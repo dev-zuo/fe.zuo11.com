@@ -1,7 +1,7 @@
 # fe
 前端知识梳理总结
 ![前端开发](./src/images/前端开发.png)
-- [JS/ES6](./##JS/ES6)
+- [JS/ES6](./##JSES6)
 - HTML/HTML5
 - CSS/CSS3
 - Vue.js
