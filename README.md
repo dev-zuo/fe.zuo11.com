@@ -15,6 +15,7 @@
 
 ## JS/ES6
 ![js相关书籍](./src/images/js_es6.png)
+- [JS高程3](./src/js_es6/js高程3/JS高程3.md)
 - [es6 - 1.let与const](./src/js_es6/es6_let与const.md)
 - [es6 - 2.声明变量的六种方法,顶层对象](./src/js_es6/es6_声明变量的六种方法_顶层对象.md)
 - [es6 - 3.解构赋值](./src/js_es6/es6_解构赋值.md)
