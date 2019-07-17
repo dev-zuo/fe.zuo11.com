@@ -1,5 +1,5 @@
 # FE技术栈
-- [JS/ES6](./#JSES6)
+- [JS/ES6](#jses6)
 - HTML/HTML5
 - CSS/CSS3
 - Vue.js
