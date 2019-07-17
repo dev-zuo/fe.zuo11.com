@@ -11,6 +11,7 @@
 - Git
 - 微信小程序开发
 - 微信公众号开发
+test github
 
 ## JS/ES6
 ![js相关书籍](./src/images/js_es6.png)
