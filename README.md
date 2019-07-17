@@ -1,6 +1,18 @@
 # fe
 前端知识梳理总结
 ![前端开发](./src/images/前端开发.png)
+- [JS/ES6](./##JS/ES6)
+- HTML/HTML5
+- CSS/CSS3
+- Vue.js
+- JS数据结构与算法
+- JS设计模式
+- Node.js
+- HTTP
+- web安全
+- Git
+- 微信小程序开发
+- 微信公众号开发
 
 ## JS/ES6
 ![js相关书籍](./src/images/js_es6.png)
