@@ -2187,9 +2187,16 @@ alert(window.find("sdf"));
 ![window.find](./images/windowFind.png)
 
 ### location对象
+可以用来获取和改变页面url，重新加载页面，
 location是最有用的BOM对象之一，提供了当前窗口中加载文档相关信息，如URL，域名，页面路径，查询字段、协议等，location是一个很特殊的对象，它既是window对象的属性，也是document对象的属性。window.location和document.location引用的是同一个对象
  ```js
 // window.location === document.location  // true
+// location.href 完整的url
+// location.origin  网站的开头部分带host 可以用来做api接口前置
+// location.pathname // 路径，不带host
+// location.searh // ?a=1&b=2  查询字符串
+// location.hash // #1   hash值
+// location.protocol 协议
 // 以访问这个url为例子，查看window.location 内容
 // https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9011978904606190454%22%7D&n_type=0&p_from=1#1
 ```
@@ -2262,6 +2269,7 @@ location.reload(true); // 重新加载 (从服务器重新加载)
 ```
 
 ### navigator对象
+可以用来获取浏览器厂商、UA、平台、语言、是否有网、是否启用了cookie、安装的插件、
 navigator对象可以用来识别客户端浏览器信息，UA等。更多信息，参考 [Navigator - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Navigator)
 #### 基本属性
 ```js
@@ -2350,6 +2358,7 @@ alert(hasIEPlugin("ShockwaveFlash.ShockwaveFlash"));
 
 
 ### screen对象
+可以查看屏幕分辩率，
 在编程中用处不大，screen对象基本上只用来表明客户端能力，记录了屏幕相关信息
  ```js
 // height：900  屏幕像素高的
@@ -2363,6 +2372,7 @@ alert(hasIEPlugin("ShockwaveFlash.ShockwaveFlash"));
 ```
 
 ### history对象
+可以用来前进、后退，
 history对象保存着用户的上网记录，出入安全方面的考虑，开发人员无法获取具体访问的URL，但可以前进或后退
 ```js
 history.go(-1); // 后退一页  相当于 histroy.back();
@@ -2372,10 +2382,11 @@ history.go(1); // 前进一页 相当于  history.forward();
 
 
 ## 八.客户端检测
+可以根据location、navigator、获取设备信息，
 主要是浏览器兼容性方面处理，根据UA识别对应的浏览器版本，是否为PC/移动端，待完善
 
 ## 九.DOM
-DOM（文档对象模型），是真的HTML和XML文档的一个API，DOM描绘了一个层次化的结点树，允许开发人员添加、移除和修改页面的某一部分。1998年10月，DOM1级规范成为W3C的推荐标准，为基本的文档结构及查询提供了接口
+DOM（文档对象模型），是针对HTML和XML文档的一个API，DOM描绘了一个层次化的结点树，允许开发人员添加、移除和修改页面的某一部分。1998年10月，DOM1级规范成为W3C的推荐标准，为基本的文档结构及查询提供了接口
 ### 节点层次
 DOM可以将HTML或XML文档描绘成一个由多层结点构成的结构，节点分为不同的类型，每种类型分别表示文档中不同的信息或标记，每个节点都拥有各自的特点、数据和方法，与其他节点存在某种关系。节点之间的关系，构成了层次，形成树形结构。
 
@@ -2383,8 +2394,14 @@ DOM可以将HTML或XML文档描绘成一个由多层结点构成的结构，节�
 
 document节点是每个文档的根节点，上图中document节点只有一个子节点，即<html>元素，称之为文档元素，它是文档的最外层元素。文档中的其他所有元素都包含在其中。每个文档只能有一个文档元素，在HTML页面中文档元素始终是<html>元素，XML中，没有预定义的元素，任何元素都可能存在文档元素
 #### Node类型
+每一段标记都可以通过树中的一个节点来表示：
+- html元素通过**元素节点**表示
+- 特性(attribute)通过**特性节点**表示
+- 文档类型通过**文档类型节点**表示
+- 注释通过**注释节点**表示
+
 DOM1级定义了一个Node接口，该接口由DOM中的所有结点类型实现，javascript中的所有结点类型都继承自Node类型，因此所有的结点类型都共享相同的属性和方法。
-每个节点都有一个nodeType属性，用于表明节点的类型，节点类型总共有12种，分别对应一个常量
+**每个节点都有一个nodeType属性，用于表明节点的类型**，节点类型总共有12种，分别对应一个常量
 -  1 Node.ELEMENT_NODE
 -  2 Node.ATTRIBUTE_NODE
 -  3 Node.TEXT_NODE
