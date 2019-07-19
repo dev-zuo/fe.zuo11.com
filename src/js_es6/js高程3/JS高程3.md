@@ -2415,6 +2415,14 @@ DOM1级定义了一个Node接口，该接口由DOM中的所有结点类型实现
 - 11 Node.DOCUMENT_FRAGMENT_NODE
 - 12 Node.NOTATION_NODE 
 ```js
+document.title = 'test' // 可以测试标题 
+document.nodeName // "#document"
+document.nodeType // 9    Node.DOCUMENT_NODE
+
+document.head.nodeName   // "HEAD"
+document.head.nodeType  // 1 ELEMENT_NODE
+document.node.nodeValue // null
+
 // 判断节点类型
 if (someNode.nodeType === Node.ELEMENT_NODE) { // 在IE中无效
     alert("Node is an element.");
@@ -2429,10 +2437,11 @@ Web浏览器并不支持所有结点类型，最常用的是元素和文本节�
 ##### nodeName 和 nodeValue属性
 ```js
 if (someNode.nodeType === 1) {
-    value = someNode.nodeName;  //对于元素节点，nodeName始终为元素的标签名，nodeValue始终为空
+    value = someNode.nodeName;  //对于元素节点，nodeName始终为元素的标签名，nodeValue始终为null
 }
 ```
 ##### 节点关系
+节点的查询、获取
 ```js
 // 子节点 childNodes
 var firstChild =someNode.childNodes[0];
@@ -2455,6 +2464,7 @@ someNode.hasChildNodes()  // true or false
 ```
 ![nodeRelation](./images/nodeRelation.png)
 ##### 操作节点
+节点的新增（appendChild(新节点/旧节点)、insertBefore(newNode, oldNode)）、修改(replaceChild())、删除(removeChild())
 上面关系指针都是只读的，DOM还提供了一些操作节点的方法
 ```js
 // 在末尾新增一个子节点  appendChild() 用于向childNodes列表的末尾添加一个节点
@@ -2487,13 +2497,20 @@ someNode.removeChild(someNode.lastChild);  // 移除最后一个子节点
 // 1.cloneNode() 复制一个相同的副本，这个副本属于文档所有，但类似于孤儿，没有指定父节点
 // 参数为true时执行深复制，复制节点及整个节点树，false时只复制节点本身
 // 如果一个ul有三个子li节点，ul对应myList对象
+//<ul> 
+//  <li>item 1</li>
+//  <li>item 2</li>
+//  <li>item 3</li>
+//</ul>
 var deepList = myList.cloneNode(true);
 deepList.chilidNodes.length // 3，如果是cloneNode(false)则为0，不包含子节点
+var shallowList = myList.cloneNode(false) // 浅复制，只是复制节点本身，不会复制子节点
+shallowList.childNodes.length // 0
 
 ```
 #### Document类型
 JS通过Document类型表示文档，在浏览器中 document对象是 HTMLDocument(继承自Document类型)的一个实例，表示整个html页面，document对象是window的一个属性，可以全局使用。Document节点具有以下特征
-- nodeType 的值为 9
+- nodeType 的值为 9 Node.DOCUMENT_NODE
 - nodeName 为 "#document", nodeValue === null , parentNode === null ownerDocument === null
 - 在浏览器中，其子节点一般是一个DocumentType(最多一个)，Document类型可以表示HTML页面或其他基于xml的文档
 ##### 文档子节点
@@ -2525,7 +2542,10 @@ var domain = document.domain;
 var referrer = document.referrer; // 如果是上面的场景，则值未"https://github.com/zuoxiaobai?tab=repositories"
 ```
 ##### 查找元素
-document.getElementById()、document.getElementsByTagName()
+- document.getElementById('kk') // 获取id为kk的元素，类型为 HTMLElement
+- document.getElementsByTagName('div')  // 获取页面所有的div元素 HTMLCollection
+- document.getElementsByName('kk')  // 获取name='kk' 的所有元素
+- document.getElementsByClassName('kk') // 获取class='kk'的所有元素
 ```js
 // <div id="myDiv">Some text</div>
 var div = document.getElementById("myDiv");  // 如果没有该id的元素，值为null
@@ -2545,18 +2565,18 @@ alert(images.item(0).src); // src内容
 
 imgs.namedItem('myImg') === imgs["myImg"] // 2.png那张图片
 
-
-// document.getElementsByName('color')，获取name属性为color的元素
+// <text id='t' name="color">textkkkk</text>
+document.getElementsByName('color') // 获取name属性为color的元素
 ```
 ##### 特殊集合
 ```js
-// document.anchors 获取文档中所有带name特性的a元素
+// document.anchors 获取文档中所有带name特性的a元素，必须要有name属性
 
-// document.forms   ===  document.getElementsByTagName('form')
+// document.forms   相当于  document.getElementsByTagName('form')
 
-// document.images ==== document.getElementsByTageName('img')
+// document.images 相当于 document.getElementsByTageName('img')
 
-// document.links 获取所有a元素
+// document.links 获取所有a元素，相当于 documet.getElmentsByTagName('a')
 ```
 
 ##### DOM一致性
@@ -2648,7 +2668,7 @@ document.write() document.writeln() 向文档中输入内容
         alert(div.className); // bg
         alert(div.title); // body text
         alert(div.lang); // en
-        alert(div.dir); // rtl   这里注意，文字会在屏幕右边显示
+        alert(div.dir); // rtl   这里注意，文字会在屏幕右边显示，类似于右对齐。从右边开始显示
 
         // 也可以直接修改属性, 立即生效
         div.id = "someOther";
@@ -2663,10 +2683,87 @@ document.write() document.writeln() 向文档中输入内容
 HTML元素以及与之关联的类型
 ![HTML_type_1](./images/HTML_type_1.png)
 ![HTML_type_2](./images/HTML_type_2.png)
-##### 获取、设置属性
+##### 获取、设置、移除特性 getAttribute()  setAttribute()  removeAttribute()
+```js
+var div = document.getElementById("myDiv");
+div.id // myDiv
+div.getAttribute('id') // myDiv
+
+// 设置特性值
+div.setAttribute('id', 'test') // 等价于 div.id = 'test'
+
+div.removeAttribute('class') // 删除class特性
+```
 ##### attributes属性
+可以用来增删查改特性，主要用来遍历某个元素的特性。
+```js
+// 获取某个节点的属性列表, 类型为 NamedNodeMap
+// <div id="myDiv" class="bg" title="body text" lang="en" dir="rtl">abcdefg</div>
+let myDiv = document.getElementById('myDiv')
+let s = myDiv.attributes 
+// NamedNodeMap {0: id, 1: class, 2: lang, 3: dir, id: id, class: class, lang: lang, dir: dir, length: 4}
+
+s.getNamedItem('id').nodeName // id  
+s.getNamedItem('id').nodeValue // myDiv
+
+s['title'].nodeValue = 'xxx'  // 设置title特性值为xxx
+s[0].nodeValue // id 
+
+s.removeNamedItem('id') // 移除id的特性，相当于 s.removeAttribute('id')
+```
 ##### 创建元素
-##### 元素的子节点
+document.createElement()
+```js
+// 创建一个div元素
+// <div class=​"ft">footer</div>​
+k = document.createElement('div')
+k.id = 'id2'
+k.innerText = '1212'
+document.getElementsByClassName('ft')[0].appendChild(k)
+// <div class=​"ft">footer<div id='id2'>1212</div></div>​
+```
 
 #### Text 类型
+文本节点有Text类型表示，不能包含HTML代码，不支持子节点
+- nodeType的值为3  Node.TEXT_NODE
+- nodeName 的值为 '#text'
+- nodeValue 的值为节点所包含的文本
+- document.createTextNode() 创建文本节点
+- element.normalize() 规范化文本节点，合并多个子文本节点
+- element.splitText() 按照指定位置分割文本节点
+```js
+//  <div id='someOther' class='ft' title='Some other text'>abcdefg</div>
+var oth = document.getElementById('someOther')
+var textNode = oth.childNodes[0] // Text()  
+textNode.nodeType // 3
+textNode.nodeName // "#text"
+textNode.nodeValue // "abcdeft"
+textNode.nodeValue = 'ddd'   // 修改text的值
+
+// 代码创建一个文本节点，挂载到元素节点div上，再放到body里面
+var e = document.createElement('div')
+e.className = 'message'
+
+var tNode = document.createTextNode('hello world')
+e.appendChild(tNode)
+
+// 一个div可以多增加几个textNode，中间不会有空格，会连着显示。
+var tNode2 = document.createTextNode('---hello world---')
+e.appendChild(tNode2)
+
+document.body.appendChild(e)
+
+e.childNodes.length // 2
+e.normalize() // 规范化文本节点
+e.childNodes.length // 1
+
+
+// 再分割文本节点 
+var newNode = e.firstChild.splitText(5)
+e.firstChild.nodeValue // 'hello'
+newNode.nodeValue // " world---hello world---"
+e.childNodes.length // 2
+```
+
+#### Comment 类型
 
