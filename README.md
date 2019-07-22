@@ -14,8 +14,8 @@
 
 ## JS/ES6
 ![js相关书籍](./src/images/js_es6.png)
-  [JavaScript DOM编程艺术(第二版本)](./src/js_es6/js_dom编程艺术/js_dom编程艺术.md)
-- [JavaScript高级程序设计(第三版)](./src/js_es6/js高程3/JS高程3.md)
+- [JavaScript DOM编程艺术(第二版本)笔记](./src/js_es6/js_dom编程艺术/js_dom编程艺术.md)
+- [JavaScript高级程序设计(第三版)笔记](./src/js_es6/js高程3/JS高程3.md)
 - [es6 - 1.let与const](./src/js_es6/es6_let与const.md)
 - [es6 - 2.声明变量的六种方法,顶层对象](./src/js_es6/es6_声明变量的六种方法_顶层对象.md)
 - [es6 - 3.解构赋值](./src/js_es6/es6_解构赋值.md)
