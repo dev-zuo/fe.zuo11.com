@@ -211,7 +211,7 @@ page(126)
 ## 实战项目
 根据该书学到的知识，灵活运用。实战写一个小项目，单独开了一个仓库放对应的源码
 - 仓库地址：https://github.com/zuoxiaobai/js_dom_chapter12_project
-- 在线预览：http://zuoguoqing.com/js_dom_chapter12_project/
+- 在线预览：http://zuoguoqing.com/js_dom_chapter12_project/docs/
 
 
 ## 最后
