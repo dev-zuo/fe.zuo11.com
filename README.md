@@ -2,9 +2,9 @@
 - [JS/ES6](#jses6)
 - [HTML/HTML5](#htmlhtml5)
 - [CSS/CSS3](#csscss3)
-- Vue.js
-- JS数据结构与算法
-- JS设计模式
+- [Vue.js](#vuejs)
+- [JS数据结构与算法](#JS数据结构与算法)
+- [JS设计模式](#JS设计模式)
 - Node.js
 - HTTP
 - web安全
@@ -40,4 +40,19 @@
 
 ## CSS/CSS3
 ![css相关书籍](src/images/css.png)
+
+## Vue.js
+![Vue.js相关书籍](src/images/vue.png)
+
+## JS数据结构与算法
+![JS数据结构与算法相关](src/images/js_algorithm.png)
+
+## JS设计模式
+![JS设计模式](src/images/js设计模式.png)
+
+## Node.js
+![Node.JS相关](src/images/node.png)
+
+## HTTP
+![http相关](src/images/http.png)
 
