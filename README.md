@@ -5,12 +5,13 @@
 - [Vue.js](#vuejs)
 - [JS数据结构与算法](#JS数据结构与算法)
 - [JS设计模式](#JS设计模式)
-- Node.js
-- HTTP
-- web安全
-- Git
+- [Node.js](#nodejs)
+- [HTTP](#http)
+- [web安全](#web安全)
+- [Git](#git)
 - 微信小程序开发
 - 微信公众号开发
+- 持续化集成(CI、docker)
 
 ## JS/ES6
 ![js相关书籍](./src/images/js_es6.png)
@@ -37,22 +38,36 @@
 
 ## HTML/HTML5
 ![HTML相关书籍](src/images/html.png)
+- 极客时间：重学前端
+- html 模板 pug
 
 ## CSS/CSS3
 ![css相关书籍](src/images/css.png)
+- CSS预处理器(sass、less)
 
 ## Vue.js
 ![Vue.js相关书籍](src/images/vue.png)
 
 ## JS数据结构与算法
 ![JS数据结构与算法相关](src/images/js_algorithm.png)
+- 极客时间: 数据结构与算法
+- leetcode 刷题
 
 ## JS设计模式
 ![JS设计模式](src/images/js设计模式.png)
 
 ## Node.js
 ![Node.JS相关](src/images/node.png)
+- 饿了么开源 node.js教程
+- express、koa、egg.js
 
 ## HTTP
 ![http相关](src/images/http.png)
+
+## web安全
+![web安全](src/images/web安全.png)
+
+## Git
+![git相关](src/images/git.png)
+
 
