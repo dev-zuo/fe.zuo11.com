@@ -110,7 +110,7 @@ element.style.top
 - 其他：localStorage、sessionStorage; webSocket; web Wroker; 标准拖放实现；浏览器中地理位置信息；
 
 ## 相关内容补充
-树中有一些细节是个人认为有必要单独列出的，在这里作为补充列出
+书中有一些细节是个人认为有必要单独列出的，在这里作为补充进行说明
 ### 元素节点、文本节点、属性(特性attribute)节点
 元素节点包括div元素、text元素、nodeType为1，文本节点只有文本内容。nodeType为3，示例：
 ```js
