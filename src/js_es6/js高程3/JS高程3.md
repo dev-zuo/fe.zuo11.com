@@ -2619,7 +2619,7 @@ document.write() document.writeln() 向文档中输入内容
 </html>
 ```
 
-#### Element类型（Node.ELEMENT_NODE 1）
+#### Element类型（1 Node.ELEMENT_NODE）
 除Document类型外，Element类型算是Web编程中最常用的类型了，它用于表现XML或HTML元素，提供了对元素标签名、子节点及特性的访问
 - nodeType 的值为 1
 - nodeName 的值为元素的标签名, nodeValue === null , parentNode 可能是Document或Element
@@ -2723,7 +2723,7 @@ document.getElementsByClassName('ft')[0].appendChild(k)
 // <div class=​"ft">footer<div id='id2'>1212</div></div>​
 ```
 
-#### Text 类型（Node.TEXT_NODE 4）
+#### Text 类型（4 Node.TEXT_NODE）
 文本节点有Text类型表示，不能包含HTML代码，不支持子节点
 - nodeType的值为3  Node.TEXT_NODE
 - nodeName 的值为 '#text'
@@ -2765,7 +2765,7 @@ newNode.nodeValue // " world---hello world---"
 e.childNodes.length // 2
 ```
 
-#### Comment 类型（Node.COMMENT_NODE 8）
+#### Comment 类型（8 Node.COMMENT_NODE）
 注释类型
 - nodeType的值为8  Node.COMMENT_NODE
 - nodeName 的值为 '#comment'
@@ -2784,7 +2784,7 @@ comNode.data // 测试注释类型，以上两种都可以修改注释内容
 
 ```
 
-#### DocumentType类型（Node.DOCUMENT_TYPE_NODE 10）
+#### DocumentType类型（10 Node.DOCUMENT_TYPE_NODE）
 DocumentType 包含着与文档的doctype有关的所有信息 document.firstChild => <!DOCTYPE html>
 - nodeType的值为10  Node.DOCUMENT_TYPE_NODE
 - nodeName 的值为doctype类型 'html'
@@ -2797,7 +2797,7 @@ e.nodeName // html
 e.nodeValue  // null
 ```
 
-#### DocumentFragment（Node.DOCUMENT_FRAGMENT_NODE 11）
+#### DocumentFragment（11 Node.DOCUMENT_FRAGMENT_NODE）
 文档片段类型，不会真正的再文档里形成节点，类似与一个中转节点。
 - nodeType的值为11
 - nodeNmae 的值为 "#document-fragment"
@@ -2819,8 +2819,8 @@ ul.childNodes // 只有3个 li 子节点
 
 ```
 
-#### Attr类型 (Node.ATTRIBUTE_NODE 2)
-特性节点类型，<ul id='xx'> ul.attributes就是特性节点数组，子元素就是特性节点
+#### Attr类型 (2 Node.ATTRIBUTE_NODE)
+特性节点类型，element.attributes就是特性节点数组，子元素就是特性节点
 - nodeType的值为2
 - nodeNmae 的值为特性的名称，比如 id
 - nodeValue 的值为特性的值，比如 xx
@@ -2843,6 +2843,242 @@ element.getAttribute('align') // left
 ```
 
 ### DOM操作技术
+DOM操作往往是JS程序中开销最大的部分，NodeList对象是动态的，每次访问NodeList对象，都会运行一次查询，尽量少DOM操作
+#### 动态添加脚本script
+```js
+// <script type='text/javascript' src='text.js'></script>
+// test.js 里面 alert('test dynamic script')
+// 添加一个script脚本元素节点
+var scriptNode = document.createElement('script');
+scriptNode.src = 'test.js';
+scriptNode.type = 'text/javascript';
+document.body.appendChild(scriptNode);
+
+// 上面是载入一个js文件，加载行内方式js代码
+var sNode = document.createElement('script');
+sNode.type = 'text/javascript';
+// sNode.appendChild(document.createTextNode('function sayHi() { alert("Hi"); }'));
+sNode.text = 'function sayHi() {alert("Hi");} sayHi()';  // 兼容IE写法
+
+document.body.appendChild(sNode);
+
+// 封装成函数
+function loadScriptString(scriptStr) {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  try {
+    script.appendChild(document.createTextNode(scriptStr));
+  } catch (e) {
+    // IE下可能会失效，走这里的逻辑
+    script.text = scriptStr;
+  }
+  document.body.append(script);
+}
+loadScriptString('function sayHi() { alert("Hi"); } sayHi()');
+
+// 等效于
+eval('function sayHi() { alert("Hi"); } sayHi()');
+```
+
+#### 动态添加样式style
+```js
+//  <link rel="stylesheet" type="text/css" href="test.css">
+var linkNode = document.createElement('link');
+linkNode.rel = 'stylesheet';
+linkNode.setAttribute('type', 'text/css'); // 熟悉下语法
+linkNode.href = 'test.css';
+document.head.appendChild(linkNode);
+// document.head 等价于 document.getElementsByTagName('head')[0]
+
+// text node
+// <style>
+//   body { color: red }
+// </style>
+function loadStyleString(cssStr) {
+  var styleNode = document.createElement('style');
+  try {
+    styleNode.appendChild(document.createTextNode(cssStr));
+  } catch (e) {
+    // IE 不允许动态添加 script、style标签子节点，会报异常，需要特殊处理
+    styleNode.styleSheet.cssText = cssStr;
+  }
+  document.body.appendChild(styleNode);
+}
+loadStyleString('body {color: red;}');
+
+```
+
+#### 操作表格HTML-DOM
+动态创建一个表格，html代码如下，先利用DOM API来动态创建。再利用HTML-DOM提供的table、tbody、tr方法来重构
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>表格</title>
+  </head>
+  <body>
+    <table border="1" width="100%">
+      <tbody>
+        <tr>
+          <td>Cell 1,1</td>
+          <td>Cell 1,2</td>
+        </tr>
+        <tr>
+          <td>Cell 2,1</td>
+          <td>Cell 2,2</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
+
+```
+js实现
+```js
+let tableNode = document.createElement('table');
+tableNode.border = '1';
+tableNode.width = '100%';
+
+let tbodyNode = document.createElement('tbody');
+
+// 添加第一行
+let tr1 = document.createElement('tr');
+let td11 = document.createElement('td');
+td11.appendChild(document.createTextNode('Cell 1,1'));
+let td12 = document.createElement('td');
+td12.appendChild(document.createTextNode('Cell 1,2'));
+tr1.appendChild(td11);
+tr1.appendChild(td12);
+
+// 添加第二行
+// 添加第一行
+let tr2 = document.createElement('tr');
+let td21 = document.createElement('td');
+td21.appendChild(document.createTextNode('Cell 2,1'));
+let td22 = document.createElement('td');
+td22.appendChild(document.createTextNode('Cell 2,2'));
+tr2.appendChild(td21);
+tr2.appendChild(td22);
+
+tbodyNode.appendChild(tr1);
+tbodyNode.appendChild(tr2);
+
+tableNode.appendChild(tbodyNode);
+document.body.appendChild(tableNode);
+
+```
+HTML DOM为方便创建表格提供的 table、tbody、tr 属性及方法
+```html
+<table border="1" width="100%">
+  <caption>表格的标题</caption>
+  <thead>
+    <tr>
+      <th>列1</th>
+      <th>列2</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+    <tr>
+      <td>Cell 1,1</td>
+      <td>Cell 2,1</td>
+    </tr>
+    <tr>
+      <td>Cell 1,1</td>
+      <td>Cell 2,1</td>
+    </tr>
+  </tbody>
+  
+  <tfoot>
+    <tr>
+      <td colspan='2'>table foot</td>
+    </tr>
+  </tfoot>
+</table>
+```
+```js
+// 先获取table元素
+var tableEle = document.getElementsByTagName('table')[0];
+
+// table元素节点 相关属性
+tableEle.caption // 获取caption元素节点，如果没有，则返回null
+tableEle.tBodies // <tbody>元素的数组， HTMLCollection   tableEle.tBodies[0] 一个tbody元素
+tableEle.tFoot // 获取tFoot元素节点
+tableEle.tHead // 获取tHead元素节点
+tableEle.rows // 获取表格里的tr数组，包含thead、tfoot，4个  tableEle.rows[0] tr节点
+
+// table元素节点 相关方法insert
+tableEle.createTHead() // 如果table内已有<thead>，返回对应的thead元素节点，如果没有，创建<thead></thead>并添加到表格，返回其引用
+tableEle.createTFoot() // 如果table内已有<tfoot>，返回对应的tfoot元素节点，如果没有，创建<tfoot></tfoot>并添加到表格，返回其引用
+tableEle.createCaption() // 如果table内已有<caption>，返回对应的节点，如果没有，创建<caption></caption>并添加到表格，返回其引用
+
+tableEle.deleteTHead() // 删除<thead>元素节点
+tableEle.deleteTFoot() // 删除<tfoot>元素节点
+tableEle.deleteCaption() // 删除<caption>元素节点
+tableEle.deleteRow(pos) // 删除rows里面的某一行，从0开始，tableEle.deleteRow(0)，删除第一个tr节点
+tableEle.insertRow(pos) // 创建一个<tr>添加到table里，并返回其引用，如果pos不传值，添加到末尾，(tfoot里面)，tableEle.insertRow(0) 在首部添加tr
+
+// tbody 元素的属性及方法
+var tbodyNode = tableEle.tBodies[0];
+tbodyNode.rows // <tbody> 里的元素数组 HTMLColletion, length = 2
+tbodyNode.deleteRow(pos) // 删除指定位置tr节点
+tbodyNode.insertRow(pos) // 在指定位置插入节点
+
+// tr 元素属性及方法
+var trNode = tbodyNode.firstElementChild; // 第一个元素节点
+trNode.cells // 保存着tr里面的单元格列表元素，HTMLCollection   <td> List
+trNode.deleteCell(pos) // 删除指定位置的单元格
+trNode.insertCell(pos) // 指定位置添加<td></td>
+
+```
+
+用table相关的HTML-DOM API重写之前创建table的例子
+
+```js
+let tableNode = document.createElement('table');
+tableNode.border = '1';
+tableNode.width = '100%';
+
+let tbodyNode = document.createElement('tbody');
+
+// 添加第一行
+let tr1 = tbodyNode.insertRow(0);
+let td1 = tr1.insertCell(0);
+let td2 = tr1.insertCell(1);
+td1.appendChild(document.createTextNode('Cell 1,1'));
+td2.appendChild(document.createTextNode('Cell 1,2'));
+
+// 添加第二行
+let tr2 = tbodyNode.insertRow(1);
+let td3 = tr2.insertCell(0);
+let td4 = tr2.insertCell(1);
+td3.appendChild(document.createTextNode('Cell 2,1'));
+td4.appendChild(document.createTextNode('Cell 2,2'));
+
+tableNode.appendChild(tbodyNode);
+document.body.appendChild(tableNode);
+```
+
+#### NodeList
+节点是动态的，下面的例子中，如果获取了某个节点元素，每次访问其length时，元素都有动态更新，length也会动态增加是个死循环，为了提高性能，尽量少操作dom
+```js
+// <div>123</div>
+var divs = document.getElementsByTagName('div'), i, div;
+
+for (let i = 0; i < divs.length; i++) {
+  div = document.createElement('div');
+  document.body.appendChild(div);
+}
+
+// 改写上面的死循环，这样就只执行有限的个数了。
+var divs = document.getElementsByTagName('div'), i, div;
+var length = 0;
+for (i = 0, length= divs.length; i < length; i++) {
+  div = document.createElement('div');
+  document.body.appendChild(div);
+}
+```
 
 
-
+## 第11章：DOM扩展
