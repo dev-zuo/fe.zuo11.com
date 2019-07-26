@@ -2402,17 +2402,17 @@ document节点是每个文档的根节点，上图中document节点只有一个�
 
 DOM1级定义了一个Node接口，该接口由DOM中的所有结点类型实现，javascript中的所有结点类型都继承自Node类型，因此所有的结点类型都共享相同的属性和方法。
 **每个节点都有一个nodeType属性，用于表明节点的类型**，节点类型总共有12种，分别对应一个常量
--  1 Node.ELEMENT_NODE
--  2 Node.ATTRIBUTE_NODE
--  3 Node.TEXT_NODE
--  4 Node.CDATA_SECTION_NODE
+-  1 Node.ELEMENT_NODE   元素节点，最常见的一种
+-  2 Node.ATTRIBUTE_NODE  特性节点，element.attributes[0]
+-  3 Node.TEXT_NODE    文本节点，文字基本都是文本节点
+-  4 Node.CDATA_SECTION_NODE (只针对XML文档)
 -  5 Node.ENTITY_REFERENCE_NODE 
 -  6 Node.ENTITY_NODE
 -  7 Node.PROCESSING_INSTRUCTION_NODE
--  8 Node.COMMENT_NODE
--  9 Node.DOCUMENT_NODE
-- 10 Node.DOCUMENT_TYPE_NODE
-- 11 Node.DOCUMENT_FRAGMENT_NODE
+-  8 Node.COMMENT_NODE   注释节点，注释
+-  9 Node.DOCUMENT_NODE   document，文档节点。一个html只有一个, .title, .URL, .referrer
+- 10 Node.DOCUMENT_TYPE_NODE doctype节点，HTML5最顶部
+- 11 Node.DOCUMENT_FRAGMENT_NODE 文档片段节点，属于中间节点，过度用
 - 12 Node.NOTATION_NODE 
 ```js
 document.title = 'test' // 可以测试标题 
@@ -2508,7 +2508,7 @@ var shallowList = myList.cloneNode(false) // 浅复制，只是复制节点本�
 shallowList.childNodes.length // 0
 
 ```
-#### Document类型
+#### Document类型（Node.DOCUMENT_NODE 9）
 JS通过Document类型表示文档，在浏览器中 document对象是 HTMLDocument(继承自Document类型)的一个实例，表示整个html页面，document对象是window的一个属性，可以全局使用。Document节点具有以下特征
 - nodeType 的值为 9 Node.DOCUMENT_NODE
 - nodeName 为 "#document", nodeValue === null , parentNode === null ownerDocument === null
@@ -2619,7 +2619,7 @@ document.write() document.writeln() 向文档中输入内容
 </html>
 ```
 
-#### Element类型
+#### Element类型（Node.ELEMENT_NODE 1）
 除Document类型外，Element类型算是Web编程中最常用的类型了，它用于表现XML或HTML元素，提供了对元素标签名、子节点及特性的访问
 - nodeType 的值为 1
 - nodeName 的值为元素的标签名, nodeValue === null , parentNode 可能是Document或Element
@@ -2723,7 +2723,7 @@ document.getElementsByClassName('ft')[0].appendChild(k)
 // <div class=​"ft">footer<div id='id2'>1212</div></div>​
 ```
 
-#### Text 类型
+#### Text 类型（Node.TEXT_NODE 4）
 文本节点有Text类型表示，不能包含HTML代码，不支持子节点
 - nodeType的值为3  Node.TEXT_NODE
 - nodeName 的值为 '#text'
@@ -2765,5 +2765,84 @@ newNode.nodeValue // " world---hello world---"
 e.childNodes.length // 2
 ```
 
-#### Comment 类型
+#### Comment 类型（Node.COMMENT_NODE 8）
+注释类型
+- nodeType的值为8  Node.COMMENT_NODE
+- nodeName 的值为 '#comment'
+- nodeValue 的值为 注释类型    等价于 .data 
+
+```js
+let divEle = document.createElement('div');
+let comNode = document.createComment('测试注释类型');
+divEle.id = "comDiv";
+divEle.appendChild(comNode);
+
+comNode.nodeType // 8
+comNode.nodeName // "#comment"
+comNode.nodeValue // 测试注释类型  
+comNode.data // 测试注释类型，以上两种都可以修改注释内容
+
+```
+
+#### DocumentType类型（Node.DOCUMENT_TYPE_NODE 10）
+DocumentType 包含着与文档的doctype有关的所有信息 document.firstChild => <!DOCTYPE html>
+- nodeType的值为10  Node.DOCUMENT_TYPE_NODE
+- nodeName 的值为doctype类型 'html'
+- nodeValue 的值为 null 
+- 父节点 document， 不支持子节点
+```js
+var e = document.firstChild  // <!DOCTYPE html>
+e.nodeType // 10
+e.nodeName // html
+e.nodeValue  // null
+```
+
+#### DocumentFragment（Node.DOCUMENT_FRAGMENT_NODE 11）
+文档片段类型，不会真正的再文档里形成节点，类似与一个中转节点。
+- nodeType的值为11
+- nodeNmae 的值为 "#document-fragment"
+- nodeValue 的值为 null
+- parentNode 的值为 null
+```js
+var fragment = document.createDocumentFragment();
+
+var ul = document.createElement('ul');
+for (let i = 0; i < 3; i++) {
+  let li = document.createElement('li');
+  li.appendChild(document.createTextNode(`text ${i}`));
+  fragment.appendChild(li)
+}
+ul.appendChild(fragment);
+document.body.appendChild(ul);
+
+ul.childNodes // 只有3个 li 子节点
+
+```
+
+#### Attr类型 (Node.ATTRIBUTE_NODE 2)
+特性节点类型，<ul id='xx'> ul.attributes就是特性节点数组，子元素就是特性节点
+- nodeType的值为2
+- nodeNmae 的值为特性的名称，比如 id
+- nodeValue 的值为特性的值，比如 xx
+- parentNode 的值为 null
+- 不支持子节点
+
+```js
+var attr = document.createAttribute('align');
+attr.value = 'left';
+
+attr.nodeType // 2
+attr.nodeName // align
+attr.nodeValue // left
+
+var element = document.createElement('div');
+element.setAttribute(attr);
+element.attributes['align'].value // left
+element.getAttributeNode('align').value // left
+element.getAttribute('align') // left
+```
+
+### DOM操作技术
+
+
 
