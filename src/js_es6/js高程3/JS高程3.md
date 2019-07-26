@@ -2624,7 +2624,7 @@ document.write() document.writeln() 向文档中输入内容
 - nodeType 的值为 1
 - nodeName 的值为元素的标签名, nodeValue === null , parentNode 可能是Document或Element
 - 访问元素的标签名可以使用nodeName属性，也可以使用tagName属性，两个属性会返回相同的值
-```js
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
