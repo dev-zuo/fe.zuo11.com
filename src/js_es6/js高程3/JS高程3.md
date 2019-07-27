@@ -3234,7 +3234,7 @@ div.dataset.myname // Kevin
 // 直接赋值，克改变对应的值。
 ```
 
-- innerHTML、outerHTML、insertAdjacentHTML()
+- 插入标记：innerHTML、outerHTML、insertAdjacentHTML()
 ```js
 // <div id="test">
 // 	<div>child1</div>
@@ -3274,11 +3274,76 @@ element.insertAdjacentHTML('beforeend', '<p>hello</p>');
 // 使用上面的属性及方法时，最好先手工删除要被替换元素的所有事件处理程序和js对象属性
 ```
 
-- 元素.scrollIntoView() 方法，滚动到对应的元素位置。除了chrome，其他浏览器都支持。
+- 元素.scrollIntoView() 方法，滚动到对应的元素位置。
 ```js
-let k = document.getElementById('myDiv')
-k.scrollIntoView() // 滚动到对应的元素位置，可见
+let k = document.getElementById('myDiv');
+k.scrollIntoView() // 滚动到对应的元素位置，注意只能是元素节点调用，文本节点调用会报错
 ```
 
 ### 专有扩展
 - IE8引入了一个新的概念：文档模式 document.documentMode，只有IE支持，如果IE11，值为11，如果IE8，值为8，如果是其他浏览器，返回undefined
+```js
+// IE的四种文档模式
+// 1. IE5 以混杂模式渲染页面，IE8及跟高版本中的新功能都无法使用
+// 2. IE7 以IE7标准模式渲染页面，IE8及更高版本中的新功能都无法使用
+// 3. IE8 以IE8标准模式渲染页面，IE8里的新功能都可以使用，如Selectors API,css2级选择符和某些css3功能，IE9中的新功能无法使用
+// 4. IE9 以IE9标准模式渲染页面，IE9中的新功能都可以使用，如ES5、完整的CSS3以及更多的HTML5功能
+
+// 要强制浏览器以某种模式渲染页面，可以使用HTTP头部信息 X-UA-Compatible
+// <meta http-equiv="X-UA-Compatible" content="IE=IEVersion">
+// > IEVersion 有下面的一些值
+// > Edge 始终以最新的文档模式来渲染页面，忽略文档类型声明，IE8以IE8标准模式渲染，IE9以IE9标准模式渲染
+// > EmulateIE9 如果有文档类型声明，则以IE9标准模式渲染，否则将文档模式设置为IE5
+// > EmulateIE8 如果有文档类型声明，则以IE8标准模式渲染，否则将文档模式设置为IE5
+// > EmulateIE7 如果有文档类型声明，则以IE7标准模式渲染，否则将文档模式设置为IE5
+// > 9 强制以IE9标准模式渲染页面，忽略文档类型声明
+// > 8 强制以IE8标准模式渲染页面，忽略文档类型声明
+// > 7 强制以IE7标准模式渲染页面，忽略文档类型声明
+// > 5 强制将文档模式设置为IE5，忽略文档类型声明
+
+// 如果想要让文档模式像在IE7中一样，可以使用如下代码
+// <meta http-equiv="X-UA-Compatible" content="IE=7">
+
+```
+
+- element.children属性，IE9之前处理文本节点空白符时有差异，就出现了children属性，相当于 childNodes 的元素版，只包含元素，childElementCount 只能计算数量，不能获取List，这个就可以
+- contains() 方法 检测某个节点是否是其祖先节点，如果是，则返回true，反则返回false
+```js
+document.documentElement.contains(document.body) // true
+
+// DOM Level 3 compareDocumentPosition() 可以更详细的获得两节点关系，IE9+
+```
+- 插入文本：innerText/textContent； outerText不常用
+```js
+// innerText/textContent 区别
+// 1.innerText/textContent都是获取文本或插入文本。前者Firefox不支持，但支持textContent(IE9+)
+// 2.innerText 会忽略行类的样式和脚本，textContent会返回行内样式和脚本代码
+
+// div.innerText 或者 div.textContent // 获取元素中包含的所有文本内容
+// 兼容性处理
+function getInnerText(element) {
+  return (typeof element.textContent === 'string') ? element.textContent : element.innerText;
+}
+
+function setInnerText(element, text) {
+  if (typeof element.textContent === 'string') {
+    element.textContent = text;
+  } else {
+    element.innerText = text;
+  }
+}
+```
+
+- 滚动除了scrollIntoView()方法外，还有其他非标准方法可以使用，但兼容性不行
+```js
+// 1. scrollIntoViewNeeded() 将元素移动到对应的元素节点，和 scrollIntoView()用法及功能基本一致
+// 兼容性： https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded
+
+// 2. window.scrollByLines(lineCount) 
+// chrome不支持，Firefox支持
+
+// 3. window.scrollByPages(pageCount) // 向上翻页或向下返回，仅火狐浏览器支持
+// 兼容性: https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollByPages
+```
+
+## 第12章 DOM2和DOM3
