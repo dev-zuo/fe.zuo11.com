@@ -3281,3 +3281,4 @@ k.scrollIntoView() // 滚动到对应的元素位置，可见
 ```
 
 ### 专有扩展
+- IE8引入了一个新的概念：文档模式 document.documentMode，只有IE支持，如果IE11，值为11，如果IE8，值为8，如果是其他浏览器，返回undefined
