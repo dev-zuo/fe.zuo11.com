@@ -3347,3 +3347,205 @@ function setInnerText(element, text) {
 ```
 
 ## 第12章 DOM2和DOM3
+DOM1级主要定义的是HTML和XML文档的底层结构，DOM2和DOM3级则在这个结构的基础上引入更多的交互能力，支持更高级的XML特性
+```js
+// DOM Level 2 Core - 在DOM1核心基础上构建，为节点添加更多方法和属性
+// DOM Level 2 Views - 为文档定义了基于样式信息的不同视图
+// DOM Level 2 Events  - DOM2事件在第13章讨论
+// DOM Level 2 style - 定义了如何以编程的方式来访问和改变CSS样式
+// DOM Level 2 Traveral and Range - 引入遍历DOM文档和选择其特定部分的新接口
+// DOM Level 2 HTML - 在DOM1级HTML基础上构建，添加了更多属性方法和新接口
+```
+### DOM变化
+```js
+// 确定浏览器是否支持某些DOM模块，返回true，则支持，否则表示不支持
+document.implementation.hasFeature('Core', '2.0')
+document.implementation.hasFeature('Core', '3.0')
+document.implementation.hasFeature('HTML', '2.0')
+document.implementation.hasFeature('Views', '2.0')
+document.implementation.hasFeature('XML', '2.0')
+document.implementation.hasFeature('CSS2', '2.0')
+
+```
+- 针对XML命名空间的变化(p306), createElementNS() ，一般尾部带有NS的，基本就是命名空间相关的。
+- DocumentType 新增三个属性： publicId, systemId, internalSubset ，document.doctype.xxx
+- importNode 类似cloneNode()
+```js
+var newNode = document.importNode(oldNode, true); // 导入节点以及其所有子节点
+document.importNode(oldNode, false); // 仅复制本节点，不包含子节点
+```
+- DOM3级方法，比较节点isSameNode()、isEqualNode() 
+```js
+// A.isSameNode(B)，两节点是否引用的是同一个对象
+// A.isEqualNode(B) 两节点是否有相同的类型、相同的属性等。
+var div1 = document.createElement('div');
+div1.setAttribute('css', 'box');
+
+var div2 = document.createElement('div');
+div2.setAttribute('css', 'box');
+
+
+div1.isSameNode(div1) // true
+div1.isSameNode(div2) // false
+div1.isEqualNode(div2) // true
+
+```
+- node.setUserData() 浏览器暂未实现 https://developer.mozilla.org/zh-CN/docs/Web/API/Node/setUserData
+
+### 样式
+js可以通过 element.style 可以访问和设置css样式，
+```js
+var myDiv = document.createElement('div');
+myDiv.appendChild(document.createTextNode('测试'));
+document.body.appendChild(myDiv)
+
+myDiv.style.backgroundColor = 'red';
+myDiv.style.width = '100px';
+myDiv.style.height = '200px'; //标准模式下，style.width设置为20，会导致被忽略，因为没有度量单位
+
+myDiv.style.border = '1px solid black';
+
+```
+- DOM样式属性和方法 cssText, length, getPropertyPriority()、getProperyValue()、item(index)、setProperty()、removeProperty()
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>测试Style</title>
+		<style>
+			#normal-div {
+				color: blue;
+				background-color: #f00;
+				display:block;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="inner-div" style="color:red;width:100px;height: 200px;font-size:29px">
+			内联样式div
+		</div>
+		<div id="normal-div">
+			正常样式
+		</div>
+		<script>
+		  let innerDiv = document.getElementById('inner-div');
+		  let normalDiv = document.getElementById('normal-div');
+		  
+		  // 1. e.style.cssText 读：获取元素的内联样式，写：设置元素的内联样式，非内联样式，值为""
+		  alert(innerDiv.style.cssText) // "color: red; width: 100px; height: 200px; font-size: 29px;"
+		  alert(normalDiv.style.cssText) // ""
+		  normalDiv.cssText = 'color:white' // 设置内联样式
+		  
+		  // 2. e.style.length  获取内联style样式个数。无法写，赋值会无效
+		  alert(innerDiv.style.length) // 4
+		  normalDiv.cssText = '' // 设置内联样式
+		  alert(normalDiv.style.length) // 0
+		  
+		  // 3. e.style[0] 或者 e.style.item(0) 遍历style
+		  for (let i = 0; i < innerDiv.style.length; i++) {
+		    let propertyName = innerDiv.style[i] // 或者 innerDiv.style.item(i), color、width、height
+		    alert(propertyName)
+		  }
+		  
+		  // 4. e.style.getPropertyValue(propertyName) 获取css属性的值
+		  //    e.style.getPropertyPriority(propertyName) 获取css属性的优先级，如果是!important 返回 "important" 否则返回""
+		  let pn = innerDiv.style[0]; // color
+		  innerDiv.style.getPropertyValue(pn) // "red"
+		  innerDiv.style.getPropertyPriority(pn) // ""
+		  
+		  // 5. e.style.setProperty(pn, value, priority) 设置css属性，e.style.removeProperty(pn) 移除css属性
+		  normalDiv.style.setProperty('color', 'white', "") // normalDiV.style.cssText  // "color: white"
+		  normalDiv.style.setProperty('font-size', '20px', "important") // "color: white; font-size: 20px !important;"
+		  normalDiv.style.getPropertyPriority('font-size') // "important"
+		  normalDiv.style.removeProperty('color'); // 移除对应的css属性
+		</script>
+	</body>
+</html>
+```
+- 获取所有样式属性（只读） document.defaultView.getComputedStyle(element, null)，第二个参数是伪元素字符串如":after",如果不需要，就传null
+```js
+let innerDiv = document.getElementById('inner-div');
+let normalDiv = document.getElementById('normal-div');
+normalDiv.style.cssText = '';
+
+let computedStyle = document.defaultView.getComputedStyle(normalDiv, null) 
+innerDiv.style.color // ""
+computedStyle.color // rgb(0,0,255)
+
+```
+- 操作样式表, 可以获取style元素里面的样式信息
+```js
+/*
+style例子：
+<style>
+  #normal-div {
+    color: blue;
+    background-color: #f00;
+    display:block;
+  }
+  div.box {
+    width: 100px;
+    height: 200px;
+    background-color: blue;
+  }
+</style>
+*/
+// 1.获取 <style> 里的样式信息CSSRule
+var rules = document.styleSheets[0].rules; // 获取第一个<style>里的样式信息  等价于.cssRules
+rules.length // 2   ，分别为 #normal-div 及 div.box 的相关样式
+rules[0].selectorText // "#normal-div"
+rules[0].cssText  // "#normal-div { color: blue; background-color: rgb(255, 0, 0); display: block; }"
+rules[0].style.cssText //  "color: blue; background-color: rgb(255, 0, 0); display: block;"
+rules[0].style.color // "blue"
+rules[0].style.color = 'white' // 可以直接设置样式
+
+rules[1].selectorText // "div.box"
+rules[1].cssText  // "div.box { width: 100px; height: 200px; background-color: blue; }"
+rules[1].style.cssText // "width: 100px; height: 200px; background-color: blue;"
+rules[1].style.width // "100px"
+
+// 2. 创建CSSRule
+var sheet = document.styleSheets[0];
+// sheet.insertRule(cssText, pos)
+sheet.insertRule("body {background-color: yellow;}", 0)  // 页面被改为yellow背景
+sheet.rules.length // 3
+
+// 3. 移除CSSRule
+sheet.deleteRule(1) // 删除一个rules里面的规则
+```
+
+- 元素大小 offsetHeight, offsetWidth, offsetTop, offsetLeft, clientHeight, clientWidth, scrollHeight, scrollWidth, scrollLeft,scrollTop
+```js
+// <div id="inner-div" style="height: 100px;overflow:scroll;color:red;width:100px;height: 200px;font-size:29px;margin:10px;padding:20px;border:2px solid #ccc;">
+// 	内联样式div
+// </div>
+var k2 = document.getElementById('inner-div');
+k2.offsetHeight // 144 边框(border) + 内边距(padding) + 元素height
+k2.offsetWidth // 144 边框(border) + 内边距(padding) + 元素width
+k2.offsetLeft // 距离左边的距离
+k2.offsetTop // 距离顶部的距离
+
+// clientWidth 内边距(padding) + 元素width
+// clientHeight 内边距(padding) + 元素height
+
+k2.scrollHeight // 703  实际可见为100左右
+k2.scrollTop // 0 改变该参数，可以设置滚动位置
+
+k2.scrollWidth // 横向滚动相关
+k2.scrollLeft  // 可以设置横向滚动位置
+```
+
+### DOM遍历(NodeIterator, TreeWalker)
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Example</title>
+	</head>
+	<body>
+		<p><b>Hello</b> world!</p>
+	</body>
+</html>
+```
