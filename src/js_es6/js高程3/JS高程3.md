@@ -3553,15 +3553,249 @@ k2.scrollLeft  // 可以设置横向滚动位置
 
 ![DOM Iterator](images/domIterator.png)
 
-- NodeIterator, document.createNodeIterator()方法可以创建NodeIterator实列，更多参见https://www.cnblogs.com/venoral/archive/2016/05/16/5499358.html
+- NodeIterator，节点遍历器，document.createNodeIterator()方法可以创建NodeIterator实列，然后用nextNode(), previousNode()，访问前一个节点，或后一个节点。更多参见https://www.cnblogs.com/venoral/archive/2016/05/16/5499358.html
 ```js
 // document.createNodeIterator(root, whatToShow, filter, entityReferenceExpansion)
-// - root [必选] 作为DOM树中搜索起点的元素节点
-// = hatToShow [可选] 表示需要访问哪些节点？可以过滤节点
+// - root [必选] 作为DOM树中搜索起点的元素节点 
+// = hatToShow [可选] 表示需要访问哪些节点？可以过滤节点，可选值值如下：除了SHOW_ALL，其他的可以用 | 来组合多个
+//   NodeFilter.SHOW_ALL: 显示所有类型的节点
+//   NodeFilter.SHOW_ELEMENT：显示元素节点
+//   NodeFilter.SHOW_TEXT：显示文本节点
+//   NodeFilter.SHOW_COMMENT：显示注释节点
+//   NodeFilter.SHOW_DOCUMENT：显示文档节点
+//   NodeFilter.SHOW_DOCUMENT_TYPE：显示文档类型节点
+//
 // - filter [可选] 一个NodeFilter对象，
 // - entiryReferenceExpansion [可选] 布尔值，是否要扩展实体引用，不适合
-document.createNodeIterator(document,)
+
+let iterator = document.createNodeIterator(document)  // 第二个字段等同于 NodeFilter.SHOW_ALL
+let node = iterator.nextNode()
+while (node !== null) {
+  console.log(`nodeType: ${node.nodeType}, nodeName: ${node.nodeName}, nodeValue: ${node.nodeValue}, tagName: ${node.tagName}`);
+  node = iterator.nextNode();
+}
+// 所有节点，包含doctype、回车空的textNode
+// nodeType: 9, nodeName: #document, nodeValue: null, tagName: undefined
+// nodeType: 10, nodeName: html, nodeValue: null, tagName: undefined
+// nodeType: 1, nodeName: HTML, nodeValue: null, tagName: HTML
+// nodeType: 1, nodeName: HEAD, nodeValue: null, tagName: HEAD
+// nodeType: 3, nodeName: #text, nodeValue: 
+// 		, tagName: undefined
+// nodeType: 1, nodeName: META, nodeValue: null, tagName: META
+// nodeType: 3, nodeName: #text, nodeValue: 
+// 		, tagName: undefined
+// nodeType: 1, nodeName: TITLE, nodeValue: null, tagName: TITLE
+// nodeType: 3, nodeName: #text, nodeValue: Example, tagName: undefined
+// nodeType: 3, nodeName: #text, nodeValue: 
+// 	, tagName: undefined
+// nodeType: 1, nodeName: BODY, nodeValue: null, tagName: BODY
+// nodeType: 3, nodeName: #text, nodeValue: 
+// 		, tagName: undefined
+// nodeType: 1, nodeName: P, nodeValue: null, tagName: P
+// nodeType: 1, nodeName: B, nodeValue: null, tagName: B
+// nodeType: 3, nodeName: #text, nodeValue: Hello, tagName: undefined
+// nodeType: 3, nodeName: #text, nodeValue:  world!, tagName: undefined
+// nodeType: 3, nodeName: #text, nodeValue: 
+// 	
+// , tagName: undefined
+// null
+
+
+let filter = {
+  acceptNode: function(node) {
+    // 如果是空的文本节点，过滤掉
+    if (node.nodeType === 3 && node.nodeValue.trim() === '') {
+      return NodeFilter.FILTER_SKIP; // 跳过该节点
+    } else {
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  }
+};
+let iterator2 = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, filter) // 只显示元素节点和文本节点
+let node = iterator2.nextNode() // 第一个nextNode() 会返回根节点。遍历到最后一个节点，会是null
+while (node !== null) {
+  console.log(`nodeType: ${node.nodeType}, nodeName: ${node.nodeName}, nodeValue: '${node.nodeValue}', tagName: ${node.tagName}`);
+  node = iterator2.nextNode();
+}
+// nodeType: 1, nodeName: HTML, nodeValue: 'null', tagName: HTML
+// nodeType: 1, nodeName: HEAD, nodeValue: 'null', tagName: HEAD
+// nodeType: 1, nodeName: META, nodeValue: 'null', tagName: META
+// nodeType: 1, nodeName: TITLE, nodeValue: 'null', tagName: TITLE
+// nodeType: 3, nodeName: #text, nodeValue: 'Example', tagName: undefined
+// nodeType: 1, nodeName: BODY, nodeValue: 'null', tagName: BODY
+// nodeType: 1, nodeName: P, nodeValue: 'null', tagName: P
+// nodeType: 1, nodeName: B, nodeValue: 'null', tagName: B
+// nodeType: 3, nodeName: #text, nodeValue: 'Hello', tagName: undefined
+// nodeType: 3, nodeName: #text, nodeValue: ' world!', tagName: undefined
+// null
+
+
+let iterator3 = document.createNodeIterator(document, NodeFilter.SHOW_ELEMENT) // 只显示元素节点
+let node = iterator3.nextNode() // 第一个nextNode() 会返回根节点。遍历到最后一个节点，会是null
+while (node !== null) {
+  console.log(`nodeType: ${node.nodeType}, nodeName: ${node.nodeName}, nodeValue: '${node.nodeValue}', tagName: ${node.tagName}`);
+  node = iterator3.nextNode();
+}
+// nodeType: 1, nodeName: HTML, nodeValue: 'null', tagName: HTML
+// nodeType: 1, nodeName: HEAD, nodeValue: 'null', tagName: HEAD
+// nodeType: 1, nodeName: META, nodeValue: 'null', tagName: META
+// nodeType: 1, nodeName: TITLE, nodeValue: 'null', tagName: TITLE
+// nodeType: 1, nodeName: BODY, nodeValue: 'null', tagName: BODY
+// nodeType: 1, nodeName: P, nodeValue: 'null', tagName: P
+// nodeType: 1, nodeName: B, nodeValue: 'null', tagName: B
+// null
 
 ```
 
+- TreeWalker，是NodeIterator的一个更高级的版本，支持parentNode(), firstChild(), lastChild(), nextSibling(), previousSibling()，可以用document.createTreewalker()方法创建TreeWalker对象。参数和document.createNodeIterator()一致
+```js
+// TreeWalker 里面的filter 新增 NodeFilter.FILTER_REJECT参数
+// NodeFilter.FILTER_SKIP  跳过节点，到子树的下一个节点
+// NodeFilter.FILTER_REJECT 跳过节点及该节点的整个子树
+// NodeFilter.FILTER_ACCEPT 不过滤节点
+let walker = document.createTreeWalker(document, NodeFilter.SHOW_ELEMENT)
+let node = walker.nextNode() // 第一个nextNode() 会返回根节点。遍历到最后一个节点，会是null
+while (node !== null) {
+  console.log(`nodeType: ${node.nodeType}, nodeName: ${node.nodeName}, nodeValue: '${node.nodeValue}', tagName: ${node.tagName}`);
+  node = walker.nextNode();
+};
+// nodeType: 1, nodeName: HTML, nodeValue: 'null', tagName: HTML
+// nodeType: 1, nodeName: HEAD, nodeValue: 'null', tagName: HEAD
+// nodeType: 1, nodeName: META, nodeValue: 'null', tagName: META
+// nodeType: 1, nodeName: TITLE, nodeValue: 'null', tagName: TITLE
+// nodeType: 1, nodeName: BODY, nodeValue: 'null', tagName: BODY
+// nodeType: 1, nodeName: P, nodeValue: 'null', tagName: P
+// nodeType: 1, nodeName: B, nodeValue: 'null', tagName: B
+// null
 
+// walker.firstChild()
+// walker.nextSibling()
+// walker.currentNode // 当前节点，给该节点赋值，可以改变起点。
+```
+
+### 范围 document.createRange()
+DOM2级在Document类型中定义了createRange()方法。返回Range对象。
+```js
+let range = document.createRange() 
+range.startContainer // 包含范围起点的节点。即选区中的第一个节点的父节点。就是docuemnt  
+// range.startContainer === document // true
+
+```
+- 用DOM范围实现简单选择
+```js
+// <body>
+//   <p id="p1"><b>Hello</b> world!</p>
+// </body>
+
+let range1 = document.createRange();
+let range2 = document.createRange();
+let p1 = document.getElementById('p1');
+
+range1.selectNode(p1);  // range1 包含 <p id="p1"><b>Hello</b> world!</p>
+range2.selectNodeContents(p1); // range2 包含 <b>Hello</b> world!
+```
+
+- 用DOM范围实现复杂选择
+```js
+let p1 = document.getElementById('p1'),
+    helloNode = p1.firstChild.firstChild; // "hello"
+    worldNode = p1.lastChild; // " world!" textNode
+    
+let range = document.createRange();
+range.setStart(helloNode, 2);
+range.setEnd(worldNode, 3);
+// rang   "llo</b> wo"
+```
+
+- 操作DOM范围中的内容
+```js
+// 1. 删除范围中的文本内容 deleteContents()
+let p1 = document.getElementById('p1'),
+    helloNode = p1.firstChild.firstChild; // "hello"
+    worldNode = p1.lastChild; // " world!" textNode
+    
+let range = document.createRange();
+range.setStart(helloNode, 2);
+range.setEnd(worldNode, 3);
+// rang   "llo</b> wo"
+range.deleteContents();
+// <p id="p1"><b>He</b>rld!</p>
+
+// 2. 删除范围中的文本内容，并返回对应的文档片段 extractContents()
+let p1 = document.getElementById('p1'),
+    helloNode = p1.firstChild.firstChild; // "hello"
+    worldNode = p1.lastChild; // " world!" textNode
+    
+let range = document.createRange();
+range.setStart(helloNode, 2);
+range.setEnd(worldNode, 3);
+// rang   "llo</b> wo"
+let fragment = range.extractContents();
+p1.parentNode.appendChild(fragment);
+// <p id="p1"><b>He</b>rld!</p>
+// <b>llo</b> wo
+
+// 3. range.cloneContents() // 克隆文档片段
+```
+
+- 插入DOM范围中的内容 range.insertNode()，range.surroundContents()
+```js
+// 1. range.insertNode(), 直接在range中插入内容
+let p1 = document.getElementById('p1'),
+    helloNode = p1.firstChild.firstChild; // "hello"
+    worldNode = p1.lastChild; // " world!" textNode
+    
+let range = document.createRange();
+range.setStart(helloNode, 2);
+range.setEnd(worldNode, 3);
+// rang   "llo</b> wo"
+
+let span = document.createElement('span');
+span.style.color = 'red';
+span.appendChild(document.createTextNode('Inserted text'));
+range.insertNode(span);
+
+// <p id="p1"><b>He  插入到这里  llo</b> world!</p>
+// html 内容
+// <p id="p1"><b>He<span style="color:red">Inserted text</span>llo</b> world!</p>
+
+// 2. range.surroundContents(), 提取range中的内容，用对应的元素节点包裹，再插入对应的位置
+let p1 = document.getElementById('p1'),
+    helloNode = p1.firstChild.firstChild; // "hello"
+    worldNode = p1.lastChild; // " world!" textNode    
+let range = document.createRange();
+range.selectNode(helloNode);
+let span = document.createElement('span');
+span.style.backgroundColor = 'yellow';
+range.surroundContents(span);
+// <p id="p1"><b><span style="background-color:yellow">Hello</span></b> world!</p>
+
+```
+
+- 折叠DOM范围
+```js
+range.collapse(true) // 折叠到起点位置
+range.collapse(false) // 折叠到结束位置
+```
+
+- 比较DOM范围 range1.compareBoundaryPoints(比较方式常量, range2)
+```js
+// 比较方式常量值，可选如下，如果相等，返回 0，range1的点位于range2的点之前，返回 -1， 如果在之后，返回1
+// Range.START_TO_START(0) 比较range1和range2的起点
+// Range.START_TO_END(1) 比较range1的起点和range2的终点
+// Range.END_TO_END(2) 比较range1和range2的终点
+// Range.END_TO_START(3) 比较range1的终点和range2的起点
+```
+
+- 复制DOM范围
+```js
+let newRange = range.cloneRange()
+```
+
+- 清理DOM 范围
+```js
+range.detach(); // 从文档中分离
+range = null // 解除引用
+```
+
+## 第13章 事件
