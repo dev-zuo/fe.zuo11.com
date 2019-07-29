@@ -3549,3 +3549,19 @@ k2.scrollLeft  // 可以设置横向滚动位置
 	</body>
 </html>
 ```
+遍历节点顺序：
+
+![DOM Iterator](images/domIterator.png)
+
+- NodeIterator, document.createNodeIterator()方法可以创建NodeIterator实列，更多参见https://www.cnblogs.com/venoral/archive/2016/05/16/5499358.html
+```js
+// document.createNodeIterator(root, whatToShow, filter, entityReferenceExpansion)
+// - root [必选] 作为DOM树中搜索起点的元素节点
+// = hatToShow [可选] 表示需要访问哪些节点？可以过滤节点
+// - filter [可选] 一个NodeFilter对象，
+// - entiryReferenceExpansion [可选] 布尔值，是否要扩展实体引用，不适合
+document.createNodeIterator(document,)
+
+```
+
+
