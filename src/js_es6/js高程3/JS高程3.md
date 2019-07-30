@@ -3799,3 +3799,341 @@ range = null // 解除引用
 ```
 
 ## 第13章 事件
+JS与HTML之间的交互是通过事件实现的
+### 事件流
+事件流描述的是从页面中接收事件的顺序。
+- 事件冒泡，如果单击了div元素，事件会一级一级向父节点传递（冒泡），一直到document => window(IE9及其他浏览器)
+- 事件捕获，如果单击了div元素，事件捕获过程中，document对象（或window）先接收到click事件，然后逐级向子节点传递，一直到div。
+- DOM事件流，DOM2级事件规定的事件流包括三个阶段：事件捕获阶段、目标阶段、事件冒泡阶段，首先发生的是事件捕获，为拦截事件提供了机会，然后是实际的目标接收到啊事件。最后一个阶段是冒泡阶段。
+![事件](images/event.png)
+
+### 事件处理程序
+- HTML事件处理程序，里面介绍的with扩展作用域问题，暂不介绍。
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>测试HTML事件</title>
+  </head>
+  <body>
+  	<!-- Example1: 按钮名称为Click Me，输出Clicked -->
+    <input type="button" value="Click Me" onclick="alert('Clicked')">
+    
+    <!-- Example2: 绑定事件函数，输出Hello world! -->
+    <input type="button" value="Click Me2" onclick="showMessage()">
+
+    <!-- Example3: 可以访问event对象，输出click -->
+    <input type="button" value="Click Me3" onclick="alert(event.type)">
+
+    <!-- Example4: this对象，输出Click Me4 -->
+    <input type="button" value="Click Me4" onclick="alert(this.value)">
+
+    <script type="text/javascript">
+    	function showMessage() {
+    		alert('Hello world!')
+    	}
+    </script>
+  </body>
+</html>
+```
+- DOM0级事件处理程序 element.onclick
+```js
+let btn = document.getElementById('myBtn');
+btn.onclick = function() { // 绑定事件处理程序
+  alert('Clicked');
+  alert(this.id); // "myBtn"
+};
+setTimeout(()=> {
+  btn.onclick = null; // 删除事件处理程序
+}, 5000)
+
+```
+- DOM2级事件处理程序 element.addEventListener(事件类型，处理函数,捕获阶段调用true/冒泡阶段调用false)，element.removeEventListener()，为了最大限度兼容各种浏览器，默认传入false，在冒泡阶段添加事件处理程序。
+```js
+// 如果绑定了多个事件，会按顺序执行
+let btn = document.getElementById('myBtn');
+btn.addEventListener('click', function() {
+  alert(this.id)
+}, false);
+btn.addEventListener('click', function() {
+  alert('Hello world!')
+}, false);
+
+// 移除事件绑定，需要传入与addEventListener里传入的事件相同的函数
+let btn = document.getElementById('myBtn');
+let handler = function() {
+  alert(this.id);
+};
+btn.addEventListener('click', handler, false);
+
+setTimeout(()=> {
+  btn.removeEventListener('click', handler, false)
+}, 8000)
+```
+- IE事件处理程序attachEvent(), detachEvent(),IE8及更早版本只支持事件冒泡   (IE5-IE10), IE11及其他浏览器都不支持。
+```js
+var btn = document.getElementById('myBtn');
+btn.attachEvent('onclick', function() {
+  alert('Clicked');
+  this === window // true
+});
+
+// 移除事件
+var btn = document.getElementById('myBtn');
+var handler = function () {
+  alert('Clicked');
+};
+btn.attachEvent('onclick', handler);
+setTimeout(function() {
+  btn.detachEvent('onclick', handler);
+}, 8000)
+```
+- 跨浏览器的事件处理程序, 为考虑IE兼容性，需要封装一个函数，作为通用事件处理函数
+```js
+var EventUtil = {
+  addHandler: function(element, type, handler) {
+    if (element.addEventListener) { // 如果支持DOM2级
+      element.addEventListener(type, handler, false);
+    } else if (element.attachEvent) { // IE10及以下版本
+      element.attachEvent("on" + type, handler);
+    } else {
+      element["on" + type] = handler;
+    }
+  },
+  removeHandler: function(element, type, handler) {
+    if (element.removeEventListener) { // 如果支持DOM2级
+     element.removeEventListener(type, handler, false);
+    } else if (element.detachEvent) { // IE10及以下版本
+     element.detachEvent("on" + type, handler);
+    } else {
+     element["on" + type] = null;
+    }
+  }
+};
+
+var btn = document.getElementById('myBtn');
+var handler = function () {
+  alert('Clicked');
+};
+
+EventUtil.addHandler(btn, "click", handler);
+
+setTimeout(function() {
+  EventUtil.removeHandler(btn, 'click', handler);
+}, 8000)
+
+```
+
+### 事件对象event
+在触发DOM上的某个事件时，会产生一个事件对象event，包括导致事件的元素、事件的类型等。
+- DOM中的事件对象event的属性和方法，一般都是只读的。
+```js
+// 1.event的属性和方法
+// event.type // 事件类型，比如 'click' 'scroll'
+// event.bubbles // Boolean 事件是否冒泡
+// event.cancelable // Boolean 是否可以取消事件的默认行为
+// event.detail // 事件相关的细节信息
+// event.eventPhase // 事件阶段：1 捕获阶段、2 处理目标阶段、3 冒泡阶段
+
+// event.preventDefault() // 取消事件的默认行为，前提条件是cancelable为true
+// event.stopPropagation() // 取消事件冒泡，前提条件是bubbles为true
+
+// event.currentTarget // Element  事件处理程序正在处理的那个元素
+// event.target // Element 事件的目标
+
+// 2.event.type，多个事件类型可以使用同一处理，函数，根据事件类型来判断操作
+var btn = document.getElementById('myBtn');
+btn.onclick = function(event) {
+  alert(event.type); // "click"
+  alert(event.currentTarget === this); // true
+  alert(event.target === this); // true
+};
+btn.addEventListener('click', function(event) {
+  alert(event.type); // "click"
+}, false);
+
+var handler = function(event) {
+  switch (event.type) {
+    case 'click':
+      alert('Clicked!');
+      break;
+    case 'mouseover':
+      event.target.style.backgroundColor = "red";
+      break;
+    case 'mouseout':
+      event.target.style.backgroundColor = "";
+      break;
+  }
+};
+btn.onclick = handler;
+btn.onmouseover = handler;
+btn.onmouseout = handler;
+
+
+// 3.event.target与event.currentTarget
+// 如果为body监听了点击事件，点击了body内的button，event.target就是button元素，event.currentTarget就是body元素
+var btn = document.getElementById('myBtn');
+document.body.onclick = function(event) {
+  alert(event.currentTarget === document.body); // true
+  alert(this === document.body); // true
+  alert(event.target === document.getElementById('myBtn')); // true
+};
+
+// 4.event.preventDefault() 阻止函数的默认行为, 可以阻止a的跳转
+var link = document.getElementById('myLink');
+link.onclick = function(event) {
+  event.preventDefault();
+};
+
+// 5.event.stopPropagation() 阻止事件冒泡
+var btn = document.getElementById('myBtn');
+btn.onclick = function(event) {
+  alert("Clicked!");
+  event.stopPropagation()
+};
+document.body.onclick = function(event) {
+  alert('Body clicked'); // 不会显示
+};
+
+// 6.event.eventPhase
+// 显示顺序为 1， 2， 3，捕获事件最先执行。然后是冒泡
+var btn = document.getElementById('myBtn');
+btn.onclick = function(event) {
+  alert(event.eventPhase); // 2  处理阶段
+};
+document.body.addEventListener('click', function(event) {
+  alert(event.eventPhase); // 1 捕获阶段
+}, true);
+document.body.onclick = function(event) {
+  alert(event.eventPhase) // 3 冒泡阶段
+};
+```
+
+- IE中的事件对象，IE中，如果是DOM0级添加的onclik事件event为window的属性，如果attachEvent监听的就是函数的event参数，但也可以使用window.event
+```js
+// IE中event对象属性
+// event.cancelBubble   Boolean, 默认为false，设置为true可以取消事件冒泡。类似DOM中的stopPropagation()
+// event.returnValue    默认为true， 如果为false，取消事件的默认行为，与preventDefault()类似
+// event.srcElement      // 只读，事件的目标，与DOM的target属性类似
+// event.type         // 事件类型
+
+// 1. IE中DOM0级事件绑定
+var btn = document.getElementById('myBtn');
+btn.onclick = function() {
+  var event = window.event;
+  event.srcElement === this // true
+  alert(event.type) // 'click'
+};
+
+// 2.IE中attachEvent绑定
+btn.attachEvent('onclick', function(event) {
+  alert(event.type) // 'click'
+})
+
+// 3.srcElement与this
+btn.onclick = function() {
+  window.event.srcElement === this // true
+};
+btn.attachEvent('onclick', function(event) {
+  event.srcElement === this // false
+});
+
+// 4.reutrnValue, 阻止默认事件
+var link = document.getElementById('myLink');
+link.onclick = function() {
+  window.event.returnValue = false; // 阻止链接跳转
+};
+
+// 5.cancelBubble，阻止事件冒泡
+var btn = document.getElementById('myBtn');
+btn.onclick = function() {
+  alert('Clicked!');
+  window.event.cancelBubble = true;
+};
+document.body.onclick = function() {
+  alert('body clicked'); // 不会显示
+}
+```
+
+- 跨浏览器的事件对象
+```js
+var EventUtil = {
+  // 添加处理函数
+  addHandler: function(element, type, handler) {
+    if (element.addEventListener) { // 如果支持DOM2级
+      element.addEventListener(type, handler, false);
+    } else if (element.attachEvent) { // IE10及以下版本
+      element.attachEvent("on" + type, handler);
+    } else {
+      element["on" + type] = handler;
+    }
+  },
+  // 移除处理函数
+  removeHandler: function(element, type, handler) {
+    if (element.removeEventListener) { // 如果支持DOM2级
+     element.removeEventListener(type, handler, false);
+    } else if (element.detachEvent) { // IE10及以下版本
+     element.detachEvent("on" + type, handler);
+    } else {
+     element["on" + type] = null;
+    }
+  },
+  // 获取事件对象 event
+  getEvent: function (event) {
+    return event ? event : window.event;
+  },
+  // 获取事件目标 target
+  getTarget: function (event) {
+    return event.target || event.srcElement;
+  },
+  // 阻止默认事件执行
+  preventDefault: function(event) {
+    if (event.preventDefault) {
+      event.preventDefault();
+    } else {
+      event.returnValue = false;
+    }
+  },
+  // 阻止冒泡
+  stopPropagation(event) {
+    if (event.stopPropagation) {
+      event.stopPropagation();
+    } else {
+      event.cancelBubble = true;
+    }
+  }
+};
+
+var btn = document.getElementById('myBtn');
+btn.onclick = function(event) {
+  // 获取event
+  event = EventUtil.getEvent(event);
+  
+  // 获取target
+  var target = EventUtil.getTarget(event);
+  
+  // 阻止事件默认行为
+  EventUtil.preventDefault(event);
+  
+  // 阻止事件冒泡
+  EventUtil.stopPropagation(event);
+}
+```
+
+### 事件类型
+
+
+### 内存和性能
+
+### 模拟事件
+
+## 第14章 表单脚本
+
+## 第15章 使用Canvas绘图
+
+## 第16章 HTML脚本编程
+
+## 第17章 错误处理与调试
+
+
