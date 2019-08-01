@@ -4250,10 +4250,153 @@ window.addEventListener('scroll', function(e) {
 // (3) blur 在失去焦点的元素上触发
 // (4) focus 在获得焦点的元素上触发
 
-//
 ```
 
 #### 鼠标与滚轮事件
+- mouseover 鼠标移动到区域时触发
+- mouseenter 鼠标移动到区域时触发，DOM3级规范，不冒泡，移动到子元素不会触发
+- mouseout  鼠标移出区域时触发
+- mouseleave 鼠标移出区域时触发，DOM3级规范，不冒泡，移出子元素时不会触发
+- mousedown 鼠标点击按下，鼠标左键、右键、滚轮键都会触发，建议不要取消默认行为，否则会导致click不触发
+- mouseup 鼠标点击按下后弹起，，鼠标左键、右键、滚轮键都会触发，建议不要取消默认行为，否则会导致click不触发
+- click 鼠标左键点击才会触发。
+- dblclick 只有触发了两次click，才会触发dblclick，如果click去掉了默认行为e.preventDefault()，不会触发该事件。
+- mousemove 在div区域移动时，不不停的触发，event里面会有对应的坐标
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>mouseEvent</title>
+		<script type="text/javascript" src="EventUtil.js"></script>
+	</head>
+	<body>
+		<div id="myDiv" style="width:100px;height:100px;border:5px solid #ccc;"></div>
+		<script type="text/javascript">
+			var myDiv = document.getElementById('myDiv');
+
+			EventUtil.addHandler(myDiv, 'mousedown', function() {
+			  console.log('mousedown');
+			});
+
+			EventUtil.addHandler(myDiv, 'mouseup', function() {
+			  console.log('mouseup');
+			});		
+
+			EventUtil.addHandler(myDiv, 'click', function() {
+			  console.log('click');
+			});	
+
+			EventUtil.addHandler(myDiv, 'dblclick', function() {
+			  console.log('dblclick');
+			});	
+
+			EventUtil.addHandler(myDiv, 'mouseover', function() {
+			  console.log('mouseover');
+			});	
+
+			EventUtil.addHandler(myDiv, 'mouseout', function() {
+			  console.log('mouseout');
+			});	
+
+			EventUtil.addHandler(myDiv, 'mouseenter', function() {
+			  console.log('mouseenter');
+			});	
+
+			EventUtil.addHandler(myDiv, 'mouseleave', function() {
+			  console.log('mouseleave');
+			});	
+			
+      EventUtil.addHandler(myDiv, 'mousemove', function(event) {
+        console.log('mousemove');
+        console.log(event)
+      });	
+				
+			// 鼠标移入div，再出来，打印顺序：mouseover; mouseenter;大量mousemove; mouseout; mouseleave; 
+			// 鼠标左键点击，打印顺序：mousedown; mouseup; click
+			// 鼠标左键双击，打印顺序：mousedown; mouseup; click；mousedown; mouseup; click；dblclick;
+			// 鼠标有点单机/双击，打印顺序: mousedown; mouseup; mousedown; mouseup;
+		</script>
+	</body>
+</html>
+```
+
+- 鼠标事件位置信息，event.clientX、event.clientY; event.pageX、event.pageY; event.screenX、event.screenY、event.offsetX
+```js
+// clientX，clientY，client区是浏览器可视区域
+// screenX, screenY, 是相对桌面屏幕的位置
+// pageX，pageY 是相对页面的位置，如果没有滚动的情况下，和client是一致的。e.pageX = document.documentElement.scrollLeft + e.clientX
+// offsetX, offsetY 是相对于目标元素边界的x、y坐标
+```
+![client与screen位置信息](images/client.png)
+
+- 修改键(鼠标点击+键盘Alt、Ctrl、Shift、win键) IE9+都支持，IE8及之前版本不支持metakey
+```js
+// e.altKey // Boolean 是否按下了Alt键
+// e.ctrlKey // Boolean 是否按下了Ctrl键
+// e.shiftKey // Boolean 是否按下了Shift键
+// e.metaKey // Boolean 是否按下了win键
+// click事件，点击时是否按下了某个键盘键
+EventUtil.addHandler(myDiv, 'click', function(e) {
+	e = EventUtil.getEvent(e);
+	var keys = [];
+
+	if (e.shiftKey) {
+		keys.push('shift');
+	}
+	if (e.ctrlKey) {
+		keys.push('ctrl');
+	}
+	if (e.altKey) {
+		keys.push('alt')
+	}
+	if (e.metaKey) {
+		keys.push('meta')
+	}
+	alert(keys.join(','))
+});	
+```
+- 相关元素 event.relatedTarget，mouseover和mouseout，还有event.toElement, event.fromElement, 否则为空
+
+- event.button, mousedown或mouseup判断点击的是鼠标左键(0)、右键(1)、中间滚轮键(2)?
+```js
+// 根据button属性，来判断是否点击了右键，阻止默认事件。
+var EventUtil = {
+   // 省略其他代码
+   getButton: function(event) {
+     if (document.implementation.hasFeature('MouseEvents', '2.0')) {
+       return event.button;
+     } else {  // IE8及之前的版本，兼容处理
+       switch (event) {
+         case 0:
+         case 1:
+         case 3:
+         case 5:
+         case 7:
+            return 0;
+         case 2:
+         case 6:
+            return 2;
+         case 4:
+            return 1;
+       }
+     }
+   }
+}
+```
+
+- mousewheel事件，鼠标滚动事件p377，chrome里面测试，event.wheelDelta 一次滚动120，但页面滚动距离是100，非标准，FireFox不支持，用DOMMouseScroll替代，非标准特性，不建议使用 https://developer.mozilla.org/zh-CN/docs/Web/Events/mousewheel
+
+- 触摸设备
+```js
+// dblclick不支持，双击浏览器会放大页面
+// mousemove会触发moseover和mouseout
+// 手指滚动页面时，会触发 mousewheel, scroll
+```
+
+#### 键盘与文本事件
+
 
 ### 内存和性能
 
