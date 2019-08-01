@@ -4122,7 +4122,138 @@ btn.onclick = function(event) {
 ```
 
 ### 事件类型
+DOM3级事件，规定了以下几类事件:
+- UI（用户界面）事件，当用户与页面上的元素交互时触发
+- 焦点事件，当元素获得或失去焦点时触发
+- 鼠标事件，当用户通过鼠标在页面执行操作时触发
+- 滚轮事件，当使用鼠标滚轮时触发
+- 文本事件，当在文档中输入文本时触发
+- 键盘事件，当用户通过键盘在页面执行操作时触发
+- 变动（mutation）事件，当DOM结构发生变化时触发
+#### UI事件
+- load事件，页面完全加载后，在window上触发; 当所有框架都加载完毕，在框架集上触发; 当图像加载完毕时，在img元素上触发; 当嵌入的内容加载完毕时，在object元素上触发;
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>测试事件类型</title>
+		<script type="text/javascript" src="EventUtil.js"></script>
+	</head>
+	<!-- 1. body元素上的onload事件 -->
+	<body onload="alert('Loaded!')">
 
+		<!-- 3.img load事件 -->
+		<img id="myImage" src="index.png" onload="alert('Image loaded')" onerror="alert('Image load error')">
+
+		<script type="text/javascript">
+			// 2.监听load事件
+			EventUtil.addHandler(window, 'load', function(event) {
+				alert('onload')
+			});
+
+			// 4.监听img load事件
+			var image = document.getElementById('myImage');
+			EventUtil.addHandler(image, 'load', function (event) {
+				event = EventUtil.getEvent(event);
+				alert(EventUtil.getTarget(event).src); // 显示img的src
+			})
+			// 依次输入的顺序，先加载图片、再window.onload，优先html元素内嵌的方法
+			// Image loaded
+			// file:///C:/Users/91670/Desktop/jsdemo/index.png
+			// Loaded!
+			// onload
+		</script>
+	</body>
+</html>
+```
+window.onload时，做一些操作
+```js
+// 1. 创建img元素并加载，只有设置了img的src属性，才会下载
+EventUtil.addHandler(window, 'load', function() {
+	var image = new Image(); // 等价于 document.createElement('img');
+	EventUtil.addHandler(image, 'load', function() {
+		alert('image loaded!');
+	});
+	image.src = 'index.png';
+	document.body.appendChild(image)
+});
+
+// 2. 动态创建加载script
+EventUtil.addHandler(window, 'load', function() {
+  var script = document.createElement('script');
+  EventUtil.addHandler(script, 'load', function() {
+  		alert('script loaded!');
+  	});
+  script.src = 'test.js';
+  document.body.appendChild(script);
+});
+
+// 3. 动态创建加载css
+EventUtil.addHandler(window, 'load', function() {
+  var link = document.createElement('link');
+  link.type = 'text/css';
+  link.rel = 'stylesheet';
+  EventUtil.addHandler(link, 'load', function() {
+  		alert('css loaded!');
+  	});
+  link.href = 'test.css';
+  document.getElementsByTagName('head')[0].appendChild(link);
+});
+```
+- unload事件，页面完全卸载后，在window上触发; 当所有框架都卸载后，在框架集上触发; 当嵌入的内容卸载完毕后，在object元素上触发; 页面完全卸载时dom被移除，不能再处理函数里做dom操作
+```js
+EventUtil.addHandler(window, 'unload', function() {
+  console.log('页面unload');
+});
+// 或者 <body onunload="alert(unloaded!)">
+
+```
+
+- resize事件，当窗口的大小发生改变时，在window或框架上触发
+```js
+EventUtil.addHandler(window, 'resize', function() {
+  console.log(`Resized, innerHeight: ${window.innerHeight}, innerWidth: ${window.innerWidth}`)
+});
+```
+- scroll事件，当用户滚动带滚动条的元素中的内容时，在window或框架上触发
+```js
+// 顶部类似阮一峰ES6网页的滚动进度条
+// <div id="posTop" style="position: fixed;top:0;height:2px;background: blue;"></div>
+// 右下角滚动百分比
+// <div id="pos" style="display:none;position:fixed;bottom: 100px;right:20px;padding:10px;background: #333;color:white;width:40px;text-align: center;border-radius:5px;"></div>
+
+window.addEventListener('scroll', function(e) {
+  let scrollTop = document.documentElement.scrollTop;
+  let total = document.documentElement.scrollHeight - window.innerHeight;
+  let persentage = parseInt(scrollTop/total*100);
+  console.log(scrollTop);  
+
+  document.getElementById('pos').style.display = scrollTop === 0 ? 'none' : 'block';
+  document.getElementById('pos').innerHTML = `${persentage}%`;
+  document.getElementById('posTop').style.width = `${persentage}%`;
+}, false)
+```
+- abort事件，当用户停止下载过程时，如果嵌入的内容没加载完，则在object元素上触发
+- error事件，当js发生错误时，在window上触发; 无法加载图像时，在img元素上触发; 当无法嵌入内容时，在object元素上触发; 当一个或多个框架无法加载时，在框架集上触发。第17章会继续讨论
+- select事件，当用户选择文本框（input或textarea）中的一个或多个字符时触发。详情见14章
+
+#### 焦点事件
+- blur事件，在元素失去焦点时触发，不会冒泡
+- focus事件，在元素得到焦点时触发，不会冒泡
+- focusin事件，在元素获得焦点时触发，会冒泡
+- focusout事件，在元素失去焦点时触发，会冒泡
+```js
+// 当焦点从一个元素移动到另一个元素，会依次触发下列事件
+// (1) focusout在失去焦点的元素上触发
+// (2) focusin在获得焦点的元素上触发
+// (3) blur 在失去焦点的元素上触发
+// (4) focus 在获得焦点的元素上触发
+
+//
+```
+
+#### 鼠标与滚轮事件
 
 ### 内存和性能
 
