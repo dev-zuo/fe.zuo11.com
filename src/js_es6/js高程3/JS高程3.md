@@ -4395,7 +4395,214 @@ var EventUtil = {
 // 手指滚动页面时，会触发 mousewheel, scroll
 ```
 
-#### 键盘与文本事件
+#### 键盘与文本事件 keydown、keypress、keyup
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>keypress</title>
+		<script type="text/javascript" src="EventUtil.js"></script>
+	</head>
+	<body>
+		<script>
+			EventUtil.addHandler(document.documentElement, 'keydown', function(e) {
+        console.log('keydown', e);
+      }); 
+      EventUtil.addHandler(document.documentElement, 'keyup', function(e) {
+        console.log('keyup', e);
+      }); 
+      EventUtil.addHandler(document.documentElement, 'keypress', function(e) {
+        console.log('keypress', e);
+      }); 
+      // 按下某个键后，依次打印 keydown, keypress, keyup
+      // 如果长按某个键，一次打印 keydown, keypress, keydown, keypress, keydown, keypress, keyup
+		</script>
+	</body>
+</html>
+```
+- event.keyCode（键码）, event.charCode（字符编码、ASCII码，小写a 97, 大写A 65， 0 48）
+```js
+// keydown/keyup里的event.keyCode感觉基本无大用
+// keypress 事件的event对象里，有charCode值，是按下的键对应的ASCII码
+// DOM3级，支持event.key, 就是按下键的名称。
+```
+
+- textInput事件，只有在可编辑区域中输入字符时才会触发这个事件。 IE9+
+```js
+// <input type="text" placeholder="测试">
+// 如果input中输入f，依次触发事件  keydown、keypress、textInput、keyup
+// evnet.data的值为输入的值如果改写会覆盖
+var textbox = document.getElementById("myText");
+EventUtil.addHandler(textbox, "textInput", function(event) {
+  event = EventUtil.getEvent(event);
+  if (event.data !== 'a') { // 只能输入a，其他字符串都不能输入
+    event.preventDefault(); // 如果阻止默认事件，则不会输入
+  }
+  alert(event.data);
+});
+
+```
+- 复合事件，IME输入法编辑器输入，暂时不知道在哪里可以用到，p384
+
+#### 变动事件(dom mutation)
+- DOMSubtreeModified，在DOM结构中发生变化时，在其他事件触发后，这个事件就会触发
+- DOMNodeRemoved, 在节点从父节点中删除时触发，被删除的节点还会触发 DOMNodeRemovedFromDocument 事件
+- DOMNodeInserted, 在一个节点作为子节点插入到另一个节点时触发, 被插入的节点还会触发 DOMNodeInsertedIntoDocument 事件
+- DOMAttrModified, 在特性修改后触发
+- DOMMCharacterDataModified, 在文本节点的值发生变化时触发
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>dom mutation</title>
+  </head>
+  <body>
+    <ul id="myList">
+      <li>Item 1</li>
+      <li>Item 2</li>
+      <li>Item 3</li>
+    </ul>
+  </body>
+</html>
+```
+- 删除节点，removeChild()、replaceChild(), 删除节点时，首先会触发DOMNodeRemoved事件
+```js
+<script type="text/javascript">
+  EventUtil.addHandler(window, 'load', function(event) {
+    var list = document.getElementById('myList');
+    EventUtil.addHandler(document, 'DOMSubtreeModified', function(event) {
+      alert(event.type);
+      alert(event.target);
+    });
+    EventUtil.addHandler(document, 'DOMNodeRemoved', function(event) {
+      alert(event.type);
+      alert(event.target);
+    });
+    EventUtil.addHandler(list.firstChild, 'DOMNodeRemovedFromDocument', function(event) {
+      alert(event.type);
+      alert(event.target);
+    });
+    list.parentNode.removeChild(list);
+  })
+  // 移除ul后打印顺序：ul元素先触发DOMNodeRemoved; ul的子元素触发DOMNodeRemovedFromDocument; body再触发DOMSubtreeModified
+  // DOMNodeRemoved, [object HTMLUListElement], DOMNodeRemovedFromDocument, [object Text], DOMSubtreeModified, [object HTMLBodyElement]
+</script>
+```
+- 插入节点, appendChild(), replaceChild()或insertBefore()向DOM中插入节点会触发DOMNodeInserted事件
+```js
+<script type="text/javascript">
+  EventUtil.addHandler(window, 'load', function(event) {
+    var list = document.getElementById('myList');
+    var item = document.createElement('li');
+    item.appendChild(document.createTextNode('Item 4'));
+    EventUtil.addHandler(document, 'DOMSubtreeModified', function(event) {
+      alert(event.type);
+      alert(event.target);
+    });
+    EventUtil.addHandler(document, 'DOMNodeInserted', function(event) {
+      alert(event.type);
+      alert(event.target);
+    });
+    EventUtil.addHandler(item, 'DOMNodeInsertedIntoDocument', function(event) {
+      alert(event.type);
+      alert(event.target);
+    });
+    list.appendChild(item)
+  })
+  // 创建一个li并append到ul里，li先触发DOMNodeInserted, li 再触发DOMNodeInsertedIntoDocument，ul再触发DOMSubtreeModified
+  // DOMNodeInserted, [object HTMLLIElement], DOMNodeInsertedIntoDocument, [object HTMLLIElement], DOMSubtreeModified, [object HTMLUListElement]
+</script>
+```
+
+#### HTML5事件
+- contextmenu，右键点击会触发，自定义右键菜单, 浏览器基本都支持
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>contextmenu</title>
+		<script type="text/javascript" src="EventUtil.js"></script>>
+	</head>
+	<body>
+		<div id="myDiv">
+			Right click or Ctrl+click me to get a custom context menu.
+		</div>
+		<div id="myMenu" style="position: absolute;visibility: hidden;background-color: silver">
+			<li><a href="#a">Item1</a></li>
+			<li><a href="#b">Item2</a></li>
+			<li><a href="#c">Item3</a></li>
+		</div>
+		<script>
+			EventUtil.addHandler(window, 'load', function (event) {
+				var div = document.getElementById('myDiv');
+				// 右键点击事件， 自定义右键菜单
+				EventUtil.addHandler(div, "contextmenu", function(event) {
+					event = EventUtil.getEvent(event);
+					console.log('contextmenu');
+					event.preventDefault(); 
+
+					var menu = document.getElementById('myMenu');
+					menu.style.left = event.clientX + 'px';
+					menu.style.top = event.clientY + 'px';
+					menu.style.visibility = 'visible';
+				});
+
+				EventUtil.addHandler(document, 'click', function(event) {
+					document.getElementById('myMenu').style.visibility = 'hidden';
+				})
+			})
+		</script>
+	</body>
+</html>
+```
+- beforeunload事件，当页面关闭时触发
+```js
+EventUtil.addHandler(window, 'beforeunload', function(event) {
+  var message = "是否确定退出？";
+  // 设置returnValue，且作为函数返回值，当关闭页面时，会弹出对应的提示
+  event.returnValue = message;
+  return message
+})
+```
+
+- DOMContentLoaded，在window.load之前执行，在形成完整的DOM树之后会触发，不理会图像、js文件、css文件其他资源是否加载完毕, IE9+
+```js
+EventUtil.addHandler(document, 'DOMContentLoaded', function(event) { 
+  alert('Content loaded');
+})
+```
+
+- readystatechange IE、Firefox支持，chrome不支持，这里不讨论，p390
+
+- pageshow, pagehide暂时感觉没什么作用，p394
+```js
+EventUtil.addHandler(window, 'load', function(event) {
+  EventUtil.addHandler(window, 'pageshow', function(event) { 
+    alert('pageshow');
+  });
+  EventUtil.addHandler(document, 'pagehide', function(event) { 
+    alert('pagehide');
+  });
+});
+```
+
+- hashchange，页面路径hash值改变，会触发hashchange事件(#ss)  IE8+
+```js
+EventUtil.addHandler(window, 'load', function(event) {
+  EventUtil.addHandler(window, 'hashchange', function(event) { 
+    console.log(event, event.oldURL, event.newURL);
+    console.log(location.hash);
+  });
+});
+```
+
+#### 设备事件
+- orientationchange事件
+#### 触摸与手势事件
+
 
 
 ### 内存和性能
