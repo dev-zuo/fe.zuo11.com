@@ -4600,12 +4600,88 @@ EventUtil.addHandler(window, 'load', function(event) {
 ```
 
 #### 设备事件
-- orientationchange事件
+- orientationchange事件，如果本地调试，可以装个nginx，然后通过局域网用手机访问看效果，**注意：1.微信内置页面，方向锁定了，无法触发该事件，待后续研究。2.由于现在的手机默认都是打开了方向锁定，所以一直是0，需要解除锁定，才能触发该事件**
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum=1.0,minimum=1.0,user-scalable=0" />
+		<title>devicemethod</title>
+		<script type="text/javascript" src="EventUtil.js"></script>
+		<script type="text/javascript" src="vconsole/vconsole.min.js"></script>
+	</head>
+	<body>
+		<div>window.orientation: <p id="orientationValue"></p></div>
+		<script type="text/javascript">
+			var vConsole = new VConsole(); 
+			EventUtil.addHandler(window, 'load', function (event) {
+				console.log('load')
+				var orientationValue = document.getElementById('orientationValue')
+				orientationValue.innerText = window.orientation
+				EventUtil.addHandler(window, 'orientationchange', function (event) {
+					console.log(event, window.orientation)
+					var orientationValue = document.getElementById('orientationValue')
+					orientationValue.innerText = `orientation changed: ${window.orientation}`
+				})
+			})
+			// 经测试安卓、iOS均支持，一共有3种情况：屏幕正常时，值为0; 横屏时，值为90; 反方向横屏时，只为-90;
+		</script>
+	</body>
+</html>
+```
 #### 触摸与手势事件
 
 
 
 ### 内存和性能
+- 事件委托，大量添加处理程序，会影响性能，尽量少添加处理事件，比如下面的代码： 
+```js
+/*
+<ul id="myLinks">
+  <li id="goSomeWhere">goSomeWhere</li>
+  <li id="doSomething">doSomething</li>
+  <li id="sayHi">sayHi</li>
+</ul>
+*/
+var item1 = document.getElementById('goSomeWhere');
+var item2 = document.getElementById('doSomething');
+var item3 = document.getElementById('sayHi');
+
+EventUtil.addHandler(item1, 'click', function(event) {
+  location.href = 'http://www.zuo11.com';
+});
+EventUtil.addHandler(item2, 'click', function(event) {
+  document.title = "I change the title";
+});
+EventUtil.addHandler(item3, 'click', function(event) {
+  alert('hi');
+});
+
+// 优化后的代码
+var links = document.getElementById('myLinks');
+EventUtil.addHandler(links, 'click', function(event) {
+  event = EventUtil.getEvent(event);
+  var target = EventUtil.getTarget(event);
+  switch (target.id) {
+    case 'goSomeWhere':
+      location.href = 'http://www.zuo11.com';
+      break;
+    case 'doSomething':
+      document.title = "I change the title";
+      break;
+    case 'sayHi':
+      alert('hi');
+      break;
+  }
+});
+```
+
+- 移除事件处理程序
+```js
+// 绑定的事件执行完成后，尽量释放掉。
+btn.onclick = null;
+```
 
 ### 模拟事件
 
