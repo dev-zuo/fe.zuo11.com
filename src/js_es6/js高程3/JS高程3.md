@@ -4995,6 +4995,410 @@ textbox.dispatchEvent(event);
 - IE中的事件模拟, p411，暂未发现比较实用的
 
 ## 第14章 表单脚本
+form元素表示表单，在JS中，对应的表单对象为HTMLFormElement 类型，继承自HTMLElement, 其独特的属性和方法如下：
+```js
+// - action 接受请求的URL
+// - enctype 请求的编码类型
+// - method 发送的http请求类型，get 或 post
+// - name 表单的名称
+// - target 等价于HTML的target特性，在何处打开 action URL。_blank 新窗口，_self 默认，在相同的框架中打开
+
+// - elements 表单中所有的控件集合 HTMLCollection
+// - length 表单中控件的数量
+// - reset() 将所有表单域重置为默认值
+// - submit() 提交表单
+
+// 1.获取表单元素
+var form = document.getElementById('form1');
+var firstForm = document.forms[0]; // 获取页面中的第一个表单
+var myForm = document.forms['form2']; // 获取页面中name为form2的表单
+
+
+// 2.提交表单
+// <input type='submit' value='Submit Form'> 通用提交按钮
+// <button type='submit'>Submit Form</button> 自定义提交按钮
+// <input type='image' src="graphic.gif"> 图像按钮
+// 点击按钮提交表单时，默认会触发submit，可以用preventDefault()来阻止默认的submit行为
+var form = docuemnt.getElementById('myForm');
+// 提交表单
+form.submit();
+EventUtil.addHandler(form, 'submit', function(event) {
+  // 获取事件对象
+  event = EventUtil.getEvent(event);
+  // 阻止默认事件
+  EventUtil.preventDefault(event);
+});
+
+
+// 3.重置表单
+form.reset();
+// 阻止表单重置
+EventUtil.addHandler(form, 'reset', function(event) {
+  // 获取事件对象
+  event = EventUtil.getEvent(event);
+  // 阻止默认事件
+  EventUtil.preventDefault(event);
+});
+
+// 4.表单字段
+form.elements[0] // 获取第一个字段
+form.elements['textbox1'] // 获取名为'textbox1'的字段，会是一个NodeList，可能不止一个
+form.elements.length // 获取表单中包含的字段数量
+
+// 5.表单字段属性
+// - disabled 是否被禁用
+// - value 当前字段提交给服务器的值，对文件字段来说，该属性只读。
+// - form 指向所属的表单指针，只读
+// - name 当前字段的名称
+// - readOnly 表示是否只读
+// - type 当前字段的类型，如checkbox, radio等
+// - tabIndex 表示当前字段的切换(tab)序号
+// 避免表单多次提交
+EventUtil.addHandler(form, 'submit', function(event) {
+  event = EventUtil.getEvent(event);
+  var target = EventUtil.getTarget(event);
+  // 取得提交按钮
+  var btn = target.elements['submit-btn'];
+  // 禁用按钮
+  btn.disabled = true;
+});
+
+// 6.表单字段方法
+// - focus() 聚焦
+// - blur() 移除焦点, 与focus相对应
+document.forms[0].elements[0].focus() // 聚焦
+// <input type="text" autofocus>  
+element.autofocus // true
+
+// 7.表单字段事件
+// blur 字段失去焦点时触发
+// change 对于<input>和<textarea>元素，在失去焦点且value值改变时触发；对于select元素，在其选项改变时触发
+// focus 当前字段获取焦点时触发
+```
+表单字段事件
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>form field event</title>
+    <script type="text/javascript" src="EventUtil.js"></script>
+  </head>
+  <body>
+    <form>
+        <input type='text' placeholder="请输入值">
+    </form>
+    <script>
+      var textbox = document.forms[0].elements[0];
+      console.log(textbox);
+
+      function fieldEventHandler(event) {
+        event = EventUtil.getEvent(event);
+        var target = EventUtil.getTarget(event);
+        switch(event.type) {
+          case 'focus':
+            // focus时，背景色改为黄色
+            target.style.backgroundColor = 'yellow'
+            break;
+          case 'blur':
+            target.style.backgroundColor = ''
+            break;
+          case 'change':
+            console.log(target.value)
+            break;
+        }
+      }
+      EventUtil.addHandler(textbox, 'focus', fieldEventHandler);
+      EventUtil.addHandler(textbox, 'blur', fieldEventHandler);
+      EventUtil.addHandler(textbox, 'change', fieldEventHandler);
+      </script>
+  </body> 
+</html>
+```
+
+### 文本框脚本
+两种方式文本框：input 单行文本框，textarea 多行文本框
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>text field</title>
+    <script type="text/javascript" src="EventUtil.js"></script>
+  </head>
+  <body>
+    <form>
+      <p>input 长度为25个字符，最多允许输入50个字符</p>
+      <input type='text' placeholder="请输入值" size="25" maxlength="50">
+
+      <p>input 长度为50个字符，最多允许输入5个字符</p>
+      <input type='text' placeholder="请输入值" size="50" maxlength="5">
+
+      <p>input 默认长度为size=20</p>
+      <input type='text' placeholder="请输入值">
+
+      <p>多行文本textarea 25行，5列</p>
+      <textarea rows="25" cols="5">initial value</textarea>
+    </form>
+    <script>
+      // 1.可以通过value属性，获得文本的值
+      var text = document.forms[0].elements[0];
+      EventUtil.addHandler(text, 'change', function(event) {
+        console.log(event.target.value)
+      });
+
+      // 2.focus后，选择所有文本或部分文本
+      EventUtil.addHandler(text, 'focus', function(event) {
+        // event.target.select()  选择所有
+        // text.setSelectionRange(3,4) 选择部分字段
+      });
+
+       // 3.select后，打印对应的值 IE9+
+       EventUtil.addHandler(text, 'select', function(event) {
+         console.log('text selected：' + text.value)
+      });
+
+      // 4.过滤输入，阻止keypress默认事件，input输入会无效
+      EventUtil.addHandler(text, 'keypress', function(event){
+        // 输入的值 event.key === String.fromCharCode(event.charCode)
+        console.log(event.key);
+        console.log(String.fromCharCode(event.charCode));
+
+        // 当某个条件时，执行下面的代码，会过滤输入
+        // event.preventDefault();
+
+        if (/[^\d]/.test(event.key)) { // 如果输入的非数字，不会生效
+            event.preventDefault();
+        }
+      });
+      
+      // 禁止粘贴，阻止这个事情后，会无法粘贴
+      EventUtil.addHandler(text, 'paste', function(event){
+          console.log('paste', event);
+          event.preventDefault();
+      });
+    </script>
+  </body> 
+</html>
+```
+### 操作粘贴版
+beforecopy, beforecut, beforepaste 不能取消copy、cut、paste操作，需要在copy\cut\paste事件中阻止默认事件，才能取消，主要是paste事件，可以修改copy后的内容. 书中的例子跑不起来，用了MDN看到的新方法
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>text field</title>
+    <script type="text/javascript" src="EventUtil.js"></script>
+  </head>
+  <body>
+    <form>
+      <p>据了解，为了让深圳市民能真正感知、体验到智慧新生活，深圳电信将以沉浸式体验为核心，计划展出5大版块内容：智慧城市、5G+智慧警务、智慧民生展播、VR直播、云VR游戏/云VR视频。另外，市民还有机会抢先体验福田中心区5G巴士精品路线。值得一提的是，5G时代，深圳的派出所借助5G网络已经解锁了各种破案"黑科技"，无人机、警用摩托车、AR眼镜、人脸识别……进一步提升警务效力，打造了首个5G智慧派出所。据了解，这其中离不开深圳电信运用5G+天翼云+专线+警务云应用融合创新的领先技术，这也是本次深圳5G体验周的重点内容。</p>
+      
+      <p>input 长度为25个字符，最多允许输入50个字符</p>
+      <textarea type='text' placeholder="请copy后粘贴信息" rows="20" cols="100"></textarea>
+    </form>
+    <script>
+      var text = document.forms[0].elements[0];
+      EventUtil.addHandler(text, 'change', function(event) {
+        console.log(event.target.value)
+      });
+
+      EventUtil.addHandler(text, 'paste', function(event){
+          console.log('paste', event)
+        //   event.preventDefault();
+      });
+
+      // 这个方法是重点，需要参考 https://developer.mozilla.org/en-US/docs/Web/API/Element/copy_event
+      EventUtil.addHandler(document, 'copy', function(event){
+          console.log('copy', event);
+          // 获取copy的内容
+          console.log(document.getSelection().toString());
+          // 在copy内容里加入信息
+          var msg = `\n ----------------------------\n 作者: guoqzuo \n 链接: https://developer.mozilla.org/en-US/docs/Web/API/Element/copy_event \n 标题：Element: copy event\n`
+          event.clipboardData.setData('text/plain', `${document.getSelection().toString()} ${msg}`);
+          event.preventDefault();
+      });
+
+      EventUtil.addHandler(document, 'cut', function(event){
+          console.log('cut', event)
+      });
+
+      EventUtil.addHandler(document, 'beforecut', function(event){
+          console.log('beforecut', event)
+      });
+
+      EventUtil.addHandler(document, 'beforecopy', function(event){
+          console.log('beforecopy', event)
+      });
+
+      EventUtil.addHandler(document, 'beforepaste', function(event){
+          console.log('beforepaste', event)
+      });
+    </script>
+  </body> 
+</html>
+```
+
+### HTML5约束验证API
+- 当input 有 required 时，点击submit后，如果输入为空，会提示不能为空
+- input的type属性，https://www.w3school.com.cn/html5/att_input_type.asp
+- pattern在submit时会做校验，看是否符合要求，不符合会提示，注意模式开头末尾不用加^和$符号
+```js
+// <input type="text" name="username" required pattern="\d+"><br><br>
+```
+- 表单元素或表单字段是否有效 xx.checkValidity() ，如果返回false则不符合要求，如果返回true则符合要求
+- 禁用验证
+```js
+// 在表单元素加入 novalidate
+// <form novalidate> 
+// 或者直接用js设置
+document.forms[0].noValidate = true;
+
+// 如果有多个submit按钮，可以让某个submit按钮不校验，在对应的input submit元素上，加入 formnovalidate即可
+// 或者用js设置为true
+document.forms[0].elements['btnValidate'].formNoValidate = true;
+```
+- 示例
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>html5 api</title>
+  </head>
+  <body>
+    <form novalidate>
+      username：
+      <input type="text" name="username" required pattern="\d+"><br><br>
+
+      email Type:
+      <input type="email" name="email"><br><br>
+
+      url type
+      <input type="url" name="url"><br><br>
+
+      color type
+      <input type="color" name="color"><br><br>
+
+      date type
+      <input type="date" name="date"><br><br>
+
+      time type
+      <input type="time" name="date"><br><br>
+
+      search type
+      <input type="search" name="search"><br><br>
+
+      tel type
+      <input type="tel" name="tel"><br><br>
+
+      range type
+      <input type="range" name="range"><br><br>
+
+      week type
+      <input type="week" name="week"><br><br>
+
+      数值范围
+      <input type="number" name="number" min="0" max="100" step="5"><br><br>
+
+
+      <input type="submit" value="提交"><br><br>
+      <input type="button" value="检测username input值是否有效" onclick="uncheckValidity()"><br><br>
+    </form>
+    <script>
+      // 获取 username 是否为必须输入
+      var isUsernameRequired = document.forms[0].elements['username'].required;
+      console.log(`isUsernameRequired: ${isUsernameRequired}`)
+
+      // 检测是否有效
+      function uncheckValidity() {
+          console.log('check')
+          alert(document.forms[0].elements['username'].checkValidity())
+      }
+    </script>
+  </body>
+</html>
+```
+
+### 选择框脚本
+选择框是通过select和option元素创建的。HTMLSelectElement类型还提供了下面的属性和方法
+```js
+// HTMLSelectElement属性及方法：
+// - add(newOption, relOption), 向select中插入新的option元素，其位置在相关项(relOption)之前
+// - remove(index) 移除给定位置的选项
+// - multiple 是否多选? 等价于HTML中的multiple特性
+// - options select控件中所有option元素的HTMLCollection
+// - selectedIndex: 基于0的选项中的索引，如果没有选中项，则值为-1，对于多选，只保存选项中第一列的索引
+// - size 选择框中可见的行数
+
+// HTMLOptionElement对象及方法
+// - index 当前options的索引
+// - label 当前选项的标签，等价于HTML特性中的label特性
+// - selected 是否被选中
+// - text 选项的文本
+// - value 选项的值
+```
+示例
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>select</title>
+  </head>
+  <body>
+    <select name="location" id="selLocation" multiple>
+      <option value="cn">China</option>
+      <option value="usa" selected>American</option>
+      <option value="jp" selected>Japan</option>
+      <option value="rus">Russia</option>
+    </select>
+    <script>
+      var sel = document.getElementById('selLocation');
+
+      // select的属性
+      console.log('multiple: ' + sel.multiple); // 是否为多选, true为多选，否则为false
+      console.log('selectedIndex: ' + sel.selectedIndex); // 如果没选中，返回-1，有选择或多个选择，返回第一个选择的index，select单选时默认为0
+      console.log('size: ' + sel.size); // 0
+      console.log('value: ' + sel.value); // 选中的值，为option value的值。单选或多选，只是第一个index的值。没选中，值为""
+      console.log('type: ' + sel.type); // 单选type为select-one, 多选值为select-multiple
+      console.log('options: ', sel.options) // 获取select的optinos HTMLCollection
+
+      // 每一个option选项，都是HTMLOptionElement对象
+      var option = sel.options[0] // 第一个option
+      console.log('option.index: ' + option.index); // 0
+      console.log('option.label: ' + option.label); // China
+      console.log('option.selected: ' + option.selected); // false
+      console.log('option.text: ' + option.text); // China
+      console.log('option.value: ' + option.value); // cn
+
+      // 获取select选择项的值
+      function getSelectedValue(selectObj) {
+          // 如果是单选，直接返回值
+          if (selectObj.type === 'select-one') {
+              return selectObj.value
+          }
+
+          var options = selectObj.options;
+          var selectArr = [];
+          for (let i = 0; i < options.length; i++) {
+              if (options[i].selected) {
+                  selectArr.push(options[i].value)
+              }
+          }
+          return selectArr.join(';')
+      }
+      console.log(getSelectedValue(sel));
+    </script>
+  </body>
+</html>
+```
+- 添加选项
+- 移除选项
+
+### 表单序列化
+### 富文本编辑器
 
 ## 第15章 使用Canvas绘图
 
