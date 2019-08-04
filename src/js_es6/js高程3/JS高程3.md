@@ -4831,6 +4831,168 @@ btn.onclick = null;
 ```
 
 ### 模拟事件
+> DOM2级事件并没有规定键盘事件，DOM3级事件才正式给出规定，需要iE9+
+
+可以用 document.createEvent('事件类型字符串') 方法创建event对象，然后用dispatchEvent(event)触发事件, 事件类型:
+- UIEvents: 一般的UI事件，鼠标和键盘事件都继承自UI事件，DOM3级中是UIEvent
+- MouseEvents: 一般的鼠标事件。DOM3级中是MouseEvent
+- MutationEvents: 一般的DOM变动事件， DOM3级中是MutationEvent
+- HTMLEvents: 一般的HTML事件，没有对应的DOM3级事件
+
+#### 模拟鼠标事件
+模拟鼠标事件，需要分三步：
+- 1.创建鼠标类型的事件对象, event = document.createEvent("MouseEvents")
+- 2.初始化事件对象, event.initMouseEvent(...args)
+```js
+// initMouseEvent()方法接收15个参数，与鼠标事件中的属性一一对象
+// - type(字符串): 要触发的事件类型, 如 'click'
+// - bubbles(布尔值): 事件是否能冒泡，为精确模拟鼠标事件，这个参数需要设置为true
+// - cancelable(布尔值): 事件是否可以取消？为精确模拟鼠标事件，这个参数需要设置为true
+// - view，与事件关联的视图，这个参数几乎总是设置为 docuemnt.defaultView
+// - detail(整数): 与事件有关的详细信息。这个值一般只有处理程序使用，但通常设置为 0 
+// - screenX(整数): 事件相对于屏幕的X坐标
+// - screenY(整数): 事件相对于屏幕的Y坐标
+// - clientX(整数): 事件相对于可视区域的X坐标
+// - clientY(整数): 事件相对于可视区域的Y坐标
+// - ctrlKey(布尔值): 是否按下了Ctrl键，默认为false
+// - altKey(布尔值): 是否按下了Alt键，默认为false
+// - shiftKey(布尔值): 是否按下了Shift键，默认为false
+// - metaKey(布尔值): 是否按下了Meta键，默认为false
+// - button(整数): 表示按下了哪个鼠标键，默认为0（左键）
+// - relatedTarget(对象): 表示事件相关的对象，只在模拟mouseover或mouseout时使用
+
+event.initEvent('click', true, true, document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+```
+- 3.触发事件dispatchEvent()
+```js
+var btn = document.getElementById('myBtn');
+// 触发事件
+btn.dispatchEvent(event);
+```
+
+- 示例: 模拟鼠标click
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum=1.0,minimum=1.0,user-scalable=0" />
+    <title>touchevent</title>
+    <script type="text/javascript" src="EventUtil.js"></script>
+    <script type="text/javascript" src="vconsole/vconsole.min.js"></script>
+  </head>
+  <body>
+    <input type="button" id="myBtn" value="模拟点击">
+    <script type='text/javascript'>
+      var myBtn = document.getElementById('myBtn');
+      EventUtil.addHandler(myBtn, 'click', function(event) {
+        console.log('click', event)
+        alert('点击了按钮')
+      })
+
+      setTimeout(function() {
+        // 模拟鼠标事件
+        var event = document.createEvent('MouseEvents');
+        event.initMouseEvent('click', true, true, document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        myBtn.dispatchEvent(event);
+      }, 5000)
+    </script>
+  </body>
+</html>
+```
+
+#### 模拟键盘事件
+模拟键盘事件:
+- 1.使用createEvent('keyboardEvent')创建键盘事件
+- 2.初始化事件对象 event.initKeyboardEvent(..args), 参数如下:
+```js
+// initkeyEvent() 有8个参数
+// - type(字符串): 表示触发事件类型, 如keydown，keyup
+// - bubbles(布尔值): 表示是否可以冒泡，默认设置为true
+// - cancelable(布尔值): 是否可以取消事件， 默认设置为true
+// - view 视图，设置为 document.defaultView
+// - key(字符串)， 按下键的键码
+// - location(整数), 0 表示主键盘，1 左，2右，3，数字键盘，4移动设备（虚拟键盘），5表示手柄
+// - modifies(字符串)，修改键列表，以空格分隔，如 "shift"
+// - repeat(整数)，在一行中按钮这个键多少次
+event.initKeyboardEvent('keydown', true, true, document.defaultView, 'a', 0, 'shift', 0);
+
+```
+- 3.触发事件
+```js
+var textbox = document.getElementById('myTextbox');
+textbox.dispatchEvent(event);
+```
+- 示例：模拟键盘事件，貌似只能模拟事件，但不能真正的输入。
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum=1.0,minimum=1.0,user-scalable=0" />
+    <title>touchevent</title>
+    <script type="text/javascript" src="EventUtil.js"></script>
+    <script type="text/javascript" src="vconsole/vconsole.min.js"></script>
+  </head>
+  <body>
+    <input type="text" id="myTextbox" autofocus>
+    <script type='text/javascript'>
+      var myTextbox = document.getElementById('myTextbox');
+      EventUtil.addHandler(myTextbox, 'keydown', function(event) {
+        console.log('keydown', event)
+      })
+      EventUtil.addHandler(myTextbox, 'keyup', function(event) {
+        console.log('keyup', event)
+      })
+      EventUtil.addHandler(myTextbox, 'keypress', function(event) {
+        console.log('keypress', event)
+      })
+
+      setTimeout(function() {
+        // 模拟键盘事件情况1
+        // var event = document.createEvent('KeyboardEvent');
+        // event.initKeyboardEvent('keydown', true, true, document.defaultView, 'a', 0, "shift", 0);
+        // myTextbox.dispatchEvent(event);
+
+        // var event2 = document.createEvent('KeyboardEvent');
+        // event2.initKeyboardEvent('keypress', true, true, document.defaultView, 'a', 0, "shift", 0);
+        // myTextbox.dispatchEvent(event2);
+
+        // var event3 = document.createEvent('KeyboardEvent');
+        // event3.initKeyboardEvent('keyup', true, true, document.defaultView, 'a', 0, "shift", 0);
+        // myTextbox.dispatchEvent(event3);
+
+        // 模拟键盘输入情况2  p409
+        var event = document.createEvent("Events");
+        event.initEvent('keydown', true, true);
+        event.view = document.defaultView;
+        event.altKey = false;
+        event.ctrlKey = false;
+        event.shiftKey = false;
+        event.metaKey = false;
+        event.keyCode = 65;
+        event.charCode = 65;
+        myTextbox.dispatchEvent(event)
+
+        // 模拟键盘输入情况3 https://developer.mozilla.org/zh-CN/docs/Web/API/KeyboardEvent/KeyboardEvent
+        // var event = new KeyboardEvent('keydown', {
+        //     key: "a"
+        // });
+        // var event2 = new KeyboardEvent('keypress', {
+        //     key: "a"
+        // });
+        // var event3 = new KeyboardEvent('keyup', {
+        //     key: "a"
+        // });
+        // myTextbox.dispatchEvent(event);
+        // myTextbox.dispatchEvent(event2);
+        // myTextbox.dispatchEvent(event3);
+      }, 3000)
+    </script>
+  </body>
+</html>
+```
+- IE中的事件模拟, p411，暂未发现比较实用的
 
 ## 第14章 表单脚本
 
