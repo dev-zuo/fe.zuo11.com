@@ -4601,6 +4601,9 @@ EventUtil.addHandler(window, 'load', function(event) {
 
 #### 设备事件
 - orientationchange事件，如果本地调试，可以装个nginx，然后通过局域网用手机访问看效果，**注意：1.微信内置页面，方向锁定了，无法触发该事件，待后续研究。2.由于现在的手机默认都是打开了方向锁定，所以一直是0，需要解除锁定，才能触发该事件**
+- deviceorientation事件、iOS http不支持，待后续测试https，安卓支持正常。
+- devicemotion事件，iOS、安卓 http都不支持，待后续测试https
+- 有一篇博客，图文介绍还不错，http://www.zhangyunling.com/725.html
 ```html
 <!DOCTYPE html>
 <html>
@@ -4613,26 +4616,170 @@ EventUtil.addHandler(window, 'load', function(event) {
 	</head>
 	<body>
 		<div>window.orientation: <p id="orientationValue"></p></div>
+		<div>deviceorientation: <p id="deviceorientation"></p></div>
+		<div>devicemotion: <p id="devicemotion"></p></div>
 		<script type="text/javascript">
 			var vConsole = new VConsole(); 
 			EventUtil.addHandler(window, 'load', function (event) {
 				console.log('load')
 				var orientationValue = document.getElementById('orientationValue')
 				orientationValue.innerText = window.orientation
+				// iPhone8 和红米6均可正常触发
+				// 一共有3种情况：屏幕正常时，值为0; 横屏时，值为90; 反方向横屏时，只为-90;
 				EventUtil.addHandler(window, 'orientationchange', function (event) {
-					console.log(event, window.orientation)
+					console.log('orientationchange', event, window.orientation)
 					var orientationValue = document.getElementById('orientationValue')
 					orientationValue.innerText = `orientation changed: ${window.orientation}`
 				})
+
+				// 经测试，iPhone8不能触发，红米6触发正常，http本地测试，可能需要https，待后续测试
+				EventUtil.addHandler(window, 'deviceorientation', function (event) {
+					console.log('deviceorientation', event)
+					var orientationValue = document.getElementById('deviceorientation')
+					orientationValue.innerText = `Alpha: ${event.alpha}, Beta：${event.beta}, Gamma: ${event.gamma}`
+				})
+
+				// 经测试、iPhone8、红米6 手机均不能正常触发，http本地测试，可能需要https，待后续测试
+				EventUtil.addHandler(window, 'devicemotion', function (event) {
+					console.log('devicemotion', event, event.acceleration, event.interval, event.accelerationIncludingGravity)
+					if (event.rotatioinRate !== null) {
+						var orientationValue = document.getElementById('devicemotion')
+						orientationValue.innerText = `Alpha: ${event.rotationRate.alpha}, Beta：${event.rotationRate.beta}, Gamma: ${event.rotationRate.gamma}`
+					} 
+				})
 			})
-			// 经测试安卓、iOS均支持，一共有3种情况：屏幕正常时，值为0; 横屏时，值为90; 反方向横屏时，只为-90;
 		</script>
 	</body>
 </html>
 ```
+
 #### 触摸与手势事件
+##### 触摸事件
+- touchstart 当手指触摸屏幕是触发
+- touchend 当手指从屏幕上移开时触发
+- touchmove 手指滑动时连续触发，如果调用preventDefault() 可以阻止滚动
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum=1.0,minimum=1.0,user-scalable=0" />
+    <title>touchevent</title>
+    <script type="text/javascript" src="EventUtil.js"></script>
+    <script type="text/javascript" src="vconsole/vconsole.min.js"></script>
+  </head>
+  <body>
+    touchstart: <div id="touchstart-output"></div>
+    touchend: <div id="touchend-output"></div>
+    touchmove: <div id="touchmove-output"></div>
+    <script type="text/javascript">
+      var vconsole = new VConsole()
+      function handleTouchEvent(event) {
+        switch(event.type) {
+          case 'touchstart':
+            var output = document.getElementById('touchstart-output')
+            output.innerHTML = `(${event.touches[0].clientX},${event.touches[0].clientY}})`
+            console.log(`Touch start: `, event)
+            break;
+          case 'touchmove':
+            var output = document.getElementById('touchmove-output')
+            event.preventDefault() // 可以阻止默认事件，可阻止微信内部下拉刷新操作，以及滚动事件
+            output.innerHTML = `(${event.changedTouches[0].clientX},${event.changedTouches[0].clientY}})`
+            console.log(`Touch move: `, event)
+            break;
+          case 'touchend':
+            var output = document.getElementById('touchend-output')
+            console.log(`Touch end: `, event)
+            output.innerHTML = `(${event.changedTouches[0].clientX},${event.changedTouches[0].clientY}})`
+            break;
+        }
+      }
+      EventUtil.addHandler(document, 'touchstart', handleTouchEvent)
+      EventUtil.addHandler(document, 'touchmove', handleTouchEvent)
+      EventUtil.addHandler(document, 'touchend', handleTouchEvent)
+    </script>
+  </body>
+</html>
+```
+##### 手势事件, 仅iOS支持
+非标准， https://developer.mozilla.org/en-US/docs/Web/API/Element/gestureend_event
+- gesturestart 两个手指触摸屏幕
+- gesturechange 两个手指，任意一手指滑动时触发，多次
+- gestureend 两个手指中的任何一个手指从屏幕移开时触发
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum=1.0,minimum=1.0,user-scalable=0" />
+    <title>touchevent</title>
+    <script type="text/javascript" src="EventUtil.js"></script>
+    <script type="text/javascript" src="vconsole/vconsole.min.js"></script>
+  </head>
+  <body>
+    touchstart: <div id="touchstart-output"></div>
+    touchend: <div id="touchend-output"></div>
+    touchmove: <div id="touchmove-output"></div>
+
+    <!-- 只有iOS支持 -->
+    gesturestart: <div id="gesturestart-output"></div>
+    gesturechange: <div id="gesturechange-output"></div>
+    gestureend: <div id="gestureend-output"></div>
+
+    <script type="text/javascript">
+      var vconsole = new VConsole()
+      function handleTouchEvent(event) {
+        switch(event.type) {
+          case 'touchstart':
+              var output = document.getElementById('touchstart-output')
+              output.innerHTML = `(${event.touches[0].clientX},${event.touches[0].clientY}})`
+              console.log(`Touch start: `, event)
+              break;
+          case 'touchmove':
+              var output = document.getElementById('touchmove-output')
+              // event.preventDefault()
+              output.innerHTML = `(${event.changedTouches[0].clientX},${event.changedTouches[0].clientY}})`
+              console.log(`Touch move: `, event)
+              break;
+          case 'touchend':
+              var output = document.getElementById('touchend-output')
+              console.log(`Touch end: `, event)
+              output.innerHTML = `(${event.changedTouches[0].clientX},${event.changedTouches[0].clientY}})`
+              break;
+        }
+      }
+      EventUtil.addHandler(document, 'touchstart', handleTouchEvent)
+      EventUtil.addHandler(document, 'touchmove', handleTouchEvent)
+      EventUtil.addHandler(document, 'touchend', handleTouchEvent)
 
 
+      // 只有iOS 支持
+      function handleGestureEvent(event) {
+        switch(event.type) {
+          case 'gesturestart':
+              var output = document.getElementById('gesturestart-output')
+              output.innerHTML = `rotation: ${event.rotation}, scale: ${event.scale}`
+              // 0, 1
+              break;
+          case 'gesturechange':
+              var output = document.getElementById('gesturechange-output')
+              output.innerHTML = `rotation: ${event.rotation}, scale: ${event.scale}`
+              break;
+              // 两只手指，放大，缩小
+          case 'gestureend':
+              var output = document.getElementById('gestureend-output')
+              output.innerHTML = `rotation: ${event.rotation}, scale: ${event.scale}`
+              break;
+        }
+      }
+      document.addEventListener('gesturestart', handleGestureEvent, false);
+      document.addEventListener('gesturechange', handleGestureEvent, false);
+      document.addEventListener('gestureend', handleGestureEvent, false);
+
+    </script>
+  </body>
+</html>
+```
 
 ### 内存和性能
 - 事件委托，大量添加处理程序，会影响性能，尽量少添加处理事件，比如下面的代码： 
