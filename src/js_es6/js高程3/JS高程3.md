@@ -6132,6 +6132,7 @@ fillText() 和 strokeText()绘制文本，或者文本边框。如fillRect类似
 - x：要绘制的x坐标
 - y: 要绘制的y坐标
 - with：可选，占用的最大像素宽度。
+
 ctx，2D绘图上下文有三个关于绘制文本的基础属性，如下：
 - font: 表示文本样式字体，用css指定字体的格式来。 如 "bold 10px Arial"
 - textAlign: 水平对齐方式 默认为start，还有end，center
@@ -6332,6 +6333,118 @@ drawImage()可以用来在画布上绘制图片，有三种传参方式：
   </body>
 </html>
 ```
+#### 阴影、渐变、模式(pattern)、合成(composite)
+![canvas_composite](images/canvas_composite.png)
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>canvas shadow gradient</title>
+    <style>
+      canvas { border:1px solid #ccc; }
+    </style>
+  </head>
+  <body>
+    <div>
+      <img src="img.png" height="100" width="100">
+    </div>
+    <canvas id="drawing" width="200" height="200"></canvas>
+    <canvas id="drawing2" width="200" height="200"></canvas>
+    <canvas id="drawing3" width="200" height="200"></canvas>
+    <script>
+      var drawing = document.getElementById('drawing');
+      var ctx = drawing.getContext('2d');
+
+      // 设置阴影
+      ctx.shadowOffsetX = 5;
+      ctx.shadowOffsetY = 5;
+      ctx.shadowBlur = 4; // 模糊像素
+      ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+
+      // 1.1 绘制红色矩形，会自带阴影
+      ctx.fillStyle = "#ff0000";
+      ctx.fillRect(10, 10, 50, 50);
+      // 1.2 绘制蓝色矩形，会自带阴影
+      ctx.fillStyle = "blue";
+      ctx.fillRect(30, 30, 50, 50);
+
+      // 清除阴影
+      ctx.shadowBlur = 0; // 模糊像素为0时，即没有模糊
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+
+      // 2.设置线性渐变
+      var gradient = ctx.createLinearGradient(130, 130, 160, 160); // 从(130,130)到(160,160)渐变
+      // var gradient = ctx.createLinearGradient(130, 130, 180, 180);
+      gradient.addColorStop(0, 'white'); // 渐变的起点色为白色
+      // gradient.addColorStop(0.4, 'pink'); 
+      // gradient.addColorStop(0.5, 'blue'); 
+      // gradient.addColorStop(0.7, 'red'); 
+      gradient.addColorStop(1, 'black'); // 渐变的结束色为白色
+      // 绘制红色矩形
+      ctx.fillStyle = 'red'
+      ctx.fillRect(100, 100, 50, 50);
+      // 绘制线性渐变矩形
+      ctx.fillStyle = gradient;
+      ctx.fillRect(130, 130, 50, 50)
+
+      // 3.绘制辐射渐变
+      var gradient = ctx.createRadialGradient(25, 175, 0, 25, 175, 30) // 绘制从(25,175)起点，0为半径到终点(25,175)，半径为30的渐变。
+      gradient.addColorStop(0, 'red')
+      gradient.addColorStop(1, 'blue')
+      ctx.fillStyle = gradient
+      ctx.fillRect(0, 150, 50, 50)
+
+      // 4.模式，其实就是重复的图像
+      var drawing2 = document.getElementById('drawing2');
+      var ctx2 = drawing2.getContext('2d');
+      var image = document.images[0]
+      var pattern = ctx2.createPattern(image, 'repeat'); // 创建重复的模式
+      // var pattern = ctx2.createPattern(image, 'repeat-x'); // 创建重复的模式
+      // var pattern = ctx2.createPattern(image, 'repeat-y'); // 创建重复的模式
+      // var pattern = ctx2.createPattern(image, 'no-repeat'); // 创建重复的模式
+      ctx2.fillStyle = pattern;
+      ctx2.fillRect(10, 10, 150, 150)
+
+      // 5. 导出canvas为图片，透明无背景
+      var imgurl = drawing.toDataURL('image/png');
+      console.log(imgurl)
+      var imgEle = document.createElement('img');
+      imgEle.src = imgurl;
+      document.body.appendChild(imgEle);
+
+      // 6.设置全局透明度ctx.globalAlpha
+      var drawing3 = document.getElementById('drawing3');
+      var ctx3 = drawing3.getContext('2d');
+      // 绘制红色矩形
+      ctx3.fillStyle = 'red';
+      ctx3.fillRect(10, 10, 50, 50);
+      // 修改全局透明度
+      ctx3.globalAlpha = 0.5;
+      // 绘制蓝色矩形
+      ctx3.fillStyle = "blue";
+      ctx3.fillRect(30, 30, 50, 50);
+      // 重置全局透明度
+      ctx3.globalAlpha = 1; // p462， 值为0，貌似有问题
+
+      // 7.ctx.globalCompositeOperation 设置后绘制的矩形怎样与先绘制的矩形结合。默认值为后绘制的位于先绘制的上方， source-over
+      // 绘制红色矩形
+      // ctx3.globalAlpha = 1;
+      ctx3.fillStyle = 'red'
+      ctx3.fillRect(100, 100, 50, 50)
+      // 设置合成（composite）操作
+      // 默认为 source-over
+      ctx3.globalCompositeOperation = 'destination-over' // 后绘制的位于先绘制的下面
+      // ctx3.globalCompositeOperation = 'destination-out' // 后绘制的图形擦除与先绘制的图形重叠部分
+      // 更多参数见p463
+      ctx3.fillStyle = 'rgba(0,0,255,1)'
+      ctx3.fillRect(125, 125, 50, 50)
+    </script>
+  </body>
+</html>
+```
+
 ### WebGL绘制3D图形
 
 ## 第16章 HTML脚本编程
