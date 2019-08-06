@@ -5875,9 +5875,7 @@ HTML5加入了canvas元素，IE9+支持，这个元素负责在页面中设定�
                 </div>
             </div>
         </div>
-
-
-    
+ 
         <div>
             <h2>ctx.arcTo(x1, y1, x2, y2, radius)</h2>
             <blockquote>
@@ -5924,7 +5922,6 @@ HTML5加入了canvas元素，IE9+支持，这个元素负责在页面中设定�
             </div>
         </div>
         
-
         <div>
             <h2>rect(x, y, width, height)</h2>
             <blockquote>
@@ -6068,7 +6065,6 @@ HTML5加入了canvas元素，IE9+支持，这个元素负责在页面中设定�
             ctx14.lineTo(200, 100);
             ctx14.stroke()
 
-
             var drawing15 = document.getElementById('drawing15');
             var ctx15 = drawing15.getContext('2d');
             ctx15.beginPath();
@@ -6088,7 +6084,6 @@ HTML5加入了canvas元素，IE9+支持，这个元素负责在页面中设定�
             ctx15.lineTo(200, 100);
             ctx15.stroke()
 
-
             var drawing16 = document.getElementById('drawing16');
             var ctx16 = drawing16.getContext('2d');
             ctx16.beginPath();
@@ -6098,6 +6093,243 @@ HTML5加入了canvas元素，IE9+支持，这个元素负责在页面中设定�
             // ctx16.moveTo(200, 100);
         </script>
     </body>
+</html>
+```
+- 绘制时钟表盘
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>canvas clock</title>
+  </head>
+  <body>
+    <canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;"></canvas>
+    <script>
+      var darwing = document.getElementById('drawing');
+      var ctx = darwing.getContext('2d');
+      // 开始路径
+      ctx.beginPath();
+
+      ctx.arc(100, 100, 99, 0, 2*Math.PI, false); // 外圆
+      // 由于画完圆后，坐标停留在(200, 100)的位置，需要移动下起点。
+      ctx.moveTo(192, 100);
+      ctx.arc(100, 100, 92, 0, 2*Math.PI, false); // 内圆
+
+      // 将绘图游标移动到中心点，画指针
+      ctx.moveTo(100, 100);
+      ctx.lineTo(100, 20);
+      ctx.moveTo(100, 100);
+      ctx.lineTo(50, 100);
+      ctx.stroke();
+    </script>
+  </body>
+</html>
+```
+#### 绘制文本
+fillText() 和 strokeText()绘制文本，或者文本边框。如fillRect类似，不必像绘制路径那样需要先beginPath()。绘制文本方法有4个参数，如下:
+- text：要绘制的文本字符串
+- x：要绘制的x坐标
+- y: 要绘制的y坐标
+- with：可选，占用的最大像素宽度。
+ctx，2D绘图上下文有三个关于绘制文本的基础属性，如下：
+- font: 表示文本样式字体，用css指定字体的格式来。 如 "bold 10px Arial"
+- textAlign: 水平对齐方式 默认为start，还有end，center
+- textBaseline: 垂直对齐方式，默认为bottom，还有 top, middle  
+![canvas_drawtext](images/canvas_fillText.png)
+示例代码如下：
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>canvas clock</title>
+  </head>
+  <body>
+    <p>208*200, 20*20小网格</p>
+    <canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;"></canvas>
+    <script>
+      var darwing = document.getElementById('drawing');
+      var ctx = darwing.getContext('2d');
+      // 开始路径
+      ctx.beginPath();
+
+      ctx.arc(100, 100, 99, 0, 2*Math.PI, false); // 外圆
+      // 由于画完圆后，坐标停留在(200, 100)的位置，需要移动下起点。
+      ctx.moveTo(192, 100);
+      ctx.arc(100, 100, 92, 0, 2*Math.PI, false); // 内圆
+
+      // 将绘图游标移动到中心点，画指针
+      ctx.moveTo(100, 100);
+      ctx.lineTo(100, 20);
+      ctx.moveTo(100, 100);
+      ctx.lineTo(50, 100);
+      ctx.stroke();
+
+      // 绘制参考线 20*20 的网格
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(0,0,0,.1)"
+      for (var i = 20; i < 200; i+=20) {
+        ctx.moveTo(0, i);
+        ctx.lineTo(200,i);
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, 200);
+      }
+      ctx.stroke();
+
+      // 绘制参考中心点
+      fillPoint(100, 40);
+      fillPoint(100, 80);
+      fillPoint(100, 120);
+      fillPoint(140, 60);
+      fillPoint(140, 100);
+      fillPoint(140, 140);
+      function fillPoint(x, y, color) {
+        var radius = 3;
+        ctx.fillStyle = "rgba(0,0,255)"
+        ctx.beginPath();
+        ctx.moveTo(x+radius, y)
+        ctx.arc(x, y, radius, 0, 2*Math.PI, false)
+        ctx.fill();
+      }
+
+      // 绘制文本
+      ctx.font = "bold 14px Arial"
+      ctx.fillStyle = "red"
+      // 默认textAlign为start
+      ctx.fillText('12', 100, 40, 20)
+
+      ctx.textAlign = "center"
+      ctx.fillText('12', 100, 80, 20)
+
+      ctx.textAlign = "end"
+      ctx.fillText('12', 100, 120, 20)
+
+      ctx.textBaseline = "bottom" // 默认textBaseline为bottom
+      ctx.fillText('12', 140, 60, 20)
+
+      ctx.textBaseline = "top"
+      ctx.fillText('12', 140, 100, 20)
+
+      ctx.textBaseline = "middle"
+      ctx.fillText('12', 140, 140, 20)
+
+      // 绘制measureText的测试矩形区域
+      ctx.beginPath();
+      ctx.strokeStyle = "rgb(0,0,255,.5)"
+      ctx.rect(40, 140, 40, 20)
+      ctx.stroke();
+
+      // 需要在40px宽度的位置绘制Hello，用measureText(str), 确定字体后再绘制
+      var fontsize = 100;
+      ctx.font = fontsize + "px Arial"
+      while (ctx.measureText('Hello').width > 40) {
+        fontsize--;
+        ctx.font = fontsize + "px Arial"
+      }
+      console.log(fontsize)
+      console.log(ctx.measureText('Hello').width)
+      ctx.textBaseline = "top";
+      ctx.textAlign = "start";
+      ctx.fillText('Hello', 40, 140)
+    </script>
+  </body>
+</html>
+```
+
+#### 变换
+暂时未发现大的用途，p453，以后再看，无意中用setTimeout写了个动画。
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>canvas 变换</title>
+  </head>
+  <body>
+    <canvas id="drawing" width="200" height="200" style='border:1px solid #ccc;'>A draw of something.</canvas>
+
+    <script>
+      var drawing = document.getElementById('drawing');
+      var ctx = drawing.getContext('2d');
+
+      ctx.beginPath();
+      ctx.arc(100, 100, 99, 0, 2*Math.PI, false);
+      ctx.moveTo(192, 100);
+      ctx.arc(100, 100, 92, 0, 2*Math.PI, false);
+      ctx.moveTo(60,100);
+      ctx.lineTo(100,100);
+      ctx.lineTo(100, 40);
+      ctx.stroke();
+
+      let x = 200, y = 200;
+      var timer = setInterval(function() {
+        if (y === 0) {
+          clearInterval(timer)
+        }
+        ctx.beginPath();
+        ctx.moveTo(100, 100);
+        ctx.lineTo(x, y)
+        ctx.stroke();
+        y = y - 10
+      }, 1000)
+    </script>
+  </body>
+</html>
+```
+#### 绘制图形
+drawImage()可以用来在画布上绘制图片，有三种传参方式：
+- 3参 ctx.drawImage(image, x, y) 在画布(x, y)位置，开始绘制image
+- 5参 ctx.drawImage(image, x, y, width, height)， 在画布(x, y)位置，开始绘制image，绘制的image宽为width,高为height
+- 9参 ctx.drawImage(image, 源图像x坐标, 源图像y坐标, 源图像width, 源图像height, 目标图像x坐标，目标图像y坐标，目标图像width，目标图像height)，从原图像的(x,y)坐标开始截图width*height大小的图片，绘制到画布(x,y)坐标位置
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>canvas 绘制图片</title>
+    <style>
+      canvas { border: 1px solid #ccc;}
+      .sec { margin-right:20px;}
+    </style>
+  </head>
+  <body>
+    <div>
+      <p>图片原大小: 1078*681，下面展示的大小 100*300</p>
+      <img src="cavasimg.png" width="1000" height="250">
+    </div>
+    <div style="display: flex;">
+      <div class="sec"> 
+        <p>ctx.drawImage(image, 10, 10)</p>
+        <canvas id="drawing" width="200" height="200">A draw of something.</canvas>
+      </div>
+      <div class="sec">
+        <p> ctx2.drawImage(image, 10, 10, 100, 50)</p>
+        <canvas id="drawing2" width="200" height="200">A draw of something.</canvas>
+      </div>
+      <div class="sec">
+        <p>ctx3.drawImage(image, 100, 0, 150, 150, 10, 10, 150, 150)</p>
+        <canvas id="drawing3" width="200" height="200">A draw of something.</canvas>
+      </div>
+    </div>
+
+    <script>
+      var image = document.images[0]
+
+      var drawing = document.getElementById('drawing');
+      var ctx = drawing.getContext('2d');
+      ctx.drawImage(image, 10, 10) // 从(10,10) 开始绘制image，不改变原图大小
+
+      var drawing2 = document.getElementById('drawing2');
+      var ctx2 = drawing2.getContext('2d');
+      ctx2.drawImage(image, 10, 10, 100, 50) // 从(10,10) 开始绘制image，设置绘制的图片大小为100*50
+
+      var drawing3 = document.getElementById('drawing3');
+      var ctx3 = drawing3.getContext('2d');
+      ctx3.drawImage(image, 100, 0, 150, 150, 10, 10, 150, 150) 
+      // 从原图像的(100, 0)坐标开始，截图宽150高150的图片，然后在画布(10,10)的位置开始绘制图形，宽为1500,高为150
+    </script>
+  </body>
 </html>
 ```
 ### WebGL绘制3D图形
