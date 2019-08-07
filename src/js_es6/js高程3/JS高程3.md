@@ -6239,7 +6239,7 @@ ctx，2D绘图上下文有三个关于绘制文本的基础属性，如下：
 ```
 
 #### 变换
-暂时未发现大的用途，p453，以后再看，无意中用setTimeout写了个动画。
+暂时未发现大的用途，p453，以后再看，无意中用setTimeout写了个动画。但canvas有专门的动画函数window.requestAnimationFrame()，待后续研究
 ```html
 <!DOCTYPE html>
 <html>
@@ -6444,11 +6444,163 @@ drawImage()可以用来在画布上绘制图片，有三种传参方式：
   </body>
 </html>
 ```
+#### 动画、物理效果、碰撞检测等
+详情待后续学习 <<HTML5 Canvas核心技术>> 图形、动画与游戏开发 时再研究
 
 ### WebGL绘制3D图形
+WebGL是针对Canvas的3D上下文，浏览器中使用的WebGL就是基于OpenGL ES2.0制定的，这里暂不讨论，后面有时间学习 <<WebGL入门指南>> 时，再研究这一块。
+```js
+var gl = drawing.getContext("experimental-webgl") // 创建webgl上下文，"experimental-webgl"，实验性的webgl
+```
 
 ## 第16章 HTML脚本编程
+HTML5规范定义了很多Javascript API，用来简化此前实现起来困难的任务
+### 跨文档消息传送
+与iframe内嵌的网页通信，利用postMessage()，与message事件监听，下面是示例xdm.html的源码:
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>xdm-document</title>
+  </head>
+  <body>
+    <div id="msg"></div>
+    <p>跨文档消息传送(XDM)：</p>
+    <iframe src="iframe.html" width="300" height="300"></iframe>
+    <script>
+      window.onload = function() {
+        setTimeout(function () {
+          try {
+            console.log('开始postmessage')
+            document.getElementsByTagName('iframe')[0].contentWindow.postMessage('1111', 'http://127.0.0.1/xdm/xdm.html')
+          } catch(e) {
+            console.log(e)
+          }
+        }, 2000)
+        window.onmessage = function(event) {
+          var msg = document.getElementById('msg');
+          msg.innerHTML = event.data
+          console.log(event)
+          console.log('接收到消息：', event.data)
+        }
+      }
+    </script>
+  </body>
+</html>
+```
+iframe.html代码如下:
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>xdm-document2</title>
+  </head>
+  <body>
+    跨文档传输消息:
+    <div id="msg"></div>
+    <script>
+      window.onmessage = function(event) {
+        var msg = document.getElementById('msg');
+        msg.innerHTML = event.data
+        console.log(event)
+        console.log('接收到消息：', event.data)
+        event.source.postMessage('消息已成功收到！', 'http://127.0.0.1/xdm/iframe.html')
+        console.log('消息已收到')
+      }
+    </script>
+  </body>
+</html>
+```
+### 原生拖放
+**该章节由于没有实例，且重要部分介绍内容有两处与实际不符，不好理解，不建议阅读本章来学习原生拖放**
+> HTML标签draggable属性，表示是否可拖动，img和a标签默认为true是可拖动的，其他元素默认为false, 无法拖动。如果想让某个区域成为可放置区域，只需要将该区域dragover事件，阻止其默认行为
 
+拖动某个元素时，会依次触发**dragstart, drag, dragend** 事件。当某个元素被拖动到一个有效的目标位置时，目标元素会依次触发**dragenter, dragover**，**dragleave(不可放置)或drop(可放置)**
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>drag demo</title>
+    <style>
+      .sec-content { width:600px;height: 400px;border:1px solid #ccc; }
+      .dragdiv {width:50px; height:50px;border:1px solid blue; margin-right:10px;}
+      .flexdiv { display: flex;}
+      #square1 { display: flex; flex-wrap: wrap}
+    </style>
+  </head>
+  <body>
+    <div>
+      <p class="sec-title">可拖动模块</p>
+      <div id="flexdiv" class="flexdiv">
+        <div id="dragdiv1" class="dragdiv" draggable="true">1</div>
+        <div id="dragdiv2" class="dragdiv" draggable="true">2</div>
+        <div id="dragdiv3"class="dragdiv" draggable="true">3</div>
+        <div id="dragdiv4" class="dragdiv" draggable="true">4</div>
+      </div>
+    </div>
+
+    <div>
+      <p class="sec-title">放置区域1</p>
+      <div id="square1" class="sec-content">
+      </div>
+    </div>
+
+    <script>
+      var flexdiv = document.getElementById('flexdiv');
+      flexdiv.addEventListener('dragstart', dragdivHandle, false);
+      flexdiv.addEventListener('drag', dragdivHandle, false);
+      flexdiv.addEventListener('dragend', dragdivHandle, false);
+
+      var square1 = document.getElementById('square1');
+      square1.addEventListener('dragenter', squareEventHandle, false);
+      square1.addEventListener('dragover', squareEventHandle, false);
+      square1.addEventListener('dragleave', squareEventHandle, false);
+      square1.addEventListener('drop', squareEventHandle, false);
+
+      function dragdivHandle(event) {
+        console.log(event.type)
+        switch(event.type) {
+          case 'dragstart':
+            // 针对拖动元素，设置event.effectAllowed
+            // event.dataTransfer.effectAllowed = 'copy'; // 这个设置与不设置貌似没什么作用
+            event.dataTransfer.setData('Text', event.target.id)
+            break;
+        }
+      }
+
+      function squareEventHandle(event) {
+        console.log(event.type)
+        switch(event.type) {
+          // case 'dragenter': // JS高程3里面p482内容: 如果想要让元素成为可放置区域，需要这里也阻止默认行为，但实际不用
+          //   event.preventDefault();
+          //   break;
+          case 'dragover':
+            event.preventDefault(); // 取消默认操作，可以让元素成为可放置区域
+            // 针对放置目标，设置event.dropEffect
+            // event.dataTransfer.dropEffect = 'copy'; // 这个设置与不设置貌似没什么作用
+            break;
+          case 'drop': // 该操作是动作执行的核心
+            // 防止火狐下，每次拖拽都会打开新的标签页
+            event.stopPropagation(); //阻止冒泡
+            event.preventDefault(); // 阻止默认事件
+
+            var id = event.dataTransfer.getData('Text');
+            console.log(id)
+            // 如果克隆了节点，不会删除源节点，如果通过getElementById获取对应的节点，会删除原来拖动的节点
+            // 如果是拖拽文件到该区域
+            console.log(event.dataTransfer.files); // 得到files数组，里面都是File文件对象
+            square1.appendChild(document.getElementById(id).cloneNode(true))
+            break;
+        }
+      }
+
+    </script>
+  </body>
+</html>
+```
 ## 第17章 错误处理与调试
 
 
