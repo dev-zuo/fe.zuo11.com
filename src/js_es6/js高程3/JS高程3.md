@@ -6515,7 +6515,7 @@ iframe.html代码如下:
 ```
 ### 原生拖放
 **该章节由于没有实例，且重要部分介绍内容有两处与实际不符，不好理解，不建议阅读本章来学习原生拖放**
-> HTML标签draggable属性，表示是否可拖动，img和a标签默认为true是可拖动的，其他元素默认为false, 无法拖动。如果想让某个区域成为可放置区域，只需要将该区域dragover事件，阻止其默认行为
+> HTML标签draggable属性，表示是否可拖动，img和a标签、选中的文本默认为是可拖动的，其他元素默认为false, 无法拖动。如果想让某个区域成为可放置区域，只需要将该区域dragover事件，阻止其默认行为
 
 拖动某个元素时，会依次触发**dragstart, drag, dragend** 事件。当某个元素被拖动到一个有效的目标位置时，目标元素会依次触发**dragenter, dragover**，**dragleave(不可放置)或drop(可放置)**
 ```html
@@ -6601,6 +6601,129 @@ iframe.html代码如下:
   </body>
 </html>
 ```
+
+### 媒体元素video/audio
+HTML5新增了两个与媒体相关的标签，让开发人员不必依赖任何插件就能在网页中嵌入音频与视频内容。标签为video和audio，IE9+ 支持。视频支持格式video/mp4; video/ogg; video/webm; 音频支持格式 audio/mp4; audio/mpeg(mp3); audio/ogg; audio/wav; 
+
+![video元素](images/video.png)
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>video</title>
+  </head>
+  <body>
+    <!-- 嵌入视频, 如果浏览器不支持会显示Video element not support -->
+
+    <video src="最后一公里.mp4" controls>Video element not support</video>
+    <video src="最后一公里.mp4">Video element not support</video>
+
+    <video id="video" src="最后一公里.mp4" controls poster="posterimg.png">Video element not support</video>
+
+    <video src="最后一公里.mp4" controls poster="posterimg.png" width="300">Video element not support</video>
+
+    <!--- 如果单独设置了autoplay，无法播放，需要再加一个muted属性才能自动播放，muted是让视频静音-->
+    <video src="最后一公里.mp4" controls poster="posterimg.png" width="300" autoplay muted>Video element not support</video>
+
+    <div>
+        <input type="button" onclick="play()" value="播放">
+        <input type="button" onclick="pause()" value="暂停">
+        <span id="curPlayTime"></span>/<span id="totalPlayTime"></span>  音量：<span id="volume"></span>
+    </div>
+    <script>
+      var video = document.getElementById('video')
+      // 无效
+      // setTimeout(function() {
+      //   console.log(video)
+      //   video.play()
+      // }, 5000)
+      // 需要点击事件才能触发，如果一进来直接调用函数会无效，除非播放时加如muted属性无声音。放在oncanplay里也无效
+      function play() {
+        console.log('video.play')
+        video.play()
+      }
+      function pause() {
+        console.log('video.pause')
+        video.pause()
+      }
+      var curPlayTimeEle = document.getElementById('curPlayTime');
+      var totalPlayTimeEle = document.getElementById('totalPlayTime');
+      var volumeEle = document.getElementById('volume');
+      // 只有在视频可以播放时才能获取到视频总时长
+      video.oncanplay = function() {
+        // video.play()
+        var duration = Math.ceil(video.duration)
+        totalPlayTimeEle.innerHTML = Math.floor(duration / 60) + '分' + duration % 60 + '秒';
+        console.log(video.duration);
+      }
+      // 更新当前播放时长及音量
+      setInterval(() => {
+        curPlayTimeEle.innerHTML = video.currentTime;
+        volumeEle.innerHTML = video.volume;
+      }, 250);
+    </script>
+  </body>
+</html>
+```
+- audio
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>video</title>
+  </head>
+  <body>
+    <!-- 嵌入audio, 如果浏览器不支持会显示Video element not support -->
+    <p>播放mp4声音: 最后一公里.mp4</p>
+    <audio src="最后一公里.mp4" controls>audio element not support</audio>
+
+    <p>播放mp3声音: 王菲 - 匆匆那年.mp3</p>
+    <audio id="audio" src="王菲 - 匆匆那年.mp3" controls>audio element not support</audio>
+    <div>
+        <input type="button" onclick="play()" value="播放">
+        <input type="button" onclick="pause()" value="暂停">
+    </div>
+    <script>
+      var audio = document.getElementById('audio')
+      audio.oncanplaythrough = function() {
+        console.log('可以播放了')
+        // 这样也无效，还是要用按钮click触发
+        // chrome 和 firefox无效，IE11有效
+        // audio.play()
+      }
+      function play() {
+        console.log('audio.play')
+        audio.play()
+      }
+      function pause() {
+        console.log('audio.pause')
+        audio.pause()
+      }
+    </script>
+  </body>
+</html>
+```
+
+### 历史状态管理
+```js
+// 在不加载新页面的情况下，改变当前的url
+history.pushState({name: 'test'}, 'page', 'event.html')
+```
 ## 第17章 错误处理与调试
+
+## 第20章 JSON
+
+## 第21章 Ajax与Comet
+
+## 第22章 高级技巧
+
+## 第23章 离线应用与客户端存储
+
+## 第24章 最佳实践
+
+## 第25章 新兴的API
 
 
