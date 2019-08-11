@@ -7380,7 +7380,158 @@ function gzhM_test(app, data, req, res) {
 - Coment
 - 服务器发送事件
 - Web Sockets
+
 ## 第22章 高级技巧
+### 高级函数
+- 安全的类型检测
+```js
+// 判断一个值是否为数组
+if (Object.prototype.toString.call(value) === '[Object Array]') {
+  // value 是数组
+}
+// 判断一个值是否为函数
+function isFunctioin(value) {
+  return Object.prototype.toString.call(value) === '[Object Function]'
+}
+```
+- 作用域安全的构造函数
+```js
+// 构造函数是一个使用new操作符调用的函数
+function Person(name, age, job) {
+  this.name = name;
+  this.age = age;
+  this.job = job;
+}
+var person = new Person('guoqzuo', 20, 'it')
+// 上面会正常执行。如果忘了写new，this会直接指向window，各个属性会直接赋值到window上
+var person2 = Person('guoqzuo', 20, 'it'); // person2 为 undefined， window.name  为 "guoqzuo"
+
+// 作用域安全的构造函数
+function Person(name, age, job) {
+  if (this instanceof Person) {
+    this.name = name;
+    this.age = age;
+    this.job = job;
+  } else {
+    return new Person(name, age, job);
+  }
+}
+
+// p599 待看完面向对象程序设计再看
+```
+
+- 惰性载入函数，惰性载入表示函数执行的分支仅会发生一次。如果函数里包含if判断分支，且函数需要多次调用，如果不优化，每次调用都会执行if分支判断。优化后if只会在第一次执行，不会每次执行
+```js
+// 函数里多if判断，函数可能被多次调用，每次调用，都会执行if判断
+function createXHR() {
+  if (typeof XMLHttpRequest !== 'undefined') {
+    return new XMLHttpRequest()
+  } else if (typeof ActiveXObject !== 'undefined') {
+    // ie处理方式省略
+  } else {
+    throw new Error("No XHR object available")
+  }
+}
+
+// 惰性载入函数改造有两种方法
+// 方法一: 第一次在函数第一次执行时就用用if分支的内容覆盖原有函数
+function createXHR() {
+  if (typeof XMLHttpRequest !== 'undefined') {
+    createXHR = function() {
+      return new XMLHttpRequest()
+    }
+  } else if (typeof ActiveXObject !== 'undefined') {
+     createXHR = function() {
+      // ie处理方式省略
+    }
+  } else {
+    createXHR = function() {
+      throw new Error("No XHR object available")
+    }
+  }
+  return createXHR();
+}
+
+// 方法二: 立即执行函数，在代码首次载入时损失一点性能。以后每次调用就都不用if判断了。
+var createXHR = (function() {
+  if (typeof XMLHttpRequest !== 'undefined') {
+    return function() {
+      return new XMLHttpRequest()
+    }
+  } else if (typeof ActiveXObject !== 'undefined') {
+    return function() {
+      // ie处理方式省略
+    }
+  } else {
+    return function() {
+      throw new Error("No XHR object available")
+    }
+  }
+})()
+
+```
+- 函数绑定, 使用闭包，bind修正作用域
+```js
+var handler = {
+  message: "Event handled",
+  handleClick: function(event) {
+    alert(this.message)
+  }
+};
+var btn = document.getElementById('my-btn');
+btn.addEventListener('click', handler.handleClick);
+// 点击后alert的是undefined, this指向了dom按钮，而非handle
+
+// 1.用闭包将函数绑定到指定环境
+var handler = {
+  message: "Event handled",
+  handleClick: function(event) {
+    alert(this.message)
+  }
+};
+var btn = document.getElementById('my-btn');
+btn.addEventListener('click', function(event) {
+  handler.handleClick(event)
+});
+
+// bind 函数的实现
+function bind(fn, context) {
+  return function() {
+    return fn.apply(context, arguments)
+  }
+}
+var handler = {
+  message: "Event handled",
+  handleClick: function(event) {
+    alert(this.message)
+  }
+};
+var btn = document.getElementById('my-btn');
+btn.addEventListener('click', bind(handler.handleClick, handler));
+
+
+// ES5 原生支持bind，可直接使用
+var handler = {
+  message: "Event handled",
+  handleClick: function(event) {
+    alert(this.message)
+  }
+};
+var btn = document.getElementById('my-btn');
+btn.addEventListener('click', handler.handleClick.bind(handler));
+```
+
+- 函数柯里化
+
+
+### 防篡改对象
+- 不可扩展对象
+- 密封的对象
+- 冻结的对象
+### 高级定时器
+### 自定义事件
+### 拖放
+
 
 ## 第23章 离线应用与客户端存储
 
