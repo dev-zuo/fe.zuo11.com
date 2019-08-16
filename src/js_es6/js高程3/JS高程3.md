@@ -7521,15 +7521,185 @@ var btn = document.getElementById('my-btn');
 btn.addEventListener('click', handler.handleClick.bind(handler));
 ```
 
-- 函数柯里化
+- 函数柯里化（主要还是闭包，call，bind相关, 待完善）
 
 
 ### 防篡改对象
-- 不可扩展对象
-- 密封的对象
-- 冻结的对象
+由于JS任何对象都可以被在同一环境中运行的代码修改，开发人员很可能会意外的修改别人的代码。未防止这种情况，ES5出了三个函数来定义防篡改对象。
+（第6章讨论了对象属性的问题，可以通过手工设置每个属性的 Configurable、Writable、Enumerable，来防止对象被修改。和ES5新出的功能类似。）
+- 不可扩展对象，不能为对象添加属性和方法，Object.preventExtensions(需要操作的对象)
+```js
+var person = { name: 'guoqzuo'};
+Object.preventExtensions(person); // 不可扩展
+person.age = 29; // 添加的属性会无效，不可扩展
+alert(person.age); // undefined
+```
+- 密封的对象，不能扩展、且不能删除属性和方法 Object.seal(需要操作的对象)
+```js
+var person = { name: 'guoqzuo'};
+Object.seal(person); // 密封的对象
+
+person.age = 29; // 添加的属性会无效, 不可扩展
+alert(person.age); // undefined
+
+delete person.name; // 删除会无效，密封的对象
+alert(person.name); // guoqzuo
+```
+- 冻结的对象，不可扩展、又密封(不能删除属性和方法)，且无法修改属性和方法。Object.freeze(需要操作的对象)
+```js
+var person = { name: 'guoqzuo'};
+Object.freeze(person); // 密封的对象
+
+person.age = 29; // 添加的属性会无效, 不可扩展
+alert(person.age); // undefined
+
+delete person.name; // 删除会无效，密封的对象
+alert(person.name); // guoqzuo
+
+person.name = "Greg"; 
+alert(person.name); // guoqzuo
+
+// 判断一个对象是否是可扩展的
+Object.isExtensible(person); // false
+// 判断一个对象是否是可密封的
+Object.isSealed(person); // true
+// 判断一个对象是否是冻结的
+Object.isFrozen(person); // true
+```
+
 ### 高级定时器
+- JS是运行于单线程环境中的，setTimeout和setInterval并不是开一个线程来执行对应的代码。而是将代码加入到一个队列，等待执行。
+- 设定一个150ms后执行的定时器不代表150ms后代码立即执行，他表示代码会在150ms后被加入到队列中。如果在这个时间点，队列没有其他东西，这个代码就会被执行。
+```js
+// 下面的代码中按钮点击后，会将onclick事件处理程序加入到队列，该程序执行后，再设置定时器，再有250ms才执行定时器代码
+// 但如果onclick事件处理程序执行了300ms，那定时器代码最早的执行时机就是300ms后。
+var btn = document.getElementById('my-btn');
+btn.onclick = function() {
+  setTimeout(function() {
+    document.getElementById('message').style.visibility = 'visible'
+  }, 250)
+}
+```
+- 1.setInterval的缺陷，比如click处理函数是setInterval，每隔200ms执行一个内容。当onclick处理程序执行后，会在200ms/400ms/600ms 位置添加处理程序。假设处理了300ms，第一个程序会在300ms执行。第二个程序会在400ms执行。这样就不是相同的间隔执行了。
+```js
+// 为了让每次处理都在相同的间隔里，可以使用链式的setTimeout（setTimeout里调用setTimeout执行内容）来代替setInterval()
+// 这样做的好处是，在第一个定时器未执行完前，不会像队列插入新的定时器代码
+setTimeout(function() {
+  // 处理中
+  setTimeout(arguments.callee, 200); // 获取当前函数执行的引用
+}, 200)
+
+// 示例
+setTimeout(function() {
+  var div = document.getElementById('myDiv');
+  left = parseInt(div.style.left) + 5;
+  display.style.left = left = 'px';
+  
+  if (left < 200) {
+    setTimeout(arguments.callee, 50);
+  }
+}, 50)
+```
+
+- 2.如果某个循环处理时间较长可能会让用户等待的事件比较久，如果代码运行超过特定时间，会提升错误。这时可以用settimeout分块执行。
+```js
+// 如果该处理不需要同步完成，且数据不是必须按顺序完成可以考虑用这个方法
+setTimeout(function() {
+  // 取出下一个条目并处理
+  var item = array.shift();
+  process(item);
+  
+  // 如果还有条目，再设置一个定时器
+  if (array.length > 0) {
+    setTimeout(arguments.callee, 100)
+  }
+});
+
+// 封装数组分块执行函数
+// context 当前执行环境 this
+function chunk(array, process, context) {
+  setTimeout(function() {
+    var item = array.shift();
+    process.call(context, item);
+    
+    if (array.length > 0) {
+      setTimeout(arguments.callee, 100);
+    }
+  }, 100)
+}
+
+var data = [12,123,1234,453,436,232,23,5,4123,45,346,6534,2234,345,342];
+function printValue() {
+  var div = document.getElementById('myDiv');
+  div.innerHTML += item + '<br>';
+}
+chunk(data, printValue);
+```
+- 函数节流，如果在1s之内触发了20次事件，只会执行一次。防止浪费性能导致浏览器挂起或产生其他副作用
+```js
+// 1. setTimeout节流方法
+var processor = {
+  timeoutId: null,
+  
+  // 执行要进行的操作
+  performProcessing: function() {
+    // 实际执行的代码
+  },
+  
+  // 初始化调用方法
+  process: function() {
+    clearTimeout(this.timeoutId);
+    
+    this.timeoutId = setTimeout(() => {
+      this.performProcessing()
+    }, 1000);
+  }
+}
+processor.process()
+
+// 简化方法
+function throttle(method, context) {
+  clearTimeout(method.tId)
+  method.tId = setTimeout(function() {
+    method.call(context)
+  }, 1000)
+}
+
+// 普通处理
+window.onresize = function() {
+  var div = document.getElementById('myDiv');
+  div.style.height = div.offsetHeight + 'px'
+}
+//节流优化后的处理
+function resizeDiv() {
+   var div = document.getElementById('myDiv');
+   div.style.height = div.offsetHeight + 'px'
+}
+window.onresize = function() {
+  throttle(resizeDiv)
+}
+
+// 2.计算当前时间方法节流
+var startTime = 0;
+var processTime = 0;
+function resizeDiv() {
+   // 计算当前时间并存入到第一次执行时间
+   var curTime = +(new Date())
+   processTime = curTime;
+   if (processTime - startTime < 1000) {
+     return;
+   } else {
+     startTime = curTime;
+   }
+   var div = document.getElementById('myDiv');
+   div.style.height = div.offsetHeight + 'px'
+}
+window.onresize = resizeDiv()
+```
+
 ### 自定义事件
+自定义事件是一种创建松散耦合代码的技术，暂时未发现有什么大的用处。有时间研究 p616
+
 ### 拖放
 
 
