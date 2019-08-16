@@ -3851,6 +3851,7 @@ setTimeout(()=> {
 ```
 - DOM2级事件处理程序 element.addEventListener(事件类型，处理函数,捕获阶段调用true/冒泡阶段调用false)，element.removeEventListener()，为了最大限度兼容各种浏览器，默认传入false，在冒泡阶段添加事件处理程序。
 ```js
+// DOM2级事件与DOM0级事件的区别，DOM2级事件处理程序，1.可以选择触发的阶段，而DOM0只能在冒泡阶段捕获 2.可以添加多个相同的事件处理程序，比如可以添加两个click事件，按顺序触发。
 // 如果绑定了多个事件，会按顺序执行
 let btn = document.getElementById('myBtn');
 btn.addEventListener('click', function() {
@@ -7701,7 +7702,134 @@ window.onresize = resizeDiv()
 自定义事件是一种创建松散耦合代码的技术，暂时未发现有什么大的用处。有时间研究 p616
 
 ### 拖放
+一般利用mousemove事件监听来移动元素。使用绝对定位 position:absolute; 通过动态改变left,top实现拖放
+```js
+// <div id="dragdiv" style="position:absolute;left:10px; top:10px;width:100px;height:100px;border:1px dashed #333;"></div>
+// 简单的div拖放，鼠标移动上去就可以拖动
+var dragdiv = document.getElementById('dragdiv')
+dragdiv.onmousemove = function(event) {
+  dragdiv.style.left = event.clientX - 20 + 'px'
+  dragdiv.style.top = event.clientY - 20 + 'px'
+}
+```
 
+- 实现点击开始后拖动，点击停止后停止拖动, 利用mousedown, mouseup, mousemove来实现
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>drag demo</title>
+  </head>
+  <body>
+    <div id="dragdiv" style="position:absolute;left:10px; top:10px;width:100px;height:100px;border:1px dashed #333;"></div>
+    <script>
+      // 鼠标左键点击后拖动，移开后停止移动
+      // 监听mousedown，就开始拖动监听，mousemove才开始生效，移动，放手后mouseup后，停止监听
+      let draging = null
+      let diffx = 0
+      let diffy = 0
+      let dragdiv = document.getElementById('dragdiv')
+
+      dragdiv.onmousedown = function(event) {
+        draging = "can drag"
+        console.log('mousedown: ', draging)
+        diffx = event.clientX - dragdiv.offsetLeft
+        diffy = event.clientY - dragdiv.offsetTop
+      } 
+      dragdiv.onmousemove = function(event) {
+        if (draging !== null) {
+          dragdiv.style.left = event.clientX - diffx  + 'px'
+          dragdiv.style.top = event.clientY - diffy + 'px'
+        }
+        console.log('mousemove: ', draging)
+      } 
+      dragdiv.onmouseup = function(event) {
+        draging = null
+        console.log('mouseup: ', draging)
+      } 
+      document.documentElement.onmouseup = function(event) {
+        draging = null
+        console.log('body mouseup: ', draging)
+      } 
+    </script>
+  </body>
+</html>
+```
+
+- 优化，封装为对象
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>drag demo</title>
+    <style>
+      .div {
+        position:absolute;
+        width:100px;height:100px;border:1px dashed #333;
+        text-align: center;
+        user-select: none;  /* 让元素不可选中 */
+      }
+      .div1 { left:10px; top:10px; background: rgba(0, 255, 0, .2) }
+      .div2 { left:200px; top:10px; background: #ddd }
+      .div3 { left:400px; top:10px; background: rgba(0, 255, 0, .2) }
+    </style>
+  </head>
+  <body>
+    <div class="div div1 dragable">可drag1</div>
+    <div class="div div2">不可drag</div>
+    <div class="div div3 dragable">可drag2</div>
+    
+    <script>
+
+      var DragDrop = function() {
+        var draging = null
+        var offsetx = 0
+        var offsety = 0
+
+        function handleEvent(event) {
+          switch(event.type) {
+            case 'mousedown':
+              // 如果元素包含drageable class则可移动
+              if (event.target.className.includes('dragable')) {
+                draging = event.target
+                offsetx = event.clientX - draging.offsetLeft
+                offsety = event.clientY - draging.offsetTop
+              }
+              break;
+            case 'mousemove':
+              if (draging !== null) {
+                draging.style.left = event.clientX - offsetx + 'px'
+                draging.style.top = event.clientY - offsety + 'px'
+              }
+              break;
+            case 'mouseup':
+              draging = null
+              break;
+          }
+        }
+
+        return {
+          enable: function() {
+            document.onmousedown = handleEvent
+            document.onmousemove = handleEvent
+            document.onmouseup = handleEvent
+          },
+          disable: function() {
+            document.onmousedown = null
+            document.onmousemove = null
+            document.onmouseup = null
+          }
+        }
+      }
+      
+      // 开启
+      new DragDrop().enable()
+    </script>
+  </body>
+</html>
+```
 
 ## 第23章 离线应用与客户端存储
 
