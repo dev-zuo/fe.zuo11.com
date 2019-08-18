@@ -7832,7 +7832,62 @@ dragdiv.onmousemove = function(event) {
 ```
 
 ## 第23章 离线应用与客户端存储
+### 离线监测
+> 通过 navigator.onLine 可以获取当前网络状态，true 有网，false 没网。HTML5定义了两个事件，可以通过监听window的online和offline事件来监听网络状态发生改变。
 
+建议先通过navigator.onLine获取当前的网络状态，再通过监听上面两个事件来确定网络连接的状态是否改变
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>离线监测、监听</title>
+  </head>
+  <body>
+    <input type="button" id="checkIsOnline" value="点击检测是否有网">
+    <script>
+        var mybtn = document.getElementById("checkIsOnline")
+        // 点击检测是否有网
+        mybtn.onclick = function(event) {
+          alert(navigator.onLine ? '有网': '没有网')
+        }
+
+        // 当网络状态发生改变时（有网 => 无网，无网 => 有网），才会触发
+        window.ononline = function(event) {
+          alert('网络已连接')
+        }
+        window.onoffline = function(event) {
+          alert('网络已断开')
+        }
+    </script>
+  </body>
+</html>
+```
+
+### 应用缓存
+HTML5 application cache 快要被废弃，由 Service Workers取代，参见: https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache
+,后续要了解applicationCatch、Service Workers、PWA 的区别
+
+### 数据缓存
+#### Http Cookie(cookie)
+HTTP Cookie，通常直接叫做cookie，用于在客户端存储用户信息。在页面设置cookie后，发送请求会在请求头里，携带对应的cookie(跨域会有对应的限制)。
+- cookie 限制
+```js
+// 1. 绑定在特定的域名下，其他域是无法访问
+// 2. Firefox 限制每个域最多50个cookie，Opera限制每个域最多30个cookie，Safari和chrome没有这方面的限制，不要超过限制，否则之前的cookie可能会被删除。
+// 3. 一般大小限制为4kb
+```
+
+- cookie构成
+```js
+// 1.**名称** 不区分大小写，myCookie和MyCookie被认同是同一个cookie。名称尽量特殊点，防止其他子域设置了相同的cookie，导致异常，名称必须被URL编码
+// 2.**值** cookie名称对应的值，值必须被URL编码
+// 3.**域** cookie在哪个域是有效的，
+// 4.**路径** 对于指定域中的路径，应该向服务器发送cookie、可以指定cookie只从xx.com/books/中才能访问，那么 xx.com的页面就不会发送cookie信息，即使请求都是来自同一个域
+// 5.**失效时间** 默认情况下，浏览器会话结束即删除所有cookie，也可以自己设置删除事件。值为GMT格式的日期，如果设置为以前的时间，会立即删除
+// 6.**安全标志** secure 指定后只有使用SSL连接的时候才会发送到服务器 
+```
+#### 
 ## 第24章 最佳实践
 
 ## 第25章 新兴的API
