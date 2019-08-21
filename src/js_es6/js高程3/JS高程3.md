@@ -7875,7 +7875,7 @@ HTTP Cookie，通常直接叫做cookie，用于在客户端存储用户信息。
 ```js
 // 1. 绑定在特定的域名下，其他域是无法访问
 // 2. Firefox 限制每个域最多50个cookie，Opera限制每个域最多30个cookie，Safari和chrome没有这方面的限制，不要超过限制，否则之前的cookie可能会被删除。
-// 3. 一般大小限制为4kb
+// 3. 一般大小限制为4kb, 这个限制是所有cookie，不是针对单个cookie的限制
 ```
 
 - cookie构成
