@@ -8410,5 +8410,106 @@ list.innerHTML = html;
 主要是解释，不要将源码直接部署到服务器，需要文件混淆压缩，合并文件、JSLint验证等。现在基本是webpack、gulp了。待后续研究
 
 ## 第25章 新兴的API
+### requestAnimationFrame()
+> 很长时间以来，计时器何循环间隔一直都是JS动画的核心。但setInterval()和setTimeout()都不十分精确，他们只是把动画代码添加到浏览器UI线程队列，如果队列正在执行其他操作。实际实行时间会比正常时间晚一点。循环间隔会有误差。requestAnimation可以避免这个误差，创建平滑的动画效果
 
+他会告诉浏览器：有一个动画开始了，进而浏览器可以确定重绘的最佳方式。window.requestAnimationFrame(callback);
+理解参考: https://www.cnblogs.com/onepixel/p/7078617.html
+```js
+// <div id="SomeElementYouWantToAnimate" style="position:absolute;height:100px;width:100px;border:1px solid #ccc;">111</div>
+// <script>
+  var progress = 0;
+  var element = document.getElementById('SomeElementYouWantToAnimate');
 
+  //回调函数
+  function render() {
+    progress += 10; //修改图像的位置， 加快动画时间  progress += 100
+    element.style.left = progress + 'px'  // 自动控制速度
+
+    if (progress < 200) {
+      //在动画没有结束前，递归渲染
+      window.requestAnimationFrame(render);
+    }
+  }
+
+  //第一帧渲染
+  window.requestAnimationFrame(render);
+// </script>
+```
+
+### Page Visibility API(页面可见性API)
+如果页面最小化了或者隐藏在了其他标签页面后面，有些功能可以停下来，比如轮询服务器或某些动画效果。而Page Visibility API就是为了让开发人员知道页面是否对用户可见而推出的。
+```js
+// - document.hidden // 页面是否隐藏
+// - document.visibilityState(不推荐使用)  IE10和Chrome对应的状态值有较大差异
+// IE值为 document.MS_PAGE_HIDDEN(0) document.MS_PAGE_VISIBLE(1)，  
+// chrome值为: hidden, visible, prerender
+// - visibilitychange事件，当文档从可见变为不可见或从不可见变为可见时，触发该事件
+
+// 实现tab间切换时，隐藏页面title改变功能
+var title = document.title;
+document.addEventListener('visibilitychange', function (event) {
+  console.log('--------------------')
+  console.log(event)
+  console.log(document.hidden)
+  console.log(document.visibilityState)
+  console.log('--------------------')
+
+  document.title =  document.hidden ? '~ 你快回来 ~ ' : title
+  if (document.hidden) {
+    // 做一些暂停操作
+  } else {
+    // 开始操作
+  }
+}, false)
+```
+
+### Geolocation API(地理位置)
+Geolocation API在浏览器中的实现是navigator.geolocation对象，IE9+支持，调用时会触发提示：xxx想要获取您的地址位置信息，是否允许？
+- 获取当前位置信息navigator.geolocation.getCurrentPosition()
+```js
+// 获取用户当前位置
+// successCallback为必须，后两个参数可选
+// navigator.geolocation.getCurrentPosition(successCallback, failCallback, options)
+navigator.geolocation.getCurrentPosition(function(position) {
+  // 获取位置信息成功(弹出是否允许使用地址位置信息时，点击了允许)
+  console.log(position) // coords,timestamp
+  console.log(position.coords.latitude, position.coords.longitude)
+}, function(error) {
+  // 获取位置信息失败或点击了不允许
+  console.log('获取用户地理位置信息失败')
+  console.log(error.message)
+}, {
+  //设定信息类型可选项
+  enableHighAccuracy: true, // 尽可能使用最准确的位置信息，默认为false，true需要更多的电量，获取更耗时
+  timeout: 5000, // 等待位置信息的最长时间，毫秒
+  maximumAge: 25000// 上一次取得的坐标的有效时间，毫秒，如果到时间需要重新取得坐标信息
+})
+```
+- 跟踪用户的位置, navigator.geolocation.watchPosition()，接收的参数完全与getCurrentPostion()一致
+```js
+// watchPosition 与定时调用getCurrentPostion的效果相同
+var watchId = navigator.geolocation.watchPosition(function(position) {
+  // 获取位置信息成功(弹出是否允许使用地址位置信息时，点击了允许)
+  console.log(position) // coords,timestamp
+  console.log(position.coords.latitude, position.coords.longitude)
+}, function(error) {
+  // 获取位置信息失败或点击了不允许
+  console.log('获取用户地理位置信息失败')
+  console.log(error.message)
+})
+
+// 取消监控
+clearWatch(watchId)
+ ```
+
+### File API
+操作文件
+
+### Web计时
+Web Timing API，核心是window.performance对象。可以全面的了解页面再被加载到浏览器的过程中都经历了哪些阶段，页面哪些阶段可能是影响性能的瓶颈。IE10+支持。
+- performance.navigation记录了页面加载器重定向的次数，导航类型(页面第一次加载，页面重载过等状态)
+- performance.timing 记录了开始导航到当前页面的时间，浏览器开始请求页面的时间、浏览器成功连接到服务器的时间等。
+
+### Web Wrokers
+使用Web Workers可以在后台执行JS，防止长时间运行的JS进程会导致浏览器"冻结"用户页面。IE10+支持，暂时没有想到应用场景，待后续研究。p718
