@@ -8504,7 +8504,271 @@ clearWatch(watchId)
  ```
 
 ### File API
-操作文件
+> 2000年以前，处理文件的唯一方式就是在表单中加入input type="file"字段。File API 在表单中的文件输入字段的基础上，添加了一些直接访问文件新兴的接口。HTML5在DOM中为文件输入元素添加了一个files集合。通过文件输入字段选择一个或多个文件时，files集合里面会包含一组File对象，一个File对象对应着一个文件。
+
+每个File对象，都有下列只读属性:
+- name 本地文件系统中的文件名
+- size 文件的字节大小
+- type 字符串，文件的MIME类型
+- lastModifiedDate: 字符串，文件上一次被修改的时间
+
+```html
+  <!-- 通过document.getElementById('file').files 即可获取对应的文件信息 -->
+  <input id="file" type="file">
+  <input id="files" type="file" multiple="multiple">
+  <script>
+    var file = document.getElementById('file')
+    var files = document.getElementById('files')
+
+    // 文件内容改变时，显示文件信息
+    file.addEventListener('change', fileChangeHandle, false)
+    files.addEventListener('change', fileChangeHandle, false)
+
+    function fileChangeHandle(e) {
+      for (var i = this.files.length - 1; i >= 0; i--) {
+        var fileInfo = this.files[i] // File对象
+        console.log('name: ', fileInfo.name)
+        console.log('lastModified: ', new Date(fileInfo.lastModified).toISOString()) // timestamp
+        console.log('type: ', fileInfo.type)
+        console.log('size: ', fileInfo.size)  // B 字节  /1000 kb
+      }
+    }
+  </script>
+```
+#### FileReader
+FileReader是一种异步文件的读取机制，可以把FileReader想象成XMLHttpRequest，区别只是它读取的是文件系统，而不是远程服务器数据。FileReader提供了如下几个方法，来读取文件中的数据
+
+- readAsText(file, encoding): 以纯文本形式读取文件，将读取到的文本保存在对应FileReader实例的result属性中
+- reader.readAsDataURL(fileInfo): 读取文件，将文件以数据URI(base64格式字符串)的形式保存在result属性中
+- reader.readAsBinaryString(fileInfo): 读取文件，并将一个字符串保存在result中，字符串中的每个字符表示一字节。
+- reader.readAsArrayBuffer(fileInfo): 读取文件，并将一个包含文件内容的ArrayBuffer保存在result属性中
+
+```js
+var reader = new FileReader();
+// 如果是图片，直接获取数据URI直接显示
+// 如果是其他，直接读取文本
+if (this.files[0].type.includes('image')) {
+  reader.readAsText(this.files[0]) // 读取文件，file为 input type="file" 对象.files里面的子元素
+} else {
+  reader.readAsDataURL(this.files[0]) // 获取文件URL
+}
+
+// 由于读取是异步的，读取文件时，reader会触发三个事件，如果读取错误触发error事件，读取中触发progress事件，读完了整个文件会触发load事件
+reader.onerror = function() {
+  var errMsg = [null, '未找到文件', '安全性错误', '读取中断', '文件不可读', '编码错误']
+  let errCode = reader.error.code
+  console.log('读取文件错误, code: ' + errCode + '，错误提示: ' + errMsg[errCode])
+}
+reader.onprogress = function(e) {
+  // 文件读取中，大概 50ms 刷新一次
+  console.log(`加载进度 ${e.loaded} / ${e.total}`)
+}
+reader.onload = function(e) {
+  // 文件读取完成会存到 reader.result里面
+  console.log(reader.result)
+}
+```
+示例
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>文件操作</title>
+</head>
+<body>
+  <input id="file" type="file" style="border:1px solid #ccc;">
+  <input id="files" type="file" multiple="multiple">
+  <script>
+    var file = document.getElementById('file')
+    var files = document.getElementById('files')
+
+    // 文件内容改变时，显示文件信息
+    file.addEventListener('change', fileChangeHandle, false)
+    files.addEventListener('change', fileChangeHandle, false)
+
+    function fileChangeHandle(e) {
+      for (var i = this.files.length - 1; i >= 0; i--) {
+        var fileInfo = this.files[i] // File对象
+        console.log('name: ', fileInfo.name)
+        console.log('lastModified: ', new Date(fileInfo.lastModified).toISOString()) // timestamp
+        console.log('type: ', fileInfo.type)
+        console.log('size: ', fileInfo.size)  // B 字节  /1000 kb
+
+        let reader = new FileReader(); // for循环中的var变量要特别注意，如果是var，选择多个图片时，只能显示一个
+
+        if (fileInfo.type.includes('image')) {
+          reader.readAsDataURL(fileInfo)
+        } else {
+          reader.readAsText(fileInfo)
+        }
+
+        // 由于读取是异步的，读取文件时，reader会触发三个事件，如果读取错误触发error事件，读取中触发progress事件，读完了整个文件会触发load事件
+        reader.onerror = function() {
+          var errMsg = [null, '未找到文件', '安全性错误', '读取中断', '文件不可读', '编码错误']
+          let errCode = reader.error.code
+          console.log('读取文件错误, code: ' + errCode + '，错误提示: ' + errMsg[errCode])
+        }
+        reader.onprogress = function(e) {
+          // 文件读取中，大概 50ms 刷新一次
+          console.log(`加载进度 ${e.loaded} / ${e.total}`)
+        }
+        reader.onload = function(e) {
+          // 文件读取完成会存到 reader.result里面
+          // console.log(reader.result)
+          var fragment = document.createDocumentFragment();
+          if (fileInfo.type.includes('image')) {
+            var img = document.createElement('img')
+            img.src = reader.result
+            fragment.appendChild(img)
+          } else {
+            var div = document.createElement('div')
+            div.appendChild(document.createTextNode(reader.result.substr(0, 100)))
+            fragment.appendChild(div)
+          }
+          document.body.appendChild(fragment)
+        }
+      }
+    }
+  </script>
+</body>
+</html>
+```
+#### 读取部分文件内容
+如果只想读取文件的一部分，而不是全部，可以使用File对象的 slice(起始字节，要读取的字节数)方法。会返回一个Blob实例，Blob是File了下的父类型
+```js
+console.log(File.__proto__  === Blob) // true
+```
+示例
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>blob slice</title>
+</head>
+<body>
+  <input type="file" id="file">
+  <script>
+    var file = document.getElementById('file')
+    file.onchange = function (e) {
+      var myfile = this.files[0]
+      var blob = myfile.slice(0, 32) // 只读取32B的内容
+      if (blob) {
+        var reader = new FileReader()
+        reader.readAsDataURL(blob)
+        reader.onerror = function() {
+          console.log('读取文件错误, ' + reader.error.code)
+        }
+        reader.onload = function() {
+          console.log('读取文件成功，' + reader.result)
+          var div = document.createElement('div')
+          div.appendChild(document.createTextNode(reader.result))
+          document.body.appendChild(div);
+        }
+        reader.onprogress = function(e) {
+          console.log('读取中.....' + e.loaded + '/' + e.total)
+        }
+      } else {
+        alert('您的浏览器不支持blob.slice()')
+      }
+    }
+  </script>
+</body>
+</html>
+```
+#### 对象URL
+对象URL，也称为blob URL，引用保存在File或Blob中数据的URL，好处是，不必把文件内容读取到JS中而直接使用文件内容。IE10+支持
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <input type="file" id="file">
+  <img src="" id="img">
+  <script>
+    var file = document.getElementById('file')
+    file.onchange = function (e) {
+      var myfile = this.files[0]
+      var img = document.getElementById('img')
+      var dataUrl = window.URL.createObjectURL(myfile)
+      console.log('dataURL: ' + dataUrl)
+      // dataURL: blob:http://localhost:63342/b42b5b0a-fef8-4cb2-b26d-1973517ac08a
+      img.src = dataUrl
+      // 页面卸载时会自动释放对象URL占用的内存。如果不用了，还是建议手工释放，节约内存，调用后，dataUrl还是会有值
+      setTimeout(function() {
+        window.URL.revokeObjectURL(myfile);
+      }, 3000)
+    }
+  </script>
+</body>
+</html>
+```
+#### 读取拖拽文件并上传
+使用H5拖放API，从桌面上把文件拖放到浏览器中也会触发drop事件。在event.dataTransger.files中可以读取到防止的文件，与通过input取得的File一样
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    #dragDiv { width:300px;height: 150px;border:2px dashed #ccc; }
+    .draging { border:2px dashed red !important; }
+  </style>
+</head>
+<body>
+  <div>拖拽文件到下面的方框区域</div>
+  <div id="dragDiv"></div>
+  <script>
+    var dragDiv = document.getElementById('dragDiv')
+
+    dragDiv.ondragenter = function(e) {
+      // 当文件拖动到区域，设置red边框样式
+      dragDiv.className = "draging"
+    }
+    dragDiv.ondragover = function (e) {
+      e.preventDefault() // 取消默认行为，设置可拖放
+    }
+    dragDiv.ondrop = function (e) { // 有文件拖放触发
+      dragDiv.className = ""
+      e.preventDefault() // drop默认行为会打开新的窗口，取消默认行为
+      console.log(e.dataTransfer.files)
+
+      // 这里只显示了一个文件，如果多个文件拖拽，需要用for循环显示
+      dragDiv.innerHTML = e.dataTransfer.files[0].name
+
+       // 将文件用XHR上传操作
+      // 1. 准备数据
+      var files = e.dataTransfer.files
+      var data = new FormData()
+      for (let i = files.length - 1; i >= 0; i--) {
+        data.append('file' + i, files[i])
+      }
+      console.log(data)
+
+      // 2. 开始上传
+      var xhr = new XMLHttpRequest()
+      xhr.open('post', '/fileupdate', true) // 异步发送请求
+      xhr.onload = function () {
+        if (xhr.status === 200) { // 请求成功
+          alert(xhr.responseText)
+        } else {
+          alert('请求异常', xhr.status)
+        }
+      }
+      xhr.send(data)
+    }
+    dragDiv.ondragleave = function (e) { // 文件移出
+      dragDiv.className = ""
+    }
+  </script>
+</body>
+</html>
+```
 
 ### Web计时
 Web Timing API，核心是window.performance对象。可以全面的了解页面再被加载到浏览器的过程中都经历了哪些阶段，页面哪些阶段可能是影响性能的瓶颈。IE10+支持。
