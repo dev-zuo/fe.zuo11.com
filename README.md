@@ -18,7 +18,7 @@
 ![js相关书籍](./src/images/js_es6.png)
 - [JavaScript DOM编程艺术(第二版本) 笔记](./src/js_es6/js_dom编程艺术/js_dom编程艺术.md)
 - [JavaScript高级程序设计(第三版) 笔记](./src/js_es6/js高程3/)
-- [ES6标准入门(第三版) 笔记](./scr/js_es6/阮一峰es6入门/)
+- [ES6标准入门(第三版) 笔记](./src/js_es6/阮一峰es6入门/)
 
 ## HTML/HTML5
 ![HTML相关书籍](src/images/html.png)
@@ -53,5 +53,6 @@
 
 ## Git
 ![git相关](src/images/git.png)
+- [廖雪峰git教程 笔记](src/git_svn/廖雪峰Git教程/廖雪峰Git教程.md)
 
 
