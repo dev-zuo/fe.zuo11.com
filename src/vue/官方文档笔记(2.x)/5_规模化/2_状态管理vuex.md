@@ -199,9 +199,7 @@ Vuex使用单一状态树，用一个对象就包含了全部的应用层级状�
 - 单一状态树可以直接定位任一特定状态片段
 - 在调试的过程中也可以轻易的取得整个应用状态的快照。
 
-单状态树何模块化并不冲突
-f在Vue组件中获得Vuex状态
-由于Vuex的状态存储是响应式的，从store实例中读取状态最简单的方法就是**在计算属性中返回某个状态**：
+单状态树和模块化并不冲突，由于Vuex的状态存储是响应式的，从store实例中读取状态最简单的方法就是**在计算属性中返回某个状态**：
 ```js
 // 没当store.state.count变化的时候，都会重新求取计算属性，并触发更新相关联的DOM
 const Counter = {
@@ -332,5 +330,519 @@ export default {
 ```
 
 ### mutations属性
+更改 Vuex 的 store 中的状态的唯一方法是提交 mutation
+```js
+const store = new Vuex.Store({
+  state: {
+    count: 1
+  },
+  mutations: {
+    increment (state) {
+      // 变更状态
+      state.count++
+    }
+  }
+})
+// 使用方法： store.commit('increment')
+
+// commit时传参 - 1.第二个参数为数字或字符串
+// 使用方法：store.commit('increment', 10)
+mutations: {
+  increment (state, n) {
+    state.count += n
+  }
+}
+
+// commit传参 - 2.第二个参数为对象，且命名为payload(建议)
+// 使用方法: store.commit('increment', { amount: 10 })
+mutations: {
+  increment (state, payload) {
+    state.count += payload.amount
+  }
+}
+
+// commit传参 3.参数只有一个Object参数，将mutation的方法名设置为type属性
+// 实现方法可以不用变动payload为整个传入的对象
+store.commit({
+  type: 'increment',
+  amount: 10
+}) 
+```
+#### mutation需要遵守Vue的响应规则
+Vuex的store中的状态是响应式的，变更状态时，监视状态的Vue组件也会自动更新，Vuex中mutation需要与使用Vue一样遵守一些注意事项：
+- 最好提前在 store 中初始化好所有需要的属性
+- 当需要在对象上添加新属性时，应该：
+  - 使用Vue.set(obj, 'newProp', 123) 或者
+  - 以新对象替换老对象。例如，使用 对象展开运算符
+  ```js
+  state.obj = { ...state.obj, newProp: 123 }
+  ```
+
+
+#### 使用常量代替Mutation事件类型
+使用常量替代 mutation 事件类型在各种 Flux 实现中是很常见的模式，好处如下：
+- 可以使linter之类的工具发挥作用
+- 把常量放到单独的文件中，可以让其他开发人员对整个app包含的mutation一目了然
+- 在需要多人协作的大型项目中，这会很有帮助，是否使用可以取决于自己的喜好。
+```js
+// mutation-types.js
+export const SOME_MUTATION = 'SOME_MUTATION'
+
+// 实际使用
+// ...
+mutations: {
+  // 我们可以使用 ES2015 风格的计算属性命名功能来使用一个常量作为函数名
+  [SOME_MUTATION] (state) {
+    // mutate state
+  }
+}
+```
+#### mutation必须是同步函数
+```js
+// 在mutation中混合异步调用会导致程序很难调试
+// 例如：调用了两个包含异步回调的mutation来改变状态，你不知道什么时候回调，不知道哪个先回调
+// 在Vuex中mutation都是同步事务，如果需要异步操作，请使用actions属性
+mutations: {
+  someMutation (state) {
+    api.callAsyncMethod(() => {
+      state.count++
+    })
+  }
+}
+```
+#### 在组件中提交Mutation
+可以在组件中使用 this.$store.commit('xxx') 提交 mutation，或使用mapMutations 辅助函数将组件中的methods映射为 store.commit调用(需要根节点注入store)
+```js
+import { mapMutations } from 'vuex'
+
+export default {
+  // ...
+  methods: {
+    // 1. mapMutations(数组)
+    ...mapMutations([
+      'increment', // 将 `this.increment()` 映射为 `this.$store.commit('increment')`
+      // `mapMutations` 也支持载荷：
+      'incrementBy' // 将 `this.incrementBy(amount)` 映射为 `this.$store.commit('incrementBy', amount)`
+    ]),
+
+    // 2. mapMutatioins(对象)
+    ...mapMutations({
+      add: 'increment' // 将 `this.add()` 映射为 `this.$store.commit('increment')`
+    })
+  }
+}
+```
+
 ### actions属性
+action类似mutation，不同在于
+- action提交的是mutation，而不是直接变更状态
+- action可以包含任意异步操作
+- 组件或实例触发mutation使用this.\$state.commit，触发action使用this.\$state.dispatch
+```js
+const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  mutations: {
+    increment (state) {
+      state.count++
+    }
+  },
+  actions: {
+    // context.commit 提交一个 mutation，或者通过 context.state 和 context.getters 来获取 state 和 getters
+    // 组件里使用方法 store.dispatch('increment')
+    // 为什么这里是context，而不是store实例本身，主要是因为module
+    increment (context) {
+      context.commit('increment')
+    }
+
+    // 使用结构赋值的写法
+    increment ({ commit }) {
+      setTimeout(()=> {
+        commit('increment')
+      }, 2000)
+    }
+  }
+})
+
+// action 异步实例
+actions: {
+  checkout ({ commit, state }, products) {
+    // 把当前购物车的物品备份起来
+    const savedCartItems = [...state.cart.added]
+    // 发出结账请求，然后乐观地清空购物车
+    commit(types.CHECKOUT_REQUEST)
+    // 购物 API 接受一个成功回调和一个失败回调
+    shop.buyProducts(
+      products,
+      // 成功操作
+      () => commit(types.CHECKOUT_SUCCESS),
+      // 失败操作
+      () => commit(types.CHECKOUT_FAILURE, savedCartItems)
+    )
+  }
+}
+```
+#### 分发action
+Action 通过 store.dispatch 方法触发
+```js
+// 以载荷形式分发
+store.dispatch('incrementAsync', {
+  amount: 10
+})
+
+// 以对象形式分发
+store.dispatch({
+  type: 'incrementAsync',
+  amount: 10
+})
+
+
+// 在组件中分发action
+import { mapActions } from 'vuex'
+
+export default {
+  // ...
+  methods: {
+    // 1.mapAction(数组)
+    ...mapActions([
+      'increment', // 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`
+
+      // `mapActions` 也支持载荷：
+      'incrementBy' // 将 `this.incrementBy(amount)` 映射为 `this.$store.dispatch('incrementBy', amount)`
+    ]),
+
+    // 2.mapAction(对象)
+    ...mapActions({
+      add: 'increment' // 将 `this.add()` 映射为 `this.$store.dispatch('increment')`
+    })
+  }
+}
+```
+#### 组合 Action
+组合多个异步的action
+```js
+actions: {
+  actionA ({ commit }) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        commit('someMutation')
+        resolve()
+      }, 1000)
+    })
+  },
+  // ...
+  actionB ({ dispatch, commit }) {
+    return dispatch('actionA').then(() => {
+      commit('someOtherMutation')
+    })
+  }
+}
+
+// 外部触发actionA
+store.dispatch('actionA').then(() => {
+  // ...
+})
+
+// 使用async/await改写
+// 假设 getData() 和 getOtherData() 返回的是 Promise
+actions: {
+  async actionA ({ commit }) {
+    commit('gotData', await getData())
+  },
+  async actionB ({ dispatch, commit }) {
+    await dispatch('actionA') // 等待 actionA 完成
+    commit('gotOtherData', await getOtherData())
+  }
+}
+```
 ### modules属性
+由于Vue使用单一状态树，应用的所有状态会集中到一个比较大的对象，当应用变得非常复杂时，store对象就有可能非常臃肿。为了解决这个问题，Vuex允许将store分割为module，每个模块拥有自己的 state、mutation、action、getter、甚至是嵌套子模块
+
+#### 基本示例
+```js
+// 模块a
+const moduleA = {
+  state: { 
+    aCount: 10  
+  },
+  mutations: { ... },
+  actions: { ... },
+  getters: { ... }
+}
+
+// 模块b
+const moduleB = {
+  state: { 
+    bCount: 100,
+  },
+  mutations: { ... },
+  actions: { ... }
+}
+
+// 根store
+const store = new Vuex.Store({
+  state: {
+    count: 0
+  },
+  modules: {
+    a: moduleA,
+    b: moduleB
+  }
+})
+
+// 组件内 this.$store.state -> { count: 0, a: { aCount: 10 }, b: { bCount: 100 } };
+store.state.a // -> moduleA 的状态
+store.state.b // -> moduleB 的状态
+```
+#### 在组件实例中访问module
+上面的例子中，通过store.state可以访问子模块的state，那子模块里的getters、mutations和actions是否和state一样呢？通过一个例子可以说明
+
+属性 | 子模块相应属性名是否可以和根节点相关的属性名一致 
+--- | --- 
+state | 可以, 所有state属性会根据层级保存到this.$store.state里  
+getters | 不可以，会抛出Error: duplicate getter key，所有getters属性都会直接存到 this.、$store.getters，根节点有对应的属性后，子模块再有这个属性会被忽略。在子模块geeters的第二个参数getters参数也是this.\$store.getters, 不像第一个参数state那样是局部的。
+mutations | 可以, store.commit('commonMutations')，会根据层级依次触发所有同名的mutations 
+actions | 可以, store.dispatch('commonActions')，会根据层级依次触发所有同名的Actions 
+
+```js
+/*
+
+测试 demo 目录结构:
+├── store
+│   ├── index.js        # 根级别的store
+│   └── modules          
+│       ├── cart.js     # 购物车模块
+│       └── product.js  # 产品模块
+└── main.js
+
+*/
+
+// store/index.js 根stote
+import Vue from "vue";
+import Vuex from "vuex";
+
+import cart from "./modules/cart";
+import products from "./modules/products";
+
+Vue.use(Vuex);
+
+console.log("cart", cart);
+console.log("product", products);
+
+export default new Vuex.Store({
+  state: {
+    count: 0,
+    commonCount: "root count"
+  },
+  getters: {
+    testCommonGetters() {
+      return "root getters";
+    },
+    rootGetters(state) {
+      return state.count + 50;
+    }
+  },
+  mutations: {
+    rootMutations(state) {
+      state.count = 50;
+    },
+    testCommonMutations() {
+      console.log("root mutations");
+    }
+  },
+  actions: {
+    testCommonActions() {
+      console.log("root actions");
+    },
+    rootActions(context) {
+      console.log("rootActions, console after 2s later");
+      setTimeout(() => {
+        console.log(context);
+      }, 2000);
+    }
+  },
+  modules: {
+    cart,
+    products
+  }
+});
+
+
+// store/modules/cart.js 购物车模块
+export default {
+  state: {
+    cardCount: 10,
+    commonCount: "cart count"
+  },
+  getters: {
+    testCommonGetters() {
+      return "card getters";
+    },
+    cardGetters(state) {
+      return state.cardCount * 2;
+    }
+  },
+  mutations: {
+    cardMutations(state) {
+      state.cardCount = 99;
+    },
+    testCommonMutations() {
+      console.log("card mutations");
+    }
+  },
+  actions: {
+    cardActions(context) {
+      console.log("cardActions, console after 2s later");
+      setTimeout(() => {
+        console.log(context);
+      }, 2000);
+    },
+    testCommonActions() {
+      console.log("cart actions");
+    }
+  },
+  modules: {
+    subCardModule: {
+      state: {
+        subCardModuleCount: "subCardState"
+      }
+    }
+  }
+};
+
+
+// store/modules/products.js 产品模块
+export default {
+  state: {
+    productsCount: 100,
+    commonCount: "product count"
+  },
+  getters: {
+    testCommonGetters() {
+      return "products getters";
+    },
+    productGetters(state) {
+      return state.productsCount * 2;
+    }
+  },
+  mutations: {
+    productMutations(state) {
+      state.productsCount = 999;
+    },
+    testCommonMutations() {
+      console.log("product mutations");
+    }
+  },
+  actions: {
+    productsActions(context) {
+      console.log("productsActions, console after 2s later");
+      setTimeout(() => {
+        console.log(context);
+      }, 2000);
+    },
+    testCommonActions() {
+      console.log("product actions");
+    }
+  }
+};
+
+/*
+
+- this.$store.state 打印：
+ {
+  "count": 0,
+  "commonCount": "root count",
+  "cart": {
+    "cardCount": 10,
+    "commonCount": "cart count",
+    "subCardModule": {
+      "subCardModuleCount": "subCardState"
+    }
+  },
+  "products": {
+    "productsCount": 100,
+    "commonCount": "product count"
+  }
+}
+
+// Error [vuex] duplicate getter key: testCommonGetters
+- this.$store.getters.productGetters 打印 200
+- this.$store.getters.testCommonGetters 打印 root getters
+
+- this.$store.commit("cardMutations");  // cardCount被改为99
+
+- this.$store.commit("testCommonMutations") 打印：
+root mutations
+card mutations
+product mutations
+
+- this.$store.dispatch("cardActions"); 打印
+cardActions, console after 2s later
+...
+
+- this.$store.dispatch("testCommonActions") 打印
+root actions
+cart actions
+product actions
+
+
+*/
+```
+
+#### 模块的局部状态
+- 子模块内部的getters和mutations，接收的第一个参数为局部的 state (包含其子module的state，非根级)
+  - (复习) mutations 第二参数为payload，store.commit时的传参
+  - getters第二个参数为getters，非局部getters，而是全局的getters
+  - getters第三个参数为rootState，根级别的state
+- 模块内部的 action，局部状态和通过 context.state 暴露出来, 根节点状态则为 context.rootState
+  - (复习) context.commit提交一个 mutation，context.state 和 context.getters 用来获取 state 和 getters
+
+**这里可以思考为什么action需要使用context, 而不是像mutation那样用state作为参数 ？**
+- mutations只需要用来变更状态，一个局部的state参数足够，第二个参数用于commit时的传值。如果需要使用rootState可以使用getters
+- actions里可以做的事情比较多，参数也多。且第二个参数需要留给dispatch传值用。commit、state、rootState，getters等参数有必要使用一个对象(context)来存储
+
+**另一个问题，子模块中getters和mutations为什么不直接使用this来获取，而是直接用context传呢？**
+- Vuex的约束规则，所有的state变更都需要显式的调用commit，执行action需要使用dispatch，直接使用this会破坏约束，可能会导致不好追踪问题，不利于维护。
+- 子模块只能访问自身的getters和mutations，actions，而context传入的是全局的，可以访问其他模块的actions、mutations等方法。
+
+
+```js
+const moduleA = {
+  state: { count: 0 },
+  mutations: {
+    increment (state) {
+      // 这里的 `state` 对象是模块的局部状态
+      state.count++
+    }
+  },
+
+  getters: {
+    sumWithRootCount (state, getters, rootState) {
+      return state.count + rootState.count
+    }
+  },
+
+  // 模块内部的 action，局部状态通过 context.state 暴露出来，根节点状态则为 context.rootState
+  incrementIfOddOnRootSum ({ state, commit, rootState }) {
+    if ((state.count + rootState.count) % 2 === 1) {
+      commit('increment')
+    }
+  }
+}
+```
+#### 命名空间
+默认情况下，模块内部的actions，mutations和getters是注册在**全局命名空间**的。多个模块能够对同一mutation或action作出响应。
+- 比如上面的例子中，子模块内部commit某个mutation，根store和其他模块中所有同名的mutation都会被触发
+
+为了模块能有更好的封装性和复用性且不会干扰外部，可以通过添加 **namespaced: true** 的方式是模块成为带有命名空间的模块，
+命名空间模块所有的getters、mutations、actions都会自动根据模块注册的路径调整命名:
+- state和之前一样，没有任何影响
+- 命名空间模块的getter、mutations、actions 无法被外部直接访问，需要加上路径
+- 命名空间模块内部context.commit("testCommonMutations")，只触发当前模块的，不会触发外部的同名mutations
+
+
+## 项目结构
+## 严格模式
+## 表单处理
+## 测试
