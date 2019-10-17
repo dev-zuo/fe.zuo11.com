@@ -556,7 +556,10 @@ actions: {
   }
 }
 ```
+
 ### modules属性
+> 我认为是重难点，刚看时有点懵，后面自己写demo再反复看文档才算理解了。文档很精简但确实功能都讲到了。
+
 由于Vue使用单一状态树，应用的所有状态会集中到一个比较大的对象，当应用变得非常复杂时，store对象就有可能非常臃肿。为了解决这个问题，Vuex允许将store分割为module，每个模块拥有自己的 state、mutation、action、getter、甚至是嵌套子模块
 
 #### 基本示例
@@ -832,17 +835,236 @@ const moduleA = {
 }
 ```
 #### 命名空间
-默认情况下，模块内部的actions，mutations和getters是注册在**全局命名空间**的。多个模块能够对同一mutation或action作出响应。
-- 比如上面的例子中，子模块内部commit某个mutation，根store和其他模块中所有同名的mutation都会被触发
+##### 为什么需要有带命名空间的模块？
 
-为了模块能有更好的封装性和复用性且不会干扰外部，可以通过添加 **namespaced: true** 的方式是模块成为带有命名空间的模块，
-命名空间模块所有的getters、mutations、actions都会自动根据模块注册的路径调整命名:
+- 默认情况下，模块内部的actions，mutations和getters是注册在**全局命名空间**的。多个模块能够对同一mutation或action作出响应。比如上面的例子中，子模块内部commit某个mutation，根store和其他模块中所有同名的mutation都会被触发
+- 封装性差，且子模块不能有和其他模块有重名的getters，否则获取的值会有问题或者导致其他模块获取的getters有问题。
+
+##### 带命名空间模块有什么好处？
+- 模块能有更好的封装性、复用性、且不会干扰外部
+
+##### 怎么让一个模块成为命名空间模块？
+- 为模块添加一个namespaced为true的属性
+```js
+const moduleA = {
+  namespaced: true,
+  store: { ... }
+  mutations: { ... }
+} 
+```
+
+##### 带命名空间的模块有哪些特性？
 - state和之前一样，没有任何影响
-- 命名空间模块的getter、mutations、actions 无法被外部直接访问，需要加上路径
-- 命名空间模块内部context.commit("testCommonMutations")，只触发当前模块的，不会触发外部的同名mutations
+- 所有的getters、mutations、actions都会自动根据模块注册的路径调整命名，命名空间模块的getter、mutations、actions 无法被外部直接访问，需要加上路径
+```js
+// 如果模块名为 a，那么组件实例访问子模块内部的getters，mutations，actions方法如下：
+this.$store.getters['a/somegetters']
+this.$store.commit('a/somemutations')
+this.$store.dispatch('a/someactions')
+```
+- 命名空间模块 getter，dispatch 和 commit 会收缩到局部模块。比如：命名空间模块内部context.commit("testCommonMutations")，只触发当前模块的，不会触发外部的同名mutations
+```js
+// 带命名空间模块内部的action中使用内部的action、geeters、mutations是不用加路径的
+// 也就是非命名空间模块和命名空间模块的的切换，可以不用改动模块内部代码。
+```
 
+##### 带命名空间的模块，怎么访问全局内容呢？
+- 对于getters来说，全局的state和全局的getters会做为函数的第3，4个参数
+```js
+// 带命名空间的模块 foo 下面的 getters 
+getters: {
+  someGetter (state, getters, rootState, rootGetters) {
+    getters.someOtherGetter // -> 'foo/someOtherGetter'
+    rootGetters.someOtherGetter // -> 'someOtherGetter'
+  },
+}
+```
+- 对于actions来说，context也暴露了rootGetters
+- mutations和actions，通过commit，dispatch的第三个参数加入 {root: true} 触发根级的mutation和action
+```js
+// 带命名空间的模块 foo 下面的 actions
+actions: {
+  // 在这个模块中， dispatch 和 commit 也被局部化了
+  // 他们可以接受 `root` 属性以访问根 dispatch 或 commit
+  someAction ({ dispatch, commit, getters, rootGetters }) {
+    getters.someGetter // -> 'foo/someGetter'
+    rootGetters.someGetter // -> 'someGetter'
 
+    dispatch('someOtherAction') // -> 'foo/someOtherAction'
+
+    // 第二个参数为null，就是不传值
+    dispatch('someOtherAction', null, { root: true }) // -> 'someOtherAction'
+
+    commit('someMutation') // -> 'foo/someMutation'
+    commit('someMutation', null, { root: true }) // -> 'someMutation'
+  }
+}
+```
+- 模块内部的actions可以注册到全局action，一般actions属性对应的是一个函数，注册到全局时，需要使用一个包含root和handler属性的对象，root设置为true，handler指定对应的处理函数
+```js
+actions: {
+  normalAction({ commit }) {
+    commit('someMutation')
+  },
+  someAction: {
+    root: true, // 将 someAction 注册到全局
+    handler (namespacedContext, payload) { ... } // -> 'someAction'
+  }
+}
+```
+
+#### 命名空间与mapState等辅助函数
+```js
+// vue 组件或实例中 用辅助函数导入对应的变量，当模块层级比较深时，使用会很繁琐
+computed: {
+  ...mapState({
+    a: state => state.moduleA.a,
+    b: state => state.moduleA.b
+  })
+},
+methods: {
+  ...mapActions([
+    'moduleA/foo', // -> this['moduleA/foo']()
+    'moduleA/bar' // -> this['moduleA/bar']()
+  ])
+}
+
+// 简化方法 - 1.使用辅助函数的第一个参数传模块路径，第二个参数传对应的数据
+computed: {
+  ...mapState('moduleA', { // 如果路径比较深，比如 some/nested/module
+    a: state => state.a,
+    b: state => state.b
+  })
+},
+methods: {
+  ...mapActions('moduleA', [ // 模块路径也可以是更深层级的 some/nested/module
+    'foo', // -> this.foo()
+    'bar' // -> this.bar()
+  ])
+}
+
+// 简化方法 - 2.使用 createNamespacedHelpers 创建基于某个命名空间辅助函数
+import { createNamespacedHelpers } from 'vuex'
+
+const { mapState, mapActions } = createNamespacedHelpers('some/nested/module')
+
+export default {
+  computed: {
+    // 在 `some/nested/module` 中查找
+    ...mapState({
+      a: state => state.a,
+      b: state => state.b
+    })
+  },
+  methods: {
+    // 在 `some/nested/module` 中查找
+    ...mapActions([
+      'foo',
+      'bar'
+    ])
+  }
+}
+```
+#### 模块动态注册
+store创建后，可以通过 **store.registerModule** 方法动态注册模块，如果是动态注册的模块，是可以通过**store.unregisterModule(moduleName)** 来动态卸载模块(非动态模块，无法用这个方法卸载)
+```js
+// 注册模块 `myModule`
+store.registerModule('myModule', {
+  // ...
+})
+// 注册嵌套模块 `nested/myModule`
+store.registerModule(['nested', 'myModule'], {
+  // ...
+})
+```
+#### 模块重用
+```js
+const MyReusableModule = {
+  state () {
+    return {
+      foo: 'bar'
+    }
+  },
+  // mutation, action 和 getter 等等...
+}
+```
 ## 项目结构
+Vuex并不限制代码结构，但需要准守一些规则:
+- 应用层级的状态应该集中到单个的对象中。
+- 提交mutation是改变状态的唯一方法，且过程是同步的。
+- 异步逻辑应该封装到action里面
+
+如果store文件太大，可以将action、mutation和getter分割到单独的文件, 项目结构示例
+```shell
+├── index.html
+├── main.js
+├── api
+│   └── ... # 抽取出API请求
+├── components
+│   ├── App.vue
+│   └── ...
+└── store
+    ├── index.js          # 我们组装模块并导出 store 的地方
+    ├── actions.js        # 根级别的 action
+    ├── mutations.js      # 根级别的 mutation
+    └── modules
+        ├── cart.js       # 购物车模块
+        └── products.js   # 产品模块
+```
+
+## 插件
+Vuex 的 store 接受 plugins 选项，这个选项暴露出每次 mutation 的钩子。
+
+下面是使用内置的logger插件示例，会打印每次mutation的详细log。如果正在使用 vue-devtools，就不需要此插件。此插件仅限于开发时使用。
+```js
+import Vue from "vue";
+import Vuex from "vuex";
+import createLogger from "vuex/dist/logger";
+
+export default new Vuex.Store({
+  plugins: [createLogger()], // 使用内置的logger插件
+  state: {
+    count: 0,
+    commonCount: "root count"
+  }
+}
+```
 ## 严格模式
-## 表单处理
+> 在严格模式下，无论何时发生了状态变更且不是由 mutation 函数引起的，将会抛出错误。这能保证所有的状态变更都能被调试工具跟踪到。
+```js
+const store = new Vuex.Store({
+  // ...
+  strict: true // 开启严格模式
+})
+```
+> 不要在发布环境下启用严格模式！严格模式会深度监测状态树来检测不合规的状态变更——请确保在发布环境下关闭严格模式，以避免性能损失。
+```js
+// 可以让构建工具来处理这种情况：
+const store = new Vuex.Store({
+  // ...
+  strict: process.env.NODE_ENV !== 'production'
+})
+```
+## store与表单关联处理
+如果表单的v-model指向一个state，而state的改变只有显示的提交mutation，需要做一些处理
+```html
+<input v-model="message">
+<script>
+  // ...
+  computed: {
+    message: {
+      get () {
+        return this.$store.state.message
+      },
+      set (value) {
+        this.$store.commit('updateMessage', value)
+      }
+    }
+  }
+</script>
+```
 ## 测试
+待完善
+
+## 实例
+[购物车示例](https://github.com/vuejs/vuex/tree/dev/examples/shopping-cart)
