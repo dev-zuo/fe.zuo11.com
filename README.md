@@ -1,4 +1,7 @@
 # FE技术栈
+
+近期计划: https://github.com/zuoxiaobai/fenote/projects/1
+
 - [JS/ES6](#jses6)
 - [HTML/HTML5](#htmlhtml5)
 - [CSS/CSS3](#csscss3)
