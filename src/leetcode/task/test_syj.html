@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let numsA = [1, 1, 2]
+    let numsB = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]
+
+    // 方法1：
+    function editArry(array) {
+      // let temp = 0
+      // let lengthGap = 0 // 长度差
+      //   array.forEach((item, index, array) => {
+      //     console.log(`item: ${array[index - lengthGap]}, index: ${index}, array:${array}`)
+      //     // 当遍历第一个时，存到临时遍历a
+      //     if (index === 0) {
+      //       temp = item
+      //     } else {
+      //       console.log(item, temp, index)
+      //       // 如果第2个和第一个相同，移除当前元素
+      //       if (array[index - lengthGap] === temp) {
+      //         array.splice(index - lengthGap, 1)
+      //         lengthGap += 1
+      //       } else {
+      //         temp = array[index - lengthGap]
+      //       }
+      //     }
+      //   })
+      //   return array.length
+      // }
+      // 使用foreach遍历时，如果splice改变了数组长度，length减少到多少，就只遍历多少个元素，后面的就不遍历了
+      let temp = 0
+      let lengthGap = 0 // 长度差
+
+      for (let i = 0, len = array.length; i < len; i++) {
+        console.log(`item: ${array[i - lengthGap]}, index: ${i}, array:${array}`)
+        // 当遍历第一个时，存到临时遍历a
+        if (i === 0) {
+          temp = array[i]
+        } else {
+          // 如果第2个和第一个相同，移除当前元素
+          if (array[i - lengthGap] === temp) {
+            array.splice(i - lengthGap, 1)
+            lengthGap += 1
+          } else {
+            temp = array[i - lengthGap]
+          }
+        }
+
+      }
+      return array.length
+    }
+
+    // 方法2:
+    // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
+    function editArrayReduce(arr) {
+      let len = 0
+      arr.reduce((accumulator, currentValue, index, array) => {
+        if (accumulator === currentValue) {
+          array.splice(index, 1)
+          // 为了防止foreach或reduce遍历时，长度受影响，在最前面加入一个空元素，后面再移除
+          array.unshift('')
+          len += 1
+          return accumulator
+        } else {
+          return currentValue
+        }
+      })  // 不使用额外的数组空间，这里第二个参数就不用了
+      arr.splice(0, len)
+      return arr.length
+    }
+
+    // 方法3
+    // 使用额外的空间
+    function editArraySet(arr) {
+      let tempSet = new Set(arr)
+      arr.splice(0, arr.length, ...tempSet)
+      return arr.length
+    }
+
+    // console.log(editArry(numsA))
+    // console.log(editArry(numsB))
+
+    // console.log(editArrayReduce(numsA))
+    // console.log(editArrayReduce(numsB))
+
+    console.log(editArraySet(numsA))
+    console.log(editArraySet(numsB))
+
+    console.log(numsA)
+    console.log(numsB)
+  </script>
+</body>
+</html>

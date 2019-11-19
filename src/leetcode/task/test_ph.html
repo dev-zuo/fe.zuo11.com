@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 有序的整数数组
+    // let nums1 = [1, 2, 3, 0, 0, 0]
+    // let m = 3
+
+    // let nums2 = [2, 5, 6]
+    // let n = 3
+
+    let nums1 = [7, 12, 18, 4, 0, 0]
+    let m = 3
+
+    let nums2 = [1, 8, 14]
+    let n = 3
+
+    // 合并，都是有序的基本不用排序
+    function mergeAndSort(arr1, len1, arr2, len2) {
+      // 舍弃后面的长度
+      arr1.splice(len1)
+      arr2.splice(len2)
+
+      // 遍历需要插入的元素
+      for (let i = 0, secondStartIndex = 0; i < len2; i++) {
+        console.log(arr2[i], secondStartIndex)
+        let t = arr2[i]  // 2, 5, 6
+
+        // 重点: 两个有序的整数数组
+        let newLen = arr1.length
+        for (let j = secondStartIndex; j < newLen; j++) {
+          console.log('j', j, arr1.length)
+          if (arr1[j] >= t) {
+            arr1.splice(j, 0, t) // 插入一个元素
+            secondStartIndex = j + 1 // 长度也加1
+            break
+          } else {
+            // 如果遍历到最后还没有找到比插入的数组大的
+            if (j === arr1.length - 1) {
+              arr1.push(t)
+              secondStartIndex = j + 1
+            }
+          }
+        }
+      }
+
+    }
+
+    mergeAndSort(nums1, m, nums2, n)
+    console.log(nums1)
+    console.log(nums2)
+  </script>
+</body>
+</html>
