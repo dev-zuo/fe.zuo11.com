@@ -33,6 +33,15 @@
         let t = arr2[i]  // 2, 5, 6
 
         // 重点: 两个有序的整数数组
+        // arr1为空的情况 会出错  []
+        // [0] 0 [1] 1
+        console.log(arr1)
+        if (arr1.length === 0) {
+            arr1.push(...arr2)
+            console.log(arr1)
+            break;
+        }
+
         let newLen = arr1.length
         for (let j = secondStartIndex; j < newLen; j++) {
           console.log('j', j, arr1.length)
