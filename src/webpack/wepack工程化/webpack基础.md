@@ -1213,3 +1213,347 @@ style-loader 在幕后使用了 module.hot.accept，在 CSS 依赖模块更新�
 参考webpack官方文档：[模块热替换 | webpack](https://webpack.docschina.org/guides/hot-module-replacement/)
 
 
+## webpack-merge
+上面我们提到过 webpack-dev-server 仅开发环境需要，开发环境和生产环境的配置是两种配置。我们可以写一份开发环境、生产环境都一致的公共配置 webpack.base.js，然后开发环境使用 webpack.dev.js，生产环境使用 webpack.prod.js，使用 webpack-merge 把特有的配置和公共配置合并。
+
+下面来看看公用的配置:
+
+1. 入口entry
+2. 静态资源处理loader
+3. 根据模板生成静态html的插件、每次构建清除dist目录的插件
+
+开发环境特有的配置
+
+1. output不能使用chunkhash、contenthash
+2. mode: 'development' 开发环境
+3. devtool: 'cheap-module-eval-source-map', 开始sourcemap
+4. 不单独生成css文件，使用 style-loader
+5. 打开devServer配置，配合 webpack-dev-server 进行开发环境调试
+
+生产环境特有的配置
+1. 使用chunkhash和contenthash
+2. mode为 production 生成环境
+3. devtool不设置，默认不开始 sourcemap
+4. 使用css插件，生成单独的css文件
+5. 不使用devServer
+
+```js
+// webpack.base.js
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+
+module.exports = {
+  entry: {
+    'index': './src/index.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|gif)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            // 文件名，[name]为资源的名称，[ext]为资源的后缀
+            name: '[name].[ext]',
+            outputPath: 'images/',
+            // 我这里图片为26k，就调到了限制，一般建议 2048, 2KB
+            // 图片太大会影响主包，还是设置为2048
+            limit: 2048 // 单位字节，小于40KB的jpg，图片自动转base64，可以减少一次http请求
+          }
+        }
+      },
+      {
+        test: /\.(eot|ttf|woff|woff2|svg)$/,
+        use: "file-loader"
+      }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: '测试webpack生成htmllll',
+      filename: 'index.html',
+      template: './src/index.html'
+    }),
+    new CleanWebpackPlugin()
+  ]
+}
+```
+开发环境特有配置
+```js
+// webpack.dev.js
+const path = require('path')
+const { merge } = require('webpack-merge')
+const commonConfig = require('./webpack.base.js')
+
+let devConfig = {
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    filename: '[name].js'
+  },
+  mode: 'development',
+  devtool: 'cheap-module-eval-source-map',
+  module: {
+    rules: [
+      // 增加对css的处理
+      {
+        test: /\.less$/,
+        // 注意css loader有执行顺序，从又向左执行
+        use: ['style-loader', 'css-loader', 'less-loader', 'postcss-loader']
+      }
+    ]
+  },
+  devServer: {
+    contentBase: './dist', // 指定服务器的静态资源目录
+    open: true, // 自动再浏览器打开
+    port: 8081, // 端口
+    hot: true,
+    //即便便HMR不不⽣生效，浏览器器也不不⾃自动刷新，就开启hotOnly 
+    // hotOnly: true,
+    proxy: {
+      "/api": {
+        target: "http://127.0.0.1:9002"
+      }
+    }
+  }
+}
+
+module.exports = merge(commonConfig, devConfig)
+```
+生产环境特有配置
+```js
+// webpack.prod.js
+
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { merge } = require('webpack-merge')
+const commonConfig = require('./webpack.base.js')
+
+const prodConfig = {
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    filename: '[name]_[chunkhash:8].js'
+  },
+  mode: 'production',
+  module: {
+    rules: [
+      // 增加对css的处理
+      {
+        test: /\.less$/,
+        // 注意css loader有执行顺序，从又向左执行
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader', 'postcss-loader']
+      }
+    ]
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "[name]_[contenthash:8].css" 
+    })
+  ]
+}
+
+module.exports = merge(commonConfig, prodConfig)
+```
+
+修改 package.json 里面的 scripts，加入对应的命令
+```js
+"scripts": {
+  // 开发环境打包、不使用devServer，主要看打包后的文件
+  "dev": "webpack --config webpack.dev.js", 
+  // 生产环境打包
+  "build": "webpack --config webpack.prod.js",
+  // 开发环境打包、调试，开启devServer 在内存中执行dist下的项目
+  "dev:server": "webpack-dev-server --config webpack.dev.js"
+},
+```
+
+### vue-cli相关
+vue-cli中的 vue.config.js，其实就是对 webpack 配置的一层封装，我们也可以在 vue.config.js 里使用使用原生的webpack写法。configureWebpack 这个选项，这个对象会被 webpack-merge 合并到最终的 webpack 配置中。
+```js
+// vue.config.js
+module.exports = {
+  configureWebpack: {
+    plugins: [
+      new MyAwesomeWebpackPlugin()
+    ]
+  }
+}
+```
+除了对象外，他还可以是一个函数，不同的环境使用不同的配置
+```js
+// vue.config.js
+module.exports = {
+  configureWebpack: config => {
+    if (process.env.NODE_ENV === 'production') {
+      // 为生产环境修改配置...
+    } else {
+      // 为开发环境修改配置...
+    }
+  }
+}
+```
+参考: [webpack相关 | vue-cli](https://cli.vuejs.org/zh/guide/webpack.html)
+
+## 处理ES6+ babel-loader
+上面的例子中，我们并没有使用babel，假设src/index.js里面使用了 ?? 、?. 、箭头函数等，它在低版本的浏览器将不会运行，这里我们可以使用 babel-loader 对他进行处理
+
+我们先把 src/index.js 的内容替换为如下内容，里面用到了 ??, ?. ES2020的内容
+```js
+const arr = [new Promise(() => {}), new Promise(() => {})];
+
+let a = ''
+let b = false
+
+let obj = { sayHi: () => console.log('hi') }
+console.log('a: ', a ?? 'a')
+console.log('b: ', b ?? 'b')
+
+arr.map(item => { console.log(item);});
+
+obj.sayHi()
+console.log('obj.sayHello?.()', obj.sayHello?.())
+console.log('obj.sayHello()', obj.sayHello())
+```
+npm run dev:server 会直接报错
+
+![webpack_1_36.png](images/webpack_1_36.png)
+
+### @babel/polyfill
+下面来使用 babel-loader，将 js 处理成 低版本浏览器也支持的代码，先安装必要的依赖
+```bash
+# webpack 4.x | babel-loader 8.x | babel 7.x
+npm install -D babel-loader @babel/core @babel/preset-env
+npm install -D @babel/polyfill core-js@3
+```
+在 src/index.js 顶部，加入
+```js
+import "@babel/polyfill";
+```
+然后加入 babel-loader 的处理：遇到js文件时，使用babel转换一次，修改 webpack.dev.js
+```js
+ module: {
+  rules: [
+    // ....
+    {
+      test: /\.js$/,
+      exclude: /node_modules/,  // 忽略 node_modules 目录下的js文件，不转换
+      loader: "babel-loader", 
+      options: {
+        presets: ["@babel/preset-env"]
+      }
+    }
+  ]
+}
+```
+这样，再运行 npm run dev 就可以正常运行了。这种情况会把 polyfill 全部载入，打包后的文件较大，也可以配置按需注入
+```js
+// presets: ["@babel/preset-env"] 修改为下面的代码
+ presets: [
+  [ 
+    "@babel/preset-env", 
+    {
+      useBuiltIns: 'usage', // 按需注⼊
+      corejs: 3
+    }
+  ]
+]    
+```
+下面是默认情况，和使用按需载入后，dist/index.js 包的大小
+
+![webpack_1_37.png](images/webpack_1_37.png)
+
+参考: [@babel/preset-env | Babel](https://babeljs.io/docs/en/babel-preset-env#usebuiltins)
+
+### @babel/plugin-transform-runtime
+由于 polyfill 是注⼊到全局变量window下的，会污染全局环境。一般如果是开发组件库，⼯具库的场景，推荐使用闭包的方式: @babel/plugin-transform-runtime 插件
+
+```bash
+# 安装依赖
+npm install --save-dev @babel/plugin-transform-runtime 
+npm install --save @babel/runtim
+```
+使用plugins
+```js
+{
+  test: /\.js$/,
+  exclude: /node_modules/,
+  loader: "babel-loader",
+  options: {
+    presets: ["@babel/preset-env"],
+    plugins: ["@babel/plugin-transform-runtime"]
+  }
+}
+```
+去掉 src/index.js 里的 `import "@babel/polyfill";`，npm run dev 后，可正常运行，并进行了转换
+
+关于 loader的配置还可以用下面的写法，下面是webpack官网对应的示例
+```js
+rules: [
+  // the 'transform-runtime' plugin tells Babel to
+  // require the runtime instead of inlining it.
+  {
+    test: /\.m?js$/,
+    exclude: /(node_modules|bower_components)/,
+    use: {
+      loader: 'babel-loader',
+      options: {
+        presets: ['@babel/preset-env'],
+        plugins: ['@babel/plugin-transform-runtime']
+      }
+    }
+  }
+]
+```
+
+参考： [@babel/plugin-transform-runtime | webpack](https://webpack.js.org/loaders/babel-loader/#install)
+
+### .babelrc文件
+新建.babelrc文件，把options部分移⼊到该⽂件中即可，如果没有在webpack配置中写options，就默认读取 .babelrc 文件里的配置
+
+```js
+//webpack.config.js
+{
+  test: /\.js$/,
+  exclude: /node_modules/, 
+  loader: "babel-loader"
+}
+
+// .babelrc
+module.exports = {
+  presets: ["@babel/preset-env"],
+  plugins: ["@babel/plugin-transform-runtime"]
+}
+```
+### 配置React打包环境
+我们在 src/index.js 里面可以跑 react 代码，使用 babel 可以转换，修改 src/index.js 入口文件
+```js
+// 显示 hello world
+import React, { Component } from "react";
+import ReactDom from "react-dom";
+class App extends Component {
+  render() {
+    return <div>hello world</div>;
+  }
+}
+ReactDom.render(<App />, document.getElementById("app"));
+```
+为了可以执行，先安装依赖
+```bash
+# 安装依赖包
+npm install react react-dom --save
+# 安装babel与react转换的插件
+npm install -D @babel/preset-react
+```
+修改 .babelrc 文件
+```js
+module.exports = {
+  presets: ["@babel/preset-env", '@babel/preset-react'],
+  plugins: ["@babel/plugin-transform-runtime"]
+}
+```
+这样，npm run dev后，运行 dist/index.html 就可以看到 hello world 了
+
+## tree shaking
+## 代码分割 code splitting
+## webpack打包原理分析
+## 自己写一个 loader
+## 自己写一个 plugins
