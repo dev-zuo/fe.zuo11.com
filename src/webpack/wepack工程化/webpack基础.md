@@ -1552,8 +1552,192 @@ module.exports = {
 ```
 这样，npm run dev后，运行 dist/index.html 就可以看到 hello world 了
 
-## tree shaking
+## tree shaking ”摇树“
+[ˈʃeɪkɪŋ]，webpack 2.x开始支持 tree shaking 概念，可以移除代码中没有用到的部分，只保留实际用到了的。从而减少打包体积。**注意它只支持 ES module，也就是 import， export，像 node 的 CommonJS module.export，require是不支持的。**
+
+修改 src/index.js
+```js
+// src/index.js
+import { add } from './counter'
+
+console.log(add(1, 2))
+```
+新建一个 counter.js，导出两个函数，我们只用其中的一个
+```js
+// src/couner.js
+export function add(a, b) {
+  return a + b
+}
+
+export function sub(a, b) {
+  return a - b
+}
+```
+我们 npm run dev 时，可以看到 counter 里没用到的 sub 函数也被打包了
+
+![webpack_1_38.png](images/webpack_1_38.png)
+
+这里，我们可以在 webpack.dev.js 中设置开启tree sharking
+```js
+// ...
+optimization: {
+  usedExports: true
+}
+// ...
+```
+再 npm run dev，可以看到打包的文件里面就标记只使用 add，没有使用 sub，如下图
+
+![webpack_1_39.png](images/webpack_1_39.png)
+
+**注意：这里我们使用开发环境有两个原因：**
+
+1. mode: development开发环境代码没有混淆压缩，可以更好的看打包出来代码情况，（注意：开发环境，tree shaking后，还是可以在代码里找到没用到的sub的，生成环境才会自动去掉）
+2. mode: production默认开启了tree shaking，不好看效果
+
+### tree shaking副作用
+tree shaking 会把没用的代码(dead code)，直接删掉。**有些css文件，或者一些表面上看起来没用到的代码，有可能会被shaking掉，这就是tree shaking开启后的副作用**
+
+怎么消除这个副作用呢？可以在 package.json 里使用 "sideEfects" 字段指定 tree shaking 时，跳过这些文件，防止误删。
+
+```js
+// package.json
+{
+  "name": "your-project",
+  // 设置 tree shaking 需要跳过的文件
+  "sideEffects": [
+    "./src/some-side-effectful-file.js",
+    "*.css"
+  ]
+}
+```
+
+### tree shaking概念的理解
+
+> You can imagine your application as a tree. The source code and libraries you actually use represent the green, living leaves of the tree. Dead code represents the brown, dead leaves of the tree that are consumed by autumn. In order to get rid of the dead leaves, you have to shake the tree, causing them to fall.
+
+你可以把你的应用想象成一颗树。绿色表示实际用到的代码和库，是树上活着的树叶。灰色表示未引用的代码，是秋天树上枯萎的树叶。为了去除死去的树叶，你必须摇动(shaking)这颗树，使它落下。
+
+参考：[tree shaking | webpack](https://webpack.docschina.org/guides/tree-shaking/#add-a-utility)
+
 ## 代码分割 code splitting
+在之前react的例子中，我们引入了react, react-dom，打包后的inde.js比较大，有 3M 多
+```js
+import React, { Component } from "react";
+import ReactDom from "react-dom";
+class App extends Component {
+  render() {
+    return <div>hello world</div>;
+  }
+}
+ReactDom.render(<App />, document.getElementById("app"));
+```
+
+![webpack_1_40.png](images/webpack_1_40.png)
+
+一般这种单个文件比较大的情况，就可以使用代码分割(code splitting)了。不使用代码分割的缺点
+
+1. 业务代码体积小，而第三方库体积大。业务逻辑会变化，而第三方库基本不会变更。如果不分割代码，每次业务代码改动，第三方库也会跟着一起打包，耗时
+2. 单个文件体积大，加载时间长。尽管分割后会多出一个或多个get请求，但整体比单个大文件体验要好。
+
+可以在 webpack.dev.js 里使用如下配置进行代码分割
+
+```js
+
+optimization:{ 
+  // 自动代码分割
+  splitChunks:{
+    chunks: "all", // 默认⽀持异步，我们使用all 
+  }
+}
+```
+这样 npm run dev 后，就可以看到多出一个 venders~index.js的文件，为 react 库文件
+
+![webpack_1_41.png](images/webpack_1_41.png)
+
+一般使用默认的配置，适合web性能最佳实践，但有些情况，项目的最佳策略可能有所不同。splitChunks 还可以配置很多细节
+```js
+module.exports = {
+  //...
+  optimization: {
+    splitChunks: {
+      chunks: 'async', // 默认仅对异步模块进行分割，initial 仅对同步，all 对所有模块
+      minSize: 20000, // 生成块的最小大大小（以字节为单位) 20kb
+      minRemainingSize: 0, // 
+      maxSize: 0, // 
+      minChunks: 1, // 打包生成的chunk文件最少有几个chunk引⽤了这个模块
+      maxAsyncRequests: 30, // 最⼤异步并行请求数
+      maxInitialRequests: 30, // 入口文件的最大并行请求数
+      automaticNameDelimiter: '~', // 代码分割文件名分隔符
+      enforceSizeThreshold: 50000,
+      cacheGroups: { // 缓存组
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    }
+  }
+};
+```
+参考：[SplitChunksPlugin | webpack](https://webpack.js.org/plugins/split-chunks-plugin/)
+
+### 预获取/预加载模块(prefetch/preload module) 
+webpack v4.6.0+ 增加了对预获取和预加载的支持。
+- prefetch(预获取)：将来某些导航下可能需要的资源 (推荐)
+- preload(预加载)：当前导航下可能需要资源 **不正确地使用 webpackPreload 会有损性能，请谨慎使用。**
+
+```js
+//...
+import(/* webpackPrefetch: true */ 'LoginModal');
+// 这会生成 <link rel="prefetch" href="login-modal-chunk.js"> 并追加到页面头部，指示着浏览器在闲置时间预取 login-modal-chunk.js 文件。
+```
+
+**prefetch 在父 chunk 加载结束后，网络空闲时开始加载。**
+
+**preload 和父 chunk 并行请求，可能会有负面的影响**
+
+参考: [预获取/预加载模块(prefetch/preload module) | webpack](https://webpack.docschina.org/guides/code-splitting/#prefetchingpreloading-modules)
+
 ## webpack打包原理分析
+来回顾一下之前的知识点，在一个空的项目中，引入webpack进行打包
+```bash
+# 创建一个空的项目
+mkdir webpack_source
+# 进入该项目目录
+cd webpack_source
+# 初始化，生成 package.json
+npm init -y
+# 安装webpack依赖包
+npm install webpack webpack-cli -D
+# 创建src/index.js 写入值document.write('123')，并返回到webpack_source目录
+mkdir src; cd src; touch index.js; echo "document.write('123')" >> index.js; cd ..;
+# 创建webpack配置文件
+touch webpack.config.js
+```
+webpack.config.js 内容如下
+```js
+const path = require('path')
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    filename: 'main.js'
+  },
+  mode: 'development'
+}
+```
+npx webpack 执行打包就可以在 dist目录下生成main.js了。webpack在打包时，主要执行了三个步骤
+
+1. 找到 entry 入口文件，分析内容
+2. 找出模块依赖，转换内容(浏览器可以运行的代码)
+3. 输出源代码，把代码放到 ./dist/main.js
+
+
 ## 自己写一个 loader
 ## 自己写一个 plugins
