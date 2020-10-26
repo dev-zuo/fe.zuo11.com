@@ -1,0 +1,32 @@
+{
+  "name": "fenote",
+  "version": "1.0.0",
+  "description": "左小白的前端笔记，用于记录、完善个人前端知识体系结构",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zuoxiaobai/fenote.git"
+  },
+  "keywords": [
+    "左小白",
+    "前端知识体系",
+    "web前端"
+  ],
+  "author": "guoqzuo",
+  "license": "Apache-2.0 License",
+  "bugs": {
+    "url": "https://github.com/zuoxiaobai/fenote/issues"
+  },
+  "homepage": "https://github.com/zuoxiaobai/fenote#readme",
+  "devDependencies": {
+    "vuepress": "^1.7.1"
+  }
+}
