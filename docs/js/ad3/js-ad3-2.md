@@ -1,0 +1,52 @@
+# 2. 在HTML中使用JavaScript
+
+
+
+向HTML中插入 JavaScript 代码的主要方法就是使用 `script`元素
+
+## `script`元素属性
+`script` 属性里面默认的type 为 "text/javascript", 需要注意的是 async 与 defer 属性
+
+HTML4.1 与 HTML5 里面 async 与 defer 属性的值不一致(之前值为 async, defer，H5 为 true, false)，现在这里以 H5 为主
+
+## `script`使用方式
+在HTML里 `script` 元素的使用方法有两种:
+- 嵌入脚本
+  
+```html
+<!-- 
+  1. 嵌入脚本里面不能使用src属性，如果使用了src引入了外部js文件，内嵌的内容会失效 
+  2. 嵌入脚本内部不要出现 </script> 结束标志。这样后面的代码不会继续执行，如果一定要加入请使用 <\/script>
+-->
+<script> 嵌入脚本内容 </script>
+```
+
+- 使用外部脚本
+
+```html
+<!-- 引入外部脚本，如果是第三方的js文件，需要确保其安全可靠。-->
+<script src="1.js"></script>
+```
+
+## `script`位置与执行顺序
+- 放到 `head` 元素内部，页面一加载就按顺序加载执行，这种情况当JS被加载执行完成，页面才会开始渲染，如果网速慢，载入文件大等会导致页面空白一段时间
+- 或者放到 `body` 元素的最后面，顺序执行，等页面渲染完后再去加载执行。
+- 使用async与defer属性会改变script的默认执行顺序
+  - async为true时，后续的页面渲染和js加载执行会并行处理(异步)
+  - defer为true时，后续的页面渲染和js加载会并行处理，但js的执行会等到页面完全渲染好后才开始。
+  
+
+![图解async与defer属性的区别](/images/js/script元素里async与defer属性的区别.png)
+
+详情请参见 [defer和async的区别](https://segmentfault.com/q/1010000000640869)
+
+## 当浏览器禁用了JS或不支持JS
+在 `body` 元素里面，最后加入 `noscript` 元素，当JS被禁用或不支持时，会显示noscript元素内部的内容
+
+```html
+<body>
+    <noscript>
+        <p>本页面需要浏览器支持（启用）JavaScript!</p>
+    </noscript>
+</body>
+```

@@ -1,0 +1,192 @@
+# 4. 接口 Interfaces
+
+
+
+> 看这一章时，感觉ts官网文档很不好理解，而ts入门教程则更好理解一点
+
+## 什么是接口
+### 在面向对象(OO)语言中
+> 在面向对象语言中，接口（Interfaces）是一个很重要的概念，它是对行为的抽象，而具体如何行动需要由类（classes）去实现（implement）。
+### 在TypeScript中
+TypeScript中，接口有两个用处:
+1. 使用接口(Interfaces)来定义对象的类型，即对对象的形状(Shape)进行描述
+2. 对类的一部分行为进行抽象
+
+## 1.用接口定义对象类型
+### 简单示例
+下面的例子中，定义了一个接口 Person，接着定义了一个变量 tom，类型是Person，这样就约束了tom的形状(Shape)必须与接口Person一致
+
+**接口命名一般需要首字母大写** 有的编程语言中会建议接口的名称加上 I 前缀: [Interface Naming Guidelines](https://docs.microsoft.com/en-us/previous-versions/dotnet/netframework-1.1/8bc1fexb(v=vs.71)?redirectedfrom=MSDN)
+```ts
+interface Person {
+  name: string; // 注意，这里是分号结尾
+  age: number;
+}
+
+// 这里赋值的属性、多一个，少一个都是不允许的
+let tom: Person = {
+  name: 'Tom',
+  age: 25
+}
+```
+
+### 可选属性
+有时我们希望不要完全匹配一个形状(Shape)，那么可以用可选属性
+```ts
+interface Person {
+  name: string;
+  age?: number;
+}
+
+let tom: Person = { // OK
+  name: 'Tom'
+}
+
+let tom2: Person = { // OK
+  name: 'Tom2',
+  age: 23
+}
+```
+
+### 任意属性
+如果我们希望一个接口允许有任意的属性，可以使用如下方式
+```js
+interface Person {
+  name: string; // 必要属性
+  age?: number; // 可选属性
+  [propName: stirng]: any; 
+  // 注意 任意属性的类型，必须包含必要属性和可选属性的类型
+  // 如果上面任意属性类型不是any，而是number或string会报错
+}
+
+let tom: Person = {
+  name: 'Tom',
+  gender: 'male'
+}
+```
+
+### 只读属性
+只读的约束是第一次给对象赋值时，而不是第一次给只读属性赋值的时候
+```js
+interface Person {
+  readonly id: number; // 只读属性
+  name: string; // 必要属性
+  age?: number; // 可选属性
+  [propName: stirng]: any;
+  // 注意 任意属性的类型，必须包含必要属性和可选属性的类型
+  // 如果上面任意属性类型不是any，而是number或string会报错
+}
+
+let tom: Person = {
+  id: 89757,
+  name: 'Tom',
+  gender: 'male'
+}
+tom.id = 9527 // Error
+```
+
+## 2.对类的一部分行为进行抽象
+有时候不同类之间可以有一些共有的特性，这时候就可以把特性提取成接口（interfaces），用 implements 关键字来实现。这个特性大大提高了面向对象的灵活性。
+### 类实现接口
+```js
+interface Alarm {
+    alert();
+}
+
+class Door {
+}
+
+// SecurityDoor 类实现了 Alarm 接口
+class SecurityDoor extends Door implements Alarm {
+    alert() {
+        console.log('SecurityDoor alert');
+    }
+}
+
+class Car implements Alarm {
+    alert() {
+        console.log('Car alert');
+    }
+}
+```
+一个类可以实现多个接口
+```js
+interface Alarm {
+    alert();
+}
+
+interface Light {
+    lightOn();
+    lightOff();
+}
+
+// Car 实现了多个接口
+class Car implements Alarm, Light {
+    alert() {
+        console.log('Car alert');
+    }
+    lightOn() {
+        console.log('Car light on');
+    }
+    lightOff() {
+        console.log('Car light off');
+    }
+}
+```
+### 接口继承接口
+```js
+interface Alarm {
+    alert();
+}
+
+interface LightableAlarm extends Alarm {
+    lightOn();
+    lightOff();
+}
+```
+### 接口继承类
+```js
+class Point {
+    x: number;
+    y: number;
+}
+
+interface Point3d extends Point {
+    z: number;
+}
+
+let point3d: Point3d = {x: 1, y: 2, z: 3};
+```
+
+### 混合类型
+之前使用过接口来定义一个函数需要符合的形状
+```js
+interface SearchFunc {
+  // 使用接口定义一个函数需要符合的形状
+  (source: string, subString: string): boolean;
+}
+let mySearch: SearchFunc;
+mySearch = function(source: string, subString: string) {
+  return source.includes(subString)
+}
+```
+一个函数可以有自定的属性和方法
+```js
+interface Counter {
+    (start: number): string;
+    interval: number;
+    reset(): void;
+}
+
+function getCounter(): Counter {
+    let counter = <Counter>function (start: number) { };
+    counter.interval = 123;
+    counter.reset = function () { };
+    return counter;
+}
+
+let c = getCounter();
+c(10);
+c.reset();
+c.interval = 5.0;
+```

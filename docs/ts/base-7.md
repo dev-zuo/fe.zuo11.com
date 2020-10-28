@@ -1,0 +1,166 @@
+
+# 7. 声明文件
+
+
+
+当使用第三方库时，**需要引用其声明文件，才能获得对应的代码补全、接口提示等功能**
+
+如果想在ts里使用jQuery，需要使用声明语句先声明
+```ts
+jQuery('#foo') // ERROR: Cannot find name 'jQuery'.
+// 但在ts中，编译器并不知道 $ 或 jQuery是什么
+
+// 需要使用declare var来定义其类型
+declare var jQuery: (selector: string) => any;
+
+jQuery('#foo')
+```
+**declare var 并没有真正定义一个变量，只是定义了类型，编译结果会删除**
+
+## 什么是声明文件
+通常会把声明语句放到单独的一个文件(比如jQuery.d.ts)中，这就是声明文件，**声明文件必须以.d.ts为后缀**
+```js
+// src/jQuery.d.ts
+declare var jQuery: (selector: string) => any;
+
+// src/index.ts
+jQuery('#foo')
+```
+当把jQuery.d.ts 放到项目中时，其他所有*.ts文件就都可以获得jQuery的类型定义了，如果还是无法解析，可以检查下
+tsconfig.json 中的 files、includes、exclude 配置，看是否包含了jQuery.d.ts文件
+```sh
+/path/to/project
+├── src
+|  ├── index.ts
+|  └── jQuery.d.ts
+└── tsconfig.json
+```
+
+## 第三方声明文件
+社区定义好了很多声明文件，可以下载下来使用即可，推荐使用 @types 统一管理第三方库的声明文件，使用方法如下
+```sh
+npm install @types/jquery --save-dev
+```
+搜索需要声明的文件 https://microsoft.github.io/TypeSearch/
+
+## 书写声明文件
+当第三方库没有提供声明文件时，就需要自己手写声明文件了。不同的使用场景，声明文件的内容和使用方法会有所区别
+
+### 全局变量
+```js
+// 1.declare var 声明全局变量, 可以是 declare let , declare const ，const无法修改，其他可修改
+// 注意不要在声明语句中，定义具体的实现
+// src/jQuery.d.ts
+declare let jQuery: (selector: string) => any;
+
+// 2.declare function，支持函数重载
+declare function jQuery(selector: string): any;
+declare function jQuery(domReadyCallback: () => any): any;
+
+// 3.declare class
+declare class Animal {
+    name: string;
+    constructor(name: string);
+    sayHi(): string; // 不能有具体实现，否则会报错
+}
+
+// 4.declare enum
+declare enum Directions {
+  Up,
+  Down,
+  Left,
+  Right
+}
+
+// 5.declare namespace
+// 随着es6广泛应用，已经**不建议再使用ts中的namespace**，直接使用es6的模块化方案
+declare namespace jQuery {
+  function ajax(url: string, settings?: any): void;
+  const version: number;
+  class Event {
+      blur(eventType: EventType): void
+  }
+  enum EventType {
+      CustomClick
+  }
+}
+// 嵌套命名空间
+jQuery.ajax('/api/get_something');
+jQuery.fn.extend({
+  check: function() {
+    return this.each(function() {
+      this.checked = true;
+    });
+  }
+});
+
+// 6.interface和type
+interface AjaxSettings {
+  method?: 'GET' | 'POST'
+  data?: any;
+}
+declare namespace jQuery {
+  function ajax(url: string, settings?: AjaxSettings): void;
+}
+
+```
+### npm 包
+一般通过 `import foo from 'foo'` 导入一个npm包
+
+在导入npm包前，需要看看声明文件是否存在，一般声明文件可能存放在下面两个地方：
+1. 与该npm包绑定在一起，判断package.json中是否有types字段，或者有一个index.d.ts声明文件，这样不需要额外安装其他包，最推荐。
+2. 发布到 `@types` 里，安装 `npm install @types/foo --save-dev`
+
+如果没有声明文件，就需要自己写声明文件了，具体方法参见: https://ts.xcatliu.com/basics/declaration-files#npm-bao
+
+npm包的声明文件与全局变量的声明文件有很大区别。使用declare不会声明全局变量，只会声明一个局部变量，只有要陪你过export导出，再用import导入，才可以
+```js
+// 1. export 导出变量
+export const name: string;
+export function getName(): string;
+export class Animal {
+    constructor(name: string);
+    sayHi(): string;
+}
+export enum Directions {
+    Up,
+    Down,
+    Left,
+    Right
+}
+export interface Options {
+    data: any;
+}
+// 混用declare与export
+declare const name: string;
+declare function getName(): string;
+declare class Animal {
+    constructor(name: string);
+    sayHi(): string;
+}
+declare enum Directions {
+    Up,
+    Down,
+    Left,
+    Right
+}
+interface Options { // interface前不需要declare
+    data: any;
+}
+
+export { name, getName, Animal, Directions, Options };
+
+// 2.export default,只有 function、class、interface 可以直接默认导出，其他变量需要先定义出来，再导出
+export default function foo(): string;
+
+// 3.export =
+export = foo;
+
+declare function foo(): string;
+declare namespace foo {
+  const bar: number;
+}
+```
+
+### 其他 
+UMD库、直接扩展全局变量、在npm包或UMD库中扩展全局变量、模块插件、发布声明文件 参见: [声明文件 - TypeScript 入门教程](https://ts.xcatliu.com/basics/declaration-files#npm-bao)

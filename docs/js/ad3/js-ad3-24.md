@@ -1,0 +1,362 @@
+
+# 24. 最佳实践
+
+
+
+## 可维护性
+一般来说，如果代码是可维护的，它应该遵循以下特点
+- 可理解性，其他人可以接手代码并理解它的意图，而无需原开发人员完成解释
+- 直观性，代码中的东西一看就能明白，不管其操作过程多复杂
+- 可适应性，可用于多个场景，稍微变化，不需要重写方法。
+- 可扩展性，在代码构架上已考虑到在未来允许对核心功能进行扩展
+- 可调试性，当有地方出错时，代码可以给予你足够的信息来确定问题所在
+
+### 代码约定
+一种让代码变得可维护的简单途径就是形成一套JS代码的书写约定
+- 可读性：缩进和注释可以带来更可读的代码。代码使用同一种缩进，会更易阅读。需要写注释的地方：
+```js
+// 1. 函数和方法, 需要注释函数的功能、参数代表什么，返回值
+// 2. 大段代码，用于完成单个任务的多行代码，应该在前面放一个描述任务的注释
+// 3. 复杂的算法，如果使用一种独特的方式解决问题，需要解释是怎么做的。方便别人何自己后面查看理解
+// 4. Hack，由于浏览器差异，JS会包括一些hack，需要注明是用来应付哪个浏览器的
+```
+
+- 变量和函数命名：适当给变量和函数起名字对于增加代码可理解、可维护性是非常重要的。命名的规则一般如下；
+```js
+// 1. 变量名应该为名词，如car或person
+// 2. 函数名应该以动词开始，如getName()，返回Boolean值的函数一般以is开头，如isEnable()
+// 3. 变量何函数都应使用合乎逻辑的名字，不要担心长度，代码压缩会处理长度问题
+// 4. 避免出现无法表示所包含的数据类型的无用变量名
+```
+
+- 变量类型透明：由于JS中变量是松散类型的，很容易忘记变量所应包含的数据类型，有三种表示数据类型的方式：
+```js
+// 1. 初始化，定义一个变量后初始化对应的值，指定变量类型
+var found = false; // 布尔型
+var count = -1;    // 数字
+var name = '';     // 字符串
+var person = null; // 对象
+// 缺点: 在用于函数参数时会显得用处不大
+
+// 2.使用匈牙利标记法(在变量名之前加一个或多个字符来表示数据类型)来指定变量类型，
+var bFound; // 布尔型
+var iCount; // 整数
+var sName;  // 字符串
+var oPerson; // 对象
+// 缺点：让代码在某种程度上难以阅读，不怎么推荐使用
+
+// 3.指定变量类型的方式使用类型注释
+var found  /*:Boolean*/ = false;
+var count  /*:int*/ = 10;
+var name   /*:String*/ = "guoqzuo";
+var person /*Object*/ = null;
+// 缺点：写法比较怪，/* */注释无法嵌套，不过问题不大
+```
+
+### 松散耦合
+如果应用的某个部分依赖于另一个部分，代码就是耦合过紧，难以维护。
+- 解耦HTML/JS，直接写在HTML里的JS，或在JS里面写的HTML尽量避免。绑定方法及函数最好都写在JS里。HTML呈现尽可能与JS保持分离，如果JS需要操作HTML，尽量先隐藏，再显示，而不是用JS生成。
+```html
+<!-- 使用了<script>的紧密耦合的 HTML/JS-->
+<script>
+  document.write("hello world!")
+</script>
+
+<!-- 使用事件处理程序属性值的紧密耦合的HTML/JS -->
+<input type="button" value="Click me" onclick="doSomething()">
+
+<!-- 将HTML紧密耦合到JS，下设下面的代码在某个JS中 -->
+<script>
+  function insertMessage(msg) {
+    var container = document.getElementById("container");
+    container.innerHTML = "<div class='msg'><p class='post'>"+ msg + "</p></div>"
+  }
+</script>
+```
+
+- 解耦CSS/JS，样式操作尽量只放到css中，不要放到JS中操作。如果必须，可以使用改变class的方式来切换样式
+```js
+// CSS 对 JS的松散耦合
+element.style.color = "red";
+element.style.backgroundColor = "blud"
+
+// 需要通过class来解耦
+element.className = "edit"
+```
+
+- 解耦应用逻辑/事件处理程序，应用和业务逻辑之间松散耦合的几条原则
+```js
+// 1. 不要将event对象传给其他方法，只传来自event对象中所需的数据
+// 2. 任何可以在应用层面的动作都应该可以在不执行任何事件处理程序的情况下进行
+// 3. 任何事件处理程序都应该处理该事件，然后将处理交给应用逻辑
+```
+
+### 推荐的编程实践
+- 尊重对象所有权
+```js
+// 1. 不要为实例或原型添加属性
+// 2. 不要为实例或原型添加方法
+// 3. 不要重定义已存在的方法
+
+// 正确方法
+// - 创建包含所需功能的新对象，并用它与相关对象交互
+// - 创建自定义类型，继承需要修改的类型，然后为自定义类型添加额外功能
+```
+
+- 避免全局变量
+```js
+// 两个全局变量要避免
+var name = "guoqzuo";
+function sayName() {
+  alert(name)
+}
+
+// 推荐改为一个全局变量
+var MyApplication = {
+  name: "guoqzuo",
+  sayName: function() {
+    alert(this.name);
+  }
+}
+// 全局变量为了避免与其他人或其他引入库的名称有冲突，尽量使用特别一点的名称，用项目名称加前缀
+// 例如 YAHOO 的 Wrox
+// 创建全局变量
+var Wrox = {}
+Wrox.ProJS = {} // 创建Professional JS 命名空间
+Wrox.ProJS.EventUtil = {}
+Wrox.ProJS.CookieUtil = {}
+```
+- 避免与null进行比较
+```js
+// 如果看到了与null比较的代码，尝试使用以下技术替换:
+// 1. 如果值应该是一个引用类型，使用instanceof操作检查器构造函数
+// 2. 如果值是一个基本类型，使用typeof检查其类型
+
+function sortArray(values) {
+  if (values != null) { // 避免
+    values.sort()
+  }
+}
+
+// 必须按照所期望的值进行检查，而非按照不期望的那些
+function sortArray(values) {
+  if (values instanceof Array) { // 推荐
+    values.sort()
+  }
+}
+```
+- 使用常量
+```js
+// 1. 重复值，任何多出用到的值都应该抽取为一个常量
+// 2. 用户界面的字符串，任何用于显示给用户的字符串，都应该被抽取出来，以方便国际化
+// 3. URLs，在web应用中，资源位置很容易变更，推荐用一个公共的地方存放所有的URL
+// 4. 任意可能会更改的值，如果定义一个值，需要问一下自己，这个值以后是否会变化，如果不会，就可以使用常量
+```
+
+## 性能
+JS是一种解释型语言，比编译型语言要慢的多。Chrome是第一款内置优化引擎，将JS编译为本地代码的浏览器，此后主流浏览器陆续效仿实现了JS编译执行。即使到了编译执行的JS新阶段，但仍然会存在低效率代码。不过还是有一些方式可以改进代码的整体性能
+### 注意作用域
+访问全局变量总是要比访问局部变量慢，因为需要遍历作用域链。只要减少花费在作用域链上的时间，就能增加脚本的整体性能
+- 避免全局查找，将一个函数中会用到多次的全局对象存储为局部变量总是没错的
+```js
+// 该函数看上去完全正常，但包含了三个对全局document对象的引用。如果页面有很多图片，document的引用会多次，每次都要进行作用域链查找。
+function updateUI() {
+  var img = document.getElementByTagName('img');
+  for (var i = 0, len=imgs.length; i < len; i++) {
+    imgs[i].title = document.title + 'image' + i;
+  }
+  var msg = document.getElementById("msg");
+  msg.innerHTML = "Update complete";
+}
+
+// 可以通过创建一个指向document的局部变量，来优化。这样只用一直全局查找
+function updateUI() {
+  var doc = document;
+  var img = doc.getElementByTagName('img');
+  for (var i = 0, len=imgs.length; i < len; i++) {
+    imgs[i].title = doc.title + 'image' + i;
+  }
+  var msg = doc.getElementById("msg");
+  msg.innerHTML = "Update complete";
+}
+```
+- 避免with语句（with语句会创建自己的作用域，会增加其中执行代码的作用域长度）
+
+### 选择正确的方法
+算法的复杂度使用O符号表示，最简单、最快捷的算法是常数值，即O(1)。
+``` js
+// 常见的算法类型
+// 1. O(1) 常数 不管有多少值，执行的时间恒定。一般表示简单值何存储在变量中的值。
+// 2. O(log n) 对数 总执行时间和值的数量相关，但是要完成算法并不一定要获取每个值，二分查找
+// 3. O(n) 线性 总执行时间和值的数量相关，如：遍历某个数组中的所有元素
+// 4. O(n²) 平方 总执行时间和值的数量有关，每个值至少获取n次，例如插入排序
+```
+- 1.避免不必要的属性查找，使用变量和数组要比访问对象的属性更有效率，后者是一个O(n)操作。对象上的任何属性查找都要比访问变量或者数组花费的时间更长。属性查找越多，执行时间越长。一般只要能减少算法的复杂度，就要尽可能减少。
+```js
+// 不推荐
+var values = {first: 5, second: 10};
+var sum = values.first + values.second;
+alert(sum);
+
+// 数组查找的速度比上面的属性查找要快
+var values = [5, 10]
+var sum = values[0] + values[1]
+alert(sum)
+```
+- 2.优化循环
+```js
+// 一个循环的基本优化步骤如下：
+// - 减值迭代，大多循环都是从0开始，增加到某个特定值的迭代器，很多情况下，从最大值开始，再循环中不断减值的迭代器更加高效
+// - 简化终止条件，由于每次循环过程都会记录终止条件，所以必须保证它尽可能快，也就是说避免属性查找或其他O(n)的操作
+// - 简化循环体，循环体内需要最大限度的优化，确保没有某些可以被很容易移出循环体的密集计算
+// - 使用后测试循环，for循环和while循环都是前测试循环。而do-while这种后测试循环，可以表面最初终止条件的计算，运行更快。
+for (var i = 0; i < values.length; i++) {
+  process(values[i]);
+}
+// 优化 => 减值迭代、简化终止条件，只执行一次 .length属性查找（前提是改变遍历顺序对功能没影响）
+for (var i = values.length - 1; i >= 0; i--) {
+  process(values[i])
+}
+// 后循环优化 => 至少要确保处理的值有一个，空数组会导致多余的一次循环，前测试循环可以避免这种情况
+var i = values.length - 1;
+if (i > -1) {
+  do {
+    process(values[i]);
+  } while(--i >= 0)
+}
+```
+- 3.展开循环，如果循环的次数是确定的，消除循环并使用多次函数调用往往更快
+```js
+// 消除循环
+process(values[0]);
+process(values[1]);
+process(values[2]);
+
+// 如果循环中的迭代次数不能事先确定，可以考虑一种叫做Duff装置技术。可提升大数据集的处理速度。如果对于小数据集，额外的开销则可能得不偿失
+// p689 待有时间研究
+```
+- 4.避免双重解释
+```js
+// 当JS代码想解析JS的时候回存在双重解释惩罚，使用eval()函数或Function构造函数以及setTimeout()传入一个字符串参数时，都会发生这种情况
+// 某些代码求值 --- 避免！！
+eval("alert('hello world')");
+// 创建新函数 --- 避免！！
+var sayHi = new Function("alert('Hello world!')");
+// 设置超时 --- 避免!!
+setTimeout("alert('hello world!')", 500)
+
+// 修正
+alert('hello world')
+var sayHi = function() {
+  alert('hello world')
+}
+setTimeout(function() {
+  alert('Hello world!');
+}, 500)
+```
+
+- 5.性能的其它注意事项
+```js
+// 1. 原生的方法较快，只要有可能，使用原生的方法而不是自己写一个。原生方法是用诸如C/C++之类的编译型语言写出来的，比js要快很多。
+// 2. switch语句较快, 如果有复杂的if-else，使用switch会更快，可以通过将case语句按照最可能到最不可能的顺序进行组织会更搞笑
+// 3. 位运算符较快 ，当进行数学运算时，位运算 比任何布尔运算或算术运算要看。取模、逻辑与和逻辑或都可以考虑用位运算替换
+```
+
+### 最小化语句数
+找出可以组合为一起的语句组合为一条语句，比执行多条语句要快
+```js
+// 1. 多个变量声明
+// 不推荐
+var count = 5;
+var color = "blue";
+var values = [1, 2, 3];
+var now = new Date();
+
+// 推荐优化 => 4个语句转换为一个语句
+var count = 5,
+    color = "blue",
+    values = [1, 2, 3],
+    now = new Date();
+
+// 2. 插入迭代值
+var name = values[i];
+i++;
+// 可以优化为
+var name = values[i++] 
+
+// 3. 使用数组和对象字面量
+// 用4个语句创建和初始化数组 --- 浪费
+var values = new Array()
+values[0] = 123;
+values[1] = 456;
+values[2] = 789;
+
+// 用4个语句创建何初始化对象 --- 浪费
+var person = new Object();
+person.name = 'guoqzuo';
+person.age = 29;
+person.sayName = function() {
+  alert(this.name);
+}
+
+// 只用一条语句创建何初始化数组
+var values = [124, 456, 789];
+
+// 只用一条语句创建何初始胡对象
+var person = {
+  name: "guoqzuo",
+  age: 29,
+  sayName: function() {
+    alert(this.name);
+  }
+}
+```
+
+### 优化DOM交互
+在JS的各个方面中，DOM毫无疑问是最慢的一部分，DOM操作要消耗大量的时间，因为他们往往需要重新渲染整个页面或者某一部分。理解如何优化DOM的交互可以极大提高脚本完成的速度。
+- 1.最小化现场更新，一旦需要访问的DOM部分已经是显示页面的一部分，那就是在进行一次现场更新。每一个更新，浏览器要重新计算无数尺寸以进行更新。现场更新越多，代码执行耗费时间越长。
+```js
+// 为代码添加10个项目，每次for循环都需要执行两个现场更新：总共20个现场更新。
+var list = document.getElementById('myList'),
+    item,
+    i;
+for (i = 0; i < 10; i++) {
+  item = document.createElementByIf("li");
+  list.appendChild(item);
+  item.appendChild(document.createTextNode("Item" + i));
+}
+// 用文档碎片来构建DOM结构，只会进行一次现场更新
+var list = document.getElementById('myList'),
+    fragment = document.createDocumentFragment(),
+    item,
+    i;
+for (i = 0; i < 10; i++) {
+  item = document.createElementByIf("li");
+  item.appendChild(document.createTextNode("Item" + i));
+  fragment.appendChild(item)
+}
+list.appendChild(fragement)
+```
+- 2.使用innerHTML，有两种方法创建dom结点：使用createElement和appendChild()，或者innerHTML，对大多数DOM更改，使用innerHTML比标准DOM方法创建同样的DOM结构快的多，当赋值innerHTML时，后台会创一个HTML解析器，而非JS DOM调用。内部方法是编译好的，所以执行的会快很多。
+```js
+// 改写上面的方法
+var list = document.getElementById("myList"),
+    html = "",
+    i;
+for (i = 0; i < 10; i++) {
+  html += "<li>Item " + i + "</li>"; 
+}
+list.innerHTML = html;
+```
+- 3.使用事件代理，页面上的事件处理数量越多，页面响应用户交互的速度会较慢，尽量可以多个时间相结合。共用一个事件处理程序.
+- 4.注意HTMLCollection， 不要在循环的判断里使用该对象的length属性。
+```js 
+// 发生以下情况会返回HTMLCollection对象:
+// 1. 进行了 getElementsByTagName()
+// 2. 获取了元素的 childNodes
+// 3. 获取了元素的attributes属性
+// 4. 访问了特殊的集合，如 document.forms，document.images 等
+```
+
+## 部署
+主要是解释，不要将源码直接部署到服务器，需要文件混淆压缩，合并文件、JSLint验证等。现在基本是webpack、gulp了。待后续研究

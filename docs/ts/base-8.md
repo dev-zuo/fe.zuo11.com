@@ -1,0 +1,328 @@
+
+# 8. 装饰器 Decorator
+
+
+
+> 这一章是真的坑，感觉单独看教程很无聊，不好理解，感觉有些没什么用处，可能好多都没有实际用途。个人建议最好还是从实际用途出发，来学习装饰器
+
+JS里的装饰器(Decorator)目前处于意见征集第二阶段(stage 2)，属于试验性特性，未来的版本中可能发生改变。
+
+Decorator 是一种不错的AOP(面向切面编程)方案，AOP是一种编程思想核心是: **非侵入式增强**，可以在运行时动态的将代码切入到类的指定方法、指定位置上。
+
+**Decorator本质上就是函数的语法糖**，设计模式中有: 装饰者模式，关于JS装饰者模式与AOP，可以参考JS设计模式与开发实践第15章装饰者模式
+
+JS是一门弱语言类型，与强语言类型相比，最大的编程陋习就是对类型思维的缺失。学习ts，最重要的就是类型思维的重塑。
+
+## 基本配置
+Decorator在TS中还是一项实验性功能，所以在TS的配置文件中需要加一个参数
+1. 命令行
+```sh
+tsc --target ES5 --experimentalDecorators ts文件
+```
+2. tsconfig.json
+```json
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "experimentalDecorators": true
+  }
+}
+```
+
+**在TS中，Decorator可以修饰5种语句：类、属性、方法、访问器、方法参数。**
+
+## 用装饰器装饰类
+- 类装饰器不能在声明文件(.d.ts)中
+- 类装饰器会在运行时当作函数被调用，类的构造函数作为其唯一的参数
+### 用装饰器装饰类可以做什么
+类装饰器可以获取到类的constructor, 那我们怎么可以在无侵入的情况，对类进行增强呢？需要思考拿到constructor可以做什么?
+```js
+// 理论上，每次new新的对象，都会调用该类的constructor函数，改变constructor函数，那可能会对每次new对象都会产生影响
+// 我写了个js的demo来修改constructor来看效果，结果发现constructor是不可修改的(修改不会生效)
+// 所以我们首先要转变思想，装饰器可以改变constructor的内容，让我们做一些运行时非侵入增强
+class A {
+  constructor() {
+    this.a = 1
+  }
+}
+
+// 尝试改变A的constructor
+console.log(A.constructor)
+A.constructor = function() {
+  console.log('constructor 改变')
+  this.a = 2
+}
+
+let a = new A()
+console.log(a) // A { a: 1 }  
+```
+### 没有返回值的类装饰器
+密封构造函数(constructor)及其原型，或者在constructor的原型上新增内容
+```js
+// 原例子：当@sealed被执行时，他将密封类的构造函数和原型
+// js中constructor本来就是密封的，无法修改，这里尝试再constructor.prototype上增加变量和函数
+// 这些新增的功能，在new的对象上都有生效
+@sealed
+class Gretter {
+  greeting: string;
+  constructor(message: string) {
+    this.greeting = message;
+  }
+  greet() {
+    return `hello, ${this.greeting}`
+  }
+}
+
+// @sealed装饰器定义
+function sealed(constructor: Function) {
+  console.log('开始了装饰器增强')
+  constructor.prototype.a = 1
+  constructor.prototype.sayNo = function() {
+    return 'No'
+  }
+  // Object.seal(constructor)
+  // Object.seal(constructor.prototype)
+}
+
+let gretter = new Gretter('tom')
+console.log(gretter) // Gretter { greeting: 'tom' }
+console.log(gretter.greet()) // hello, tom
+console.log(gretter.a) // 1
+console.log(gretter.sayNo()) // No
+
+// 这里为了看看 console.log('开始了装饰器增强')，是否每次在new时都会执行
+// 事实是就算不调用new，console.log('开始了装饰器增强') 也只会执行一次，每次new并不会调用装饰器方法
+// 而是在程序运行时，装饰器函数只执行一次，动态的对类进行增强性修改
+let gretter2 = new Gretter('jack')
+console.log(gretter2.sayNo()) // No
+```
+
+### 有返回值的类装饰器
+如果类装饰器返回一个值，需要返回一个新的构造函数，必须处理好原来的原型链，原来的构造函数会被替换，这样我们可以在每次new时加一个log什么的，下面来看例子
+```ts
+@classDecorator
+class Greeter {
+  property = 'property';
+  hello: string;
+  constructor(m: string) {
+    this.hello = m
+  }
+} 
+console.log(new Greeter('world')) // 未加装饰器之前：Greeter { property: 'property', hello: 'world' }
+console.log(new Greeter('world2')) 
+  
+// { new (...args: any[]): {} } 表示一个构造函数 类型
+function classDecorator<T extends {new(...args:any[]):{}}>(constructor: T) {
+  // 每次执行都会执行下面函数体的内容
+  return class extends constructor {
+    constructor(...args: any[]) {
+      super(...args)
+      console.log('new 发生了')
+    }
+    newProperty = 'new Property';
+    // hello = 'override'; // 如果打开，所有的hello都将是override
+  }
+}
+
+// new 发生了
+// class_1 {
+//   property: 'property',
+//   hello: 'world',
+//   newProperty: 'new Property' }
+// new 发生了
+// class_1 {
+//   property: 'property',
+//   hello: 'world2',
+//   newProperty: 'new Property' }
+
+```
+## 用装饰器装饰属性
+装饰属性，基本是一次性操作，运行到装饰器当做函数运行后，基本只执行了一次，函数会接收两个参数
+1. 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象
+2. 成员的key
+```ts
+function setDefaultValue(target: Object, propertyName: string) {
+  // 对于不同属性，target为类的原型对象
+  console.log(target, propertyName) // Person {} 'name'
+  target[propertyName] = "Tom";
+}
+
+function setDefaultValueStatic(target: Object, propertyName: string) {
+  // 对于静态属性，target为类的构造函数
+  console.log(target, propertyName) // { [Function: Person] displayName: 'PersonClass' } 'displayName'
+  target[propertyName] = "Static Tom";
+}
+
+class Person {
+  @setDefaultValue
+  name: string;
+
+  @setDefaultValueStatic
+  static displayName = 'PersonClass'
+}
+
+console.log(new Person()) // Person {}
+console.log(new Person().name); // Tom
+console.log(Person.displayName); // Static Tom
+```
+
+## 用装饰器装饰方法
+注意方法(method)与函数(function)的区别，方法一般指对象的方法，一般有公共方法、私有方法等; 函数一般是独立的函数
+
+用装饰器装饰函数，可以想象，就是再返回一个新的函数，如果不返回新的函数，你只能对装饰器自己传入的参数进行处理，没什么用，所以装饰器装饰函数一般都是需要return一个新的函数，且这个函数会接收三个参数：
+1. 类的构造函数(对于静态函数来说) 或者 类的原型对象(对于普通实例函数来说)
+2. 成员(函数)的名称
+3. 成员(函数变量)的属性描述符 (如果代码输出目标版本小于ES5，属性描述符会是undefined)
+```ts
+class Greeter {
+  greeting: string;
+  constructor(message: string) {
+    this.greeting = message
+  }
+  @enumerable(false)
+  greet() {
+    return `Hello, ${this.greeting}`
+  }
+}
+
+function enumerable(value: boolean) {
+  // console.log(value)
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    console.log('返回的新方法')
+    console.log(target, propertyKey, descriptor)
+    // Greeter { greet: [Function] }
+    // 'greet'
+    // { value: [Function],
+    //   writable: true,
+    //   enumerable: true,
+    //   configurable: true }
+    
+    // descriptor.enumerable = value; 原demo比较鸡肋，这个貌似都是不可枚举的
+    // 用Refect.ownKeys() 才能遍历出 返回自身的所有属性、函数，不管是否可枚举，包括symbol
+    // 关于for...in,Object.keys()遍历的区别，参见原来的笔记: https://www.yuque.com/guoqzuo/js_es6/rxu7ms
+
+    // 那我们还是改 descriptor 的value吧
+    const method = descriptor.value // 将函数的值 () => { return `Hello, ${this.greeting}`} 保存到变量里
+    descriptor.value = function(...args: any[]) {
+      // 先执行原来的方法
+      let result = method.apply(this, args)
+      // 增强部分
+      // 这里可以执行其他的一些额外操作
+      console.log('原计算结果为: ', result)
+      let newRes = 'No, ' + this.greeting 
+      console.log('但我在这里把结果改为了', newRes)
+      return newRes
+    }
+  };
+}
+
+// 这里会打印: 返回的新方法
+
+let a = new Greeter('hello')
+console.log(a)
+console.log(Object.keys(a))
+console.log(a.greet())
+
+let a2 = new Greeter('hello2')
+console.log(a2)
+console.log(Object.keys(a2))
+console.log(a2.greet())
+
+// Greeter { greeting: 'hello' }
+// [ 'greeting' ]
+// 原计算结果为:  Hello, hello
+// 但我在这里把结果改为了 No, hello
+// No, hello
+// Greeter { greeting: 'hello2' }
+// [ 'greeting' ]
+// 原计算结果为:  Hello, hello2
+// 但我在这里把结果改为了 No, hello2
+// No, hello2
+
+```
+
+## 用装饰器装饰访问器(getter或setter)
+```js
+function Enumerable( target: any, propertyKey: string, descriptor: PropertyDescriptor ) {
+  //make the method enumerable
+  descriptor.enumerable = false; // 本来就是可迭代的，我们设置为不可迭代
+
+  // 无法修改value 
+  // TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute
+  // descriptor.value = function(...args: any[]) {
+  //   // const method = descriptor.value
+  //   // let result = method.apply(this, args)
+  //   // return this._name + '无脑赋值'
+  // }
+}
+
+class Person {
+  _name: string;
+  constructor(name: string) {
+    this._name = name;
+  }
+
+  // @Enumerable
+  get name() {
+    return this._name;
+  }
+}
+
+console.log("-- creating instance --");
+let person = new Person("tom");
+console.log("-- looping --");
+for (let key in person) {
+  console.log(key + " = " + person[key]);
+}
+// 不加装饰器的情况
+// -- creating instance --
+// -- looping --
+// _name = tom
+// name = tom
+
+// 加了装饰器的情况
+// -- creating instance --
+// -- looping --
+// _name = tom
+```
+
+## 用装饰器装饰函数参数
+看官方示例，函数参数装饰器结合函数装饰器，进行校验。待后续研究
+有三个参数:
+- 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象
+- 成员的名字
+- 参数在函数参数列表中的索引
+```ts
+class Greeter {
+  greeting: string;
+
+  constructor(message: string) {
+      this.greeting = message;
+  }
+
+  // @validate
+  greet(@required name: string) {
+      return "Hello " + name + ", " + this.greeting;
+  }
+}
+
+function required(...args) {
+  console.log(args) // [ Greeter { greet: [Function] }, 'greet', 0 ]
+  
+}
+```
+
+## 装饰器执行顺序
+一个类中，不同位置声明的装饰器，按照以下规定的顺序应用：
+- 有多个参数装饰器（parameterDecorator）时，从最后一个参数依次向前执行
+- 方法（methodDecorator）和方法参数装饰器（parameterDecorator）中，参数装饰器先执行
+- 类装饰器（classDecorator）总是最后执行。
+- 方法（methodDecorator）和属性装饰器（propertyDecorator），谁在前面谁先执行。
+
+## 参考
+- [如何用 Decorator 装饰你的 Typescript？](https://mp.weixin.qq.com/s/0JTvJJNX4zwE3-Kl6dMvrA)
+- [tc39/proposal-decorators](https://github.com/tc39/proposal-decorators)
+- [装饰器 - ECMAScript 6入门](http://es6.ruanyifeng.com/#docs/decorator)
+- [Decorators · TypeScript](http://www.typescriptlang.org/docs/handbook/decorators.html)
+- [Decorators · TypeScript中文](https://zhongsp.gitbooks.io/typescript-handbook/content/doc/handbook/Decorators.html)
+
