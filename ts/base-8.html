@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>8. 装饰器 Decorator | 左小白的前端笔记</title>
+    <meta name="generator" content="VuePress 1.7.1">
+    
+    <meta name="description" content="左小白的前端笔记，用于记录、完善个人前端知识体系结构">
+    
+    <link rel="preload" href="/assets/css/0.styles.23b40414.css" as="style"><link rel="preload" href="/assets/js/app.65ebfc93.js" as="script"><link rel="preload" href="/assets/js/2.a6dde13a.js" as="script"><link rel="preload" href="/assets/js/73.9bc2c7a3.js" as="script"><link rel="prefetch" href="/assets/js/10.b82bcbb0.js"><link rel="prefetch" href="/assets/js/11.66e507ec.js"><link rel="prefetch" href="/assets/js/12.bfb9bb44.js"><link rel="prefetch" href="/assets/js/13.c50827a9.js"><link rel="prefetch" href="/assets/js/14.1346cb3c.js"><link rel="prefetch" href="/assets/js/15.e00fe3ce.js"><link rel="prefetch" href="/assets/js/16.6e6f8e60.js"><link rel="prefetch" href="/assets/js/17.167c0edd.js"><link rel="prefetch" href="/assets/js/18.14edc139.js"><link rel="prefetch" href="/assets/js/19.857508b4.js"><link rel="prefetch" href="/assets/js/20.e339e00b.js"><link rel="prefetch" href="/assets/js/21.b4d704af.js"><link rel="prefetch" href="/assets/js/22.98433c99.js"><link rel="prefetch" href="/assets/js/23.7f0045b2.js"><link rel="prefetch" href="/assets/js/24.5fe30490.js"><link rel="prefetch" href="/assets/js/25.6f3cc1d0.js"><link rel="prefetch" href="/assets/js/26.d186970f.js"><link rel="prefetch" href="/assets/js/27.c5de1bb2.js"><link rel="prefetch" href="/assets/js/28.a059dcca.js"><link rel="prefetch" href="/assets/js/29.450699c6.js"><link rel="prefetch" href="/assets/js/3.0cda60c3.js"><link rel="prefetch" href="/assets/js/30.e0d35303.js"><link rel="prefetch" href="/assets/js/31.ee5cd765.js"><link rel="prefetch" href="/assets/js/32.347e8b32.js"><link rel="prefetch" href="/assets/js/33.3bbbec8a.js"><link rel="prefetch" href="/assets/js/34.a665fd0a.js"><link rel="prefetch" href="/assets/js/35.7836a167.js"><link rel="prefetch" href="/assets/js/36.d088d7c7.js"><link rel="prefetch" href="/assets/js/37.ebe29911.js"><link rel="prefetch" href="/assets/js/38.0e0d8adb.js"><link rel="prefetch" href="/assets/js/39.1b6f14c0.js"><link rel="prefetch" href="/assets/js/4.9e5ec091.js"><link rel="prefetch" href="/assets/js/40.53f1eb7c.js"><link rel="prefetch" href="/assets/js/41.47933331.js"><link rel="prefetch" href="/assets/js/42.406b901e.js"><link rel="prefetch" href="/assets/js/43.025434c7.js"><link rel="prefetch" href="/assets/js/44.f92cb38b.js"><link rel="prefetch" href="/assets/js/45.5652e8c0.js"><link rel="prefetch" href="/assets/js/46.0f2b7382.js"><link rel="prefetch" href="/assets/js/47.73789e73.js"><link rel="prefetch" href="/assets/js/48.8dea295a.js"><link rel="prefetch" href="/assets/js/49.6404a61e.js"><link rel="prefetch" href="/assets/js/5.62651f26.js"><link rel="prefetch" href="/assets/js/50.da6674ac.js"><link rel="prefetch" href="/assets/js/51.331741bc.js"><link rel="prefetch" href="/assets/js/52.036f72c8.js"><link rel="prefetch" href="/assets/js/53.593ee9ec.js"><link rel="prefetch" href="/assets/js/54.27210fd1.js"><link rel="prefetch" href="/assets/js/55.bc92b466.js"><link rel="prefetch" href="/assets/js/56.2c34c595.js"><link rel="prefetch" href="/assets/js/57.be00cd7d.js"><link rel="prefetch" href="/assets/js/58.744c6fd5.js"><link rel="prefetch" href="/assets/js/59.44f6cf12.js"><link rel="prefetch" href="/assets/js/6.eafd2c6f.js"><link rel="prefetch" href="/assets/js/60.456cb2eb.js"><link rel="prefetch" href="/assets/js/61.c569376d.js"><link rel="prefetch" href="/assets/js/62.d708ca25.js"><link rel="prefetch" href="/assets/js/63.842cc759.js"><link rel="prefetch" href="/assets/js/64.361bda1f.js"><link rel="prefetch" href="/assets/js/65.c43de85e.js"><link rel="prefetch" href="/assets/js/66.aee6d038.js"><link rel="prefetch" href="/assets/js/67.3fb01e2c.js"><link rel="prefetch" href="/assets/js/68.53b4a7d9.js"><link rel="prefetch" href="/assets/js/69.046d6530.js"><link rel="prefetch" href="/assets/js/7.517cdead.js"><link rel="prefetch" href="/assets/js/70.7758848f.js"><link rel="prefetch" href="/assets/js/71.68c9c979.js"><link rel="prefetch" href="/assets/js/72.e517a723.js"><link rel="prefetch" href="/assets/js/74.8325853c.js"><link rel="prefetch" href="/assets/js/75.ebfb4f84.js"><link rel="prefetch" href="/assets/js/8.02155513.js"><link rel="prefetch" href="/assets/js/9.018a3597.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.23b40414.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">左小白的前端笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">
+  指南
+</a></div><div class="nav-item"><a href="/config.html" class="nav-link">
+  配置
+</a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">
+  指南
+</a></div><div class="nav-item"><a href="/config.html" class="nav-link">
+  配置
+</a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Web FE</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/nav.html" class="sidebar-link">前端网址导航</a></li><li><a href="/docker.html" class="sidebar-link">Docker 基础</a></li><li><a href="/git.html" class="sidebar-link">Git 笔记</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>CSS/CSS3</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JS/ES6</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>TypeScript</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading open"><span>TypeScript入门教程笔记</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/ts/base-1.html" class="sidebar-link">1. 前言</a></li><li><a href="/ts/base-2.html" class="sidebar-link">2. 基础类型</a></li><li><a href="/ts/base-3.html" class="sidebar-link">3. 类</a></li><li><a href="/ts/base-4.html" class="sidebar-link">4. 接口 Interfaces</a></li><li><a href="/ts/base-5.html" class="sidebar-link">5. 函数的类型、接口与类数组</a></li><li><a href="/ts/base-6.html" class="sidebar-link">6. 类型别名/字符串字面量类型/内置对象</a></li><li><a href="/ts/base-7.html" class="sidebar-link">7. 声明文件</a></li><li><a href="/ts/base-8.html" aria-current="page" class="active sidebar-link">8. 装饰器 Decorator</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/ts/base-8.html#基本配置" class="sidebar-link">基本配置</a></li><li class="sidebar-sub-header"><a href="/ts/base-8.html#用装饰器装饰类" class="sidebar-link">用装饰器装饰类</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/ts/base-8.html#用装饰器装饰类可以做什么" class="sidebar-link">用装饰器装饰类可以做什么</a></li><li class="sidebar-sub-header"><a href="/ts/base-8.html#没有返回值的类装饰器" class="sidebar-link">没有返回值的类装饰器</a></li><li class="sidebar-sub-header"><a href="/ts/base-8.html#有返回值的类装饰器" class="sidebar-link">有返回值的类装饰器</a></li></ul></li><li class="sidebar-sub-header"><a href="/ts/base-8.html#用装饰器装饰属性" class="sidebar-link">用装饰器装饰属性</a></li><li class="sidebar-sub-header"><a href="/ts/base-8.html#用装饰器装饰方法" class="sidebar-link">用装饰器装饰方法</a></li><li class="sidebar-sub-header"><a href="/ts/base-8.html#用装饰器装饰访问器-getter或setter" class="sidebar-link">用装饰器装饰访问器(getter或setter)</a></li><li class="sidebar-sub-header"><a href="/ts/base-8.html#用装饰器装饰函数参数" class="sidebar-link">用装饰器装饰函数参数</a></li><li class="sidebar-sub-header"><a href="/ts/base-8.html#装饰器执行顺序" class="sidebar-link">装饰器执行顺序</a></li><li class="sidebar-sub-header"><a href="/ts/base-8.html#参考" class="sidebar-link">参考</a></li></ul></li><li><a href="/ts/base-9.html" class="sidebar-link">9. 泛型与声明合并</a></li><li><a href="/ts/base-10.html" class="sidebar-link">10. 代码检查与编译选项</a></li></ul></section></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>webpack</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="_8-装饰器-decorator"><a href="#_8-装饰器-decorator" class="header-anchor">#</a> 8. 装饰器 Decorator</h1> <blockquote><p>这一章是真的坑，感觉单独看教程很无聊，不好理解，感觉有些没什么用处，可能好多都没有实际用途。个人建议最好还是从实际用途出发，来学习装饰器</p></blockquote> <p>JS里的装饰器(Decorator)目前处于意见征集第二阶段(stage 2)，属于试验性特性，未来的版本中可能发生改变。</p> <p>Decorator 是一种不错的AOP(面向切面编程)方案，AOP是一种编程思想核心是: <strong>非侵入式增强</strong>，可以在运行时动态的将代码切入到类的指定方法、指定位置上。</p> <p><strong>Decorator本质上就是函数的语法糖</strong>，设计模式中有: 装饰者模式，关于JS装饰者模式与AOP，可以参考JS设计模式与开发实践第15章装饰者模式</p> <p>JS是一门弱语言类型，与强语言类型相比，最大的编程陋习就是对类型思维的缺失。学习ts，最重要的就是类型思维的重塑。</p> <h2 id="基本配置"><a href="#基本配置" class="header-anchor">#</a> 基本配置</h2> <p>Decorator在TS中还是一项实验性功能，所以在TS的配置文件中需要加一个参数</p> <ol><li>命令行</li></ol> <div class="language-sh extra-class"><pre class="language-sh"><code>tsc --target ES5 --experimentalDecorators ts文件
+</code></pre></div><ol start="2"><li>tsconfig.json</li></ol> <div class="language-json extra-class"><pre class="language-json"><code><span class="token punctuation">{</span>
+  <span class="token property">&quot;compilerOptions&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">&quot;target&quot;</span><span class="token operator">:</span> <span class="token string">&quot;ES5&quot;</span><span class="token punctuation">,</span>
+    <span class="token property">&quot;experimentalDecorators&quot;</span><span class="token operator">:</span> <span class="token boolean">true</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><strong>在TS中，Decorator可以修饰5种语句：类、属性、方法、访问器、方法参数。</strong></p> <h2 id="用装饰器装饰类"><a href="#用装饰器装饰类" class="header-anchor">#</a> 用装饰器装饰类</h2> <ul><li>类装饰器不能在声明文件(.d.ts)中</li> <li>类装饰器会在运行时当作函数被调用，类的构造函数作为其唯一的参数</li></ul> <h3 id="用装饰器装饰类可以做什么"><a href="#用装饰器装饰类可以做什么" class="header-anchor">#</a> 用装饰器装饰类可以做什么</h3> <p>类装饰器可以获取到类的constructor, 那我们怎么可以在无侵入的情况，对类进行增强呢？需要思考拿到constructor可以做什么?</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 理论上，每次new新的对象，都会调用该类的constructor函数，改变constructor函数，那可能会对每次new对象都会产生影响</span>
+<span class="token comment">// 我写了个js的demo来修改constructor来看效果，结果发现constructor是不可修改的(修改不会生效)</span>
+<span class="token comment">// 所以我们首先要转变思想，装饰器可以改变constructor的内容，让我们做一些运行时非侵入增强</span>
+<span class="token keyword">class</span> <span class="token class-name">A</span> <span class="token punctuation">{</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>a <span class="token operator">=</span> <span class="token number">1</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 尝试改变A的constructor</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token class-name">A</span><span class="token punctuation">.</span>constructor<span class="token punctuation">)</span>
+<span class="token class-name">A</span><span class="token punctuation">.</span><span class="token function-variable function">constructor</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'constructor 改变'</span><span class="token punctuation">)</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>a <span class="token operator">=</span> <span class="token number">2</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">let</span> a <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">A</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span> <span class="token comment">// A { a: 1 }  </span>
+</code></pre></div><h3 id="没有返回值的类装饰器"><a href="#没有返回值的类装饰器" class="header-anchor">#</a> 没有返回值的类装饰器</h3> <p>密封构造函数(constructor)及其原型，或者在constructor的原型上新增内容</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 原例子：当@sealed被执行时，他将密封类的构造函数和原型</span>
+<span class="token comment">// js中constructor本来就是密封的，无法修改，这里尝试再constructor.prototype上增加变量和函数</span>
+<span class="token comment">// 这些新增的功能，在new的对象上都有生效</span>
+@sealed
+<span class="token keyword">class</span> <span class="token class-name">Gretter</span> <span class="token punctuation">{</span>
+  greeting<span class="token operator">:</span> string<span class="token punctuation">;</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">message<span class="token operator">:</span> string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>greeting <span class="token operator">=</span> message<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">greet</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">hello, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>greeting<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// @sealed装饰器定义</span>
+<span class="token keyword">function</span> <span class="token function">sealed</span><span class="token punctuation">(</span><span class="token parameter">constructor<span class="token operator">:</span> Function</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'开始了装饰器增强'</span><span class="token punctuation">)</span>
+  constructor<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>a <span class="token operator">=</span> <span class="token number">1</span>
+  constructor<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span><span class="token function-variable function">sayNo</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token string">'No'</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// Object.seal(constructor)</span>
+  <span class="token comment">// Object.seal(constructor.prototype)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">let</span> gretter <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Gretter</span><span class="token punctuation">(</span><span class="token string">'tom'</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>gretter<span class="token punctuation">)</span> <span class="token comment">// Gretter { greeting: 'tom' }</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>gretter<span class="token punctuation">.</span><span class="token function">greet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// hello, tom</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>gretter<span class="token punctuation">.</span>a<span class="token punctuation">)</span> <span class="token comment">// 1</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>gretter<span class="token punctuation">.</span><span class="token function">sayNo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// No</span>
+
+<span class="token comment">// 这里为了看看 console.log('开始了装饰器增强')，是否每次在new时都会执行</span>
+<span class="token comment">// 事实是就算不调用new，console.log('开始了装饰器增强') 也只会执行一次，每次new并不会调用装饰器方法</span>
+<span class="token comment">// 而是在程序运行时，装饰器函数只执行一次，动态的对类进行增强性修改</span>
+<span class="token keyword">let</span> gretter2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Gretter</span><span class="token punctuation">(</span><span class="token string">'jack'</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>gretter2<span class="token punctuation">.</span><span class="token function">sayNo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// No</span>
+</code></pre></div><h3 id="有返回值的类装饰器"><a href="#有返回值的类装饰器" class="header-anchor">#</a> 有返回值的类装饰器</h3> <p>如果类装饰器返回一个值，需要返回一个新的构造函数，必须处理好原来的原型链，原来的构造函数会被替换，这样我们可以在每次new时加一个log什么的，下面来看例子</p> <div class="language-ts extra-class"><pre class="language-ts"><code>@classDecorator
+<span class="token keyword">class</span> <span class="token class-name">Greeter</span> <span class="token punctuation">{</span>
+  property <span class="token operator">=</span> <span class="token string">'property'</span><span class="token punctuation">;</span>
+  hello<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span>m<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>hello <span class="token operator">=</span> m
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span> 
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Greeter</span><span class="token punctuation">(</span><span class="token string">'world'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 未加装饰器之前：Greeter { property: 'property', hello: 'world' }</span>
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Greeter</span><span class="token punctuation">(</span><span class="token string">'world2'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> 
+  
+<span class="token comment">// { new (...args: any[]): {} } 表示一个构造函数 类型</span>
+<span class="token keyword">function</span> <span class="token generic-function"><span class="token function">classDecorator</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token constant">T</span> <span class="token keyword">extends</span> <span class="token punctuation">{</span><span class="token keyword">new</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token operator">:</span><span class="token builtin">any</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span><span class="token keyword">constructor</span><span class="token operator">:</span> <span class="token constant">T</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 每次执行都会执行下面函数体的内容</span>
+  <span class="token keyword">return</span> <span class="token keyword">class</span> <span class="token class-name"><span class="token keyword">extends</span></span> <span class="token keyword">constructor</span> <span class="token punctuation">{</span>
+    <span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">)</span>
+      <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'new 发生了'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    newProperty <span class="token operator">=</span> <span class="token string">'new Property'</span><span class="token punctuation">;</span>
+    <span class="token comment">// hello = 'override'; // 如果打开，所有的hello都将是override</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// new 发生了</span>
+<span class="token comment">// class_1 {</span>
+<span class="token comment">//   property: 'property',</span>
+<span class="token comment">//   hello: 'world',</span>
+<span class="token comment">//   newProperty: 'new Property' }</span>
+<span class="token comment">// new 发生了</span>
+<span class="token comment">// class_1 {</span>
+<span class="token comment">//   property: 'property',</span>
+<span class="token comment">//   hello: 'world2',</span>
+<span class="token comment">//   newProperty: 'new Property' }</span>
+
+</code></pre></div><h2 id="用装饰器装饰属性"><a href="#用装饰器装饰属性" class="header-anchor">#</a> 用装饰器装饰属性</h2> <p>装饰属性，基本是一次性操作，运行到装饰器当做函数运行后，基本只执行了一次，函数会接收两个参数</p> <ol><li>对于静态成员来说是类的构造函数，对于实例成员是类的原型对象</li> <li>成员的key</li></ol> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">function</span> <span class="token function">setDefaultValue</span><span class="token punctuation">(</span>target<span class="token operator">:</span> Object<span class="token punctuation">,</span> propertyName<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 对于不同属性，target为类的原型对象</span>
+  <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> propertyName<span class="token punctuation">)</span> <span class="token comment">// Person {} 'name'</span>
+  target<span class="token punctuation">[</span>propertyName<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">&quot;Tom&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">setDefaultValueStatic</span><span class="token punctuation">(</span>target<span class="token operator">:</span> Object<span class="token punctuation">,</span> propertyName<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 对于静态属性，target为类的构造函数</span>
+  <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> propertyName<span class="token punctuation">)</span> <span class="token comment">// { [Function: Person] displayName: 'PersonClass' } 'displayName'</span>
+  target<span class="token punctuation">[</span>propertyName<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">&quot;Static Tom&quot;</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">{</span>
+  @setDefaultValue
+  name<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+
+  @setDefaultValueStatic
+  <span class="token keyword">static</span> displayName <span class="token operator">=</span> <span class="token string">'PersonClass'</span>
+<span class="token punctuation">}</span>
+
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// Person {}</span>
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Tom</span>
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Person<span class="token punctuation">.</span>displayName<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Static Tom</span>
+</code></pre></div><h2 id="用装饰器装饰方法"><a href="#用装饰器装饰方法" class="header-anchor">#</a> 用装饰器装饰方法</h2> <p>注意方法(method)与函数(function)的区别，方法一般指对象的方法，一般有公共方法、私有方法等; 函数一般是独立的函数</p> <p>用装饰器装饰函数，可以想象，就是再返回一个新的函数，如果不返回新的函数，你只能对装饰器自己传入的参数进行处理，没什么用，所以装饰器装饰函数一般都是需要return一个新的函数，且这个函数会接收三个参数：</p> <ol><li>类的构造函数(对于静态函数来说) 或者 类的原型对象(对于普通实例函数来说)</li> <li>成员(函数)的名称</li> <li>成员(函数变量)的属性描述符 (如果代码输出目标版本小于ES5，属性描述符会是undefined)</li></ol> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">class</span> <span class="token class-name">Greeter</span> <span class="token punctuation">{</span>
+  greeting<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span>message<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>greeting <span class="token operator">=</span> message
+  <span class="token punctuation">}</span>
+  @<span class="token function">enumerable</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span>
+  <span class="token function">greet</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Hello, </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>greeting<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">enumerable</span><span class="token punctuation">(</span>value<span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// console.log(value)</span>
+  <span class="token keyword">return</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>target<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">,</span> propertyKey<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">,</span> descriptor<span class="token operator">:</span> PropertyDescriptor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'返回的新方法'</span><span class="token punctuation">)</span>
+    <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> propertyKey<span class="token punctuation">,</span> descriptor<span class="token punctuation">)</span>
+    <span class="token comment">// Greeter { greet: [Function] }</span>
+    <span class="token comment">// 'greet'</span>
+    <span class="token comment">// { value: [Function],</span>
+    <span class="token comment">//   writable: true,</span>
+    <span class="token comment">//   enumerable: true,</span>
+    <span class="token comment">//   configurable: true }</span>
+    
+    <span class="token comment">// descriptor.enumerable = value; 原demo比较鸡肋，这个貌似都是不可枚举的</span>
+    <span class="token comment">// 用Refect.ownKeys() 才能遍历出 返回自身的所有属性、函数，不管是否可枚举，包括symbol</span>
+    <span class="token comment">// 关于for...in,Object.keys()遍历的区别，参见原来的笔记: https://www.yuque.com/guoqzuo/js_es6/rxu7ms</span>
+
+    <span class="token comment">// 那我们还是改 descriptor 的value吧</span>
+    <span class="token keyword">const</span> method <span class="token operator">=</span> descriptor<span class="token punctuation">.</span>value <span class="token comment">// 将函数的值 () =&gt; { return `Hello, ${this.greeting}`} 保存到变量里</span>
+    descriptor<span class="token punctuation">.</span><span class="token function-variable function">value</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 先执行原来的方法</span>
+      <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token function">method</span><span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span>
+      <span class="token comment">// 增强部分</span>
+      <span class="token comment">// 这里可以执行其他的一些额外操作</span>
+      <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'原计算结果为: '</span><span class="token punctuation">,</span> result<span class="token punctuation">)</span>
+      <span class="token keyword">let</span> newRes <span class="token operator">=</span> <span class="token string">'No, '</span> <span class="token operator">+</span> <span class="token keyword">this</span><span class="token punctuation">.</span>greeting 
+      <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'但我在这里把结果改为了'</span><span class="token punctuation">,</span> newRes<span class="token punctuation">)</span>
+      <span class="token keyword">return</span> newRes
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 这里会打印: 返回的新方法</span>
+
+<span class="token keyword">let</span> a <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Greeter</span><span class="token punctuation">(</span><span class="token string">'hello'</span><span class="token punctuation">)</span>
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a<span class="token punctuation">.</span><span class="token function">greet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">let</span> a2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Greeter</span><span class="token punctuation">(</span><span class="token string">'hello2'</span><span class="token punctuation">)</span>
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a2<span class="token punctuation">)</span>
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>a2<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a2<span class="token punctuation">.</span><span class="token function">greet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment">// Greeter { greeting: 'hello' }</span>
+<span class="token comment">// [ 'greeting' ]</span>
+<span class="token comment">// 原计算结果为:  Hello, hello</span>
+<span class="token comment">// 但我在这里把结果改为了 No, hello</span>
+<span class="token comment">// No, hello</span>
+<span class="token comment">// Greeter { greeting: 'hello2' }</span>
+<span class="token comment">// [ 'greeting' ]</span>
+<span class="token comment">// 原计算结果为:  Hello, hello2</span>
+<span class="token comment">// 但我在这里把结果改为了 No, hello2</span>
+<span class="token comment">// No, hello2</span>
+
+</code></pre></div><h2 id="用装饰器装饰访问器-getter或setter"><a href="#用装饰器装饰访问器-getter或setter" class="header-anchor">#</a> 用装饰器装饰访问器(getter或setter)</h2> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token function">Enumerable</span><span class="token punctuation">(</span> <span class="token parameter">target<span class="token operator">:</span> any<span class="token punctuation">,</span> propertyKey<span class="token operator">:</span> string<span class="token punctuation">,</span> descriptor<span class="token operator">:</span> PropertyDescriptor</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//make the method enumerable</span>
+  descriptor<span class="token punctuation">.</span>enumerable <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token comment">// 本来就是可迭代的，我们设置为不可迭代</span>
+
+  <span class="token comment">// 无法修改value </span>
+  <span class="token comment">// TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute</span>
+  <span class="token comment">// descriptor.value = function(...args: any[]) {</span>
+  <span class="token comment">//   // const method = descriptor.value</span>
+  <span class="token comment">//   // let result = method.apply(this, args)</span>
+  <span class="token comment">//   // return this._name + '无脑赋值'</span>
+  <span class="token comment">// }</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Person</span> <span class="token punctuation">{</span>
+  _name<span class="token operator">:</span> string<span class="token punctuation">;</span>
+  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token parameter">name<span class="token operator">:</span> string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>_name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// @Enumerable</span>
+  <span class="token keyword">get</span> <span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>_name<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;-- creating instance --&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> person <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token string">&quot;tom&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;-- looping --&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> key <span class="token keyword">in</span> person<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>key <span class="token operator">+</span> <span class="token string">&quot; = &quot;</span> <span class="token operator">+</span> person<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 不加装饰器的情况</span>
+<span class="token comment">// -- creating instance --</span>
+<span class="token comment">// -- looping --</span>
+<span class="token comment">// _name = tom</span>
+<span class="token comment">// name = tom</span>
+
+<span class="token comment">// 加了装饰器的情况</span>
+<span class="token comment">// -- creating instance --</span>
+<span class="token comment">// -- looping --</span>
+<span class="token comment">// _name = tom</span>
+</code></pre></div><h2 id="用装饰器装饰函数参数"><a href="#用装饰器装饰函数参数" class="header-anchor">#</a> 用装饰器装饰函数参数</h2> <p>看官方示例，函数参数装饰器结合函数装饰器，进行校验。待后续研究
+有三个参数:</p> <ul><li>对于静态成员来说是类的构造函数，对于实例成员是类的原型对象</li> <li>成员的名字</li> <li>参数在函数参数列表中的索引</li></ul> <div class="language-ts extra-class"><pre class="language-ts"><code><span class="token keyword">class</span> <span class="token class-name">Greeter</span> <span class="token punctuation">{</span>
+  greeting<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span>message<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>greeting <span class="token operator">=</span> message<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// @validate</span>
+  <span class="token function">greet</span><span class="token punctuation">(</span>@required name<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token string">&quot;Hello &quot;</span> <span class="token operator">+</span> name <span class="token operator">+</span> <span class="token string">&quot;, &quot;</span> <span class="token operator">+</span> <span class="token keyword">this</span><span class="token punctuation">.</span>greeting<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">required</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span> <span class="token comment">// [ Greeter { greet: [Function] }, 'greet', 0 ]</span>
+  
+<span class="token punctuation">}</span>
+</code></pre></div><h2 id="装饰器执行顺序"><a href="#装饰器执行顺序" class="header-anchor">#</a> 装饰器执行顺序</h2> <p>一个类中，不同位置声明的装饰器，按照以下规定的顺序应用：</p> <ul><li>有多个参数装饰器（parameterDecorator）时，从最后一个参数依次向前执行</li> <li>方法（methodDecorator）和方法参数装饰器（parameterDecorator）中，参数装饰器先执行</li> <li>类装饰器（classDecorator）总是最后执行。</li> <li>方法（methodDecorator）和属性装饰器（propertyDecorator），谁在前面谁先执行。</li></ul> <h2 id="参考"><a href="#参考" class="header-anchor">#</a> 参考</h2> <ul><li><a href="https://mp.weixin.qq.com/s/0JTvJJNX4zwE3-Kl6dMvrA" target="_blank" rel="noopener noreferrer">如何用 Decorator 装饰你的 Typescript？<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li> <li><a href="https://github.com/tc39/proposal-decorators" target="_blank" rel="noopener noreferrer">tc39/proposal-decorators<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li> <li><a href="http://es6.ruanyifeng.com/#docs/decorator" target="_blank" rel="noopener noreferrer">装饰器 - ECMAScript 6入门<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li> <li><a href="http://www.typescriptlang.org/docs/handbook/decorators.html" target="_blank" rel="noopener noreferrer">Decorators · TypeScript<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li> <li><a href="https://zhongsp.gitbooks.io/typescript-handbook/content/doc/handbook/Decorators.html" target="_blank" rel="noopener noreferrer">Decorators · TypeScript中文<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">10/28/2020, 6:32:03 PM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/ts/base-7.html" class="prev">
+        7. 声明文件
+      </a></span> <span class="next"><a href="/ts/base-9.html">
+        9. 泛型与声明合并
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.65ebfc93.js" defer></script><script src="/assets/js/2.a6dde13a.js" defer></script><script src="/assets/js/73.9bc2c7a3.js" defer></script>
+  </body>
+</html>

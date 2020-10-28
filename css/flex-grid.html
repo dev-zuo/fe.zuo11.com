@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Flex与Grid布局 | 左小白的前端笔记</title>
+    <meta name="generator" content="VuePress 1.7.1">
+    
+    <meta name="description" content="左小白的前端笔记，用于记录、完善个人前端知识体系结构">
+    
+    <link rel="preload" href="/assets/css/0.styles.23b40414.css" as="style"><link rel="preload" href="/assets/js/app.65ebfc93.js" as="script"><link rel="preload" href="/assets/js/2.a6dde13a.js" as="script"><link rel="preload" href="/assets/js/8.02155513.js" as="script"><link rel="prefetch" href="/assets/js/10.b82bcbb0.js"><link rel="prefetch" href="/assets/js/11.66e507ec.js"><link rel="prefetch" href="/assets/js/12.bfb9bb44.js"><link rel="prefetch" href="/assets/js/13.c50827a9.js"><link rel="prefetch" href="/assets/js/14.1346cb3c.js"><link rel="prefetch" href="/assets/js/15.e00fe3ce.js"><link rel="prefetch" href="/assets/js/16.6e6f8e60.js"><link rel="prefetch" href="/assets/js/17.167c0edd.js"><link rel="prefetch" href="/assets/js/18.14edc139.js"><link rel="prefetch" href="/assets/js/19.857508b4.js"><link rel="prefetch" href="/assets/js/20.e339e00b.js"><link rel="prefetch" href="/assets/js/21.b4d704af.js"><link rel="prefetch" href="/assets/js/22.98433c99.js"><link rel="prefetch" href="/assets/js/23.7f0045b2.js"><link rel="prefetch" href="/assets/js/24.5fe30490.js"><link rel="prefetch" href="/assets/js/25.6f3cc1d0.js"><link rel="prefetch" href="/assets/js/26.d186970f.js"><link rel="prefetch" href="/assets/js/27.c5de1bb2.js"><link rel="prefetch" href="/assets/js/28.a059dcca.js"><link rel="prefetch" href="/assets/js/29.450699c6.js"><link rel="prefetch" href="/assets/js/3.0cda60c3.js"><link rel="prefetch" href="/assets/js/30.e0d35303.js"><link rel="prefetch" href="/assets/js/31.ee5cd765.js"><link rel="prefetch" href="/assets/js/32.347e8b32.js"><link rel="prefetch" href="/assets/js/33.3bbbec8a.js"><link rel="prefetch" href="/assets/js/34.a665fd0a.js"><link rel="prefetch" href="/assets/js/35.7836a167.js"><link rel="prefetch" href="/assets/js/36.d088d7c7.js"><link rel="prefetch" href="/assets/js/37.ebe29911.js"><link rel="prefetch" href="/assets/js/38.0e0d8adb.js"><link rel="prefetch" href="/assets/js/39.1b6f14c0.js"><link rel="prefetch" href="/assets/js/4.9e5ec091.js"><link rel="prefetch" href="/assets/js/40.53f1eb7c.js"><link rel="prefetch" href="/assets/js/41.47933331.js"><link rel="prefetch" href="/assets/js/42.406b901e.js"><link rel="prefetch" href="/assets/js/43.025434c7.js"><link rel="prefetch" href="/assets/js/44.f92cb38b.js"><link rel="prefetch" href="/assets/js/45.5652e8c0.js"><link rel="prefetch" href="/assets/js/46.0f2b7382.js"><link rel="prefetch" href="/assets/js/47.73789e73.js"><link rel="prefetch" href="/assets/js/48.8dea295a.js"><link rel="prefetch" href="/assets/js/49.6404a61e.js"><link rel="prefetch" href="/assets/js/5.62651f26.js"><link rel="prefetch" href="/assets/js/50.da6674ac.js"><link rel="prefetch" href="/assets/js/51.331741bc.js"><link rel="prefetch" href="/assets/js/52.036f72c8.js"><link rel="prefetch" href="/assets/js/53.593ee9ec.js"><link rel="prefetch" href="/assets/js/54.27210fd1.js"><link rel="prefetch" href="/assets/js/55.bc92b466.js"><link rel="prefetch" href="/assets/js/56.2c34c595.js"><link rel="prefetch" href="/assets/js/57.be00cd7d.js"><link rel="prefetch" href="/assets/js/58.744c6fd5.js"><link rel="prefetch" href="/assets/js/59.44f6cf12.js"><link rel="prefetch" href="/assets/js/6.eafd2c6f.js"><link rel="prefetch" href="/assets/js/60.456cb2eb.js"><link rel="prefetch" href="/assets/js/61.c569376d.js"><link rel="prefetch" href="/assets/js/62.d708ca25.js"><link rel="prefetch" href="/assets/js/63.842cc759.js"><link rel="prefetch" href="/assets/js/64.361bda1f.js"><link rel="prefetch" href="/assets/js/65.c43de85e.js"><link rel="prefetch" href="/assets/js/66.aee6d038.js"><link rel="prefetch" href="/assets/js/67.3fb01e2c.js"><link rel="prefetch" href="/assets/js/68.53b4a7d9.js"><link rel="prefetch" href="/assets/js/69.046d6530.js"><link rel="prefetch" href="/assets/js/7.517cdead.js"><link rel="prefetch" href="/assets/js/70.7758848f.js"><link rel="prefetch" href="/assets/js/71.68c9c979.js"><link rel="prefetch" href="/assets/js/72.e517a723.js"><link rel="prefetch" href="/assets/js/73.9bc2c7a3.js"><link rel="prefetch" href="/assets/js/74.8325853c.js"><link rel="prefetch" href="/assets/js/75.ebfb4f84.js"><link rel="prefetch" href="/assets/js/9.018a3597.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.23b40414.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">左小白的前端笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">
+  指南
+</a></div><div class="nav-item"><a href="/config.html" class="nav-link">
+  配置
+</a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">
+  指南
+</a></div><div class="nav-item"><a href="/config.html" class="nav-link">
+  配置
+</a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Web FE</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/nav.html" class="sidebar-link">前端网址导航</a></li><li><a href="/docker.html" class="sidebar-link">Docker 基础</a></li><li><a href="/git.html" class="sidebar-link">Git 笔记</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>CSS/CSS3</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/css/flex-grid.html" aria-current="page" class="active sidebar-link">Flex与Grid布局</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/css/flex-grid.html#flex弹性布局" class="sidebar-link">Flex弹性布局</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/css/flex-grid.html#flex布局是什么" class="sidebar-link">Flex布局是什么？</a></li><li class="sidebar-sub-header"><a href="/css/flex-grid.html#flex容器与flex-item" class="sidebar-link">Flex容器与Flex item</a></li><li class="sidebar-sub-header"><a href="/css/flex-grid.html#容器的属性" class="sidebar-link">容器的属性</a></li><li class="sidebar-sub-header"><a href="/css/flex-grid.html#项目-flex-item-的属性" class="sidebar-link">项目(Flex item)的属性</a></li></ul></li><li class="sidebar-sub-header"><a href="/css/flex-grid.html#grid网格布局" class="sidebar-link">Grid网格布局</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/css/flex-grid.html#基本概念" class="sidebar-link">基本概念</a></li><li class="sidebar-sub-header"><a href="/css/flex-grid.html#容器属性" class="sidebar-link">容器属性</a></li><li class="sidebar-sub-header"><a href="/css/flex-grid.html#项目属性" class="sidebar-link">项目属性</a></li></ul></li></ul></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>HTML5权威指南(CSS部分)笔记</span> <span class="arrow right"></span></p> <!----></section></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JS/ES6</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>TypeScript</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>webpack</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="flex与grid布局"><a href="#flex与grid布局" class="header-anchor">#</a> Flex与Grid布局</h1> <h2 id="flex弹性布局"><a href="#flex弹性布局" class="header-anchor">#</a> Flex弹性布局</h2> <blockquote><p>布局的传统解决方案，基于盒状模型，依赖 display 属性 + position属性 + float属性。它对于那些特殊布局非常不方便，比如，垂直居中就不容易实现。</p></blockquote> <p>2009年，W3C 提出了一种新的方案----Flex 布局，可以简便、完整、响应式地实现各种页面布局。IE10+支持</p> <p>参考：
+flex语法：http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html
+flex教程实例：http://www.ruanyifeng.com/blog/2015/07/flex-examples.html</p> <h3 id="flex布局是什么"><a href="#flex布局是什么" class="header-anchor">#</a> Flex布局是什么？</h3> <p>Flex 是 Flexible Box 的缩写，意为&quot;弹性布局&quot;，用来为盒状模型提供最大的灵活性。</p> <p>任何一个容器都可以指定为 Flex 布局。<strong>设为 Flex 布局以后，子元素的float、clear和vertical-align属性将失效。</strong></p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.box</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* 行内元素也可以使用 Flex 布局。 */</span>
+<span class="token selector">.box</span><span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> inline-flex<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3 id="flex容器与flex-item"><a href="#flex容器与flex-item" class="header-anchor">#</a> Flex容器与Flex item</h3> <ul><li>采用 Flex 布局的元素，称为 <strong>Flex 容器</strong>（flex container），简称&quot;容器&quot;。</li> <li>它的所有子元素自动成为容器成员，称为 <strong>Flex 项目</strong>（flex item），简称&quot;项目&quot;。</li></ul> <h3 id="容器的属性"><a href="#容器的属性" class="header-anchor">#</a> 容器的属性</h3> <h4 id="flex-direction-方向"><a href="#flex-direction-方向" class="header-anchor">#</a> flex-direction(方向)</h4> <p>布局方向：</p> <ul><li>row 水平方向布局子元素 <strong>(默认)</strong></li> <li>row-reverse 水平方向，逆序</li> <li>column 垂直方向布局子元素</li> <li>column-reverse 垂直方向，逆序</li></ul> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.box</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
+  <span class="token property">flex-direction</span><span class="token punctuation">:</span> row | row-reverse | column | column-reverse<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="flex-wrap-换行"><a href="#flex-wrap-换行" class="header-anchor">#</a> flex-wrap(换行)</h4> <p>换行规则：</p> <ul><li>nowrap 不换行，子元素等分 <strong>(默认)</strong></li> <li>wrap 自动换行</li> <li>wrap-reverse 换行，逆序</li></ul> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.box</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
+  <span class="token property">flex-wrap</span><span class="token punctuation">:</span> nowrap | wrap |  | wrap-reverse<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><img src="/images/css/flex_wrap.png" alt="flex_wrap.png"></p> <h4 id="flex-flow-direction加wrap"><a href="#flex-flow-direction加wrap" class="header-anchor">#</a> flex-flow(direction加wrap)</h4> <p>flex-flow属性是flex-direction属性和flex-wrap属性的简写形式，默认值为row nowrap。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.box</span> <span class="token punctuation">{</span>
+  <span class="token property">flex-flow</span><span class="token punctuation">:</span> &lt;flex-direction&gt; || &lt;flex-wrap&gt;<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="justify-content-主轴对齐"><a href="#justify-content-主轴对齐" class="header-anchor">#</a> justify-content(主轴对齐)</h4> <p>justify-content 水平对齐方式</p> <ul><li>flex-start <strong>（默认值）</strong>：左对齐</li> <li>flex-end：右对齐</li> <li>center： 居中</li> <li>space-between：两端对齐，项目之间的间隔都相等。</li> <li>space-around：每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。</li></ul> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.box</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
+  <span class="token property">justify-content</span><span class="token punctuation">:</span> flex-start | flex-end | center | space-between | space-around<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><img src="/images/css/flex_justify_content.png" alt="flex_justify_content.png"></p> <h4 id="align-items-交叉轴对齐"><a href="#align-items-交叉轴对齐" class="header-anchor">#</a> align-items(交叉轴对齐)</h4> <p>align-items属性定义项目在垂直方向的对齐方式</p> <ul><li>flex-start：交叉轴的起点对齐。</li> <li>flex-end：交叉轴的终点对齐。</li> <li>center：交叉轴的中点对齐。</li> <li>baseline: 项目的第一行文字的基线对齐。</li> <li>stretch <strong>（默认值）</strong>：如果项目未设置高度或设为auto，将占满整个容器的高度。</li></ul> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.box</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
+  <span class="token property">align-items</span><span class="token punctuation">:</span> flex-start | flex-end | center | baseline | stretch<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><img src="/images/css/flex-align_items.png" alt="flex-align_items.png"></p> <h4 id="align-content-多轴对齐"><a href="#align-content-多轴对齐" class="header-anchor">#</a> align-content(多轴对齐)</h4> <p>align-content属性定义了多根轴线的对齐方式。如果项目只有一根轴线，该属性不起作用。</p> <ul><li>flex-start：与交叉轴的起点对齐。</li> <li>flex-end：与交叉轴的终点对齐。</li> <li>center：与交叉轴的中点对齐。</li> <li>space-between：与交叉轴两端对齐，轴线之间的间隔平均分布。</li> <li>space-around：每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍。</li> <li>stretch <strong>（默认值）</strong>：轴线占满整个交叉轴。</li></ul> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.box</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> flex<span class="token punctuation">;</span>
+  <span class="token property">align-content</span><span class="token punctuation">:</span> flex-start | flex-end | center | space-between | space-around | stretch<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><img src="/images/css/align_content.png" alt="align_content.png"></p> <h3 id="项目-flex-item-的属性"><a href="#项目-flex-item-的属性" class="header-anchor">#</a> 项目(Flex item)的属性</h3> <h4 id="order-顺序"><a href="#order-顺序" class="header-anchor">#</a> order(顺序)</h4> <p>order属性定义项目的排列顺序。数值越小，排列越靠前，<strong>默认为0</strong>。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.item</span> <span class="token punctuation">{</span>
+  <span class="token property">order</span><span class="token punctuation">:</span> &lt;integer&gt;<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="flex-grow-放大0"><a href="#flex-grow-放大0" class="header-anchor">#</a> flex-grow(放大0)</h4> <p>flex-grow属性定义项目的放大比例，<strong>默认为0，即如果存在剩余空间，也不放大</strong>。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.item</span> <span class="token punctuation">{</span>
+  <span class="token property">flex-grow</span><span class="token punctuation">:</span> &lt;number&gt;<span class="token punctuation">;</span> <span class="token comment">/* default 0 */</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/* 如果所有项目的flex-grow属性都为1，则它们将等分剩余空间（如果有的话）。如果一个项目的flex-grow属性为2，其他项目都为1，则前者占据的剩余空间将比其他项多一倍。 */</span>
+</code></pre></div><h4 id="flex-shrink-缩小1"><a href="#flex-shrink-缩小1" class="header-anchor">#</a> flex-shrink（缩小1）</h4> <p>flex-shrink属性定义了项目的缩小比例，<strong>默认为1，即如果空间不足，该项目将缩小</strong>。</p> <p>如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小。如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。<strong>负值对该属性无效。</strong></p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.item</span> <span class="token punctuation">{</span>
+  <span class="token property">flex-shrink</span><span class="token punctuation">:</span> &lt;number&gt;<span class="token punctuation">;</span> <span class="token comment">/* default 1 */</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="flex-basis-基本宽度"><a href="#flex-basis-基本宽度" class="header-anchor">#</a> flex-basis(基本宽度)</h4> <p>flex-basis属性定义了在分配多余空间之前，项目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.item</span> <span class="token punctuation">{</span>
+  <span class="token property">flex-basis</span><span class="token punctuation">:</span> &lt;length&gt; | auto<span class="token punctuation">;</span> <span class="token comment">/* default auto */</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/* 它可以设为跟width或height属性一样的值（比如350px），则项目将占据固定空间。 */</span>
+</code></pre></div><h4 id="flex-grow加shrink加basis"><a href="#flex-grow加shrink加basis" class="header-anchor">#</a> flex (grow加shrink加basis)</h4> <p>flex属性是flex-grow, flex-shrink 和 flex-basis的简写，<strong>默认值为0 1 auto。后两个属性可选</strong>。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.item</span> <span class="token punctuation">{</span>
+  <span class="token property">flex</span><span class="token punctuation">:</span> none | [ &lt;<span class="token string">'flex-grow'</span>&gt; &lt;<span class="token string">'flex-shrink'</span>&gt;? || &lt;<span class="token string">'flex-basis'</span>&gt; ]
+<span class="token punctuation">}</span>
+<span class="token comment">/*该属性有两个快捷值：auto (1 1 auto) 和 none (0 0 auto)。
+
+建议优先使用这个属性，而不是单独写三个分离的属性，因为浏览器会推算相关值。*/</span>
+</code></pre></div><h4 id="align-self-item独立对齐方式"><a href="#align-self-item独立对齐方式" class="header-anchor">#</a> align-self（item独立对齐方式）</h4> <p>align-self属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为auto，表示继承父元素的align-items属性，如果没有父元素，则等同于stretch。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.item</span> <span class="token punctuation">{</span>
+  <span class="token property">align-self</span><span class="token punctuation">:</span> auto | flex-start | flex-end | center | baseline | stretch<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><img src="/images/css/flex_align_self.png" alt="flex_align_self.png"></p> <h2 id="grid网格布局"><a href="#grid网格布局" class="header-anchor">#</a> Grid网格布局</h2> <blockquote><p>网格布局（Grid）是最强大的 CSS 布局方案。IE10+支持, 它将网页划分成一个个网格，可以任意组合不同的网格，做出各种各样的布局。以前，只能通过复杂的 CSS 框架达到的效果，现在浏览器内置了。</p></blockquote> <p>Flex 布局是轴线布局，只能指定&quot;项目&quot;针对轴线的位置，可以看作是一维布局。</p> <p>Grid 布局则是将容器划分成&quot;行&quot;和&quot;列&quot;，产生单元格，然后指定&quot;项目所在&quot;的单元格，可以看作是二维布局。Grid 布局远比 Flex 布局强大。</p> <p>参考：
+<a href="http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html" target="_blank" rel="noopener noreferrer">CSS Grid 网格布局教程<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <a href="https://segmentfault.com/a/1190000007139070" target="_blank" rel="noopener noreferrer">二维 grid 布局<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p>指定一个容器采用网格布局。*<em>注意，设为网格布局以后，容器子元素（项目）的float、display: inline-block、display: table-cell、vertical-align和column-<em>等设置都将失效。</em></em></p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">div</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector">div</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> inline-grid<span class="token punctuation">;</span> 
+  <span class="token comment">/* 默认情况下，容器元素都是块级元素，但也可以设成行内元素。 */</span>
+<span class="token punctuation">}</span>
+
+</code></pre></div><h3 id="基本概念"><a href="#基本概念" class="header-anchor">#</a> 基本概念</h3> <ul><li>容器和项目：采用网格布局的区域，称为&quot;容器&quot;（container）。容器内部采用网格定位的子元素，称为&quot;项目&quot;（item）。</li> <li>行和列：容器里面的水平区域称为&quot;行&quot;（row），垂直区域称为&quot;列&quot;（column）。</li> <li>单元格：行和列的交叉区域，称为&quot;单元格&quot;（cell）。</li> <li>网格线：划分网格的线，称为&quot;网格线&quot;（grid line）。水平网格线划分出行，垂直网格线划分出列。</li></ul> <h3 id="容器属性"><a href="#容器属性" class="header-anchor">#</a> 容器属性</h3> <p>容器指定了网格布局以后，接着就要划分行和列。</p> <h4 id="grid-template-columns-列宽"><a href="#grid-template-columns-列宽" class="header-anchor">#</a> grid-template-columns (列宽)</h4> <p>grid-template-columns属性定义每一列的列宽</p> <h4 id="grid-template-rows-行高"><a href="#grid-template-rows-行高" class="header-anchor">#</a> grid-template-rows (行高)</h4> <p>grid-template-rows属性定义每一行的行高。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token comment">/* 指定一个三行三列的网格，列宽和行高都是100px */</span>
+<span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 100px 100px 100px<span class="token punctuation">;</span>
+  <span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 100px 100px 100px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* 也可以使用百分百单位*/</span>
+<span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 33.33% 33.33% 33.33%<span class="token punctuation">;</span>
+  <span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 33.33% 33.33% 33.33%<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* 1.repeat(count, content)  重复
+ * 第一个参数是重复的次数（上例是3），第二个参数是所要重复的值
+ */</span>
+<span class="token property">grid-template-columns</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>2<span class="token punctuation">,</span> 100px 20px 80px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">/* 等价于 grid-template-columns: 100px 20px 80px 100px 20px 80px */</span>
+<span class="token property">grid-template-rows</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>3<span class="token punctuation">,</span> 33.33%<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">/* 等价于 grid-template-rows: 33.33% 33.33% 33.33%; */</span>
+
+<span class="token comment">/**
+ * 2.auto-fill 关键字  自动填充
+ * 单元格的大小是固定的，但是容器的大小不确定。
+ * 如果希望每一行（或列）容纳尽可能多的单元格，可以使用auto-fill关键字表示自动填充。
+ */</span>
+ <span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>auto-fill<span class="token punctuation">,</span> 100px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">/* 每列宽度100px，然后自动填充，直到容器不能放置更多的列。 */</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * 3.fr 关键字，（fraction 的缩写，意为&quot;片段&quot;） 表示比例
+ * 1fr和2fr，就表示后者是前者的两倍。
+ */</span>
+<span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 1fr 1fr<span class="token punctuation">;</span> <span class="token comment">/* 两列相同宽度 */</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 150px 1fr 2fr<span class="token punctuation">;</span>
+  <span class="token comment">/* 第一列的宽度为150像素，第二列的宽度是第三列的一半。 */</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * 4.minmax() 范围
+ * minmax(min, max)函数产生一个长度范围，表示长度就在这个范围之中。
+ */</span>
+<span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 1fr 1fr <span class="token function">minmax</span><span class="token punctuation">(</span>100px<span class="token punctuation">,</span> 1fr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">/* minmax(100px, 1fr)表示列宽不小于100px，不大于1fr。 */</span>
+<span class="token punctuation">}</span>
+
+ <span class="token comment">/**
+  * 5.auto关键字
+  * 表示由浏览器自己决定长度。
+  */</span>
+<span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 100px auto 100px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * 6.网格线名称
+ * 可以使用方括号，指定每一根网格线的名字，方便以后的引用。
+ */</span>
+<span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> [c1] 100px [c2] 100px [c3] auto [c4]<span class="token punctuation">;</span>
+  <span class="token property">grid-template-rows</span><span class="token punctuation">:</span> [r1] 100px [r2] 100px [r3] auto [r4]<span class="token punctuation">;</span>
+  <span class="token comment">/* 指定网格布局为3行3列，有4根垂直网格线和4根水平网格线。方括号里面依次是这八根线的名字。 */</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* 例子1：
+ * grid-template-columns属性对于网页布局非常有用。两栏式布局只需要一行代码。
+ */</span>
+<span class="token selector">.wrapper</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 70% 30%<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* 例子2：
+ * 传统的十二网格布局，写起来也很容易。
+ */</span>
+ <span class="token selector">.wrapper</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>12<span class="token punctuation">,</span> 1fr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">}</span>
+</code></pre></div><h4 id="grid-row-gap-行间距"><a href="#grid-row-gap-行间距" class="header-anchor">#</a> grid-row-gap (行间距)</h4> <p>grid-row-gap属性设置行与行的间隔（行间距）</p> <h4 id="grid-column-gap-列间距"><a href="#grid-column-gap-列间距" class="header-anchor">#</a> grid-column-gap (列间距)</h4> <p>grid-column-gap属性设置列与列的间隔（列间距）。</p> <h4 id="grid-gap-行间距加列间距"><a href="#grid-gap-行间距加列间距" class="header-anchor">#</a> grid-gap (行间距加列间距)</h4> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-row-gap</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token comment">/* 等价于 row-gap: 20px */</span>
+  <span class="token property">grid-column-gap</span><span class="token punctuation">:</span> 20px<span class="token punctuation">;</span> <span class="token comment">/* 等价于 column-gap: 20px */</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* grid-gap: &lt;grid-row-gap&gt; &lt;grid-column-gap&gt;; */</span>
+<span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-gap</span><span class="token punctuation">:</span> 20px 20px<span class="token punctuation">;</span> <span class="token comment">/*等价于 gap: 20px 20px */</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* 如果grid-gap省略了第二个值，浏览器认为第二个值等于第一个值。 */</span>
+
+</code></pre></div><h4 id="grid-template-areas-标记单元格"><a href="#grid-template-areas-标记单元格" class="header-anchor">#</a> grid-template-areas (标记单元格)</h4> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 100px 100px 100px<span class="token punctuation">;</span>
+  <span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 100px 100px 100px<span class="token punctuation">;</span>
+  <span class="token comment">/* 划分出9个单元格，将其命名为a到i的九个区域，分别对应这九个单元格。 */</span>
+  <span class="token property">grid-template-areas</span><span class="token punctuation">:</span> <span class="token string">'a b c'</span>
+                       <span class="token string">'d e f'</span>
+                       <span class="token string">'g h i'</span><span class="token punctuation">;</span>
+
+  <span class="token comment">/* 多个单元格合并成一个区域的写法 */</span>
+  <span class="token property">grid-template-areas</span><span class="token punctuation">:</span> <span class="token string">'a a a'</span>
+                       <span class="token string">'b b b'</span>
+                       <span class="token string">'c c c'</span><span class="token punctuation">;</span>
+
+  <span class="token comment">/* 布局实例 */</span>
+  <span class="token property">grid-template-areas</span><span class="token punctuation">:</span> <span class="token string">&quot;header header header&quot;</span>
+                       <span class="token string">&quot;main main sidebar&quot;</span>
+                       <span class="token string">&quot;footer footer footer&quot;</span><span class="token punctuation">;</span>
+
+  <span class="token comment">/* 如果某些元素不需要利用，以.来代替 */</span>
+  <span class="token property">grid-template-areas</span><span class="token punctuation">:</span> <span class="token string">'a . c'</span>
+                       <span class="token string">'d . f'</span>
+                       <span class="token string">'g . i'</span><span class="token punctuation">;</span>
+
+  <span class="token comment">/* 区域的命名会影响到网格线。
+  每个区域的起始网格线，会自动命名为区域名-start，终止网格线自动命名为区域名-end */</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>示例</p> <div class="language-html extra-class"><pre class="language-html"><code><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>utf-8<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>grid<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+      <span class="token selector">.container</span> <span class="token punctuation">{</span>
+        <span class="token property">min-height</span><span class="token punctuation">:</span> 100vh<span class="token punctuation">;</span>
+        <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+        <span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 100px auto 100px<span class="token punctuation">;</span>
+        <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> <span class="token function">repeat</span><span class="token punctuation">(</span>3<span class="token punctuation">,</span> 1fr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token property">grid-template-areas</span><span class="token punctuation">:</span> <span class="token string">&quot;header header header&quot;</span>
+                             <span class="token string">&quot;main main sidebar&quot;</span>
+                             <span class="token string">&quot;footer footer footer&quot;</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token selector">.header</span> <span class="token punctuation">{</span>
+        <span class="token property">grid-area</span><span class="token punctuation">:</span> header<span class="token punctuation">;</span>
+        <span class="token property">background</span><span class="token punctuation">:</span> gray<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token selector">.main</span> <span class="token punctuation">{</span>
+        <span class="token property">grid-area</span><span class="token punctuation">:</span> main<span class="token punctuation">;</span>
+        <span class="token property">background</span><span class="token punctuation">:</span> green<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token selector">.sidebar</span> <span class="token punctuation">{</span>
+        <span class="token property">grid-area</span><span class="token punctuation">:</span> sidebar<span class="token punctuation">;</span>
+        <span class="token property">background</span><span class="token punctuation">:</span> blue<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token selector">.footer</span> <span class="token punctuation">{</span>
+        <span class="token property">grid-area</span><span class="token punctuation">:</span> footer<span class="token punctuation">;</span>
+        <span class="token property">background</span><span class="token punctuation">:</span> yellow<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token style-attr language-css"><span class="token attr-name"> <span class="token attr-name">style</span></span><span class="token punctuation">=&quot;</span><span class="token attr-value"><span class="token property">padding</span><span class="token punctuation">:</span>0<span class="token punctuation">;</span><span class="token property">margin</span><span class="token punctuation">:</span>0</span><span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>container<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>header<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>header<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>main<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>main<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>sidebar<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>sidebar<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>footer<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>footer<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h4 id="grid-auto-flow-平铺网格顺序"><a href="#grid-auto-flow-平铺网格顺序" class="header-anchor">#</a> grid-auto-flow(平铺网格顺序)</h4> <p>划分网格以后，容器的子元素会按照顺序，自动放置在每一个网格。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token property">grid-auto-flow</span><span class="token punctuation">:</span> column<span class="token punctuation">;</span>  <span class="token comment">/* 默认为row */</span>
+<span class="token comment">/*
+  grid-auto-flow: row  &quot;先行后列&quot;
+  1 2 3
+  4 5 6
+  7 6 9
+  grid-auto-flow: column  &quot;先列后行&quot;
+  1 4 7
+  2 5 8
+  3 6 9
+*/</span>
+</code></pre></div><p><img src="/images/css/grid_auto_flow.png" alt="grid_auto_flow.png"></p> <h4 id="justify-items-单元格水平对齐"><a href="#justify-items-单元格水平对齐" class="header-anchor">#</a> justify-items(单元格水平对齐)</h4> <p>justify-items属性设置单元格内容的水平位置（左中右）。</p> <h4 id="align-items-单元格垂直对齐"><a href="#align-items-单元格垂直对齐" class="header-anchor">#</a> align-items(单元格垂直对齐)</h4> <p>align-items属性设置单元格内容的垂直位置（上中下）。</p> <ul><li>start：对齐单元格的起始边缘。</li> <li>end：对齐单元格的结束边缘。</li> <li>center：单元格内部居中。</li> <li>stretch：拉伸，占满单元格的整个宽度（默认值）。</li></ul> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">justify-items</span><span class="token punctuation">:</span> start | end | center | stretch<span class="token punctuation">;</span>
+  <span class="token property">align-items</span><span class="token punctuation">:</span> start | end | center | stretch<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="place-items-单元格水平-垂直对齐"><a href="#place-items-单元格水平-垂直对齐" class="header-anchor">#</a> place-items(单元格水平/垂直对齐)</h4> <p>place-items属性是align-items属性和justify-items属性的合并简写形式。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token property">place-items</span><span class="token punctuation">:</span> &lt;align-items&gt; &lt;justify-items&gt;
+</code></pre></div><h4 id="justify-content-整体内容水平对齐"><a href="#justify-content-整体内容水平对齐" class="header-anchor">#</a> justify-content(整体内容水平对齐)</h4> <p>justify-content属性是<strong>整个内容区域</strong>在容器里面的水平位置（左中右）。</p> <h4 id="align-content-整体内容垂直对齐"><a href="#align-content-整体内容垂直对齐" class="header-anchor">#</a> align-content(整体内容垂直对齐)</h4> <p>align-content属性是<strong>整个内容区域</strong>的垂直位置（上中下）。</p> <h4 id="place-content-整体内容水平-垂直对齐"><a href="#place-content-整体内容水平-垂直对齐" class="header-anchor">#</a> place-content(整体内容水平/垂直对齐)</h4> <ul><li>start - 对齐容器的起始边框。</li> <li>end - 对齐容器的结束边框。</li> <li>center - 容器内部居中。</li> <li>stretch - 项目大小没有指定时，拉伸占据整个网格容器。</li> <li>space-around - 每个项目两侧的间隔相等。所以，项目之间的间隔比项目与容器边框的间隔大一倍。</li> <li>space-between - 项目与项目的间隔相等，项目与容器边框之间没有间隔。</li> <li>space-evenly - 项目与项目的间隔相等，项目与容器边框之间也是同样长度的间隔。</li></ul> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">justify-content</span><span class="token punctuation">:</span> start | end | center | stretch | space-around | space-between | space-evenly<span class="token punctuation">;</span>
+  <span class="token property">align-content</span><span class="token punctuation">:</span> start | end | center | stretch | space-around | space-between | space-evenly<span class="token punctuation">;</span>  
+  <span class="token property">place-content</span><span class="token punctuation">:</span> &lt;align-content&gt; &lt;justify-content&gt;
+<span class="token punctuation">}</span>
+</code></pre></div><p><img src="/images/css/justify_content.png" alt="justify_content.png"></p> <h4 id="grid-auto-columns-多余网格列宽"><a href="#grid-auto-columns-多余网格列宽" class="header-anchor">#</a> grid-auto-columns(多余网格列宽)</h4> <h4 id="grid-auto-rows-多余网格行高"><a href="#grid-auto-rows-多余网格行高" class="header-anchor">#</a> grid-auto-rows(多余网格行高)</h4> <p>有时候，一些项目的指定位置，在现有网格的外部。比如网格只有3列，但是某一个项目指定在第5行。这时，浏览器会自动生成多余的网格，以便放置项目。</p> <p>grid-auto-columns属性和grid-auto-rows属性用来设置，浏览器自动创建的多余网格的列宽和行高。它们的写法与grid-template-columns和grid-template-rows完全相同。如果不指定这两个属性，浏览器完全根据单元格内容的大小，决定新增网格的列宽和行高。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.container</span> <span class="token punctuation">{</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> grid<span class="token punctuation">;</span>
+  <span class="token property">grid-template-columns</span><span class="token punctuation">:</span> 100px 100px 100px<span class="token punctuation">;</span>
+  <span class="token property">grid-template-rows</span><span class="token punctuation">:</span> 100px 100px 100px<span class="token punctuation">;</span>
+  <span class="token property">grid-auto-rows</span><span class="token punctuation">:</span> 50px<span class="token punctuation">;</span> 
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="grid-template-3个属性合并写法"><a href="#grid-template-3个属性合并写法" class="header-anchor">#</a> grid-template(3个属性合并写法)</h4> <p>grid-template属性是grid-template-columns、grid-template-rows和grid-template-areas这三个属性的合并简写形式。</p> <h4 id="grid-6个属性合并写法"><a href="#grid-6个属性合并写法" class="header-anchor">#</a> grid(6个属性合并写法)</h4> <p>grid属性是grid-template-rows、grid-template-columns、grid-template-areas、 grid-auto-rows、grid-auto-columns、grid-auto-flow这六个属性的合并简写形式。</p> <h3 id="项目属性"><a href="#项目属性" class="header-anchor">#</a> 项目属性</h3> <h4 id="grid-column-start-左边框所在的垂直网格线"><a href="#grid-column-start-左边框所在的垂直网格线" class="header-anchor">#</a> grid-column-start（左边框所在的垂直网格线）</h4> <h4 id="grid-column-end-右边框所在的垂直网格线"><a href="#grid-column-end-右边框所在的垂直网格线" class="header-anchor">#</a> grid-column-end（右边框所在的垂直网格线）</h4> <h4 id="grid-row-start-上边框所在的水平网格线"><a href="#grid-row-start-上边框所在的水平网格线" class="header-anchor">#</a> grid-row-start（上边框所在的水平网格线）</h4> <h4 id="grid-row-end-上边框所在的水平网格线"><a href="#grid-row-end-上边框所在的水平网格线" class="header-anchor">#</a> grid-row-end（上边框所在的水平网格线）</h4> <p>项目的位置是可以指定的，具体方法就是指定项目的四个边框，分别定位在哪根网格线。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.item-1</span> <span class="token punctuation">{</span>
+  <span class="token comment">/* 1号项目的左边框是第二根垂直网格线，右边框是第四根垂直网格线。 */</span>
+  <span class="token property">grid-column-start</span><span class="token punctuation">:</span> 2<span class="token punctuation">;</span>
+  <span class="token property">grid-column-end</span><span class="token punctuation">:</span> 4<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><img src="/images/css/grid_column_start_end.png" alt="grid_column_start_end.png"></p> <h4 id="grid-column-start加end属性"><a href="#grid-column-start加end属性" class="header-anchor">#</a> grid-column（start加end属性）</h4> <p>grid-column属性是grid-column-start和grid-column-end的合并简写形式。</p> <h4 id="grid-row-start加end属性"><a href="#grid-row-start加end属性" class="header-anchor">#</a> grid-row (start加end属性)</h4> <p>grid-row属性是grid-row-start属性和grid-row-end的合并简写形式。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.item-1</span> <span class="token punctuation">{</span>
+  <span class="token property">grid-column</span><span class="token punctuation">:</span> 1 / 3<span class="token punctuation">;</span>
+  <span class="token property">grid-row</span><span class="token punctuation">:</span> 1 / 2<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/* 等同于 */</span>
+<span class="token selector">.item-1</span> <span class="token punctuation">{</span>
+  <span class="token property">grid-column-start</span><span class="token punctuation">:</span> 1<span class="token punctuation">;</span>
+  <span class="token property">grid-column-end</span><span class="token punctuation">:</span> 3<span class="token punctuation">;</span>
+  <span class="token property">grid-row-start</span><span class="token punctuation">:</span> 1<span class="token punctuation">;</span>
+  <span class="token property">grid-row-end</span><span class="token punctuation">:</span> 2<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>实例</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.item-1</span> <span class="token punctuation">{</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> #b03532<span class="token punctuation">;</span>
+  <span class="token property">grid-column</span><span class="token punctuation">:</span> 1 / 3<span class="token punctuation">;</span>
+  <span class="token property">grid-row</span><span class="token punctuation">:</span> 1 / 3<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/* 等同于 */</span>
+<span class="token selector">.item-1</span> <span class="token punctuation">{</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> #b03532<span class="token punctuation">;</span>
+  <span class="token property">grid-column</span><span class="token punctuation">:</span> 1 / span 2<span class="token punctuation">;</span>
+  <span class="token property">grid-row</span><span class="token punctuation">:</span> 1 / span 2<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><img src="/images/css/grid_column_row.png" alt="grid_column_row.png"></p> <h4 id="grid-area-指定项目区域"><a href="#grid-area-指定项目区域" class="header-anchor">#</a> grid-area(指定项目区域)</h4> <p>grid-area属性指定项目放在哪一个区域。</p> <div class="language-css extra-class"><pre class="language-css"><code><span class="token comment">/* 1号项目位于e区 */</span>
+<span class="token selector">.item-1</span> <span class="token punctuation">{</span>
+  <span class="token property">grid-area</span><span class="token punctuation">:</span> e<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector">.item</span> <span class="token punctuation">{</span>
+  <span class="token property">grid-area</span><span class="token punctuation">:</span> &lt;row-start&gt; / &lt;column-start&gt; / &lt;row-end&gt; / &lt;column-end&gt;<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token selector">.item-1</span> <span class="token punctuation">{</span>
+  <span class="token property">grid-area</span><span class="token punctuation">:</span> 1 / 1 / 3 / 3<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4 id="justify-self-单个项目水平对齐"><a href="#justify-self-单个项目水平对齐" class="header-anchor">#</a> justify-self(单个项目水平对齐)</h4> <h4 id="align-self-单个项目垂直对齐"><a href="#align-self-单个项目垂直对齐" class="header-anchor">#</a> align-self(单个项目垂直对齐)</h4> <h4 id="place-self-单个项目水平-垂直对齐"><a href="#place-self-单个项目水平-垂直对齐" class="header-anchor">#</a> place-self(单个项目水平/垂直对齐)</h4> <ul><li>justify-self属性设置单元格内容的水平位置（左中右），跟justify-items属性的用法完全一致，但只作用于单个项目。</li> <li>align-self属性设置单元格内容的垂直位置（上中下），跟align-items属性的用法完全一致，也是只作用于单个项目。</li> <li>place-self属性是align-self属性和justify-self属性的合并简写形式。</li></ul> <div class="language-css extra-class"><pre class="language-css"><code><span class="token selector">.item</span> <span class="token punctuation">{</span>
+  <span class="token property">justify-self</span><span class="token punctuation">:</span> start | end | center | stretch<span class="token punctuation">;</span>
+  <span class="token property">align-self</span><span class="token punctuation">:</span> start | end | center | stretch<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">/* place-self: &lt;align-self&gt; &lt;justify-self&gt;; */</span>
+<span class="token property">place-self</span><span class="token punctuation">:</span> center center<span class="token punctuation">;</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">10/28/2020, 6:32:03 PM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/git.html" class="prev">
+        Git 笔记
+      </a></span> <span class="next"><a href="/css/html5-css-1.html">
+        1. 前言
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.65ebfc93.js" defer></script><script src="/assets/js/2.a6dde13a.js" defer></script><script src="/assets/js/8.02155513.js" defer></script>
+  </body>
+</html>

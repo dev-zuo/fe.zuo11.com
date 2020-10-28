@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Docker 基础 | 左小白的前端笔记</title>
+    <meta name="generator" content="VuePress 1.7.1">
+    
+    <meta name="description" content="左小白的前端笔记，用于记录、完善个人前端知识体系结构">
+    
+    <link rel="preload" href="/assets/css/0.styles.23b40414.css" as="style"><link rel="preload" href="/assets/js/app.65ebfc93.js" as="script"><link rel="preload" href="/assets/js/2.a6dde13a.js" as="script"><link rel="preload" href="/assets/js/19.857508b4.js" as="script"><link rel="prefetch" href="/assets/js/10.b82bcbb0.js"><link rel="prefetch" href="/assets/js/11.66e507ec.js"><link rel="prefetch" href="/assets/js/12.bfb9bb44.js"><link rel="prefetch" href="/assets/js/13.c50827a9.js"><link rel="prefetch" href="/assets/js/14.1346cb3c.js"><link rel="prefetch" href="/assets/js/15.e00fe3ce.js"><link rel="prefetch" href="/assets/js/16.6e6f8e60.js"><link rel="prefetch" href="/assets/js/17.167c0edd.js"><link rel="prefetch" href="/assets/js/18.14edc139.js"><link rel="prefetch" href="/assets/js/20.e339e00b.js"><link rel="prefetch" href="/assets/js/21.b4d704af.js"><link rel="prefetch" href="/assets/js/22.98433c99.js"><link rel="prefetch" href="/assets/js/23.7f0045b2.js"><link rel="prefetch" href="/assets/js/24.5fe30490.js"><link rel="prefetch" href="/assets/js/25.6f3cc1d0.js"><link rel="prefetch" href="/assets/js/26.d186970f.js"><link rel="prefetch" href="/assets/js/27.c5de1bb2.js"><link rel="prefetch" href="/assets/js/28.a059dcca.js"><link rel="prefetch" href="/assets/js/29.450699c6.js"><link rel="prefetch" href="/assets/js/3.0cda60c3.js"><link rel="prefetch" href="/assets/js/30.e0d35303.js"><link rel="prefetch" href="/assets/js/31.ee5cd765.js"><link rel="prefetch" href="/assets/js/32.347e8b32.js"><link rel="prefetch" href="/assets/js/33.3bbbec8a.js"><link rel="prefetch" href="/assets/js/34.a665fd0a.js"><link rel="prefetch" href="/assets/js/35.7836a167.js"><link rel="prefetch" href="/assets/js/36.d088d7c7.js"><link rel="prefetch" href="/assets/js/37.ebe29911.js"><link rel="prefetch" href="/assets/js/38.0e0d8adb.js"><link rel="prefetch" href="/assets/js/39.1b6f14c0.js"><link rel="prefetch" href="/assets/js/4.9e5ec091.js"><link rel="prefetch" href="/assets/js/40.53f1eb7c.js"><link rel="prefetch" href="/assets/js/41.47933331.js"><link rel="prefetch" href="/assets/js/42.406b901e.js"><link rel="prefetch" href="/assets/js/43.025434c7.js"><link rel="prefetch" href="/assets/js/44.f92cb38b.js"><link rel="prefetch" href="/assets/js/45.5652e8c0.js"><link rel="prefetch" href="/assets/js/46.0f2b7382.js"><link rel="prefetch" href="/assets/js/47.73789e73.js"><link rel="prefetch" href="/assets/js/48.8dea295a.js"><link rel="prefetch" href="/assets/js/49.6404a61e.js"><link rel="prefetch" href="/assets/js/5.62651f26.js"><link rel="prefetch" href="/assets/js/50.da6674ac.js"><link rel="prefetch" href="/assets/js/51.331741bc.js"><link rel="prefetch" href="/assets/js/52.036f72c8.js"><link rel="prefetch" href="/assets/js/53.593ee9ec.js"><link rel="prefetch" href="/assets/js/54.27210fd1.js"><link rel="prefetch" href="/assets/js/55.bc92b466.js"><link rel="prefetch" href="/assets/js/56.2c34c595.js"><link rel="prefetch" href="/assets/js/57.be00cd7d.js"><link rel="prefetch" href="/assets/js/58.744c6fd5.js"><link rel="prefetch" href="/assets/js/59.44f6cf12.js"><link rel="prefetch" href="/assets/js/6.eafd2c6f.js"><link rel="prefetch" href="/assets/js/60.456cb2eb.js"><link rel="prefetch" href="/assets/js/61.c569376d.js"><link rel="prefetch" href="/assets/js/62.d708ca25.js"><link rel="prefetch" href="/assets/js/63.842cc759.js"><link rel="prefetch" href="/assets/js/64.361bda1f.js"><link rel="prefetch" href="/assets/js/65.c43de85e.js"><link rel="prefetch" href="/assets/js/66.aee6d038.js"><link rel="prefetch" href="/assets/js/67.3fb01e2c.js"><link rel="prefetch" href="/assets/js/68.53b4a7d9.js"><link rel="prefetch" href="/assets/js/69.046d6530.js"><link rel="prefetch" href="/assets/js/7.517cdead.js"><link rel="prefetch" href="/assets/js/70.7758848f.js"><link rel="prefetch" href="/assets/js/71.68c9c979.js"><link rel="prefetch" href="/assets/js/72.e517a723.js"><link rel="prefetch" href="/assets/js/73.9bc2c7a3.js"><link rel="prefetch" href="/assets/js/74.8325853c.js"><link rel="prefetch" href="/assets/js/75.ebfb4f84.js"><link rel="prefetch" href="/assets/js/8.02155513.js"><link rel="prefetch" href="/assets/js/9.018a3597.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.23b40414.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">左小白的前端笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">
+  指南
+</a></div><div class="nav-item"><a href="/config.html" class="nav-link">
+  配置
+</a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">
+  指南
+</a></div><div class="nav-item"><a href="/config.html" class="nav-link">
+  配置
+</a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Web FE</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/nav.html" class="sidebar-link">前端网址导航</a></li><li><a href="/docker.html" aria-current="page" class="active sidebar-link">Docker 基础</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docker.html#容器、操作系统级虚拟化" class="sidebar-link">容器、操作系统级虚拟化</a></li><li class="sidebar-sub-header"><a href="/docker.html#docker安装" class="sidebar-link">Docker安装</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docker.html#mac本地安装" class="sidebar-link">Mac本地安装</a></li><li class="sidebar-sub-header"><a href="/docker.html#ubuntu服务器安装" class="sidebar-link">Ubuntu服务器安装</a></li><li class="sidebar-sub-header"><a href="/docker.html#镜像加速" class="sidebar-link">镜像加速</a></li></ul></li><li class="sidebar-sub-header"><a href="/docker.html#运行简单nginx服务" class="sidebar-link">运行简单Nginx服务</a></li><li class="sidebar-sub-header"><a href="/docker.html#docker运行过程" class="sidebar-link">Docker运行过程</a></li><li class="sidebar-sub-header"><a href="/docker.html#dockerfile-定制镜像" class="sidebar-link">Dockerfile 定制镜像</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docker.html#定制-node-js-镜像" class="sidebar-link">定制 Node.js 镜像</a></li><li class="sidebar-sub-header"><a href="/docker.html#定制pm2镜像" class="sidebar-link">定制PM2镜像</a></li></ul></li><li class="sidebar-sub-header"><a href="/docker.html#docker-compose" class="sidebar-link">docker-compose</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docker.html#docker-compose-up运行的都是旧代码-有缓存的问题" class="sidebar-link">docker-compose up运行的都是旧代码，有缓存的问题</a></li></ul></li><li class="sidebar-sub-header"><a href="/docker.html#前端后分离项目整体运行与部署" class="sidebar-link">前端后分离项目整体运行与部署</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docker.html#nginx部署前端项目" class="sidebar-link">nginx部署前端项目</a></li><li class="sidebar-sub-header"><a href="/docker.html#mysql镜像" class="sidebar-link">mysql镜像</a></li><li class="sidebar-sub-header"><a href="/docker.html#node-pm2服务端部署" class="sidebar-link">node pm2服务端部署</a></li></ul></li><li class="sidebar-sub-header"><a href="/docker.html#使用vscode-deploy插件部署项目到ubuntu" class="sidebar-link">使用vscode Deploy插件部署项目到Ubuntu</a></li><li class="sidebar-sub-header"><a href="/docker.html#使用github-webhooks做持续集成-自动化部署" class="sidebar-link">使用github Webhooks做持续集成，自动化部署</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docker.html#配置github-webhooks" class="sidebar-link">配置github webhooks</a></li><li class="sidebar-sub-header"><a href="/docker.html#写node接口来处理webhooks请求" class="sidebar-link">写node接口来处理webhooks请求</a></li><li class="sidebar-sub-header"><a href="/docker.html#sh脚本-拉取最新代码-重新部署" class="sidebar-link">sh脚本：拉取最新代码，重新部署</a></li></ul></li></ul></li><li><a href="/git.html" class="sidebar-link">Git 笔记</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>CSS/CSS3</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JS/ES6</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>TypeScript</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>webpack</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="docker-基础"><a href="#docker-基础" class="header-anchor">#</a> Docker 基础</h1> <blockquote><p>Docker is an open platform for developing, shipping, and running applications.</p></blockquote> <p>Docker是一个用于开发、发布和运行应用程序的开放平台。也可以简单的理解为 Docker 是一个可以部署、运行项目的容器。</p> <p>参考：<a href="https://docs.docker.com/get-started/overview/" target="_blank" rel="noopener noreferrer">Docker overview<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h2 id="容器、操作系统级虚拟化"><a href="#容器、操作系统级虚拟化" class="header-anchor">#</a> 容器、操作系统级虚拟化</h2> <p>Docker 是基于 Linux 的高效、敏捷、轻量级的容器（轻量虚拟）方案。它的特点：高效的利用系统资源、快速的启动时间、一致的运行环境、持续交付和部署、更轻松的迁移。</p> <table><thead><tr><th>虚拟化技术</th> <th>代表</th></tr></thead> <tbody><tr><td>完全虚拟化</td> <td>VMware Workstation、VirtualBox</td></tr> <tr><td>硬件辅助虚拟化</td> <td>InterVT AMD-V</td></tr> <tr><td>超虚拟化</td> <td>Xen</td></tr> <tr><td>操作系统级</td> <td>Docker LXC容器</td></tr></tbody></table> <p>Docker 对比传统虚拟机</p> <table><thead><tr><th>特性</th> <th>容器</th> <th>虚拟机</th></tr></thead> <tbody><tr><td>启动</td> <td>秒级</td> <td>分钟级</td></tr> <tr><td>硬盘使用</td> <td>一般为 MB</td> <td>一般为 GB</td></tr> <tr><td>性能</td> <td>接近原生</td> <td>弱于原生</td></tr> <tr><td>系统支持量</td> <td>单机支持上千个容器</td> <td>一般几十个</td></tr></tbody></table> <h2 id="docker安装"><a href="#docker安装" class="header-anchor">#</a> Docker安装</h2> <p>这里主要介绍两种安装方式，一种是本地开发电脑 Mac 上的安装，一种是服务器 Ubuntu 上的安装</p> <h3 id="mac本地安装"><a href="#mac本地安装" class="header-anchor">#</a> Mac本地安装</h3> <p>到官方网站下载 <a href="https://docs.docker.com/get-docker/" target="_blank" rel="noopener noreferrer">Docker Desktop for Mac<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> 安装即可。安装完成后，命令行输入 docker，如果不是 command not found，就表示安装成功了。</p> <p>在 docker 上运行一个 nginx 应用看看效果</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 创建一个 www 目录</span>
+<span class="token function">mkdir</span> www 
+<span class="token comment"># 在该目录下创建一个 index.html 文件，内容为 hello docker</span>
+<span class="token builtin class-name">echo</span> <span class="token string">&quot;hello docker&quot;</span> <span class="token operator">&gt;&gt;</span> www/index.html
+
+<span class="token comment"># 使用 Docker 运行</span>
+<span class="token comment"># 这里要用到 nginx，要先下载镜像到本地</span>
+<span class="token comment"># 防止 Unable to find image 'nginx:latest' locally</span>
+docker pull nginx
+<span class="token comment"># 运行</span>
+<span class="token comment"># 将本地的 8000 端口，映射到容器的 80 端口</span>
+<span class="token comment"># 将当前目录下的 www 目录，映射到容器 /usr/share/nginx/html 目录</span>
+<span class="token comment"># 容器里 nginx 服务端口为 80，默认目录为 /usr/share/nginx/html </span>
+docker run -p <span class="token number">8000</span>:80 -v <span class="token environment constant">$PWD</span>/www:/usr/share/nginx/html nginx
+<span class="token comment"># docker run --help</span>
+<span class="token comment"># Usage：docker run [OPTIONS] IMAGE [COMMAND] [ARG...] </span>
+<span class="token comment"># Run a command in a new container</span>
+<span class="token comment"># -p, --publish list，Publish a container's port(s) to the host 将容器的端口发布到主机</span>
+<span class="token comment"># -v, --volume list，Bind mount a volume 绑定挂载卷(可以简单理解为磁盘、分区)</span>
+<span class="token comment"># $PWD 当前目录，nginx 为镜像</span>
+</code></pre></div><p>这样，通过 <code>http://127.0.0.1:8000</code> 就可以看到 hello docker 了</p> <h3 id="ubuntu服务器安装"><a href="#ubuntu服务器安装" class="header-anchor">#</a> Ubuntu服务器安装</h3> <p>下面使用一台全新的腾讯云 云服务器来尝试安装 Docker，系统为 Ubuntu Sever 18.04.1 LTS 64位。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 登录到远程服务器，我这里默认的用户是 unbuntu</span>
+<span class="token comment"># 如果是 root 用户</span>
+<span class="token function">ssh</span> root@xx.xx.xx.xx    
+<span class="token comment"># unbuntu 用户，执行命令时需要 sudo</span>
+<span class="token function">ssh</span> unbuntu@xx.xx.xx.xx 
+
+<span class="token comment"># apt升级</span>
+<span class="token function">sudo</span> <span class="token function">apt-get</span> update
+<span class="token comment"># 添加相关软件包</span>
+<span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> <span class="token punctuation">\</span>
+apt-transport-https <span class="token punctuation">\</span>
+ca-certificates <span class="token punctuation">\</span>
+<span class="token function">curl</span> <span class="token punctuation">\</span>
+software-properties-common
+<span class="token comment"># 下载软件包的合法性，需要添加软件源的 GPG 密钥</span>
+<span class="token function">curl</span> -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg <span class="token operator">|</span> <span class="token function">sudo</span> apt-key <span class="token function">add</span> -
+<span class="token comment"># source.list 中添加 Docker 软件源</span>
+<span class="token function">sudo</span> add-apt-repository <span class="token punctuation">\</span>
+<span class="token string">&quot;deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu \
+<span class="token variable"><span class="token variable">$(</span>lsb_release -cs<span class="token variable">)</span></span> \
+stable&quot;</span>
+<span class="token comment"># 安装 Docker CE</span>
+<span class="token function">sudo</span> <span class="token function">apt-get</span> update
+<span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> docker-ce
+<span class="token comment"># 启动 Docker CE</span>
+<span class="token function">sudo</span> systemctl <span class="token builtin class-name">enable</span> docker  <span class="token comment"># 添加docker服务</span>
+<span class="token function">sudo</span> systemctl start docker <span class="token comment"># 启动docker</span>
+<span class="token comment"># 建立 docker 用户组(可选，如果只有root用户，可以加一个) </span>
+<span class="token function">sudo</span> <span class="token function">groupadd</span> docker
+<span class="token function">sudo</span> <span class="token function">usermod</span> -aG docker <span class="token environment constant">$USER</span>
+<span class="token comment"># 测试命令是否生效</span>
+docker
+</code></pre></div><h3 id="镜像加速"><a href="#镜像加速" class="header-anchor">#</a> 镜像加速</h3> <p>为了加快镜像下载速度，可以使用第三方镜像</p> <ul><li>阿里云加速器(需登录账号获取) 暂不推荐</li> <li>Azure 中国镜像 https://dockerhub.azk8s.cn</li> <li>七牛云加速器 https://reg-mirror.qiniu.com</li></ul> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># sudo vi /etc/docker/daemon.json </span>
+<span class="token punctuation">{</span> 
+  <span class="token string">&quot;registry-mirrors&quot;</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span> 
+    <span class="token string">&quot;https://dockerhub.azk8s.cn&quot;</span>,
+    <span class="token string">&quot;https://reg-mirror.qiniu.com&quot;</span> 
+  <span class="token punctuation">]</span> 
+<span class="token punctuation">}</span>
+
+<span class="token comment"># 重启docker</span>
+<span class="token function">sudo</span> systemctl daemon-reload
+<span class="token function">sudo</span> systemctl restart docker
+</code></pre></div><h2 id="运行简单nginx服务"><a href="#运行简单nginx服务" class="header-anchor">#</a> 运行简单Nginx服务</h2> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 拉取官方镜像 - 面向docker的只读模板</span>
+docker pull nginx   <span class="token comment"># 可能会等很久，下载慢</span>
+<span class="token comment"># 查看镜像</span>
+docker images nginx
+<span class="token comment"># 启动镜像</span>
+<span class="token function">mkdir</span> www
+<span class="token builtin class-name">echo</span> <span class="token string">'hello docker!!'</span> <span class="token operator">&gt;&gt;</span> www/index.html
+<span class="token comment"># 启动</span>
+<span class="token comment"># www目录里面放一个index.html</span>
+<span class="token comment"># -p 端口映射 8000:80 ，将服务器的8000端口，映射到docker虚拟机里nginx服务的80端口</span>
+<span class="token comment"># $PWD/www 当前目录下的www，: 映射到 nginx 默认的路径下，使用镜像名字为 nginx</span>
+docker run -p <span class="token number">8000</span>:80 -v <span class="token environment constant">$PWD</span>/www:/usr/share/nginx/html nginx  
+<span class="token comment"># 后台启动</span>
+<span class="token comment"># -d 以 daemon 后台守护进程执行，返回 uuid</span>
+docker run -p <span class="token number">80</span>:80 -v <span class="token environment constant">$PWD</span>/www:/usr/share/nginx/html -d nginx 
+<span class="token comment"># 查看运行中的容器，如果要查看全部加 -a，容器id的前3位就可以操作该容器。</span>
+<span class="token comment"># List containers，-a Show all containers (default shows just running)</span>
+docker <span class="token function">ps</span> 
+<span class="token comment"># 停止</span>
+docker stop ff6
+<span class="token comment"># 开启</span>
+docker start ff6
+<span class="token comment"># 进入docker内部伪终端，可以看容器内部文件系统</span>
+docker <span class="token builtin class-name">exec</span> -it ff6 /bin/bash
+<span class="token comment"># 删除镜像</span>
+docker <span class="token function">rm</span> ff6
+</code></pre></div><h2 id="docker运行过程"><a href="#docker运行过程" class="header-anchor">#</a> Docker运行过程</h2> <p>基本概念</p> <ul><li>镜像（Image），面向Docker的只读模板，其中包含创建Docker容器的说明。An image is a read-only template with instructions for creating a Docker container.</li> <li>容器（Container），镜像的运行实例。A container is a runnable instance of an image.</li> <li>仓库 (Registry)，存储镜像的服务器</li></ul> <p>命令运行过程，如下图</p> <ul><li>运行 docker pull，从镜像服务器拉取镜像到本地</li> <li>运行 docker run，将镜像实例化，放到容器列表列执行</li> <li>运行 docker build，创建一个镜像</li></ul> <p><img src="/images/docker/docker_architecture.svg" alt="docker_architecture"></p> <h2 id="dockerfile-定制镜像"><a href="#dockerfile-定制镜像" class="header-anchor">#</a> Dockerfile 定制镜像</h2> <blockquote><p>To build your own image, you create a Dockerfile with a simple syntax for defining the steps needed to create the image and run it. Each instruction in a Dockerfile creates a layer in the image. When you change the Dockerfile and rebuild the image, only those layers which have changed are rebuilt. This is part of what makes images so lightweight, small, and fast, when compared to other virtualization technologies.</p></blockquote> <p>要构建自己的镜像，您可以使用简单的语法创建一个 Dockerfile 文件，用于定义创建镜像并运行它所需的步骤。 Dockerfile中的每条指令都会在映像中创建一个层。 当您更改 Dockerfile 并重新构建镜像时，仅重建那些已更改的层。 与其他虚拟化技术相比，这是使镜像如此轻量，小和快速的部分原因。</p> <p>定制自己的web服务</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 创建一个测试的文件夹</span>
+<span class="token function">mkdir</span> my_nginx
+<span class="token comment"># 在 myNginx 下创建 Dockerfile 文件，并写入内容</span>
+<span class="token function">vi</span> my_nginx/Dockerfile
+<span class="token comment"># Dockerfile 内容，从 nginx 镜像开始，在nginx目录下新增一个页面</span>
+FROM nginx:latest
+RUN <span class="token builtin class-name">echo</span> <span class="token string">'&lt;h1&gt;Hello, my_nginx!&lt;/h1&gt;'</span> <span class="token operator">&gt;</span> /usr/share/nginx/html/index.html
+
+<span class="token comment"># 进入 myNginx</span>
+<span class="token builtin class-name">cd</span> my_nginx
+<span class="token comment"># 定制镜像</span>
+<span class="token comment"># -t tag list，Name and optionally a tag in the 'name:tag' format</span>
+docker build -t my_nginx:v1 <span class="token builtin class-name">.</span>  <span class="token comment"># nginx定义镜像名，v1版本</span>
+<span class="token comment"># 运行镜像</span>
+docker run -p <span class="token number">80</span>:80 my_nginx:v1
+</code></pre></div><p>这样访问 <code>127.0.0.1</code> 就可以看到 Hello, my_nginx! 了</p> <h3 id="定制-node-js-镜像"><a href="#定制-node-js-镜像" class="header-anchor">#</a> 定制 Node.js 镜像</h3> <p>先创建一个新的 Node.js 项目，目录为 nodeapp</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 创建 nodeapp，并初始化一个简单的项目</span>
+<span class="token function">mkdir</span> nodeapp
+<span class="token builtin class-name">cd</span> nodeapp
+<span class="token function">npm</span> init -y
+<span class="token function">npm</span> i koa -s
+<span class="token function">vi</span> app.js
+</code></pre></div><p>app.js代码如下</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// app.js</span>
+<span class="token keyword">const</span> Koa <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'koa'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Koa</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token parameter">ctx</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  ctx<span class="token punctuation">.</span>body <span class="token operator">=</span> <span class="token string">'Hello Node.js'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'app started at http://localhost:3000/'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><p>为当前 Node.js 项目定制 Docker 镜像</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 在当前目录创建Dockerfile</span>
+<span class="token function">vi</span> Dockerfile
+<span class="token comment"># Dockerfile 内容</span>
+FROM node:10-alpine
+ADD <span class="token builtin class-name">.</span> /app/
+WORKDIR /app
+RUN <span class="token function">npm</span> <span class="token function">install</span>
+EXPOSE <span class="token number">3000</span>
+CMD <span class="token punctuation">[</span><span class="token string">&quot;node&quot;</span>, <span class="token string">&quot;app.js&quot;</span><span class="token punctuation">]</span>
+</code></pre></div><p>具体解释</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># Dockerfile</span>
+<span class="token comment"># 制定node镜像的版本</span>
+FROM node:10-alpine
+<span class="token comment"># 移动当前目录下面的文件到app目录下</span>
+ADD <span class="token builtin class-name">.</span> /app/
+<span class="token comment"># 进入到app目录下面，类似cd</span>
+WORKDIR /app
+<span class="token comment"># 安装依赖</span>
+RUN <span class="token function">npm</span> <span class="token function">install</span>
+<span class="token comment"># 对外暴露的端口</span>
+EXPOSE <span class="token number">3000</span>
+<span class="token comment"># 程序启动脚本</span>
+CMD <span class="token punctuation">[</span><span class="token string">&quot;node&quot;</span>, <span class="token string">&quot;app.js&quot;</span><span class="token punctuation">]</span>
+</code></pre></div><p>构建镜像并运行</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 定制镜像</span>
+docker build -t nodeapp:v1 <span class="token builtin class-name">.</span>
+<span class="token comment"># 运行，-d 后台运行Run container in background and print container ID</span>
+docker run -p <span class="token number">3000</span>:3000 -d nodeapp:v1
+<span class="token comment"># 返回64位uuid 1f8c4b917efb92c313...</span>
+<span class="token comment"># 停止服务</span>
+docker stop 1f8
+</code></pre></div><h3 id="定制pm2镜像"><a href="#定制pm2镜像" class="header-anchor">#</a> 定制PM2镜像</h3> <p>PM2 - 利用多核资源</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># .dockerignore</span>
+node_modules
+</code></pre></div><p>pm2配置文件</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// process.yml</span>
+apps<span class="token operator">:</span>
+  script<span class="token operator">:</span> app<span class="token punctuation">.</span>js
+  instances<span class="token operator">:</span> <span class="token number">2</span>
+  watch<span class="token operator">:</span> <span class="token boolean">true</span>
+  env<span class="token operator">:</span>
+    <span class="token constant">NODE_ENV</span><span class="token operator">:</span> production
+</code></pre></div><p>Dockerfile</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># Dockerfile  </span>
+<span class="token comment"># pm2在docker中使用命令为pm2-runtime</span>
+FROM keymetrics/pm2:latest-alpine
+WORKDIR /usr/src/app
+ADD <span class="token builtin class-name">.</span> /usr/src/app
+RUN <span class="token function">npm</span> config <span class="token builtin class-name">set</span> registry https://registry.npm.taobao.org/ <span class="token operator">&amp;&amp;</span> <span class="token punctuation">\</span>
+<span class="token function">npm</span> i
+EXPOSE <span class="token number">3000</span>
+CMD <span class="token punctuation">[</span><span class="token string">&quot;pm2-runtime&quot;</span>, <span class="token string">&quot;start&quot;</span>, <span class="token string">&quot;process.yml&quot;</span><span class="token punctuation">]</span>
+</code></pre></div><p>定制镜像</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 定制镜像</span>
+docker build -t mypm2 <span class="token builtin class-name">.</span>
+<span class="token comment"># 运行</span>
+docker run -p <span class="token number">3000</span>:3000 -d mypm2
+</code></pre></div><h2 id="docker-compose"><a href="#docker-compose" class="header-anchor">#</a> docker-compose</h2> <p>Compose项目是 Docker 官方的开源项目，负责实现对 Docker 容器集群的快速编排，一次性可以启动多个镜像。</p> <p>docker-compose：Define and run multi-container applications with Docker. 使用 Docker 定义或运行多个容器应用。</p> <p>安装</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># ubuntu需要安装，Mac不需要</span>
+<span class="token function">apt</span> <span class="token function">install</span> docker-compose
+</code></pre></div><p>测试</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">mkdir</span> helloworld
+<span class="token builtin class-name">cd</span> helloworld
+<span class="token function">vi</span> docker-compose.yml
+<span class="token comment"># docker-compose.yml 文件内容</span>
+version: <span class="token string">'3.1'</span>
+services:
+ hello-world:
+  image: hello-world
+
+<span class="token comment"># 运行 docker-compose  Create and start containers</span>
+docker-compose up 
+</code></pre></div><p>注意，如果是 ubuntu 服务器，会报 <code>Couldn't connect to Docker daemon at http+docker://localunixsocket - is it running?</code> 的错误，解决方法如下：</p> <div class="language-bash extra-class"><pre class="language-bash"><code>docker-compose up
+<span class="token comment"># ERROR: Couldn't connect to Docker daemon at http+docker://localunixsocket - is it running?</span>
+<span class="token comment"># If it's at a non-standard location, specify the URL with the DOCKER_HOST environment variable.</span>
+<span class="token comment"># 将当前用户加入docker组</span>
+<span class="token function">sudo</span> gpasswd -a <span class="token variable">${<span class="token environment constant">USER</span>}</span> docker
+<span class="token comment"># Adding user ubuntu to group docker</span>
+<span class="token function">sudo</span> <span class="token function">su</span> <span class="token comment"># 切换到 root</span>
+<span class="token function">su</span> ubuntu <span class="token comment"># 切回 ubuntu 再次执行即可</span>
+docker-compose up
+</code></pre></div><p>参考: <a href="https://blog.csdn.net/xiojing825/article/details/79494408" target="_blank" rel="noopener noreferrer">解决 ERROR: Couldn't connect to Docker daemon at http+docker://localunixsocket - is it running? | CSDN<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p>同时启用mongo、mongo-express两个镜像服务</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 新建一个项目</span>
+<span class="token function">mkdir</span> mongo
+<span class="token builtin class-name">cd</span> mongo
+<span class="token function">vi</span> docker-compose.yml
+
+<span class="token comment"># docker-compose.yml</span>
+version: <span class="token string">'3.1'</span>
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - <span class="token number">27017</span>:27017
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - <span class="token number">8000</span>:8081
+
+<span class="token comment"># 运行</span>
+docker-compose up
+</code></pre></div><p>在浏览器打开 http://127.0.0.1:8000/ 就可以看到 mongo 客户端了</p> <h3 id="docker-compose-up运行的都是旧代码-有缓存的问题"><a href="#docker-compose-up运行的都是旧代码-有缓存的问题" class="header-anchor">#</a> docker-compose up运行的都是旧代码，有缓存的问题</h3> <p>当包含有 Dockfile 需要 build 的情况，比如 node 项目。如果代码有改动，重新运行 docker-compose up，那么他还会是旧的代码，并没有刷新。</p> <p>就算不使用 <code>docker-compose up --force-recreate</code> 也不管用，<strong>还要加 --build，才会将修改后的代码重新build</strong></p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 重新创建容器，重新build</span>
+docker-compose up --force-recreate --build
+</code></pre></div><p>参考：<a href="https://www.jianshu.com/p/18cb318445f4" target="_blank" rel="noopener noreferrer">2019-11-07 史上大坑：使用docker-compose自动更新代码到容器 | 简书<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h2 id="前端后分离项目整体运行与部署"><a href="#前端后分离项目整体运行与部署" class="header-anchor">#</a> 前端后分离项目整体运行与部署</h2> <p>使用 docker-compose 运行部署多个镜像，一次性部署前端后代码以及mysql</p> <ul><li>nginx 用于部署前端构建后的 dist 目录</li> <li>mysql-db 用于启动 mysql 服务</li> <li>app-pm2 用于部署 backend 目录下的 node 服务端项目</li></ul> <div class="language-yml extra-class"><pre class="language-yml"><code><span class="token comment"># docker-compose.yml</span>
+<span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">'3.1'</span>
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+  <span class="token key atrule">nginx</span><span class="token punctuation">:</span>
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> nginx
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token datetime number">80:80</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./nginx/conf.d/<span class="token punctuation">:</span>/etc/nginx/conf.d
+      <span class="token punctuation">-</span> ./dist<span class="token punctuation">:</span>/var/www/html/
+  <span class="token key atrule">mysql-db</span><span class="token punctuation">:</span>
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> mysql
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> mysql
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">MYSQL_ROOT_PASSWORD</span><span class="token punctuation">:</span> <span class="token string">'you passowrd'</span>
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> 3306<span class="token punctuation">:</span><span class="token number">3306</span>
+    <span class="token key atrule">expose</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token number">3306</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./backend/dao<span class="token punctuation">:</span>/docker<span class="token punctuation">-</span>entrypoint<span class="token punctuation">-</span>initdb.d/ <span class="token comment"># 挂载数据初始化sql脚本</span>
+  <span class="token key atrule">app-pm2</span><span class="token punctuation">:</span>
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> app<span class="token punctuation">-</span>pm2
+    <span class="token comment"># 构建容器</span>
+    <span class="token key atrule">build</span><span class="token punctuation">:</span> ./backend
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> 8700<span class="token punctuation">:</span><span class="token number">8700</span>
+    <span class="token key atrule">depends_on</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> mysql<span class="token punctuation">-</span>db
+</code></pre></div><h3 id="nginx部署前端项目"><a href="#nginx部署前端项目" class="header-anchor">#</a> nginx部署前端项目</h3> <p>使用 nginx 镜像</p> <ol><li>自定义 nginx 配置，将前端目录下的 nginx/conf.d/docker.conf 映射到 docker 容器的 nginx 默认配置目录</li> <li>将当前目录下的 dist 目录，映射到 nginx 默认目录</li></ol> <div class="language-yml extra-class"><pre class="language-yml"><code>  <span class="token comment"># docker-compose.yml nginx 部分</span>
+  <span class="token key atrule">nginx</span><span class="token punctuation">:</span>
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> nginx
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token datetime number">80:80</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./nginx/conf.d/<span class="token punctuation">:</span>/etc/nginx/conf.d
+      <span class="token punctuation">-</span> ./dist<span class="token punctuation">:</span>/var/www/html/
+</code></pre></div><p>./nginx/conf.d/docker.conf</p> <div class="language-js extra-class"><pre class="language-js"><code>server <span class="token punctuation">{</span>
+  listen <span class="token number">80</span><span class="token punctuation">;</span>
+  location <span class="token operator">/</span> <span class="token punctuation">{</span>
+    root <span class="token operator">/</span><span class="token keyword">var</span><span class="token operator">/</span>www<span class="token operator">/</span>html<span class="token punctuation">;</span>
+    index index<span class="token punctuation">.</span>html index<span class="token punctuation">.</span>htm<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3 id="mysql镜像"><a href="#mysql镜像" class="header-anchor">#</a> mysql镜像</h3> <p>开启 mysql 服务，设置一个连接密码，用于本地 mac、以及 docker 里的其他镜像实例去连接该数据库</p> <div class="language-yml extra-class"><pre class="language-yml"><code>  <span class="token comment"># docker-compose.yml mysql 部分</span>
+  <span class="token key atrule">mysql-db</span><span class="token punctuation">:</span>
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> mysql
+    <span class="token key atrule">image</span><span class="token punctuation">:</span> mysql
+    <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+      <span class="token key atrule">MYSQL_ROOT_PASSWORD</span><span class="token punctuation">:</span> <span class="token string">'you passowrd'</span> <span class="token comment"># 密码</span>
+    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> 3306<span class="token punctuation">:</span><span class="token number">3306</span>
+    <span class="token key atrule">expose</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token number">3306</span>
+    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> ./backend/dao<span class="token punctuation">:</span>/docker<span class="token punctuation">-</span>entrypoint<span class="token punctuation">-</span>initdb.d/ <span class="token comment"># 挂载数据初始化sql脚本</span>
+</code></pre></div><p>注意几个坑的问题</p> <p><strong>1. 允许外部 Host 连接，进入 mysql 镜像内部做修改，ubuntu默认ok，mac本地不可以，需要做如下修改</strong></p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># docker ps 查看到 mysql 镜像id 为 46e4xxx 后，进入该镜像</span>
+docker <span class="token builtin class-name">exec</span> -it 46e4 /bin/bash
+<span class="token comment"># 连接到 mysql</span>
+mysql -uroot -p
+<span class="token comment"># 操作</span>
+mysql<span class="token operator">&gt;</span> use mysql
+mysql<span class="token operator">&gt;</span> <span class="token keyword">select</span> Host,User from user<span class="token punctuation">;</span>
++-----------+------------------+
+<span class="token operator">|</span> Host      <span class="token operator">|</span> User             <span class="token operator">|</span>
++-----------+------------------+
+<span class="token operator">|</span> %         <span class="token operator">|</span> root             <span class="token operator">|</span> <span class="token comment"># Host为 % 比是正常的</span>
+<span class="token operator">|</span> localhost <span class="token operator">|</span> mysql.infoschema <span class="token operator">|</span>
+<span class="token operator">|</span> localhost <span class="token operator">|</span> mysql.session    <span class="token operator">|</span>
+<span class="token operator">|</span> localhost <span class="token operator">|</span> mysql.sys        <span class="token operator">|</span>
+<span class="token operator">|</span> localhost <span class="token operator">|</span> root             <span class="token operator">|</span>
++-----------+------------------+
+<span class="token number">5</span> rows <span class="token keyword">in</span> <span class="token builtin class-name">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+<span class="token comment"># mac系统下，如果有则修改</span>
+mysql<span class="token operator">&gt;</span> update user <span class="token builtin class-name">set</span> <span class="token assign-left variable">host</span><span class="token operator">=</span><span class="token string">'%'</span> where <span class="token assign-left variable">user</span><span class="token operator">=</span><span class="token string">'root'</span> and <span class="token assign-left variable">host</span><span class="token operator">=</span><span class="token string">'localhost'</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>2. 无法使用socket方式连接到数据库，提示：ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/tmp/mysql.sock'</strong></p> <p>一般 mysql 连接方式有两种，使用过 mac <code>Sequel Pro</code> app 的应该都知道</p> <ul><li>mysql -uroot -p 属于 Socket 连接</li> <li>mysql -uroot -p -h127.0.0.1 加了-h参数，属于TCP/IP连接</li></ul> <p>可能是由于 docker 端口映射的问题，我们无法使用 Socket 方式连接，会一直报上面的错误。这种情况下，我们加上 <code>-h127.0.0.1</code> 参数即可正常访问，暂时没找到其他解决方法。</p> <p><strong>3. 其他 docker 镜像(node项目)连接该 mysql 镜像连接不上</strong></p> <ul><li>mac环境下报错 <code>Error: connect ECONNREFUSED 127.0.0.1:3306</code></li> <li>ubuntu服务器环境报错 <code>ConnectionError [SequelizeConnectionError]: connect ETIMEDOUT</code></li></ul> <p>主要是因为 <strong>node服务的镜像实例与mysql镜像实例之间相互独立，node镜像实例里代码连接 127.0.0.1:3306 是无法访问到 mysql 镜像实例的，需要相关联</strong></p> <p>这里有个临时解决方法，就是先后台运行，然后通过 <code>docker ps</code> 查看对应的 镜像ID，再根据镜像ID，使用 <code>docker inspect 镜像ID</code> 查看 mysql 镜像对应的 IP ，然后将代码里的 host 改为该 IP 即可。<strong>这个IP可能是动态的，比如从mac到Ubuntu系统，是不一样的。所以它只是临时解决方案，如果IP变更了，代码也要修改</strong> ，具体步骤如下</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 后台运行</span>
+docker-compose up --force-recreate --build -d
+docker <span class="token function">ps</span>
+<span class="token comment"># CONTAINER ID        IMAGE  </span>
+<span class="token comment"># 4248f7c1d71b        nginx </span>
+<span class="token comment"># 6a6b527f3193        zuo11com_app-pm2 </span>
+<span class="token comment"># 46e47b6cc227        mysql </span>
+docker inspect 46e4
+<span class="token comment">#  &quot;Gateway&quot;: &quot;172.18.0.1&quot;,</span>
+<span class="token comment">#  &quot;IPAddress&quot;: &quot;172.18.0.2&quot;,</span>
+</code></pre></div><p>修改 node 中修改 mysql 连接，重新运行 <code>docker-compose up --force-recreate --build -d</code></p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">this</span><span class="token punctuation">.</span>sequelize <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Sequelize</span><span class="token punctuation">(</span><span class="token string">'ibd'</span><span class="token punctuation">,</span> <span class="token string">'root'</span><span class="token punctuation">,</span> <span class="token string">'1234567Abc,.'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  host<span class="token operator">:</span> <span class="token string">'172.18.0.1'</span><span class="token punctuation">,</span> <span class="token comment">// Gateway IP, docker从一个镜像访问里另一个镜像(mysql)</span>
+  <span class="token comment">// host: 'localhost', // 默认情况</span>
+  dialect<span class="token operator">:</span> <span class="token string">'mysql'</span><span class="token punctuation">,</span> <span class="token comment">// 'mysql' | 'mariadb' | 'postgres' | 'mssql' 之一 </span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><p>2020/10/06更新，<strong>一劳永逸解决方法：host 直接写mysql对应的镜像名 &quot;mysql-db&quot; 即可。由于都是运行在一个docker环境里，即使不使用 links，使用 mysql-db 也会映射到对应 mysql 镜像的 IPAddress。</strong></p> <p>这里又会有另外一个问题，original: Error: connect ECONNREFUSED 172.26.0.3:3306，可以看到 mysql-db 这个 host 名并不是解析到 mysql 镜像的 Gateway 网关地址，而是镜像的 IPAddress。</p> <p>这个问题的原因在于，node服务 depends_on mysql服务，但并不一定是等 mysql 镜像完全加载好才开始连接。所以 node 的 mysql 连接程序需要有错误重试的逻辑。如果出错，每隔2秒再重新连接。过个 5-10 秒，mysql 镜像完全初始化好，重连就正常了。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// mysql 重连逻辑</span>
+<span class="token comment">// 初始化数据库</span>
+<span class="token keyword">async</span> <span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 建立连接</span>
+    <span class="token comment">// 参数分别为: database, username, password, config</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>sequelize <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Sequelize</span><span class="token punctuation">(</span><span class="token string">'数据库名'</span><span class="token punctuation">,</span> <span class="token string">'root'</span><span class="token punctuation">,</span> <span class="token string">'密码'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      host<span class="token operator">:</span> <span class="token string">'mysql-db'</span><span class="token punctuation">,</span> <span class="token comment">// docker从一个镜像访问里另一个镜像(mysql)</span>
+      dialect<span class="token operator">:</span> <span class="token string">'mysql'</span><span class="token punctuation">,</span> <span class="token comment">// 'mysql' | 'mariadb' | 'postgres' | 'mssql' 之一 </span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token comment">// 测试连接，使用 .authenticate() 函数来测试连接</span>
+    <span class="token keyword">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span>sequelize<span class="token punctuation">.</span><span class="token function">authenticate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 如果连接异常，会走catch的逻辑</span>
+
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createConfigModel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span>
+    <span class="token comment">// 失败重连，fix dcoker-compose 连不上mysql容器</span>
+    <span class="token comment">// original: Error: connect ECONNREFUSED 172.26.0.3:3306</span>
+    <span class="token comment">// depends_on 并不代表 mysql 数据库完全初始化好再启动当前服务</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">2000</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><strong>4. 在 mysql 镜像执行 当前目录下的 .sql 文件</strong></p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 后台运行</span>
+<span class="token comment"># docker-compose up --force-recreate --build -d</span>
+<span class="token comment"># 可以使用 docker-compose logs 查看日志</span>
+<span class="token comment"># docker ps 查看mysql镜像id</span>
+<span class="token comment"># 在 mysql 镜像里，批量执行当前目录下的 .sql 文件</span>
+docker <span class="token builtin class-name">exec</span> -i mysql镜像id <span class="token function">sh</span> -c <span class="token string">'exec mysql -h127.0.0.1 -uroot -p数据库密码'</span> <span class="token operator">&lt;</span> ./xxx.sql
+</code></pre></div><p>参考 <a href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener noreferrer">mysql | Docker Hub<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h3 id="node-pm2服务端部署"><a href="#node-pm2服务端部署" class="header-anchor">#</a> node pm2服务端部署</h3> <p>部署并运行 backend 下的镜像，会 build 执行该项目下的 Dockfile</p> <div class="language-yml extra-class"><pre class="language-yml"><code>  <span class="token comment"># docker-compose.yml node pm2 部分</span>
+  <span class="token key atrule">app-pm2</span><span class="token punctuation">:</span>
+    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> app<span class="token punctuation">-</span>pm2
+    <span class="token comment"># 构建容器</span>
+    <span class="token key atrule">build</span><span class="token punctuation">:</span> ./backend
+    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> 3000<span class="token punctuation">:</span><span class="token number">3000</span>
+    <span class="token key atrule">depends_on</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> mysql<span class="token punctuation">-</span>db
+</code></pre></div><p>./backend/Dockfile</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token constant">FROM</span> keymetrics<span class="token operator">/</span>pm2<span class="token operator">:</span>latest<span class="token operator">-</span>alpine
+<span class="token constant">WORKDIR</span> <span class="token operator">/</span>usr<span class="token operator">/</span>src<span class="token operator">/</span>app
+<span class="token constant">ADD</span> <span class="token punctuation">.</span> <span class="token operator">/</span>usr<span class="token operator">/</span>src<span class="token operator">/</span>app
+<span class="token constant">RUN</span> npm config <span class="token keyword">set</span> registry https<span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span>registry<span class="token punctuation">.</span>npm<span class="token punctuation">.</span>taobao<span class="token punctuation">.</span>org<span class="token operator">/</span> <span class="token operator">&amp;&amp;</span> \
+npm i
+<span class="token constant">EXPOSE</span> <span class="token number">3000</span>
+<span class="token constant">CMD</span> <span class="token punctuation">[</span><span class="token string">&quot;pm2-runtime&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;start&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;process.yml&quot;</span><span class="token punctuation">]</span>
+</code></pre></div><h2 id="使用vscode-deploy插件部署项目到ubuntu"><a href="#使用vscode-deploy插件部署项目到ubuntu" class="header-anchor">#</a> 使用vscode Deploy插件部署项目到Ubuntu</h2> <p>假设项目名为 test_demo，目录结构如下</p> <div class="language-bash extra-class"><pre class="language-bash"><code>backend
+frontend
+nginx
+docker-compose.yml
+</code></pre></div><p>在 test_demo 当前目录下创建一个 <code>.vscode/settings.json</code> 文件</p> <div class="language-json extra-class"><pre class="language-json"><code><span class="token punctuation">{</span>
+  <span class="token property">&quot;deploy&quot;</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">&quot;packages&quot;</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+          <span class="token property">&quot;files&quot;</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+              <span class="token string">&quot;**/*&quot;</span><span class="token punctuation">,</span>
+          <span class="token punctuation">]</span><span class="token punctuation">,</span>
+
+          <span class="token property">&quot;exclude&quot;</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+              <span class="token string">&quot;node_modules/**&quot;</span><span class="token punctuation">,</span>
+              <span class="token string">&quot;.git/**&quot;</span><span class="token punctuation">,</span>
+              <span class="token string">&quot;.vscode/**&quot;</span><span class="token punctuation">,</span>
+              <span class="token string">&quot;**/node_modules/**&quot;</span><span class="token punctuation">,</span>
+          <span class="token punctuation">]</span><span class="token punctuation">,</span>
+          <span class="token property">&quot;deployOnSave&quot;</span><span class="token operator">:</span> <span class="token boolean">false</span>
+      <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+      <span class="token property">&quot;targets&quot;</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+          <span class="token property">&quot;type&quot;</span><span class="token operator">:</span> <span class="token string">&quot;sftp&quot;</span><span class="token punctuation">,</span>
+          <span class="token property">&quot;name&quot;</span><span class="token operator">:</span> <span class="token string">&quot;TencentServer&quot;</span><span class="token punctuation">,</span>
+          <span class="token comment">// 服务器地址，注意我这里是ubuntu用户名，还可能是root</span>
+          <span class="token property">&quot;dir&quot;</span><span class="token operator">:</span> <span class="token string">&quot;/home/ubuntu/test_demo&quot;</span><span class="token punctuation">,</span>
+          <span class="token property">&quot;host&quot;</span><span class="token operator">:</span> <span class="token string">&quot;服务器ip地址&quot;</span><span class="token punctuation">,</span>
+          <span class="token property">&quot;port&quot;</span><span class="token operator">:</span> <span class="token number">22</span><span class="token punctuation">,</span>
+          <span class="token property">&quot;user&quot;</span><span class="token operator">:</span> <span class="token string">&quot;ubuntu&quot;</span><span class="token punctuation">,</span>
+          <span class="token comment">// 也可以使用 ssh key登录</span>
+          <span class="token comment">// &quot;privateKey&quot;: &quot;/Users/guoqzuo/.ssh/id_rsa&quot;,</span>
+          <span class="token property">&quot;password&quot;</span><span class="token operator">:</span> <span class="token string">&quot;服务器密码&quot;</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>这样，假设你的服务器ip密码都是正确的。那么在 vscode 里右键对应的目录，选择 Deploy current file /folder 就可以部署到服务器了。</p> <p>把 frontend、backend、nginx、docker-compose.yml 等必须要的文件部署到 服务器后，在服务器执行对应的 docker-compose up 命令即可。</p> <p>注意，<strong>腾讯云/阿里云等服务器一般有配置安全组，一般访问服务器的 3000端口，80端口等可能会被限制，需要在入规则里，开放对应的端口</strong></p> <h2 id="使用github-webhooks做持续集成-自动化部署"><a href="#使用github-webhooks做持续集成-自动化部署" class="header-anchor">#</a> 使用github Webhooks做持续集成，自动化部署</h2> <p>在上面的例子中，我们知道当我们写好 docker-compose.yml 后，再运行 docker-compose up 即可开启多个服务。持续集成可以做到提交代码后自动部署最新代码。</p> <p>整个过程如下:</p> <ol><li>提交新的内容到github仓库，github仓库接收到push事件，触发对应的 webhooks 事件，向设置的一个 URL 发送 POST 请求。</li> <li>专门用一个node接口来接收该请求。接收到请求后，如果是 master 分支的 push 事件，用 node 执行 shell 脚本（.sh 文件）</li> <li>本地 shell 脚本用于 git pull 最新代码，并重新使用 docker-compose up 部署最新代码</li></ol> <h3 id="配置github-webhooks"><a href="#配置github-webhooks" class="header-anchor">#</a> 配置github webhooks</h3> <p>将项目文件放到 github 仓库，然后在对应的仓库，setting、选择 webhooks，添加 webhooks，如下图</p> <p><img src="/images/docker/github_webhooks_1.png" alt="github_webhooks_1.png"></p> <p>新建一个 webhooks，有下面几个字段</p> <ul><li>Payload URL: <code>http://www.xxx.com:8800/docker_deploy</code> ，发送post请求的地址，你自己的服务器要处理该请求。测试时可以用 IP 地址</li> <li>Content type: application/json，发送数据类型，一般选json，方便处理</li> <li>secret: xxx  秘钥，做验证用，接口处理是需要使用</li> <li>which events would you like to trigger this webhook? 触发该接口的时机我们选择仅 push 时触发</li></ul> <p><img src="/images/docker/github_webhooks_2.png" alt="github_webhooks_2.png"></p> <p>新增 webhooks 后，可以发测试请求，点击 redeliver 弹窗提示后再点击确认，这样就可以调试接口了。如下图</p> <p><img src="/images/docker/github_webhooks_3.png" alt="github_webhooks_3.png"></p> <h3 id="写node接口来处理webhooks请求"><a href="#写node接口来处理webhooks请求" class="header-anchor">#</a> 写node接口来处理webhooks请求</h3> <p>我们用一个简单的 nodejs 文件，在 8800 端口新建一个接口来处理 github webhooks 的请求，先写一个简单的测试 js</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// webhook.js</span>
+<span class="token keyword">const</span> http <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'http'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> createHandler <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'github-webhook-handler'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> handler <span class="token operator">=</span> <span class="token function">createHandler</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  path<span class="token operator">:</span><span class="token string">'/docker_deploy'</span><span class="token punctuation">,</span>
+  secret<span class="token operator">:</span><span class="token string">'xxx'</span> <span class="token comment">// 之间设置的秘钥</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+http<span class="token punctuation">.</span><span class="token function">createServer</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">req<span class="token punctuation">,</span>res</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token function">handler</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span>res<span class="token punctuation">,</span><span class="token parameter">err</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    res<span class="token punctuation">.</span>statusCode <span class="token operator">=</span> <span class="token number">404</span>
+    res<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">'no such location'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">8800</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Webhook listen at 8800'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+handler<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span><span class="token parameter">err</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">'Error'</span><span class="token punctuation">,</span>err<span class="token punctuation">.</span>message<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 接收所有事件(包括push事件)打印日志</span>
+handler<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'*'</span><span class="token punctuation">,</span><span class="token parameter">event</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Received * '</span><span class="token punctuation">,</span>event<span class="token punctuation">.</span>payload<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><p>我们要在服务器跑起这个服务需要先在 ubuntu 系统上安装 node/npm</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 默认安装方法</span>
+<span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> -y nodejs
+<span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> <span class="token function">npm</span>
+
+<span class="token comment"># ubuntu 安装node版本过低，怎么解决</span>
+node -v <span class="token comment"># v8.10.0</span>
+<span class="token function">npm</span> -v <span class="token comment"># 3.5.2</span>
+
+<span class="token comment"># 将node升级到最新稳定版</span>
+<span class="token function">sudo</span> <span class="token function">npm</span> cache clean -f
+<span class="token function">sudo</span> <span class="token function">npm</span> <span class="token function">install</span> -g n
+<span class="token function">sudo</span> n stable
+<span class="token assign-left variable"><span class="token environment constant">PATH</span></span><span class="token operator">=</span><span class="token string">&quot;<span class="token environment constant">$PATH</span>&quot;</span> <span class="token comment"># 立即在终端生效</span>
+
+<span class="token comment"># 再查看版本就是最新稳定版了</span>
+node -v <span class="token comment"># v12.18.4</span>
+<span class="token function">npm</span> -v <span class="token comment"># 6.14.6</span>
+</code></pre></div><p>参考：<a href="https://blog.csdn.net/skylark0924/article/details/79306999" target="_blank" rel="noopener noreferrer">使用apt-get install安装node.js导致安装成低版本的解决方案 | CSDN<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p>注意 npm init 一个 package.json，并安装 github-webhook-handler 模块，再 <code>nodemon webhook.js</code> 开启服务，也可以把 nodemon webhook.js 使用 pm2 来管理。然后再在 github webhooks 里触发测试请求，当看到 Received * log，即表示接收成功，如下图：</p> <p><img src="/images/docker/github_webhooks_4.png" alt="github_webhooks_4.png"></p> <h3 id="sh脚本-拉取最新代码-重新部署"><a href="#sh脚本-拉取最新代码-重新部署" class="header-anchor">#</a> sh脚本：拉取最新代码，重新部署</h3> <p>这里已经知道如何接收事件了，我们再在 webhook.js 里加入执行 shell 脚本的代码</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 使用子进程执行命令</span>
+<span class="token keyword">function</span> <span class="token function">run_cmd</span><span class="token punctuation">(</span><span class="token parameter">cmd<span class="token punctuation">,</span> args<span class="token punctuation">,</span> callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> spawn <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'child_process'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>spawn<span class="token punctuation">;</span>
+  <span class="token keyword">var</span> child <span class="token operator">=</span> <span class="token function">spawn</span><span class="token punctuation">(</span>cmd<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">var</span> resp <span class="token operator">=</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+  child<span class="token punctuation">.</span>stdout<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'data'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">buffer</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> resp <span class="token operator">+=</span> buffer<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  child<span class="token punctuation">.</span>stdout<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'end'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token function">callback</span><span class="token punctuation">(</span>resp<span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 接收到 push 事件时，执行 sh ./deploy-master.sh</span>
+handler<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'push'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Received a push event for %s to %s'</span><span class="token punctuation">,</span> event<span class="token punctuation">.</span>payload<span class="token punctuation">.</span>repository<span class="token punctuation">.</span>name<span class="token punctuation">,</span> event<span class="token punctuation">.</span>payload<span class="token punctuation">.</span>ref<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 分支判断，如果是master</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span>payload<span class="token punctuation">.</span>ref <span class="token operator">===</span> <span class="token string">'refs/heads/master'</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'deploy master..'</span><span class="token punctuation">)</span>
+    <span class="token function">run_cmd</span><span class="token punctuation">(</span><span class="token string">'sh'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'./deploy-master.sh'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">text</span><span class="token punctuation">)</span><span class="token punctuation">{</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><p>在当前目录新建一个 deploy-master.sh 文件，内容先只有 <code>ls</code>，用于测试，修改代码后，再次测试，如下图，ls执行成功过即表示代码正常。</p> <p><strong>注意，1. 模拟请求可能会拿不到 event.payload.ref 的值，需要出发真实的 push 请求才有 2.如果 deploy-master.sh 没有可执行权限，那么就需要执行 chmod +x 文件名，来给他加可执行权限</strong></p> <p><img src="/images/docker/github_webhooks_5.png" alt="github_webhooks_5.png"></p> <p>修改部署脚本</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 测试</span>
+<span class="token comment"># ls</span>
+
+<span class="token comment"># deploy-master.sh</span>
+<span class="token builtin class-name">echo</span> <span class="token string">&quot;Start Deploy&quot;</span>
+
+<span class="token comment"># 获取最新版代码</span>
+<span class="token function">git</span> pull
+
+<span class="token comment"># 停止原先的镜像实例(容器)</span>
+docker-compose down
+<span class="token comment"># 重新build，创建实例化镜像(容器)</span>
+docker-compose up -d --force-recreate --build
+</code></pre></div><p>这里要注意 git pull 的问题。我们这里要放弃之间 vscode 插件部署的方法，要使用 git pull 的方式来更新部署代码，这样才不会有冲突。</p> <p>这里我们要先在 ubuntu 系统里 git clone github的仓库，建议使用 ssh 的方法， 使用 <code>ssh-keygen -t rsa -C &quot;xxx@qq.com&quot;</code> 生成公钥私钥，然后再把公钥配置到 github 个人账号 setting 里的 ssh keys里面。就可以使用 ssh 地址正常拉取了。</p> <p>这样就可以实现提交代码到master分支就自动部署最新代码了</p></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">10/28/2020, 6:32:03 PM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/nav.html" class="prev">
+        前端网址导航
+      </a></span> <span class="next"><a href="/git.html">
+        Git 笔记
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.65ebfc93.js" defer></script><script src="/assets/js/2.a6dde13a.js" defer></script><script src="/assets/js/19.857508b4.js" defer></script>
+  </body>
+</html>
