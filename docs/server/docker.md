@@ -1,6 +1,8 @@
+---
+sidebar: auto
+---
+
 # Docker 基础
-
-
 
 > Docker is an open platform for developing, shipping, and running applications. 
 
