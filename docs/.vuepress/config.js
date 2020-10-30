@@ -1,3 +1,5 @@
+const path = require('path')
+
 // 技术日常记录 独立侧边栏
 const dailySidebar = [
   {
@@ -413,9 +415,16 @@ module.exports = {
         serviceWorker: true,
         updatePopup: true
       }
-    ]
+    ],
+    ['sitemap', {
+      hostname: 'http://fe.zuo11.com',
+      exclude: ['/404.html']
+    },]
   ],
   markdown: {
     plugins: ['task-lists']
-  }
+  },
+  clientRootMixin: path.resolve(__dirname, 'mixin.js'),
+  enhanceAppFiles: path.resolve(__dirname, 'enhanceAppFile.js')
+  // enhanceAppFiles: path.resolve(__dirname, 'common.js')
 }
