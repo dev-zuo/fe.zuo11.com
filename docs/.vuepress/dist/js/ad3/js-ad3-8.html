@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>8. BOM | 左小白的前端笔记</title>
+    <meta name="generator" content="VuePress 1.7.1">
+    <link rel="icon" href="/logo.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-152x152.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#3eaf7c">
+    <meta name="description" content="左小白的前端笔记，用于记录、完善个人前端知识体系结构">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileImage" content="/icons/msapplication-icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <link rel="preload" href="/assets/css/0.styles.594b47db.css" as="style"><link rel="preload" href="/assets/js/app.9db0a638.js" as="script"><link rel="preload" href="/assets/js/2.4b3539f1.js" as="script"><link rel="preload" href="/assets/js/83.dccf9b37.js" as="script"><link rel="preload" href="/assets/js/3.e6a4dd76.js" as="script"><link rel="prefetch" href="/assets/js/10.35d8cd15.js"><link rel="prefetch" href="/assets/js/100.01e41ee6.js"><link rel="prefetch" href="/assets/js/101.28f8026a.js"><link rel="prefetch" href="/assets/js/102.31d7d0e0.js"><link rel="prefetch" href="/assets/js/103.71225fe7.js"><link rel="prefetch" href="/assets/js/104.fe63eb6b.js"><link rel="prefetch" href="/assets/js/105.c0b31bc8.js"><link rel="prefetch" href="/assets/js/106.a7b64c67.js"><link rel="prefetch" href="/assets/js/107.35f43657.js"><link rel="prefetch" href="/assets/js/108.25e30499.js"><link rel="prefetch" href="/assets/js/109.865008b8.js"><link rel="prefetch" href="/assets/js/11.22ff506c.js"><link rel="prefetch" href="/assets/js/110.fb459190.js"><link rel="prefetch" href="/assets/js/111.1740bd73.js"><link rel="prefetch" href="/assets/js/112.ea5b5225.js"><link rel="prefetch" href="/assets/js/113.3e891c50.js"><link rel="prefetch" href="/assets/js/114.83254ffb.js"><link rel="prefetch" href="/assets/js/115.dcdb82ef.js"><link rel="prefetch" href="/assets/js/116.8cca1faf.js"><link rel="prefetch" href="/assets/js/117.f70c6759.js"><link rel="prefetch" href="/assets/js/118.ea15b201.js"><link rel="prefetch" href="/assets/js/119.51ac8585.js"><link rel="prefetch" href="/assets/js/12.66186d22.js"><link rel="prefetch" href="/assets/js/120.27fc9d41.js"><link rel="prefetch" href="/assets/js/121.4050195a.js"><link rel="prefetch" href="/assets/js/122.ae0aaf85.js"><link rel="prefetch" href="/assets/js/123.3412ab46.js"><link rel="prefetch" href="/assets/js/124.abd8c6d3.js"><link rel="prefetch" href="/assets/js/125.7cc27db5.js"><link rel="prefetch" href="/assets/js/126.af33ab3a.js"><link rel="prefetch" href="/assets/js/127.3170e8ab.js"><link rel="prefetch" href="/assets/js/128.c04c4bb0.js"><link rel="prefetch" href="/assets/js/129.4165d0ac.js"><link rel="prefetch" href="/assets/js/13.df602e5a.js"><link rel="prefetch" href="/assets/js/130.0d0d3cf7.js"><link rel="prefetch" href="/assets/js/131.c7db2083.js"><link rel="prefetch" href="/assets/js/132.79c11c42.js"><link rel="prefetch" href="/assets/js/133.9039bd5f.js"><link rel="prefetch" href="/assets/js/134.566c80ad.js"><link rel="prefetch" href="/assets/js/135.8d23eb58.js"><link rel="prefetch" href="/assets/js/136.f2879705.js"><link rel="prefetch" href="/assets/js/137.255c0784.js"><link rel="prefetch" href="/assets/js/138.304cbec6.js"><link rel="prefetch" href="/assets/js/139.7a7fc3e0.js"><link rel="prefetch" href="/assets/js/14.c0b1490a.js"><link rel="prefetch" href="/assets/js/140.4abf26a8.js"><link rel="prefetch" href="/assets/js/141.81d4d878.js"><link rel="prefetch" href="/assets/js/142.cd404be7.js"><link rel="prefetch" href="/assets/js/143.0e44aa20.js"><link rel="prefetch" href="/assets/js/144.237a43d9.js"><link rel="prefetch" href="/assets/js/145.cede5af9.js"><link rel="prefetch" href="/assets/js/146.c9d3967b.js"><link rel="prefetch" href="/assets/js/147.080beb71.js"><link rel="prefetch" href="/assets/js/15.540e7ea4.js"><link rel="prefetch" href="/assets/js/16.eb71a02a.js"><link rel="prefetch" href="/assets/js/17.92df7b99.js"><link rel="prefetch" href="/assets/js/18.50bc4846.js"><link rel="prefetch" href="/assets/js/19.bb9e9c88.js"><link rel="prefetch" href="/assets/js/20.e5894862.js"><link rel="prefetch" href="/assets/js/21.8dd45d89.js"><link rel="prefetch" href="/assets/js/22.aab57678.js"><link rel="prefetch" href="/assets/js/23.5456b7dc.js"><link rel="prefetch" href="/assets/js/24.68f5b54e.js"><link rel="prefetch" href="/assets/js/25.f7468bea.js"><link rel="prefetch" href="/assets/js/26.2fa477e0.js"><link rel="prefetch" href="/assets/js/27.3b27afbb.js"><link rel="prefetch" href="/assets/js/28.5e4373e8.js"><link rel="prefetch" href="/assets/js/29.3980b790.js"><link rel="prefetch" href="/assets/js/30.8385df39.js"><link rel="prefetch" href="/assets/js/31.18be5061.js"><link rel="prefetch" href="/assets/js/32.7ebc4f72.js"><link rel="prefetch" href="/assets/js/33.eab97304.js"><link rel="prefetch" href="/assets/js/34.10d3aaea.js"><link rel="prefetch" href="/assets/js/35.cf227858.js"><link rel="prefetch" href="/assets/js/36.72eb2e1b.js"><link rel="prefetch" href="/assets/js/37.76967d57.js"><link rel="prefetch" href="/assets/js/38.1b8baf1e.js"><link rel="prefetch" href="/assets/js/39.305ba346.js"><link rel="prefetch" href="/assets/js/4.0ac4f1f6.js"><link rel="prefetch" href="/assets/js/40.2815fe02.js"><link rel="prefetch" href="/assets/js/41.2b41b172.js"><link rel="prefetch" href="/assets/js/42.1d69d4fa.js"><link rel="prefetch" href="/assets/js/43.d4971a84.js"><link rel="prefetch" href="/assets/js/44.0e04f785.js"><link rel="prefetch" href="/assets/js/45.9025c56f.js"><link rel="prefetch" href="/assets/js/46.a1ee9725.js"><link rel="prefetch" href="/assets/js/47.ee929b91.js"><link rel="prefetch" href="/assets/js/48.260b57c1.js"><link rel="prefetch" href="/assets/js/49.fc5704d5.js"><link rel="prefetch" href="/assets/js/5.5b94bff7.js"><link rel="prefetch" href="/assets/js/50.40b0ba28.js"><link rel="prefetch" href="/assets/js/51.549a6a9a.js"><link rel="prefetch" href="/assets/js/52.81153bb7.js"><link rel="prefetch" href="/assets/js/53.7fcef945.js"><link rel="prefetch" href="/assets/js/54.746a2bbd.js"><link rel="prefetch" href="/assets/js/55.29274bd7.js"><link rel="prefetch" href="/assets/js/56.1b76e54c.js"><link rel="prefetch" href="/assets/js/57.ef2bb07c.js"><link rel="prefetch" href="/assets/js/58.e2bac053.js"><link rel="prefetch" href="/assets/js/59.285e53f6.js"><link rel="prefetch" href="/assets/js/6.481b22df.js"><link rel="prefetch" href="/assets/js/60.00d6c919.js"><link rel="prefetch" href="/assets/js/61.af411822.js"><link rel="prefetch" href="/assets/js/62.a7e74f84.js"><link rel="prefetch" href="/assets/js/63.2cccfda3.js"><link rel="prefetch" href="/assets/js/64.5a4a2d69.js"><link rel="prefetch" href="/assets/js/65.6be1cbc1.js"><link rel="prefetch" href="/assets/js/66.7e93c722.js"><link rel="prefetch" href="/assets/js/67.11f563a3.js"><link rel="prefetch" href="/assets/js/68.ad75af4a.js"><link rel="prefetch" href="/assets/js/69.75221a93.js"><link rel="prefetch" href="/assets/js/7.cb937ed7.js"><link rel="prefetch" href="/assets/js/70.34f4dcf5.js"><link rel="prefetch" href="/assets/js/71.aa606e80.js"><link rel="prefetch" href="/assets/js/72.7486a2dd.js"><link rel="prefetch" href="/assets/js/73.2bbd3b87.js"><link rel="prefetch" href="/assets/js/74.3c64330c.js"><link rel="prefetch" href="/assets/js/75.b1cabeb6.js"><link rel="prefetch" href="/assets/js/76.1f563ab7.js"><link rel="prefetch" href="/assets/js/77.abb4ca5d.js"><link rel="prefetch" href="/assets/js/78.40ffda23.js"><link rel="prefetch" href="/assets/js/79.f3fe6eaa.js"><link rel="prefetch" href="/assets/js/8.f5dced20.js"><link rel="prefetch" href="/assets/js/80.3de3caa0.js"><link rel="prefetch" href="/assets/js/81.e2aa0b2b.js"><link rel="prefetch" href="/assets/js/82.d1ca99a1.js"><link rel="prefetch" href="/assets/js/84.4dae5e5b.js"><link rel="prefetch" href="/assets/js/85.c6480fc2.js"><link rel="prefetch" href="/assets/js/86.d5480dce.js"><link rel="prefetch" href="/assets/js/87.01b022e2.js"><link rel="prefetch" href="/assets/js/88.02938c2d.js"><link rel="prefetch" href="/assets/js/89.d7e23c9c.js"><link rel="prefetch" href="/assets/js/9.e0f173ad.js"><link rel="prefetch" href="/assets/js/90.9ed16b8c.js"><link rel="prefetch" href="/assets/js/91.40909222.js"><link rel="prefetch" href="/assets/js/92.2f121267.js"><link rel="prefetch" href="/assets/js/93.80f9c1cd.js"><link rel="prefetch" href="/assets/js/94.b78709e4.js"><link rel="prefetch" href="/assets/js/95.71adfe21.js"><link rel="prefetch" href="/assets/js/96.41c9152f.js"><link rel="prefetch" href="/assets/js/97.b80c4bf0.js"><link rel="prefetch" href="/assets/js/98.e0a4d08a.js"><link rel="prefetch" href="/assets/js/99.38bc76b8.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.594b47db.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">左小白的前端笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/git.html" class="nav-link">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/git.html" class="nav-link">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>JS/ES6</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>ES6标准入门(第三版)笔记</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading open"><span>JavaScript高级程序设计(第三版)笔记</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/js/ad3/js-ad3-1.html" class="sidebar-link">1. JavaScript简介</a></li><li><a href="/js/ad3/js-ad3-2.html" class="sidebar-link">2. 在HTML中使用JavaScript</a></li><li><a href="/js/ad3/js-ad3-3.html" class="sidebar-link">3. ECMAScript基本概念</a></li><li><a href="/js/ad3/js-ad3-4.html" class="sidebar-link">4. 变量、作用域和内存问题</a></li><li><a href="/js/ad3/js-ad3-5.html" class="sidebar-link">5. 引用类型</a></li><li><a href="/js/ad3/js-ad3-6.html" class="sidebar-link">6. 面向对象程序设计</a></li><li><a href="/js/ad3/js-ad3-7.html" class="sidebar-link">7. 函数表达式与闭包</a></li><li><a href="/js/ad3/js-ad3-8.html" aria-current="page" class="active sidebar-link">8. BOM</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#window对象" class="sidebar-link">window对象</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#全局作用域" class="sidebar-link">全局作用域</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#窗口关系及框架frames" class="sidebar-link">窗口关系及框架frames</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#窗口位置、大小、打开新窗口" class="sidebar-link">窗口位置、大小、打开新窗口</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#settimeout与setinterval" class="sidebar-link">setTimeout与setInterval</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#系统对话框" class="sidebar-link">系统对话框</a></li></ul></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#location对象" class="sidebar-link">location对象</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#url主要属性及对应的解释" class="sidebar-link">URL主要属性及对应的解释</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#获取url查询字符串" class="sidebar-link">获取URL查询字符串</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#改变当前页面url" class="sidebar-link">改变当前页面url</a></li></ul></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#navigator对象" class="sidebar-link">navigator对象</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#基本属性" class="sidebar-link">基本属性</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#检测插件" class="sidebar-link">检测插件</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#待后续研究" class="sidebar-link">待后续研究</a></li></ul></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#screen对象" class="sidebar-link">screen对象</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-8.html#history对象" class="sidebar-link">history对象</a></li></ul></li><li><a href="/js/ad3/js-ad3-9.html" class="sidebar-link">9. 用户代理检测</a></li><li><a href="/js/ad3/js-ad3-10.html" class="sidebar-link">10. DOM</a></li><li><a href="/js/ad3/js-ad3-11.html" class="sidebar-link">11. DOM扩展</a></li><li><a href="/js/ad3/js-ad3-12.html" class="sidebar-link">12. DOM2和DOM3</a></li><li><a href="/js/ad3/js-ad3-13.html" class="sidebar-link">13. 事件</a></li><li><a href="/js/ad3/js-ad3-14.html" class="sidebar-link">14. 表单脚本</a></li><li><a href="/js/ad3/js-ad3-15.html" class="sidebar-link">15. 使用Canvas绘图</a></li><li><a href="/js/ad3/js-ad3-16.html" class="sidebar-link">16. HTML脚本编程</a></li><li><a href="/js/ad3/js-ad3-17.html" class="sidebar-link">17. 错误处理与调试</a></li><li><a href="/js/ad3/js-ad3-20.html" class="sidebar-link">20. JSON数据格式</a></li><li><a href="/js/ad3/js-ad3-21.html" class="sidebar-link">21. Ajax与Comet</a></li><li><a href="/js/ad3/js-ad3-22.html" class="sidebar-link">22. 高级技巧</a></li><li><a href="/js/ad3/js-ad3-23.html" class="sidebar-link">23. 离线应用与客户端存储</a></li><li><a href="/js/ad3/js-ad3-24.html" class="sidebar-link">24. 最佳实践</a></li><li><a href="/js/ad3/js-ad3-25.html" class="sidebar-link">25. 新兴的API</a></li></ul></section></li><li><a href="/js/js-dom-art.html" class="sidebar-link">JavaScript DOM编程艺术(第二版)笔记</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="_8-bom"><a href="#_8-bom" class="header-anchor">#</a> 8. BOM</h1> <p>在web中使用Javascript，离不开BOM(Browser Object Model)，BOM提供了很多对象，用于访问浏览器的功能</p> <ul><li>window对象，全局作用域、打开窗口、窗口位置大小、setTimeout、setInterval，alert等</li> <li>location对象，主要是URL相关信息，href、hash、查询字符串search，端口等信息</li> <li>navigator对象, 主要用来获取浏览器厂商、UA、平台、语言、是否有网、是否启用了cookie、安装的插件等信息</li> <li>screen对象，记录屏幕相关信息，分辨率，screen.width * screen.height</li> <li>history对象, 访问的历史记录</li></ul> <h2 id="window对象"><a href="#window对象" class="header-anchor">#</a> window对象</h2> <p>BOM的核心对象是window，它表示浏览器的一个实例。在浏览器中，window对象有双重角色</p> <ul><li>是通过JS访问浏览器窗口的一个接口</li> <li>是ECMAScript规定的Global对象，在全局作用域中定义的任何一个对象、变量、函数，都会变成window对象的属性和方法。</li></ul> <h3 id="全局作用域"><a href="#全局作用域" class="header-anchor">#</a> 全局作用域</h3> <ul><li>全局定义的方法、属性都可以通过window对象调用；window.的属性、方法，其他位置都可以使用。</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> age <span class="token operator">=</span> <span class="token number">29</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">sayAge</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token function">alert</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>age<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span>window<span class="token punctuation">.</span>age<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 29</span>
+<span class="token function">sayAge</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 29</span>
+window<span class="token punctuation">.</span><span class="token function">sayAge</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//29</span>
+</code></pre></div><ul><li>window.设置的对象，与var对象声明的对象，虽然都可以通过window.访问，但还是有区别的</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// window.设置的变量可以通过 delete删除，而 var age，通过window.age是无法删除的。</span>
+<span class="token comment">// 使用var添加的window属性，有一个名为[[Configurable]]的特性，被设置为false，所以无法删</span>
+window<span class="token punctuation">.</span>test <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> age <span class="token operator">=</span> <span class="token number">29</span><span class="token punctuation">;</span>
+
+<span class="token keyword">delete</span> window<span class="token punctuation">.</span>test  <span class="token comment">// true</span>
+<span class="token keyword">delete</span> window<span class="token punctuation">.</span>age <span class="token comment">// false </span>
+</code></pre></div><h3 id="窗口关系及框架frames"><a href="#窗口关系及框架frames" class="header-anchor">#</a> 窗口关系及框架frames</h3> <p>一般一个页面只对应一个html文件，框架相关的frameset、frame元素可以让多个页面html在同一个窗口中显示。</p> <ul><li>同页面的每个frame对应一个单独的html，都有独立的window</li> <li>可以通过 frames, top.frames，获取页面window数组，可以通过 frames[0] 或 frames[&quot;topFrame&quot;] 来获取对应的window对象，子frame对象可以通过parent属性访问上层框架。</li> <li>框架的主页面，不需要包含body元素，写在body外才行</li></ul> <div class="language-js extra-class"><pre class="language-js"><code>top<span class="token punctuation">.</span>frames<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">.</span>name  <span class="token comment">// &quot;rightFrame&quot;</span>
+top<span class="token punctuation">.</span>frames<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">.</span>location<span class="token punctuation">.</span>href <span class="token operator">=</span> <span class="token string">&quot;leftFrame.html&quot;</span> <span class="token comment">// 切换页面</span>
+</code></pre></div><ul><li><strong>注意：本地调试需要用nginx或其他方式开启http服务，不能直接访问页面文件路径，会出现跨域的错误，导致top无法访问frame内的页面window</strong></li></ul> <div class="language-html extra-class"><pre class="language-html"><code><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>UTF-8<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>窗口关系及框架frames<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token comment">&lt;!-- &lt;body&gt; --&gt;</span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>frameset</span> <span class="token attr-name">rows</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>20%,*<span class="token punctuation">&quot;</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>frames<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>frame</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>topFrame.html<span class="token punctuation">&quot;</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>topFrame<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>frameset</span> <span class="token attr-name">cols</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>20%,80%<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>frame</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>leftFrame.html<span class="token punctuation">&quot;</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>leftFrame<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>frame</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>rightFrame.html<span class="token punctuation">&quot;</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>rightFrame<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>frameset</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>noframes</span><span class="token punctuation">&gt;</span></span>Sorry, your browser does not handle frames!<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>noframes</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>frameset</span><span class="token punctuation">&gt;</span></span>
+  <span class="token comment">&lt;!-- &lt;/body&gt; --&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p><img src="/images/js/8_0_frame.png" alt="8_0_frame.png"></p> <h3 id="窗口位置、大小、打开新窗口"><a href="#窗口位置、大小、打开新窗口" class="header-anchor">#</a> 窗口位置、大小、打开新窗口</h3> <ul><li>窗口位置，浏览器窗口在屏幕中的位置，通过两个属性来确定：
+<ul><li>浏览器窗口距离屏幕顶部距离(Number)：window.screenTop，window.screenY</li> <li>浏览器窗口距离屏幕左侧距离(Number)：window.screenLeft，window.screenX</li></ul></li> <li>窗口大小，chrome浏览器，从外到内：
+<ul><li>整个浏览器窗口的宽高：window.outerWidth, window.outerHeight</li> <li>可视区域的宽高：window.innerWidth，window.innerHeight</li> <li>可视区域的宽高-滚动条宽高: document.documentElement.clientWidth, document.documentElement.clientHeight</li> <li>body内容的宽高: document.body.clientWidth, document.body.clientHeight</li></ul></li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 打印窗口位置信息</span>
+windowSiteBtn<span class="token punctuation">.</span><span class="token function-variable function">onclick</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    info<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    &lt;p&gt;screenLeft: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>window<span class="token punctuation">.</span>screenLeft<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, screenTop: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>window<span class="token punctuation">.</span>screenTop<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;&lt;/p&gt;
+    &lt;p&gt;screenX：</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>window<span class="token punctuation">.</span>screenX<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, screenY: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>window<span class="token punctuation">.</span>screenY<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;&lt;/p&gt;
+    </span><span class="token template-punctuation string">`</span></span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 打印窗口大小信息</span>
+windowSizeBtn<span class="token punctuation">.</span><span class="token function-variable function">onclick</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">e</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    info<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    &lt;p&gt;body元素的宽*高：（如果网页内容过少，body元素的实际宽高比可视区域要小, 如果内容过多，body的高度以实际内容为准）&lt;/p&gt;
+    &lt;p&gt;document.body.clientWidth: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>document<span class="token punctuation">.</span>body<span class="token punctuation">.</span>clientWidth<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, document.body.clientHeight: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span> document<span class="token punctuation">.</span>body<span class="token punctuation">.</span>clientHeight<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;&lt;/p&gt;
+    &lt;p&gt;可视区域的宽*高 - 滚动条宽高&lt;/p&gt;
+    &lt;p&gt;document.documentElement.clientWidth: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span> document<span class="token punctuation">.</span>documentElement<span class="token punctuation">.</span>clientWidth<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, document.documentElement.clientHeight: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span> document<span class="token punctuation">.</span>documentElement<span class="token punctuation">.</span>clientHeight<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;&lt;/p&gt;
+    &lt;p&gt;可视区域的宽*高：（包含滚动条宽高, 不包含console调试区域, 不包含浏览器顶部组件高度）&lt;/p&gt;
+    &lt;p&gt;innerWidth: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>window<span class="token punctuation">.</span>innerWidth<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, innerHeight: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>window<span class="token punctuation">.</span>innerHeight<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;&lt;/p&gt;
+    &lt;p&gt;浏览器窗口宽*高：(包含console调试区域)&lt;/p&gt;
+    &lt;p&gt;outerWidth: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>window<span class="token punctuation">.</span>outerWidth<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, outerHeight: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>window<span class="token punctuation">.</span>outerHeight<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">;&lt;/p&gt;
+    </span><span class="token template-punctuation string">`</span></span>
+<span class="token punctuation">}</span>
+</code></pre></div><ul><li>打开窗口 window.open()，该方法接收4个参数
+<ul><li>1.要加载的URL (如果没有，就会打开空白页面，用该函数返回值.document.write()，写入值到该页面)</li> <li>2.窗口目标, 已有窗口或框架名称，这样就会在对应的窗口或框架内打开页面。</li> <li>3.一个特性字符串，窗口的宽、高、窗口位置等，如果不传，默认在tab页打开新窗口</li> <li>4.true or false， 新页面是否取代浏览器历史记录中当前页面</li></ul></li></ul> <div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>button<span class="token punctuation">&quot;</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>打开 <span class="token punctuation">'</span>我的窗口<span class="token punctuation">'</span><span class="token punctuation">&quot;</span></span> <span class="token attr-name">onclick</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>openWin()<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+    <span class="token keyword">var</span> myWindow<span class="token punctuation">;</span>
+    <span class="token keyword">function</span> <span class="token function">openWin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token comment">// 1.打开一个新的窗口，一般浏览器可能会阻止，第一次运行需要允许, url为空，不打开其他链接</span>
+        <span class="token comment">// myWindow = window.open(&quot;&quot;, &quot;testWindow&quot;,&quot;height=400,width=400,top=200,left=400,location=no&quot;);</span>
+        <span class="token comment">// myWindow = window.open(&quot;&quot;, &quot;testWindow&quot;); // 打开新的tab窗口，如果二参是frame名，会在该frame打开该窗口</span>
+        myWindow <span class="token operator">=</span> window<span class="token punctuation">.</span><span class="token function">open</span><span class="token punctuation">(</span><span class="token string">&quot;window.html&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span> <span class="token string">&quot;width=300,height=400,resizable=no&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+        
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>myWindow <span class="token operator">===</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'浏览器不允许弹窗'</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            myWindow<span class="token punctuation">.</span>document<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">'test'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 向窗口写入内容</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">// 打开console调试，如下命令</span>
+        <span class="token comment">// 2.移动窗口位置</span>
+        <span class="token comment">// myWindow.moveTo(100,100);  // 移动窗口位置到 (100, 100)</span>
+        <span class="token comment">// myWindow.moveBy(-50, 50); // 相对当前位置（x,y）, 将窗口移动到 (x-50, y+50) 位置</span>
+
+        <span class="token comment">// 3.改变窗口大小</span>
+        <span class="token comment">// myWindow.resizeTo(600,300); // 改变窗口大小为 600*300</span>
+        <span class="token comment">// myWindow.resizeBy(100,200); // 改变窗口大小为 (x-100)*(y+200)</span>
+
+        <span class="token comment">// 4.关闭窗口</span>
+        <span class="token comment">// myWindow.close(); // 关闭弹窗</span>
+    <span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h3 id="settimeout与setinterval"><a href="#settimeout与setinterval" class="header-anchor">#</a> setTimeout与setInterval</h3> <p>JS是单线程语言，它允许通过设置超时值和间歇时间值来调度代码在特定时间执行。</p> <ul><li>setTimeout() 在指定时间后将代码添加到执行队列，待空闲后执行, 清除：clearTimeout(timoutId)</li> <li>setInterval() 每隔指定的时间就将代码添加到执行队列，待空闲后执行， 清除：clearInterval(intervalId)</li></ul> <p>一参为执行的代码，二参为等待时间(毫秒)，但经过该时间后，指定的代码并不一定会立即执行，JS是一个单线程解释器，一定时间内只能执行一段代码。为了控制代码执行，就有一个JS任务队列。这些任务会按照他们添加到队列的顺序执行。如果队列为空，会立即执行，如果队列不为空，那么就需要等前面的代码执行完了以后再执行。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 根据值切换对应的demo</span>
+<span class="token keyword">var</span> test <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">(</span>test <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 1 2  基本同同时打印</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'3'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">(</span>test <span class="token operator">===</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">//  1  3  打印1后后面间隔500ms</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'3'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">2500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">(</span>test <span class="token operator">===</span> <span class="token number">4</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 2 3 5 4 1</span>
+    <span class="token comment">// 为什么这里后被执行，因为setTimeout是异步的（是注册事件），他会先把函数注册到事件队列当中，等待主程序走完，然后再被调用。</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token function">executor</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span><span class="token punctuation">(</span> <span class="token keyword">var</span> i<span class="token operator">=</span><span class="token number">0</span> <span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token number">10000</span> <span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            i <span class="token operator">===</span> <span class="token number">9999</span> <span class="token operator">&amp;&amp;</span> <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">(</span>test <span class="token operator">===</span> <span class="token number">5</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 5 1 2 4 3</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// for循环里面如果没有阻塞代码，还是会顺序执行</span>
+        <span class="token keyword">for</span><span class="token punctuation">(</span> <span class="token keyword">var</span> i<span class="token operator">=</span><span class="token number">0</span> <span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token number">1000000000</span> <span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">===</span> <span class="token number">999999999</span><span class="token punctuation">)</span>  <span class="token punctuation">{</span>
+                console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 清除setTimeout</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'testStart'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> t <span class="token operator">=</span> <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'exec'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">5000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">clearTimeout</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 每隔一段时间执行</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'testStart2'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> t2 <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'exec...'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 3s 后清除</span>
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">clearInterval</span><span class="token punctuation">(</span>t2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+</code></pre></div><h3 id="系统对话框"><a href="#系统对话框" class="header-anchor">#</a> 系统对话框</h3> <p>浏览器可以通过alert()、confirm()、prompt()方法可以调用系统对话框向用户显示消息，系统对话框不包含html，外观有浏览器决定，不是由css决定。
+这几个方法打开的对话框都是同步和模态的，显示对话框会阻塞程序向下执行，关掉对话框后程序会继续执行</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// alert显示信息 &quot;123&quot;，点击确认关闭</span>
+<span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'123'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><img src="/images/js/alert.png" alt="alert"></p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// confirm显示询问框，可点击确认或取消关闭, 分别返回true、false</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">confirm</span><span class="token punctuation">(</span><span class="token string">&quot;are you ok?&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'您点击了确定'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'您点击了取消'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><img src="/images/js/confirm.png" alt="confirm"></p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// prompt打开一个对话框，里面包含一个文本输入框，第一个参数为提示内容，第二个参数为输入框的默认值</span>
+<span class="token comment">// 当点击取消返回null，更改内容后返回对应输入框的内容，如果填写为空，返回&quot;&quot;</span>
+<span class="token function">alert</span><span class="token punctuation">(</span><span class="token function">prompt</span><span class="token punctuation">(</span><span class="token string">'请输入你的姓名?'</span><span class="token punctuation">,</span> <span class="token string">'张三'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><img src="/images/js/prompt.png" alt="prompt"></p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 另外两个非同步，异步执行的方法</span>
+<span class="token comment">// 调用打印功能，相当于anle ctrl+p</span>
+window<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 查找网页里面是否有某个字符串, 如果有打印true，没有打印false</span>
+<span class="token comment">// &lt;p&gt;sdfsdfdfd打发时间乐山大佛技术对接分类数据砥砺奋进是登录&lt;/p&gt;</span>
+<span class="token function">alert</span><span class="token punctuation">(</span>window<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">&quot;sdf&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><img src="/images/js/windowFind.png" alt="window.find"></p> <h2 id="location对象"><a href="#location对象" class="header-anchor">#</a> location对象</h2> <p>location是最有用的BOM对象之一，提供了当前窗口中加载文档相关信息，如URL，域名，页面路径，查询字段、协议等</p> <ul><li>可以用来获取和改变页面url，重新加载页面</li> <li>它既是window对象的属性，也是document对象的属性。window.location和document.location引用的是同一个对象</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// window.location === document.location  // true</span>
+<span class="token comment">// location.href 完整的url</span>
+<span class="token comment">// location.origin  网站的开头部分带host 可以用来做api接口前置</span>
+<span class="token comment">// location.pathname // 路径，不带host</span>
+<span class="token comment">// location.searh // ?a=1&amp;b=2  查询字符串</span>
+<span class="token comment">// location.hash // #1   hash值</span>
+<span class="token comment">// location.protocol 协议</span>
+<span class="token comment">// 以访问这个url为例子，查看window.location 内容</span>
+<span class="token comment">// https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_9011978904606190454%22%7D&amp;n_type=0&amp;p_from=1#1</span>
+</code></pre></div><p><img src="/images/js/windowLocation.png" alt="window.location"></p> <h3 id="url主要属性及对应的解释"><a href="#url主要属性及对应的解释" class="header-anchor">#</a> URL主要属性及对应的解释</h3> <p><img src="/images/js/window_location_prop.png" alt="window.location prop"></p> <h3 id="获取url查询字符串"><a href="#获取url查询字符串" class="header-anchor">#</a> 获取URL查询字符串</h3> <div class="language-js extra-class"><pre class="language-js"><code>
+<span class="token comment">// 前端获取url里面的查询字符串</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">getQueryStringArgs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * 获取url里面的查询信息(window.location.search)
+ * 如果查询为空 &quot;&quot;，如果有查询  &quot;?a=kk&quot;
+ * @returns 如果有查询语句返回{},如果没有返回 &quot;&quot;
+ */</span>
+<span class="token keyword">function</span> <span class="token function">getQueryStringArgs</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> searchStr <span class="token operator">=</span> location<span class="token punctuation">.</span>search<span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>searchStr<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 去掉开头的?</span>
+    <span class="token keyword">var</span> argsArr<span class="token punctuation">;</span>
+    searchStr <span class="token operator">=</span> searchStr<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 切分后将 xxx=xxx 字符串格式转为 {xxxx:xxxx,....}</span>
+    argsArr <span class="token operator">=</span> searchStr<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'&amp;'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">var</span> args <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> argsArr<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> itemArr <span class="token operator">=</span> argsArr<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'='</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> tempKey <span class="token operator">=</span> <span class="token function">decodeURIComponent</span><span class="token punctuation">(</span>itemArr<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> tempValue <span class="token operator">=</span> <span class="token function">decodeURIComponent</span><span class="token punctuation">(</span>itemArr<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        args<span class="token punctuation">[</span>tempKey<span class="token punctuation">]</span> <span class="token operator">=</span> tempValue<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> args<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 可以通过改变search的值刷新网页</span>
+
+
+</code></pre></div><h3 id="改变当前页面url"><a href="#改变当前页面url" class="header-anchor">#</a> 改变当前页面url</h3> <p>使用location对象可以通过很多方式来改变当前页面url，每次修改location属性(hash除外)，页面都会以新的URL重新加载</p> <div class="language-js extra-class"><pre class="language-js"><code>location<span class="token punctuation">.</span><span class="token function">assign</span><span class="token punctuation">(</span><span class="token string">&quot;http://zuo11.com&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 切换url</span>
+<span class="token comment">// 如果将location.href与window.location 设置为一个url，会间接调用location.assign(对应的值)</span>
+
+<span class="token comment">// 假设初始化URL为 http://www.zuo11.com/test/</span>
+
+<span class="token comment">// 将URL修改为 http://www.zuo11.com/test/#section1</span>
+location<span class="token punctuation">.</span>hash <span class="token operator">=</span><span class="token string">&quot;#section1&quot;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 将URL修改为 http://www.zuo11.com/test/?k=2</span>
+location<span class="token punctuation">.</span>search <span class="token operator">=</span> <span class="token string">'?k=2'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 将URL修改为 http://www.baidu.com/test/</span>
+location<span class="token punctuation">.</span>hostname <span class="token operator">=</span> <span class="token string">&quot;www.baidu.com/&quot;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 将URL修改为 http://www.zuo11.com/mydir/</span>
+location<span class="token punctuation">.</span>pathname <span class="token operator">=</span> <span class="token string">&quot;mydir&quot;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 将URL修改为 http://www.zuo11.com:8080/test/</span>
+location<span class="token punctuation">.</span>port <span class="token operator">=</span> <span class="token number">8080</span><span class="token punctuation">;</span>
+</code></pre></div><p>location改变URL后，浏览器会产生一条新的记录，可以通过后退，返回到前一个页面，使用location.replace(),可以无法返回上一页</p> <div class="language-js extra-class"><pre class="language-js"><code>location<span class="token punctuation">.</span><span class="token function">reload</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// 重新加载 (可能是从缓存中加载)</span>
+location<span class="token punctuation">.</span><span class="token function">reload</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 重新加载 (从服务器重新加载)</span>
+</code></pre></div><h2 id="navigator对象"><a href="#navigator对象" class="header-anchor">#</a> navigator对象</h2> <p>可以用来获取浏览器厂商、UA、平台、语言、是否有网、是否启用了cookie、安装的插件、
+navigator对象可以用来识别客户端浏览器信息，UA等。更多信息，参考 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator" target="_blank" rel="noopener noreferrer">Navigator - Web APIs | MDN<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h3 id="基本属性"><a href="#基本属性" class="header-anchor">#</a> 基本属性</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// appCodeName: &quot;Mozilla&quot;,  // 浏览器名称      Safari、Firefox、Chrome、IE 均是这个值</span>
+<span class="token comment">// appName: &quot;Netscape&quot;,     // 完整的浏览器名称 Safari、Firefox、Chrome、IE 均是这个值</span>
+<span class="token comment">// product: &quot;Gecko&quot;,        // 产品名称       Safari、Firefox、Chrome、IE 均是这个值</span>
+
+<span class="token comment">// appVersion: &quot;&quot;,          // 浏览器的版本，一般不与实际的浏览器版本对应</span>
+<span class="token comment">// userAgent: &quot;&quot;,           // 浏览器的用户代理字符串,HTTP规范明确规定，浏览器应该发送简短的用户代理字符串指明浏览器的版本和版本号</span>
+
+<span class="token comment">// cookieEnabled: true,     // 是否启用的cookie</span>
+<span class="token comment">// onLine: true,            // 是否有网络</span>
+
+<span class="token comment">// language: &quot;zh-CN&quot;,       // 浏览器主语言</span>
+<span class="token comment">// platform: &quot;MacIntel&quot;,    // 浏览器所在的系统平台， windows为win32</span>
+<span class="token comment">// vendor: &quot;Apple Computer, Inc.&quot; // 浏览器的品牌，IE、Edge、Firefox均为&quot;&quot;, Safari和Chrome(Google Inc.)有值，</span>
+
+
+<span class="token comment">/*
+IE11
+appVersion:  &quot;5.0 (Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; rv:11.0) like Gecko&quot;
+userAgent:    &quot;Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; .NET4.0C; .NET4.0E; rv:11.0) like Gecko&quot;
+
+Edge
+appVersion:  &quot;5.0 (Windows NT 10.0; Win64; x64; ServiceUI 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063&quot;
+userAgent:   &quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64; ServiceUI 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063&quot;
+
+QQ
+appVersion:  &quot;5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36 Core/1.63.5702.400 QQBrowser/10.2.1893.400&quot;
+userAgent:    &quot;Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36 Core/1.63.5702.400 QQBrowser/10.2.1893.400&quot;
+
+Chrome 
+appVersion: &quot;5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36&quot;
+userAgent:   &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36&quot;
+
+Firefox
+appVersion: &quot;5.0 (Macintosh)&quot;
+userAgent:   &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0&quot;
+
+Safari
+appVersion: &quot;5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.1 Safari/605.1.15&quot;
+userAgent:   &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.1 Safari/605.1.15&quot;
+*/</span>
+</code></pre></div><h3 id="检测插件"><a href="#检测插件" class="header-anchor">#</a> 检测插件</h3> <p>navigator.plugins 数组记录了当前浏览器上安装的插件</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 相关属性</span>
+<span class="token comment">// name : 插件的名字</span>
+<span class="token comment">// description: 插件的描述</span>
+<span class="token comment">// filename: 插件的文件名</span>
+<span class="token comment">// length: 插件所处理的MIME类型数量</span>
+
+<span class="token comment">// 检测插件 (非IE环境)</span>
+<span class="token keyword">function</span> <span class="token function">hasPlugin</span><span class="token punctuation">(</span><span class="token parameter">name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    name <span class="token operator">=</span> name<span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> navigator<span class="token punctuation">.</span>plugins<span class="token punctuation">.</span>lenght<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>navigator<span class="token punctuation">.</span>plugins<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>name<span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 检测Flash</span>
+<span class="token function">alert</span><span class="token punctuation">(</span><span class="token function">hasPlugin</span><span class="token punctuation">(</span><span class="token string">&quot;flash&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+<span class="token comment">// IE中检测插件方法</span>
+<span class="token keyword">function</span> <span class="token function">hasIEPlugin</span><span class="token punctuation">(</span><span class="token parameter">name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">new</span> <span class="token class-name">ActiveXObject</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 检测Falsh</span>
+<span class="token function">alert</span><span class="token punctuation">(</span><span class="token function">hasIEPlugin</span><span class="token punctuation">(</span><span class="token string">&quot;ShockwaveFlash.ShockwaveFlash&quot;</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="待后续研究"><a href="#待后续研究" class="header-anchor">#</a> 待后续研究</h3> <ul><li>Navigator.registerContentHandler()</li> <li>Navigator.registerProtocolHandler()</li> <li>Navigator.serviceWorker</li> <li>Navigator.getUserMedia()</li></ul> <h2 id="screen对象"><a href="#screen对象" class="header-anchor">#</a> screen对象</h2> <p>可以查看屏幕分辩率，
+在编程中用处不大，screen对象基本上只用来表明客户端能力，记录了屏幕相关信息</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// height：900  屏幕像素高的</span>
+<span class="token comment">// width：1400   屏幕像素宽度</span>
+<span class="token comment">// availHeight: 841   有效高度</span>
+<span class="token comment">// availLeft: 0</span>
+<span class="token comment">// availTop: 23</span>
+<span class="token comment">// availWidth: 1440</span>
+<span class="token comment">// colorDepth: 24   色彩位数</span>
+<span class="token comment">// pixelDepth: 24   像素深度</span>
+</code></pre></div><h2 id="history对象"><a href="#history对象" class="header-anchor">#</a> history对象</h2> <p>可以用来前进、后退，history对象保存着用户的上网记录，出入安全方面的考虑，开发人员无法获取具体访问的URL，但可以前进或后退</p> <div class="language-js extra-class"><pre class="language-js"><code>history<span class="token punctuation">.</span><span class="token function">go</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 后退一页  相当于 histroy.back();</span>
+
+history<span class="token punctuation">.</span><span class="token function">go</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 前进一页 相当于  history.forward();</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">10/28/2020, 6:32:03 PM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/js/ad3/js-ad3-7.html" class="prev">
+        7. 函数表达式与闭包
+      </a></span> <span class="next"><a href="/js/ad3/js-ad3-9.html">
+        9. 用户代理检测
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----><!----></div></div>
+    <script src="/assets/js/app.9db0a638.js" defer></script><script src="/assets/js/2.4b3539f1.js" defer></script><script src="/assets/js/83.dccf9b37.js" defer></script><script src="/assets/js/3.e6a4dd76.js" defer></script>
+  </body>
+</html>

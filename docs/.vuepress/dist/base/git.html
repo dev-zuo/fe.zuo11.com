@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Git 笔记 | 左小白的前端笔记</title>
+    <meta name="generator" content="VuePress 1.7.1">
+    <link rel="icon" href="/logo.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-152x152.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#3eaf7c">
+    <meta name="description" content="左小白的前端笔记，用于记录、完善个人前端知识体系结构">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileImage" content="/icons/msapplication-icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <link rel="preload" href="/assets/css/0.styles.594b47db.css" as="style"><link rel="preload" href="/assets/js/app.9db0a638.js" as="script"><link rel="preload" href="/assets/js/2.4b3539f1.js" as="script"><link rel="preload" href="/assets/js/18.50bc4846.js" as="script"><link rel="preload" href="/assets/js/3.e6a4dd76.js" as="script"><link rel="prefetch" href="/assets/js/10.35d8cd15.js"><link rel="prefetch" href="/assets/js/100.01e41ee6.js"><link rel="prefetch" href="/assets/js/101.28f8026a.js"><link rel="prefetch" href="/assets/js/102.31d7d0e0.js"><link rel="prefetch" href="/assets/js/103.71225fe7.js"><link rel="prefetch" href="/assets/js/104.fe63eb6b.js"><link rel="prefetch" href="/assets/js/105.c0b31bc8.js"><link rel="prefetch" href="/assets/js/106.a7b64c67.js"><link rel="prefetch" href="/assets/js/107.35f43657.js"><link rel="prefetch" href="/assets/js/108.25e30499.js"><link rel="prefetch" href="/assets/js/109.865008b8.js"><link rel="prefetch" href="/assets/js/11.22ff506c.js"><link rel="prefetch" href="/assets/js/110.fb459190.js"><link rel="prefetch" href="/assets/js/111.1740bd73.js"><link rel="prefetch" href="/assets/js/112.ea5b5225.js"><link rel="prefetch" href="/assets/js/113.3e891c50.js"><link rel="prefetch" href="/assets/js/114.83254ffb.js"><link rel="prefetch" href="/assets/js/115.dcdb82ef.js"><link rel="prefetch" href="/assets/js/116.8cca1faf.js"><link rel="prefetch" href="/assets/js/117.f70c6759.js"><link rel="prefetch" href="/assets/js/118.ea15b201.js"><link rel="prefetch" href="/assets/js/119.51ac8585.js"><link rel="prefetch" href="/assets/js/12.66186d22.js"><link rel="prefetch" href="/assets/js/120.27fc9d41.js"><link rel="prefetch" href="/assets/js/121.4050195a.js"><link rel="prefetch" href="/assets/js/122.ae0aaf85.js"><link rel="prefetch" href="/assets/js/123.3412ab46.js"><link rel="prefetch" href="/assets/js/124.abd8c6d3.js"><link rel="prefetch" href="/assets/js/125.7cc27db5.js"><link rel="prefetch" href="/assets/js/126.af33ab3a.js"><link rel="prefetch" href="/assets/js/127.3170e8ab.js"><link rel="prefetch" href="/assets/js/128.c04c4bb0.js"><link rel="prefetch" href="/assets/js/129.4165d0ac.js"><link rel="prefetch" href="/assets/js/13.df602e5a.js"><link rel="prefetch" href="/assets/js/130.0d0d3cf7.js"><link rel="prefetch" href="/assets/js/131.c7db2083.js"><link rel="prefetch" href="/assets/js/132.79c11c42.js"><link rel="prefetch" href="/assets/js/133.9039bd5f.js"><link rel="prefetch" href="/assets/js/134.566c80ad.js"><link rel="prefetch" href="/assets/js/135.8d23eb58.js"><link rel="prefetch" href="/assets/js/136.f2879705.js"><link rel="prefetch" href="/assets/js/137.255c0784.js"><link rel="prefetch" href="/assets/js/138.304cbec6.js"><link rel="prefetch" href="/assets/js/139.7a7fc3e0.js"><link rel="prefetch" href="/assets/js/14.c0b1490a.js"><link rel="prefetch" href="/assets/js/140.4abf26a8.js"><link rel="prefetch" href="/assets/js/141.81d4d878.js"><link rel="prefetch" href="/assets/js/142.cd404be7.js"><link rel="prefetch" href="/assets/js/143.0e44aa20.js"><link rel="prefetch" href="/assets/js/144.237a43d9.js"><link rel="prefetch" href="/assets/js/145.cede5af9.js"><link rel="prefetch" href="/assets/js/146.c9d3967b.js"><link rel="prefetch" href="/assets/js/147.080beb71.js"><link rel="prefetch" href="/assets/js/15.540e7ea4.js"><link rel="prefetch" href="/assets/js/16.eb71a02a.js"><link rel="prefetch" href="/assets/js/17.92df7b99.js"><link rel="prefetch" href="/assets/js/19.bb9e9c88.js"><link rel="prefetch" href="/assets/js/20.e5894862.js"><link rel="prefetch" href="/assets/js/21.8dd45d89.js"><link rel="prefetch" href="/assets/js/22.aab57678.js"><link rel="prefetch" href="/assets/js/23.5456b7dc.js"><link rel="prefetch" href="/assets/js/24.68f5b54e.js"><link rel="prefetch" href="/assets/js/25.f7468bea.js"><link rel="prefetch" href="/assets/js/26.2fa477e0.js"><link rel="prefetch" href="/assets/js/27.3b27afbb.js"><link rel="prefetch" href="/assets/js/28.5e4373e8.js"><link rel="prefetch" href="/assets/js/29.3980b790.js"><link rel="prefetch" href="/assets/js/30.8385df39.js"><link rel="prefetch" href="/assets/js/31.18be5061.js"><link rel="prefetch" href="/assets/js/32.7ebc4f72.js"><link rel="prefetch" href="/assets/js/33.eab97304.js"><link rel="prefetch" href="/assets/js/34.10d3aaea.js"><link rel="prefetch" href="/assets/js/35.cf227858.js"><link rel="prefetch" href="/assets/js/36.72eb2e1b.js"><link rel="prefetch" href="/assets/js/37.76967d57.js"><link rel="prefetch" href="/assets/js/38.1b8baf1e.js"><link rel="prefetch" href="/assets/js/39.305ba346.js"><link rel="prefetch" href="/assets/js/4.0ac4f1f6.js"><link rel="prefetch" href="/assets/js/40.2815fe02.js"><link rel="prefetch" href="/assets/js/41.2b41b172.js"><link rel="prefetch" href="/assets/js/42.1d69d4fa.js"><link rel="prefetch" href="/assets/js/43.d4971a84.js"><link rel="prefetch" href="/assets/js/44.0e04f785.js"><link rel="prefetch" href="/assets/js/45.9025c56f.js"><link rel="prefetch" href="/assets/js/46.a1ee9725.js"><link rel="prefetch" href="/assets/js/47.ee929b91.js"><link rel="prefetch" href="/assets/js/48.260b57c1.js"><link rel="prefetch" href="/assets/js/49.fc5704d5.js"><link rel="prefetch" href="/assets/js/5.5b94bff7.js"><link rel="prefetch" href="/assets/js/50.40b0ba28.js"><link rel="prefetch" href="/assets/js/51.549a6a9a.js"><link rel="prefetch" href="/assets/js/52.81153bb7.js"><link rel="prefetch" href="/assets/js/53.7fcef945.js"><link rel="prefetch" href="/assets/js/54.746a2bbd.js"><link rel="prefetch" href="/assets/js/55.29274bd7.js"><link rel="prefetch" href="/assets/js/56.1b76e54c.js"><link rel="prefetch" href="/assets/js/57.ef2bb07c.js"><link rel="prefetch" href="/assets/js/58.e2bac053.js"><link rel="prefetch" href="/assets/js/59.285e53f6.js"><link rel="prefetch" href="/assets/js/6.481b22df.js"><link rel="prefetch" href="/assets/js/60.00d6c919.js"><link rel="prefetch" href="/assets/js/61.af411822.js"><link rel="prefetch" href="/assets/js/62.a7e74f84.js"><link rel="prefetch" href="/assets/js/63.2cccfda3.js"><link rel="prefetch" href="/assets/js/64.5a4a2d69.js"><link rel="prefetch" href="/assets/js/65.6be1cbc1.js"><link rel="prefetch" href="/assets/js/66.7e93c722.js"><link rel="prefetch" href="/assets/js/67.11f563a3.js"><link rel="prefetch" href="/assets/js/68.ad75af4a.js"><link rel="prefetch" href="/assets/js/69.75221a93.js"><link rel="prefetch" href="/assets/js/7.cb937ed7.js"><link rel="prefetch" href="/assets/js/70.34f4dcf5.js"><link rel="prefetch" href="/assets/js/71.aa606e80.js"><link rel="prefetch" href="/assets/js/72.7486a2dd.js"><link rel="prefetch" href="/assets/js/73.2bbd3b87.js"><link rel="prefetch" href="/assets/js/74.3c64330c.js"><link rel="prefetch" href="/assets/js/75.b1cabeb6.js"><link rel="prefetch" href="/assets/js/76.1f563ab7.js"><link rel="prefetch" href="/assets/js/77.abb4ca5d.js"><link rel="prefetch" href="/assets/js/78.40ffda23.js"><link rel="prefetch" href="/assets/js/79.f3fe6eaa.js"><link rel="prefetch" href="/assets/js/8.f5dced20.js"><link rel="prefetch" href="/assets/js/80.3de3caa0.js"><link rel="prefetch" href="/assets/js/81.e2aa0b2b.js"><link rel="prefetch" href="/assets/js/82.d1ca99a1.js"><link rel="prefetch" href="/assets/js/83.dccf9b37.js"><link rel="prefetch" href="/assets/js/84.4dae5e5b.js"><link rel="prefetch" href="/assets/js/85.c6480fc2.js"><link rel="prefetch" href="/assets/js/86.d5480dce.js"><link rel="prefetch" href="/assets/js/87.01b022e2.js"><link rel="prefetch" href="/assets/js/88.02938c2d.js"><link rel="prefetch" href="/assets/js/89.d7e23c9c.js"><link rel="prefetch" href="/assets/js/9.e0f173ad.js"><link rel="prefetch" href="/assets/js/90.9ed16b8c.js"><link rel="prefetch" href="/assets/js/91.40909222.js"><link rel="prefetch" href="/assets/js/92.2f121267.js"><link rel="prefetch" href="/assets/js/93.80f9c1cd.js"><link rel="prefetch" href="/assets/js/94.b78709e4.js"><link rel="prefetch" href="/assets/js/95.71adfe21.js"><link rel="prefetch" href="/assets/js/96.41c9152f.js"><link rel="prefetch" href="/assets/js/97.b80c4bf0.js"><link rel="prefetch" href="/assets/js/98.e0a4d08a.js"><link rel="prefetch" href="/assets/js/99.38bc76b8.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.594b47db.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">左小白的前端笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/git.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/git.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>计算机基础</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/base/git.html" aria-current="page" class="active sidebar-link">Git 笔记</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/base/git.html#基本命令" class="sidebar-link">基本命令</a></li><li class="sidebar-sub-header"><a href="/base/git.html#git当前状态、修改" class="sidebar-link">git当前状态、修改</a></li><li class="sidebar-sub-header"><a href="/base/git.html#版本回退" class="sidebar-link">版本回退</a></li><li class="sidebar-sub-header"><a href="/base/git.html#工作区和暂存区" class="sidebar-link">工作区和暂存区</a></li><li class="sidebar-sub-header"><a href="/base/git.html#删除一个文件" class="sidebar-link">删除一个文件</a></li><li class="sidebar-sub-header"><a href="/base/git.html#远程仓库" class="sidebar-link">远程仓库</a></li><li class="sidebar-sub-header"><a href="/base/git.html#本地仓库关联远程仓库" class="sidebar-link">本地仓库关联远程仓库</a></li><li class="sidebar-sub-header"><a href="/base/git.html#从远程库克隆" class="sidebar-link">从远程库克隆</a></li><li class="sidebar-sub-header"><a href="/base/git.html#创建并合并分支" class="sidebar-link">创建并合并分支</a></li><li class="sidebar-sub-header"><a href="/base/git.html#解决冲突" class="sidebar-link">解决冲突</a></li><li class="sidebar-sub-header"><a href="/base/git.html#分支管理策略" class="sidebar-link">分支管理策略</a></li><li class="sidebar-sub-header"><a href="/base/git.html#bug分支" class="sidebar-link">bug分支</a></li><li class="sidebar-sub-header"><a href="/base/git.html#featrue分支" class="sidebar-link">featrue分支</a></li><li class="sidebar-sub-header"><a href="/base/git.html#多人协作" class="sidebar-link">多人协作</a></li><li class="sidebar-sub-header"><a href="/base/git.html#rebase-变基" class="sidebar-link">rebase 变基</a></li><li class="sidebar-sub-header"><a href="/base/git.html#创建标签-tag" class="sidebar-link">创建标签 tag</a></li><li class="sidebar-sub-header"><a href="/base/git.html#操作标签-tag" class="sidebar-link">操作标签 tag</a></li><li class="sidebar-sub-header"><a href="/base/git.html#忽略特殊文件" class="sidebar-link">忽略特殊文件</a></li><li class="sidebar-sub-header"><a href="/base/git.html#配置别名" class="sidebar-link">配置别名</a></li></ul></li><li><a href="/base/markdown.html" class="sidebar-link">Markdown 基础语法</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>数据库系统原理笔记</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="git-笔记"><a href="#git-笔记" class="header-anchor">#</a> Git 笔记</h1> <blockquote><p>参考：<a href="https://www.liaoxuefeng.com/wiki/896043488029600" target="_blank" rel="noopener noreferrer">Git教程 - 廖雪峰的官方网站<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p></blockquote> <h2 id="基本命令"><a href="#基本命令" class="header-anchor">#</a> 基本命令</h2> <ul><li>初始化一个Git仓库，使用 <strong>git init</strong> 命令。</li> <li>添加文件到Git仓库，分两步：
+<ul><li>使用命令 <strong>git add &lt;file&gt;</strong>，注意，可反复多次使用，添加多个文件；每次修改，如果不用git add到暂存区，那就不会加入到commit中。</li> <li>使用命令 <strong>git commit -m &lt;message&gt;</strong>，完成。</li></ul></li></ul> <h2 id="git当前状态、修改"><a href="#git当前状态、修改" class="header-anchor">#</a> git当前状态、修改</h2> <ul><li>要随时掌握工作区的状态，使用 <strong>git status</strong> 命令。</li> <li>如果git status告诉你有文件被修改过，用 <strong>git diff</strong> 可以查看修改内容。</li></ul> <h2 id="版本回退"><a href="#版本回退" class="header-anchor">#</a> 版本回退</h2> <p>HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令 <strong>git reset --hard commit_id</strong>。</p> <ul><li>穿梭前，用 <strong>git log</strong> 可以查看提交历史，以便确定要回退到哪个版本。</li> <li>要重返未来，用 <strong>git reflog</strong> 查看命令历史，以便确定要回到未来的哪个版本。</li> <li>查看简略信息 <strong>git log --graph --pretty=oneline --abbrev-commit</strong> , 简略信息、commit Id缩写</li></ul> <h2 id="工作区和暂存区"><a href="#工作区和暂存区" class="header-anchor">#</a> 工作区和暂存区</h2> <p>clone下来的目录或当前工作所在的目录就是工作区，目录下.git里面存了暂存区、HEAD、修改记录等信息</p> <ul><li><strong>git checkout -- &lt;file&gt;</strong> 可以丢弃工作区的修改，恢复到上一次git add 或git commit的状态</li> <li><strong>git reset HEAD &lt;file&gt;</strong> 将暂存区git add里面的内容撤销掉  HEAD 表示当前版本</li></ul> <p>场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout -- &lt;file&gt;。可以丢弃工作区的修改，恢复到上一次git add 或git commit的状态
+场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD &lt;file&gt;，就回到了场景1，第二步按场景1操作。
+场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退，不过前提是没有推送到远程库。</p> <h2 id="删除一个文件"><a href="#删除一个文件" class="header-anchor">#</a> 删除一个文件</h2> <ul><li>撤销删除可以使用 <strong>git checkout -- &lt;file&gt;</strong> , 彻底删除文件除了 <strong>rm file</strong>  或者 rm -rf外还需要使用 <strong>git rm</strong> 或 git rm -rf 类似于git add的功能</li></ul> <p>命令git rm用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。</p> <h2 id="远程仓库"><a href="#远程仓库" class="header-anchor">#</a> 远程仓库</h2> <p>本地git仓库和github仓库之间的传输是通过SSH加密的，所以，需要一点设置：</p> <ul><li>第1步：创建SSH Key。在用户主目录下，看看有没有.ssh目录，如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，如果已经有了，可直接跳到下一步。如果没有，打开Shell（Windows下打开Git Bash），创建SSH Key：</li></ul> <div class="language-js extra-class"><pre class="language-js"><code>ssh<span class="token operator">-</span>keygen <span class="token operator">-</span>t rsa <span class="token operator">-</span><span class="token constant">C</span> <span class="token string">&quot;youremail@example.com&quot;</span>
+<span class="token comment">/*
+ 你需要把邮件地址换成你自己的邮件地址，然后一路回车，使用默认值即可，由于这个Key也不是用于军事目的，所以也无需设置密码。如果一切顺利的话，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
+ */</span>
+</code></pre></div><ul><li>第2步：登陆GitHub，打开“Account settings”，“SSH Keys”页面。然后，点“Add SSH Key”，填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容，点“Add Key”，你就应该看到已经添加的Key</li></ul> <h2 id="本地仓库关联远程仓库"><a href="#本地仓库关联远程仓库" class="header-anchor">#</a> 本地仓库关联远程仓库</h2> <ul><li>要关联一个远程库，使用命令 <strong>git remote add origin git@server-name:path/repo-name.git</strong>；</li> <li>关联后，使用命令 <strong>git push -u origin master</strong> 第一次推送master分支的所有内容；</li></ul> <p>此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改；
+分布式版本系统的最大好处之一是在本地工作完全不需要考虑远程库的存在，也就是有没有联网都可以正常工作，而SVN在没有联网的时候是拒绝干活的！当有网络的时候，再把本地提交推送一下就完成了同步，真是太方便了！</p> <h2 id="从远程库克隆"><a href="#从远程库克隆" class="header-anchor">#</a> 从远程库克隆</h2> <p>要克隆一个仓库，首先必须知道仓库的地址，然后使用 <strong>git clone</strong> 命令克隆。Git支持多种协议，包括https，但通过ssh支持的原生git协议速度最快。</p> <h2 id="创建并合并分支"><a href="#创建并合并分支" class="header-anchor">#</a> 创建并合并分支</h2> <p><img src="/images/git/git_new_branch_merge.png" alt="git创建分支并合并.png"></p> <p>Git鼓励大量使用分支：</p> <ul><li>查看分支：<strong>git branch</strong></li> <li>创建分支：<strong>git branch &lt;name&gt;</strong></li> <li>切换分支：<strong>git checkout &lt;name&gt;</strong></li> <li>创建+切换分支：<strong>git checkout -b &lt;name&gt;</strong></li> <li>合并某分支到当前分支：<strong>git merge &lt;name&gt;</strong></li> <li>删除分支：<strong>git branch -d &lt;name&gt;</strong></li></ul> <h2 id="解决冲突"><a href="#解决冲突" class="header-anchor">#</a> 解决冲突</h2> <p><img src="/images/git/git_fix_conflict.png" alt="git解决冲突.png"></p> <ul><li>当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。</li> <li>解决冲突就是把Git合并失败的文件手动编辑为我们希望的内容，再提交。</li> <li>用git log --graph命令可以看到分支合并图。如果terminal显示空间不够，按回车会继续显示，要退出类似于vim的退出（q）</li> <li><strong>git log --graph --pretty=oneline --abbrev-commit</strong> 查看</li></ul> <h2 id="分支管理策略"><a href="#分支管理策略" class="header-anchor">#</a> 分支管理策略</h2> <p>合并分支时，加上 <strong>--no-ff</strong> 参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而fast forward合并就看不出来曾经做过合并。</p> <div class="language-js extra-class"><pre class="language-js"><code>git merge <span class="token operator">--</span>no<span class="token operator">-</span>ff <span class="token operator">-</span>m <span class="token string">&quot;merge with no-ff&quot;</span> dev
+</code></pre></div><p><img src="/images/git/merge_fast_forward.png" alt="merge_fast_forward.png"></p> <p>在实际开发中，我们应该按照几个基本原则进行分支管理：</p> <ul><li>首先，master分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活；</li> <li>那在哪干活呢？干活都在dev分支上，也就是说，dev分支是不稳定的，到某个时候，比如1.0版本发布时，再把dev分支合并到master上，在master分支发布1.0版本；</li> <li>你和你的小伙伴们每个人都在dev分支上干活，每个人都有自己的分支，时不时地往dev分支上合并就可以了。</li></ul> <p>所以，团队合作的分支看起来就像这样：</p> <p><img src="/images/git/git_teamwork.png" alt="git团队协作.png"></p> <h2 id="bug分支"><a href="#bug分支" class="header-anchor">#</a> bug分支</h2> <p>修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除；</p> <ul><li>当手头工作没有完成时，先把工作现场 <strong>git stash</strong> 一下，然后去修复bug，修复后，再 <strong>git stash pop</strong> ，回到工作现场；</li> <li>在master分支上修复的bug，想要合并到当前dev分支，可以用**git cherry-pick &lt;commit&gt;**命令，把bug提交的修改“复制”到当前分支，避免重复劳动。</li></ul> <h2 id="featrue分支"><a href="#featrue分支" class="header-anchor">#</a> featrue分支</h2> <p>开发一个新feature，最好新建一个分支；
+如果要丢弃一个没有被合并过的分支，可以通过**git branch -D &lt;name&gt;**强行删除。</p> <h2 id="多人协作"><a href="#多人协作" class="header-anchor">#</a> 多人协作</h2> <p>多人协作的工作模式通常是这样：</p> <ul><li>1.首先，可以试图用 <strong>git push origin &lt;branch-name&gt;</strong> 推送自己的修改；</li> <li>2.如果推送失败，则因为远程分支比你的本地更新，需要先用 <strong>git pull</strong> 试图合并；</li> <li>3.如果合并有冲突，则解决冲突，并在本地提交；</li> <li>4.没有冲突或者解决掉冲突后，再用**git push origin &lt;branch-name&gt;**推送就能成功！</li></ul> <p>如果git pull提示no tracking information，则说明本地分支和远程分支的链接关系没有创建，用命令</p> <div class="language-js extra-class"><pre class="language-js"><code>git branch <span class="token operator">--</span>set<span class="token operator">-</span>upstream<span class="token operator">-</span>to <span class="token operator">&lt;</span>branch<span class="token operator">-</span>name<span class="token operator">&gt;</span> origin<span class="token operator">/</span><span class="token operator">&lt;</span>branch<span class="token operator">-</span>name<span class="token operator">&gt;</span>
+</code></pre></div><p>这就是多人协作的工作模式，一旦熟悉了，就非常简单。</p> <p>多人协作相关:</p> <ul><li>查看远程库信息，使用 <strong>git remote -v</strong>；</li> <li>本地新建的分支如果不推送到远程，对其他人就是不可见的；</li> <li>从本地推送分支，使用<strong>git push origin branch-name</strong>，如果推送失败，先用<strong>git pull</strong>抓取远程的新提交；</li> <li>在本地创建和远程分支对应的分支，使用<strong>git checkout -b branch-name origin/branch-name</strong>，本地和远程分支的名称最好一致；</li> <li>建立本地分支和远程分支的关联，使用<strong>git branch --set-upstream branch-name origin/branch-name</strong>；</li> <li>从远程抓取分支，使用git pull，如果有冲突，要先处理冲突。</li></ul> <h2 id="rebase-变基"><a href="#rebase-变基" class="header-anchor">#</a> rebase 变基</h2> <ul><li>rebase操作可以把本地未push的分叉提交历史整理成直线；</li> <li>rebase的目的是使得我们在查看历史提交的变化时更容易，因为分叉的提交需要三方对比。</li></ul> <h2 id="创建标签-tag"><a href="#创建标签-tag" class="header-anchor">#</a> 创建标签 tag</h2> <ul><li>命令 <strong>git tag &lt;tagname&gt;</strong> 用于新建一个标签，默认为HEAD，也可以指定一个commit id；</li> <li>命令 <strong>git tag -a &lt;tagname&gt; -m &quot;blablabla...0&quot;</strong> 可以指定标签信息；</li> <li>命令 <strong>git tag</strong> 可以查看所有标签。</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/*
+$ git tag v1.0 // 当前commit位置 打一个tag 名字为v1.0
+$ git tag // 查看所有标签
+$ git show v1.0 可以查看具体的信息
+$ git log --pretty=oneline --abbrev-commit  // 查看历史git信息，缩略的commitid  
+*/</span>
+</code></pre></div><h2 id="操作标签-tag"><a href="#操作标签-tag" class="header-anchor">#</a> 操作标签 tag</h2> <ul><li>命令**git push origin &lt;tagname&gt;**可以推送一个本地标签；</li> <li>命令<strong>git push origin --tags</strong>可以推送全部未推送过的本地标签；</li> <li>命令**git tag -d &lt;tagname&gt;**可以删除一个本地标签；</li> <li>命令**git push origin :refs/tags/&lt;tagname&gt;**可以删除一个远程标签。</li> <li>默认tag注释为提交的注释，-a -m 可以自定义注释，-m 单引号，逐行输入，可以有多行效果，如下</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/*
+kevindeMacBook-Air:foodDiary kevin$ git tag -a v1.1.0 -m '
+&gt; 1. A 新增 iPad UI适配，将字体rpx，以及固定高度rpx改为px，优化大屏显示效果。iphone 5显示优化
+&gt; 2. A 新增下拉刷新，弥补多端同步时，一端已缓存数据，另一端当天数据变更后，缓存的一端不会实时刷新的不足。
+&gt; 3. A 新增网络异常提示，当检测没网络时，提示异常，但如果连接了wifi，但如果wifi也没网是无法检测的，只能等超时提示异常
+&gt; '
+kevindeMacBook-Air:foodDiary kevin$ git show v1.1.0
+tag v1.1.0
+Tagger: guoqzuo &lt;guoqzuo@gmail.com&gt;
+Date:   Wed Aug 21 15:17:08 2019 +0800
+
+1. A 新增 iPad UI适配，将字体rpx，以及固定高度rpx改为px，优化大屏显示效果。iphone 5显示优化
+2. A 新增下拉刷新，弥补多端同步时，一端已缓存数据，另一端当天数据变更后，缓存的一端不会实时刷新的不足。
+3. A 新增网络异常提示，当检测没网络时，提示异常，但如果连接了wifi，但如果wifi也没网是无法检测的，只能等超时提示异常
+
+commit 512f64fb07f626dd48362bd6e22fb3c9bf188d1d (HEAD -&gt; master, tag: v1.1.0, origin/master, origin/HEAD)
+Author: guoqzuo &lt;guoqzuo@gmail.com&gt;
+Date:   Mon Aug 19 20:50:39 2019 +0800
+*/</span>
+</code></pre></div><p><img src="/images/git/git_tag_multi_line.png" alt="git_tag_multi_line.png"></p> <h2 id="忽略特殊文件"><a href="#忽略特殊文件" class="header-anchor">#</a> 忽略特殊文件</h2> <ul><li>忽略某些文件时，需要编写**.gitignore**；</li> <li>.gitignore文件本身要放到版本库里，并且可以对.gitignore做版本管理！</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/*
+kevindeMacBook-Air:KK kevin$ cat .gitignore
+
+dist
+  
+# myconfig
+db.ini
+kevindeMacBook-Air:KK kevin$ mkdir dist
+kevindeMacBook-Air:KK kevin$ git add dist
+The following paths are ignored by one of your .gitignore files:
+dist
+Use -f if you really want to add them.
+*/</span>
+</code></pre></div><h2 id="配置别名"><a href="#配置别名" class="header-anchor">#</a> 配置别名</h2> <p>如果敲git st就表示git status那就简单多了，当然这种偷懒的办法我们是极力赞成的。
+我们只需要敲一行命令，告诉Git，以后st就表示status：会将修改保存到~/.gitconfig里</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/*
+$ git config --global alias.st status
+$ git config --global alias.co checkout
+$ git config --global alias.ci commit
+$ git config --global alias.br branch
+*/</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">10/29/2020, 10:59:19 PM</span></div></footer> <div class="page-nav"><p class="inner"><!----> <span class="next"><a href="/base/markdown.html">
+        Markdown 基础语法
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----><!----></div></div>
+    <script src="/assets/js/app.9db0a638.js" defer></script><script src="/assets/js/2.4b3539f1.js" defer></script><script src="/assets/js/18.50bc4846.js" defer></script><script src="/assets/js/3.e6a4dd76.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>数据库应设计与开发实例 | 左小白的前端笔记</title>
+    <meta name="generator" content="VuePress 1.7.1">
+    <link rel="icon" href="/logo.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-152x152.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#3eaf7c">
+    <meta name="description" content="左小白的前端笔记，用于记录、完善个人前端知识体系结构">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileImage" content="/icons/msapplication-icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <link rel="preload" href="/assets/css/0.styles.594b47db.css" as="style"><link rel="preload" href="/assets/js/app.9db0a638.js" as="script"><link rel="preload" href="/assets/js/2.4b3539f1.js" as="script"><link rel="preload" href="/assets/js/16.eb71a02a.js" as="script"><link rel="preload" href="/assets/js/3.e6a4dd76.js" as="script"><link rel="prefetch" href="/assets/js/10.35d8cd15.js"><link rel="prefetch" href="/assets/js/100.01e41ee6.js"><link rel="prefetch" href="/assets/js/101.28f8026a.js"><link rel="prefetch" href="/assets/js/102.31d7d0e0.js"><link rel="prefetch" href="/assets/js/103.71225fe7.js"><link rel="prefetch" href="/assets/js/104.fe63eb6b.js"><link rel="prefetch" href="/assets/js/105.c0b31bc8.js"><link rel="prefetch" href="/assets/js/106.a7b64c67.js"><link rel="prefetch" href="/assets/js/107.35f43657.js"><link rel="prefetch" href="/assets/js/108.25e30499.js"><link rel="prefetch" href="/assets/js/109.865008b8.js"><link rel="prefetch" href="/assets/js/11.22ff506c.js"><link rel="prefetch" href="/assets/js/110.fb459190.js"><link rel="prefetch" href="/assets/js/111.1740bd73.js"><link rel="prefetch" href="/assets/js/112.ea5b5225.js"><link rel="prefetch" href="/assets/js/113.3e891c50.js"><link rel="prefetch" href="/assets/js/114.83254ffb.js"><link rel="prefetch" href="/assets/js/115.dcdb82ef.js"><link rel="prefetch" href="/assets/js/116.8cca1faf.js"><link rel="prefetch" href="/assets/js/117.f70c6759.js"><link rel="prefetch" href="/assets/js/118.ea15b201.js"><link rel="prefetch" href="/assets/js/119.51ac8585.js"><link rel="prefetch" href="/assets/js/12.66186d22.js"><link rel="prefetch" href="/assets/js/120.27fc9d41.js"><link rel="prefetch" href="/assets/js/121.4050195a.js"><link rel="prefetch" href="/assets/js/122.ae0aaf85.js"><link rel="prefetch" href="/assets/js/123.3412ab46.js"><link rel="prefetch" href="/assets/js/124.abd8c6d3.js"><link rel="prefetch" href="/assets/js/125.7cc27db5.js"><link rel="prefetch" href="/assets/js/126.af33ab3a.js"><link rel="prefetch" href="/assets/js/127.3170e8ab.js"><link rel="prefetch" href="/assets/js/128.c04c4bb0.js"><link rel="prefetch" href="/assets/js/129.4165d0ac.js"><link rel="prefetch" href="/assets/js/13.df602e5a.js"><link rel="prefetch" href="/assets/js/130.0d0d3cf7.js"><link rel="prefetch" href="/assets/js/131.c7db2083.js"><link rel="prefetch" href="/assets/js/132.79c11c42.js"><link rel="prefetch" href="/assets/js/133.9039bd5f.js"><link rel="prefetch" href="/assets/js/134.566c80ad.js"><link rel="prefetch" href="/assets/js/135.8d23eb58.js"><link rel="prefetch" href="/assets/js/136.f2879705.js"><link rel="prefetch" href="/assets/js/137.255c0784.js"><link rel="prefetch" href="/assets/js/138.304cbec6.js"><link rel="prefetch" href="/assets/js/139.7a7fc3e0.js"><link rel="prefetch" href="/assets/js/14.c0b1490a.js"><link rel="prefetch" href="/assets/js/140.4abf26a8.js"><link rel="prefetch" href="/assets/js/141.81d4d878.js"><link rel="prefetch" href="/assets/js/142.cd404be7.js"><link rel="prefetch" href="/assets/js/143.0e44aa20.js"><link rel="prefetch" href="/assets/js/144.237a43d9.js"><link rel="prefetch" href="/assets/js/145.cede5af9.js"><link rel="prefetch" href="/assets/js/146.c9d3967b.js"><link rel="prefetch" href="/assets/js/147.080beb71.js"><link rel="prefetch" href="/assets/js/15.540e7ea4.js"><link rel="prefetch" href="/assets/js/17.92df7b99.js"><link rel="prefetch" href="/assets/js/18.50bc4846.js"><link rel="prefetch" href="/assets/js/19.bb9e9c88.js"><link rel="prefetch" href="/assets/js/20.e5894862.js"><link rel="prefetch" href="/assets/js/21.8dd45d89.js"><link rel="prefetch" href="/assets/js/22.aab57678.js"><link rel="prefetch" href="/assets/js/23.5456b7dc.js"><link rel="prefetch" href="/assets/js/24.68f5b54e.js"><link rel="prefetch" href="/assets/js/25.f7468bea.js"><link rel="prefetch" href="/assets/js/26.2fa477e0.js"><link rel="prefetch" href="/assets/js/27.3b27afbb.js"><link rel="prefetch" href="/assets/js/28.5e4373e8.js"><link rel="prefetch" href="/assets/js/29.3980b790.js"><link rel="prefetch" href="/assets/js/30.8385df39.js"><link rel="prefetch" href="/assets/js/31.18be5061.js"><link rel="prefetch" href="/assets/js/32.7ebc4f72.js"><link rel="prefetch" href="/assets/js/33.eab97304.js"><link rel="prefetch" href="/assets/js/34.10d3aaea.js"><link rel="prefetch" href="/assets/js/35.cf227858.js"><link rel="prefetch" href="/assets/js/36.72eb2e1b.js"><link rel="prefetch" href="/assets/js/37.76967d57.js"><link rel="prefetch" href="/assets/js/38.1b8baf1e.js"><link rel="prefetch" href="/assets/js/39.305ba346.js"><link rel="prefetch" href="/assets/js/4.0ac4f1f6.js"><link rel="prefetch" href="/assets/js/40.2815fe02.js"><link rel="prefetch" href="/assets/js/41.2b41b172.js"><link rel="prefetch" href="/assets/js/42.1d69d4fa.js"><link rel="prefetch" href="/assets/js/43.d4971a84.js"><link rel="prefetch" href="/assets/js/44.0e04f785.js"><link rel="prefetch" href="/assets/js/45.9025c56f.js"><link rel="prefetch" href="/assets/js/46.a1ee9725.js"><link rel="prefetch" href="/assets/js/47.ee929b91.js"><link rel="prefetch" href="/assets/js/48.260b57c1.js"><link rel="prefetch" href="/assets/js/49.fc5704d5.js"><link rel="prefetch" href="/assets/js/5.5b94bff7.js"><link rel="prefetch" href="/assets/js/50.40b0ba28.js"><link rel="prefetch" href="/assets/js/51.549a6a9a.js"><link rel="prefetch" href="/assets/js/52.81153bb7.js"><link rel="prefetch" href="/assets/js/53.7fcef945.js"><link rel="prefetch" href="/assets/js/54.746a2bbd.js"><link rel="prefetch" href="/assets/js/55.29274bd7.js"><link rel="prefetch" href="/assets/js/56.1b76e54c.js"><link rel="prefetch" href="/assets/js/57.ef2bb07c.js"><link rel="prefetch" href="/assets/js/58.e2bac053.js"><link rel="prefetch" href="/assets/js/59.285e53f6.js"><link rel="prefetch" href="/assets/js/6.481b22df.js"><link rel="prefetch" href="/assets/js/60.00d6c919.js"><link rel="prefetch" href="/assets/js/61.af411822.js"><link rel="prefetch" href="/assets/js/62.a7e74f84.js"><link rel="prefetch" href="/assets/js/63.2cccfda3.js"><link rel="prefetch" href="/assets/js/64.5a4a2d69.js"><link rel="prefetch" href="/assets/js/65.6be1cbc1.js"><link rel="prefetch" href="/assets/js/66.7e93c722.js"><link rel="prefetch" href="/assets/js/67.11f563a3.js"><link rel="prefetch" href="/assets/js/68.ad75af4a.js"><link rel="prefetch" href="/assets/js/69.75221a93.js"><link rel="prefetch" href="/assets/js/7.cb937ed7.js"><link rel="prefetch" href="/assets/js/70.34f4dcf5.js"><link rel="prefetch" href="/assets/js/71.aa606e80.js"><link rel="prefetch" href="/assets/js/72.7486a2dd.js"><link rel="prefetch" href="/assets/js/73.2bbd3b87.js"><link rel="prefetch" href="/assets/js/74.3c64330c.js"><link rel="prefetch" href="/assets/js/75.b1cabeb6.js"><link rel="prefetch" href="/assets/js/76.1f563ab7.js"><link rel="prefetch" href="/assets/js/77.abb4ca5d.js"><link rel="prefetch" href="/assets/js/78.40ffda23.js"><link rel="prefetch" href="/assets/js/79.f3fe6eaa.js"><link rel="prefetch" href="/assets/js/8.f5dced20.js"><link rel="prefetch" href="/assets/js/80.3de3caa0.js"><link rel="prefetch" href="/assets/js/81.e2aa0b2b.js"><link rel="prefetch" href="/assets/js/82.d1ca99a1.js"><link rel="prefetch" href="/assets/js/83.dccf9b37.js"><link rel="prefetch" href="/assets/js/84.4dae5e5b.js"><link rel="prefetch" href="/assets/js/85.c6480fc2.js"><link rel="prefetch" href="/assets/js/86.d5480dce.js"><link rel="prefetch" href="/assets/js/87.01b022e2.js"><link rel="prefetch" href="/assets/js/88.02938c2d.js"><link rel="prefetch" href="/assets/js/89.d7e23c9c.js"><link rel="prefetch" href="/assets/js/9.e0f173ad.js"><link rel="prefetch" href="/assets/js/90.9ed16b8c.js"><link rel="prefetch" href="/assets/js/91.40909222.js"><link rel="prefetch" href="/assets/js/92.2f121267.js"><link rel="prefetch" href="/assets/js/93.80f9c1cd.js"><link rel="prefetch" href="/assets/js/94.b78709e4.js"><link rel="prefetch" href="/assets/js/95.71adfe21.js"><link rel="prefetch" href="/assets/js/96.41c9152f.js"><link rel="prefetch" href="/assets/js/97.b80c4bf0.js"><link rel="prefetch" href="/assets/js/98.e0a4d08a.js"><link rel="prefetch" href="/assets/js/99.38bc76b8.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.594b47db.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">左小白的前端笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/git.html" class="nav-link">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/git.html" class="nav-link">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>计算机基础</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>数据库系统原理笔记</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/base/dbtheory/1.html" class="sidebar-link">前言</a></li><li><a href="/base/dbtheory/2.html" class="sidebar-link">数据库系统概述</a></li><li><a href="/base/dbtheory/3.html" class="sidebar-link">关系数据库</a></li><li><a href="/base/dbtheory/4.html" class="sidebar-link">数据库设计</a></li><li><a href="/base/dbtheory/5.html" class="sidebar-link">SQL与关系数据库基本操作</a></li><li><a href="/base/dbtheory/6.html" class="sidebar-link">数据库编程</a></li><li><a href="/base/dbtheory/7.html" class="sidebar-link">数据库安全与保护</a></li><li><a href="/base/dbtheory/8.html" aria-current="page" class="active sidebar-link">数据库应设计与开发实例</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#需求描述与分析-领会" class="sidebar-link">需求描述与分析(领会)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#系统设计-综合应用" class="sidebar-link">系统设计(综合应用)</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#确定实体" class="sidebar-link">确定实体</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#用er图描述局部信息结构" class="sidebar-link">用ER图描述局部信息结构</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#逻辑结构与规范化设计" class="sidebar-link">逻辑结构与规范化设计</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#创建数据库" class="sidebar-link">创建数据库</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#创建数据表" class="sidebar-link">创建数据表</a></li></ul></li><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#系统功能实现-综合应用" class="sidebar-link">系统功能实现(综合应用)</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#实现数据库行为" class="sidebar-link">实现数据库行为</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#应用软件的业务逻辑" class="sidebar-link">应用软件的业务逻辑</a></li></ul></li><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#系统测试与维护-综合应用" class="sidebar-link">系统测试与维护(综合应用)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/8.html#练习" class="sidebar-link">练习</a></li></ul></li><li><a href="/base/dbtheory/9.html" class="sidebar-link">数据管理技术的发展</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="数据库应设计与开发实例"><a href="#数据库应设计与开发实例" class="header-anchor">#</a> 数据库应设计与开发实例</h1> <p>实例：高校在线选课系统数据库设计</p> <p>系统模块如下图所示：</p> <p><img src="/images/db/7_1_%E9%AB%98%E6%A0%A1%E5%9C%A8%E7%BA%BF%E9%80%89%E8%AF%BE%E7%B3%BB%E7%BB%9F.png" alt="7_1_高校在线选课系统.png"></p> <h2 id="需求描述与分析-领会"><a href="#需求描述与分析-领会" class="header-anchor">#</a> 需求描述与分析(领会)</h2> <p>功能性需求
+非功能性需求</p> <h2 id="系统设计-综合应用"><a href="#系统设计-综合应用" class="header-anchor">#</a> 系统设计(综合应用)</h2> <p>质量要求：</p> <ul><li>可靠性</li> <li>正确性</li> <li>兼容性</li> <li>健壮性(容错性)</li></ul> <p>功能模块设计
+数据库设计</p> <h3 id="确定实体"><a href="#确定实体" class="header-anchor">#</a> 确定实体</h3> <p>根据功能模块，看有哪些实体</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 根据图自己思考的实体</span>
+<span class="token function">学生</span><span class="token punctuation">(</span>学生<span class="token constant">ID</span>、姓名、学号、年级、班级、年龄、院系<span class="token punctuation">)</span>
+<span class="token function">课程</span><span class="token punctuation">(</span>课程<span class="token constant">ID</span>、课程名称、学分、是否是公共课<span class="token punctuation">)</span>
+<span class="token function">开课信息</span><span class="token punctuation">(</span>课程<span class="token constant">ID</span>、上课位置、上课时间、限制人数、教师<span class="token constant">ID</span><span class="token punctuation">)</span>
+<span class="token function">院系</span><span class="token punctuation">(</span>院系<span class="token constant">ID</span>、院系名称<span class="token punctuation">)</span>
+<span class="token function">教师</span><span class="token punctuation">(</span>教师<span class="token constant">ID</span>、姓名、年龄<span class="token punctuation">)</span>
+<span class="token function">成绩</span><span class="token punctuation">(</span>课程<span class="token constant">ID</span>、学生<span class="token constant">ID</span>、成绩<span class="token punctuation">)</span>
+<span class="token function">教师课程</span><span class="token punctuation">(</span>教师<span class="token constant">ID</span>、课程<span class="token constant">ID</span><span class="token punctuation">)</span>
+<span class="token function">学生选课</span><span class="token punctuation">(</span>开课信息<span class="token constant">ID</span>、学生<span class="token constant">ID</span><span class="token punctuation">)</span>
+</code></pre></div><p>参考答案</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token number">1.</span>学生（学号、姓名、性别、密码）
+<span class="token number">2.</span>教师（教师工号、姓名、性别、年龄、职称、密码）
+<span class="token number">3.</span>课程（课程号、课程名、学分、时间、地点、类别、开课学院、限选人数）
+<span class="token number">4.</span>院系（院系名称、办公地点、教师人数）
+<span class="token number">5.</span>系统管理员（姓名、<span class="token constant">ID</span>号、密码）
+</code></pre></div><h3 id="用er图描述局部信息结构"><a href="#用er图描述局部信息结构" class="header-anchor">#</a> 用ER图描述局部信息结构</h3> <p>上述实体之间存在哪些相互联系？</p> <ol><li>学生-课程</li> <li>教师-课程</li> <li>教师-院系</li> <li>学生-院系</li> <li>系统管理员-学生</li> <li>系统管理员-教师</li> <li>系统管理员-课程</li> <li>系统管理员-院系</li></ol> <p>E-R图</p> <p><img src="/images/db/7_2_ER%E5%9B%BE.png" alt="7_2_ER图.png"></p> <h3 id="逻辑结构与规范化设计"><a href="#逻辑结构与规范化设计" class="header-anchor">#</a> 逻辑结构与规范化设计</h3> <p>如何将ER图装换为关系模式</p> <ul><li>学生（<strong>学号</strong>、姓名、性别、登录密码、院系编号）</li> <li>院系（<strong>院系编号</strong>、系名、学生人数、教师人数、办公地点）</li> <li>教师（<strong>职工号</strong>、姓名、性别、年龄、职称、登录密码、院系编号）</li> <li>课程（<strong>课程号</strong>、课程名称、课程类别、学分、上课时间、上课地点、开课学院、限选人数、职工号）</li> <li>系统管理员（<strong>ID号</strong>、姓名、登录密码）</li> <li>选修（<strong>学号</strong>、课程号、成绩）</li> <li>管理学生（管理员ID号、学号、操作时间）</li> <li>管理院系（管理员ID号、院系编号、操作时间）</li> <li>管理教师（管理员ID号、职工号、操作时间）</li> <li>管理课程（管理员ID、课程号、操作时间）</li></ul> <p>数据库的实现</p> <h3 id="创建数据库"><a href="#创建数据库" class="header-anchor">#</a> 创建数据库</h3> <div class="language-bash extra-class"><pre class="language-bash"><code>CREATE DATABASE db_xuanke<span class="token punctuation">;</span>
+</code></pre></div><h3 id="创建数据表"><a href="#创建数据表" class="header-anchor">#</a> 创建数据表</h3> <p>以学生信息表为例子，把关系模式全部创建成表</p> <div class="language-bash extra-class"><pre class="language-bash"><code>CREATE TABLE student <span class="token punctuation">(</span>
+  StuNo INT<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> NOT NULL COMMENT <span class="token string">'学号'</span>,
+  StuName VARCHAR<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span> NOT NULL COMMENT <span class="token string">'姓名'</span>,
+  StuSex CHAR<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> COMMENT <span class="token string">'性别'</span>,
+  Pwd VARCHAR<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> DEFAULT <span class="token string">'00000000'</span> COMMENT <span class="token string">'登录密码'</span>,
+  DeptNo INT<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span> NOT NULL COMMENT <span class="token string">'所属院系'</span>,
+  PRIMARY KEY<span class="token punctuation">(</span>StuNo<span class="token punctuation">)</span>,
+  FOREIGN KEY<span class="token punctuation">(</span>DeptNo<span class="token punctuation">)</span> REFERENCES department<span class="token punctuation">(</span>DeptNo<span class="token punctuation">)</span> ON DELETE RESTRICT ON UPDATE RESTRICT
+<span class="token punctuation">)</span> COMMENT <span class="token string">'学生信息表'</span>
+
+<span class="token comment"># 关于外键部分，可以参考: 参照完整性约束</span>
+</code></pre></div><ul><li>院系编码表 deptcode</li> <li>院系表 department</li> <li>教师表 teacher</li> <li>课程编码表 coursecode</li> <li>课程表 course</li> <li>系统管理员表 administrator</li> <li>选修表 electing</li> <li>管理学生表 adminstu</li> <li>管理院系表 admindept</li> <li>管理教师表 adminteacher</li> <li>管理课程表 admincourse</li></ul> <h2 id="系统功能实现-综合应用"><a href="#系统功能实现-综合应用" class="header-anchor">#</a> 系统功能实现(综合应用)</h2> <h3 id="实现数据库行为"><a href="#实现数据库行为" class="header-anchor">#</a> 实现数据库行为</h3> <h4 id="安全控制"><a href="#安全控制" class="header-anchor">#</a> 安全控制</h4> <p>例子：为心来的教务管理人员金老师(用户名jin)分配具备管理学生、院系、教师和课程的权限</p> <div class="language-bash extra-class"><pre class="language-bash"><code>GRANT SELECT,UPDATE,INSERT,DELETE ON db_xuanke.* TO <span class="token string">'jin'</span>@<span class="token string">'localhost'</span><span class="token punctuation">;</span>
+</code></pre></div><h4 id="管理学生"><a href="#管理学生" class="header-anchor">#</a> 管理学生</h4> <p>例子：金老师在学生管理功能中添加一名计算机学院的女生黄然</p> <div class="language-bash extra-class"><pre class="language-bash"><code>INSERT INTO db_xuanke.student SET <span class="token assign-left variable">StuNo</span><span class="token operator">=</span><span class="token number">20170922</span>, <span class="token assign-left variable">StuName</span><span class="token operator">=</span><span class="token string">'黄然'</span>, <span class="token assign-left variable">StuSex</span><span class="token operator">=</span><span class="token string">'女'</span>, <span class="token assign-left variable">Pwd</span><span class="token operator">=</span>DEFAULT, DeptNo <span class="token operator">=</span> 
+SELECT DepNo FROM db_xuanke.departcode WHERE <span class="token assign-left variable">DepName</span><span class="token operator">=</span><span class="token string">'计算机学院'</span><span class="token punctuation">;</span>
+</code></pre></div><h4 id="数据库保护"><a href="#数据库保护" class="header-anchor">#</a> 数据库保护</h4> <p>例子：当每位老师进行登记分数操作时，系统需要自动验证分数值是否位于0-100区间，以此保护数据库中数据的正确性</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 创建一个触发器，当分数不满足条件时直接删除</span>
+CREATE TRIGGER tri_test AFTER INSERT ON db_xuanke.electing FOR EACH ROW
+BEGIN
+IF NEW.Score <span class="token operator">&lt;</span> <span class="token number">0</span> OR NEW.Score <span class="token operator">&gt;</span> <span class="token number">100</span> THEN
+DELETE FROM db_xuanke.electing WHERE <span class="token assign-left variable">Score</span><span class="token operator">=</span>NEW.Score
+END IF
+END
+</code></pre></div><h4 id="事务与并发控制"><a href="#事务与并发控制" class="header-anchor">#</a> 事务与并发控制</h4> <p>例子：金老师需要批量录入教师信息时，为防止其他操作对数据的影响，可以使用事务处理来维护数据库的完整性</p> <div class="language-bash extra-class"><pre class="language-bash"><code>BEGIN TRANSACTION<span class="token punctuation">;</span> <span class="token comment"># 开始事务</span>
+INSERT INTO db_xuanke.teacher VALUES<span class="token punctuation">(</span><span class="token number">10021</span>,<span class="token string">'万明'</span>,NULL,NULL,NULL,DEFAULT,10<span class="token punctuation">)</span>
+INSERT INTO db_xuanke.teacher VALUES<span class="token punctuation">(</span><span class="token number">10022</span>,<span class="token string">'万明2'</span>,NULL,NULL,NULL,DEFAULT,11<span class="token punctuation">)</span>
+INSERT INTO db_xuanke.teacher VALUES<span class="token punctuation">(</span><span class="token number">10023</span>,<span class="token string">'万明3'</span>,NULL,NULL,NULL,DEFAULT,12<span class="token punctuation">)</span>
+COMMIT<span class="token punctuation">;</span> <span class="token comment"># 提交事务</span>
+</code></pre></div><h4 id="数据查询与统计报表"><a href="#数据查询与统计报表" class="header-anchor">#</a> 数据查询与统计报表</h4> <p>例子：为教务管理人员提供统计每个学生选修课程学分的报表</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 使用视图</span>
+CREATE VIEW v_score<span class="token punctuation">(</span>StuNo,totlescore<span class="token punctuation">)</span> AS 
+SELECT student.StuNo,SUM<span class="token punctuation">(</span>course.Credit<span class="token punctuation">)</span> FORM student 
+JOIN electing ON student.StuNo<span class="token operator">=</span>electing.StuNo 
+JOIN course ON course.CourseNo<span class="token operator">=</span>electing.CorseNo
+WHERE electing.Score <span class="token operator">&gt;</span><span class="token operator">=</span> <span class="token number">60</span> GROUP BY student.StuNo<span class="token punctuation">;</span>
+<span class="token comment"># Credit学分</span>
+</code></pre></div><h3 id="应用软件的业务逻辑"><a href="#应用软件的业务逻辑" class="header-anchor">#</a> 应用软件的业务逻辑</h3> <p>首先，使用网页设计语言HTML/CSS实现系统登录验证页面</p> <p>然后，通过使用服务端语言(比如php，java,node等)编写相应的服务端代码，完成登录验证页面与后台数据库的交互操作</p> <h2 id="系统测试与维护-综合应用"><a href="#系统测试与维护-综合应用" class="header-anchor">#</a> 系统测试与维护(综合应用)</h2> <ul><li>登录验证功能测试</li> <li>管理员后台主要功能测试
+<ul><li>学生信息管理系统</li> <li>课程信息管理系统</li></ul></li> <li>学生使用模块功能测试</li> <li>教师使用模块功能测试</li></ul> <h2 id="练习"><a href="#练习" class="header-anchor">#</a> 练习</h2> <p>1.在选课期间，除非遇到特殊情况，否则要保证系统正常使用，这体现了选课系统质量要求中的（  ）。单选题，答案：A</p> <ul><li>A 可靠性</li> <li>B 正确性</li> <li>C 兼容性</li> <li>D 健壮性</li></ul> <p>2.以下属于基于教材中网络的在线选课程系统对于客户端软件、硬件环境的要求是（  ）。单选题，答案：B</p> <ul><li>A 使用Windows作为操作系统</li> <li>B 能在支持IE的浏览器上运行</li> <li>C Apache作为Web服务器</li> <li>D MySQL作为数据库管理系统</li></ul> <p>3.以下系统功能实现中，不属于实现数据库行为的是（  ）。单选题，答案 D</p> <ul><li>A 通过SQL语言完成与本应用功能相关的增、删、查、改等数据库操作</li> <li>B 创建子查询</li> <li>C 创建存储过程或存储函数</li> <li>D 使用php标尺语言写相应的服务端代码</li></ul></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">10/29/2020, 10:59:19 PM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/base/dbtheory/7.html" class="prev">
+        数据库安全与保护
+      </a></span> <span class="next"><a href="/base/dbtheory/9.html">
+        数据管理技术的发展
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----><!----></div></div>
+    <script src="/assets/js/app.9db0a638.js" defer></script><script src="/assets/js/2.4b3539f1.js" defer></script><script src="/assets/js/16.eb71a02a.js" defer></script><script src="/assets/js/3.e6a4dd76.js" defer></script>
+  </body>
+</html>

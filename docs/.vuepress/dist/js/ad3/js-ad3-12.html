@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>12. DOM2和DOM3 | 左小白的前端笔记</title>
+    <meta name="generator" content="VuePress 1.7.1">
+    <link rel="icon" href="/logo.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-152x152.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#3eaf7c">
+    <meta name="description" content="左小白的前端笔记，用于记录、完善个人前端知识体系结构">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileImage" content="/icons/msapplication-icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <link rel="preload" href="/assets/css/0.styles.594b47db.css" as="style"><link rel="preload" href="/assets/js/app.9db0a638.js" as="script"><link rel="preload" href="/assets/js/2.4b3539f1.js" as="script"><link rel="preload" href="/assets/js/65.6be1cbc1.js" as="script"><link rel="preload" href="/assets/js/3.e6a4dd76.js" as="script"><link rel="prefetch" href="/assets/js/10.35d8cd15.js"><link rel="prefetch" href="/assets/js/100.01e41ee6.js"><link rel="prefetch" href="/assets/js/101.28f8026a.js"><link rel="prefetch" href="/assets/js/102.31d7d0e0.js"><link rel="prefetch" href="/assets/js/103.71225fe7.js"><link rel="prefetch" href="/assets/js/104.fe63eb6b.js"><link rel="prefetch" href="/assets/js/105.c0b31bc8.js"><link rel="prefetch" href="/assets/js/106.a7b64c67.js"><link rel="prefetch" href="/assets/js/107.35f43657.js"><link rel="prefetch" href="/assets/js/108.25e30499.js"><link rel="prefetch" href="/assets/js/109.865008b8.js"><link rel="prefetch" href="/assets/js/11.22ff506c.js"><link rel="prefetch" href="/assets/js/110.fb459190.js"><link rel="prefetch" href="/assets/js/111.1740bd73.js"><link rel="prefetch" href="/assets/js/112.ea5b5225.js"><link rel="prefetch" href="/assets/js/113.3e891c50.js"><link rel="prefetch" href="/assets/js/114.83254ffb.js"><link rel="prefetch" href="/assets/js/115.dcdb82ef.js"><link rel="prefetch" href="/assets/js/116.8cca1faf.js"><link rel="prefetch" href="/assets/js/117.f70c6759.js"><link rel="prefetch" href="/assets/js/118.ea15b201.js"><link rel="prefetch" href="/assets/js/119.51ac8585.js"><link rel="prefetch" href="/assets/js/12.66186d22.js"><link rel="prefetch" href="/assets/js/120.27fc9d41.js"><link rel="prefetch" href="/assets/js/121.4050195a.js"><link rel="prefetch" href="/assets/js/122.ae0aaf85.js"><link rel="prefetch" href="/assets/js/123.3412ab46.js"><link rel="prefetch" href="/assets/js/124.abd8c6d3.js"><link rel="prefetch" href="/assets/js/125.7cc27db5.js"><link rel="prefetch" href="/assets/js/126.af33ab3a.js"><link rel="prefetch" href="/assets/js/127.3170e8ab.js"><link rel="prefetch" href="/assets/js/128.c04c4bb0.js"><link rel="prefetch" href="/assets/js/129.4165d0ac.js"><link rel="prefetch" href="/assets/js/13.df602e5a.js"><link rel="prefetch" href="/assets/js/130.0d0d3cf7.js"><link rel="prefetch" href="/assets/js/131.c7db2083.js"><link rel="prefetch" href="/assets/js/132.79c11c42.js"><link rel="prefetch" href="/assets/js/133.9039bd5f.js"><link rel="prefetch" href="/assets/js/134.566c80ad.js"><link rel="prefetch" href="/assets/js/135.8d23eb58.js"><link rel="prefetch" href="/assets/js/136.f2879705.js"><link rel="prefetch" href="/assets/js/137.255c0784.js"><link rel="prefetch" href="/assets/js/138.304cbec6.js"><link rel="prefetch" href="/assets/js/139.7a7fc3e0.js"><link rel="prefetch" href="/assets/js/14.c0b1490a.js"><link rel="prefetch" href="/assets/js/140.4abf26a8.js"><link rel="prefetch" href="/assets/js/141.81d4d878.js"><link rel="prefetch" href="/assets/js/142.cd404be7.js"><link rel="prefetch" href="/assets/js/143.0e44aa20.js"><link rel="prefetch" href="/assets/js/144.237a43d9.js"><link rel="prefetch" href="/assets/js/145.cede5af9.js"><link rel="prefetch" href="/assets/js/146.c9d3967b.js"><link rel="prefetch" href="/assets/js/147.080beb71.js"><link rel="prefetch" href="/assets/js/15.540e7ea4.js"><link rel="prefetch" href="/assets/js/16.eb71a02a.js"><link rel="prefetch" href="/assets/js/17.92df7b99.js"><link rel="prefetch" href="/assets/js/18.50bc4846.js"><link rel="prefetch" href="/assets/js/19.bb9e9c88.js"><link rel="prefetch" href="/assets/js/20.e5894862.js"><link rel="prefetch" href="/assets/js/21.8dd45d89.js"><link rel="prefetch" href="/assets/js/22.aab57678.js"><link rel="prefetch" href="/assets/js/23.5456b7dc.js"><link rel="prefetch" href="/assets/js/24.68f5b54e.js"><link rel="prefetch" href="/assets/js/25.f7468bea.js"><link rel="prefetch" href="/assets/js/26.2fa477e0.js"><link rel="prefetch" href="/assets/js/27.3b27afbb.js"><link rel="prefetch" href="/assets/js/28.5e4373e8.js"><link rel="prefetch" href="/assets/js/29.3980b790.js"><link rel="prefetch" href="/assets/js/30.8385df39.js"><link rel="prefetch" href="/assets/js/31.18be5061.js"><link rel="prefetch" href="/assets/js/32.7ebc4f72.js"><link rel="prefetch" href="/assets/js/33.eab97304.js"><link rel="prefetch" href="/assets/js/34.10d3aaea.js"><link rel="prefetch" href="/assets/js/35.cf227858.js"><link rel="prefetch" href="/assets/js/36.72eb2e1b.js"><link rel="prefetch" href="/assets/js/37.76967d57.js"><link rel="prefetch" href="/assets/js/38.1b8baf1e.js"><link rel="prefetch" href="/assets/js/39.305ba346.js"><link rel="prefetch" href="/assets/js/4.0ac4f1f6.js"><link rel="prefetch" href="/assets/js/40.2815fe02.js"><link rel="prefetch" href="/assets/js/41.2b41b172.js"><link rel="prefetch" href="/assets/js/42.1d69d4fa.js"><link rel="prefetch" href="/assets/js/43.d4971a84.js"><link rel="prefetch" href="/assets/js/44.0e04f785.js"><link rel="prefetch" href="/assets/js/45.9025c56f.js"><link rel="prefetch" href="/assets/js/46.a1ee9725.js"><link rel="prefetch" href="/assets/js/47.ee929b91.js"><link rel="prefetch" href="/assets/js/48.260b57c1.js"><link rel="prefetch" href="/assets/js/49.fc5704d5.js"><link rel="prefetch" href="/assets/js/5.5b94bff7.js"><link rel="prefetch" href="/assets/js/50.40b0ba28.js"><link rel="prefetch" href="/assets/js/51.549a6a9a.js"><link rel="prefetch" href="/assets/js/52.81153bb7.js"><link rel="prefetch" href="/assets/js/53.7fcef945.js"><link rel="prefetch" href="/assets/js/54.746a2bbd.js"><link rel="prefetch" href="/assets/js/55.29274bd7.js"><link rel="prefetch" href="/assets/js/56.1b76e54c.js"><link rel="prefetch" href="/assets/js/57.ef2bb07c.js"><link rel="prefetch" href="/assets/js/58.e2bac053.js"><link rel="prefetch" href="/assets/js/59.285e53f6.js"><link rel="prefetch" href="/assets/js/6.481b22df.js"><link rel="prefetch" href="/assets/js/60.00d6c919.js"><link rel="prefetch" href="/assets/js/61.af411822.js"><link rel="prefetch" href="/assets/js/62.a7e74f84.js"><link rel="prefetch" href="/assets/js/63.2cccfda3.js"><link rel="prefetch" href="/assets/js/64.5a4a2d69.js"><link rel="prefetch" href="/assets/js/66.7e93c722.js"><link rel="prefetch" href="/assets/js/67.11f563a3.js"><link rel="prefetch" href="/assets/js/68.ad75af4a.js"><link rel="prefetch" href="/assets/js/69.75221a93.js"><link rel="prefetch" href="/assets/js/7.cb937ed7.js"><link rel="prefetch" href="/assets/js/70.34f4dcf5.js"><link rel="prefetch" href="/assets/js/71.aa606e80.js"><link rel="prefetch" href="/assets/js/72.7486a2dd.js"><link rel="prefetch" href="/assets/js/73.2bbd3b87.js"><link rel="prefetch" href="/assets/js/74.3c64330c.js"><link rel="prefetch" href="/assets/js/75.b1cabeb6.js"><link rel="prefetch" href="/assets/js/76.1f563ab7.js"><link rel="prefetch" href="/assets/js/77.abb4ca5d.js"><link rel="prefetch" href="/assets/js/78.40ffda23.js"><link rel="prefetch" href="/assets/js/79.f3fe6eaa.js"><link rel="prefetch" href="/assets/js/8.f5dced20.js"><link rel="prefetch" href="/assets/js/80.3de3caa0.js"><link rel="prefetch" href="/assets/js/81.e2aa0b2b.js"><link rel="prefetch" href="/assets/js/82.d1ca99a1.js"><link rel="prefetch" href="/assets/js/83.dccf9b37.js"><link rel="prefetch" href="/assets/js/84.4dae5e5b.js"><link rel="prefetch" href="/assets/js/85.c6480fc2.js"><link rel="prefetch" href="/assets/js/86.d5480dce.js"><link rel="prefetch" href="/assets/js/87.01b022e2.js"><link rel="prefetch" href="/assets/js/88.02938c2d.js"><link rel="prefetch" href="/assets/js/89.d7e23c9c.js"><link rel="prefetch" href="/assets/js/9.e0f173ad.js"><link rel="prefetch" href="/assets/js/90.9ed16b8c.js"><link rel="prefetch" href="/assets/js/91.40909222.js"><link rel="prefetch" href="/assets/js/92.2f121267.js"><link rel="prefetch" href="/assets/js/93.80f9c1cd.js"><link rel="prefetch" href="/assets/js/94.b78709e4.js"><link rel="prefetch" href="/assets/js/95.71adfe21.js"><link rel="prefetch" href="/assets/js/96.41c9152f.js"><link rel="prefetch" href="/assets/js/97.b80c4bf0.js"><link rel="prefetch" href="/assets/js/98.e0a4d08a.js"><link rel="prefetch" href="/assets/js/99.38bc76b8.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.594b47db.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">左小白的前端笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/git.html" class="nav-link">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/git.html" class="nav-link">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>JS/ES6</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading"><span>ES6标准入门(第三版)笔记</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable is-sub-group depth-1"><p class="sidebar-heading open"><span>JavaScript高级程序设计(第三版)笔记</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/js/ad3/js-ad3-1.html" class="sidebar-link">1. JavaScript简介</a></li><li><a href="/js/ad3/js-ad3-2.html" class="sidebar-link">2. 在HTML中使用JavaScript</a></li><li><a href="/js/ad3/js-ad3-3.html" class="sidebar-link">3. ECMAScript基本概念</a></li><li><a href="/js/ad3/js-ad3-4.html" class="sidebar-link">4. 变量、作用域和内存问题</a></li><li><a href="/js/ad3/js-ad3-5.html" class="sidebar-link">5. 引用类型</a></li><li><a href="/js/ad3/js-ad3-6.html" class="sidebar-link">6. 面向对象程序设计</a></li><li><a href="/js/ad3/js-ad3-7.html" class="sidebar-link">7. 函数表达式与闭包</a></li><li><a href="/js/ad3/js-ad3-8.html" class="sidebar-link">8. BOM</a></li><li><a href="/js/ad3/js-ad3-9.html" class="sidebar-link">9. 用户代理检测</a></li><li><a href="/js/ad3/js-ad3-10.html" class="sidebar-link">10. DOM</a></li><li><a href="/js/ad3/js-ad3-11.html" class="sidebar-link">11. DOM扩展</a></li><li><a href="/js/ad3/js-ad3-12.html" aria-current="page" class="active sidebar-link">12. DOM2和DOM3</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#dom变化" class="sidebar-link">DOM变化</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#针对xml命名空间的变化" class="sidebar-link">针对XML命名空间的变化</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#其他方面的变化" class="sidebar-link">其他方面的变化</a></li></ul></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#样式" class="sidebar-link">样式</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#访问元素的样式" class="sidebar-link">访问元素的样式</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#操作样式表" class="sidebar-link">操作样式表</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#元素大小" class="sidebar-link">元素大小</a></li></ul></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#dom遍历" class="sidebar-link">DOM遍历</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#nodeiterator" class="sidebar-link">NodeIterator</a></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#treewalker" class="sidebar-link">TreeWalker</a></li></ul></li><li class="sidebar-sub-header"><a href="/js/ad3/js-ad3-12.html#_4-范围-range" class="sidebar-link">4.范围(range)</a></li></ul></li><li><a href="/js/ad3/js-ad3-13.html" class="sidebar-link">13. 事件</a></li><li><a href="/js/ad3/js-ad3-14.html" class="sidebar-link">14. 表单脚本</a></li><li><a href="/js/ad3/js-ad3-15.html" class="sidebar-link">15. 使用Canvas绘图</a></li><li><a href="/js/ad3/js-ad3-16.html" class="sidebar-link">16. HTML脚本编程</a></li><li><a href="/js/ad3/js-ad3-17.html" class="sidebar-link">17. 错误处理与调试</a></li><li><a href="/js/ad3/js-ad3-20.html" class="sidebar-link">20. JSON数据格式</a></li><li><a href="/js/ad3/js-ad3-21.html" class="sidebar-link">21. Ajax与Comet</a></li><li><a href="/js/ad3/js-ad3-22.html" class="sidebar-link">22. 高级技巧</a></li><li><a href="/js/ad3/js-ad3-23.html" class="sidebar-link">23. 离线应用与客户端存储</a></li><li><a href="/js/ad3/js-ad3-24.html" class="sidebar-link">24. 最佳实践</a></li><li><a href="/js/ad3/js-ad3-25.html" class="sidebar-link">25. 新兴的API</a></li></ul></section></li><li><a href="/js/js-dom-art.html" class="sidebar-link">JavaScript DOM编程艺术(第二版)笔记</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="_12-dom2和dom3"><a href="#_12-dom2和dom3" class="header-anchor">#</a> 12. DOM2和DOM3</h1> <p>DOM1级主要定义的是HTML和XML文档的底层结构，DOM2和DOM3级则在这个结构的基础上引入更多的交互能力，支持更高级的XML特性</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// DOM Level 2 Core - 在DOM1核心基础上构建，为节点添加更多方法和属性</span>
+<span class="token comment">// DOM Level 2 Views - 为文档定义了基于样式信息的不同视图</span>
+<span class="token comment">// DOM Level 2 Events  - DOM2事件在第13章讨论</span>
+<span class="token comment">// DOM Level 2 style - 定义了如何以编程的方式来访问和改变CSS样式</span>
+<span class="token comment">// DOM Level 2 Traveral and Range - 引入遍历DOM文档和选择其特定部分的新接口</span>
+<span class="token comment">// DOM Level 2 HTML - 在DOM1级HTML基础上构建，添加了更多属性方法和新接口</span>
+</code></pre></div><h2 id="dom变化"><a href="#dom变化" class="header-anchor">#</a> DOM变化</h2> <p>DOM2级和DOM3级目的在于扩展DOM API，以满足操作XML的所有需求，同时提供更好的错误处理及特性检测能力。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 确定浏览器是否支持某些DOM模块，返回true，则支持，否则表示不支持</span>
+document<span class="token punctuation">.</span>implementation<span class="token punctuation">.</span><span class="token function">hasFeature</span><span class="token punctuation">(</span><span class="token string">'Core'</span><span class="token punctuation">,</span> <span class="token string">'2.0'</span><span class="token punctuation">)</span>
+document<span class="token punctuation">.</span>implementation<span class="token punctuation">.</span><span class="token function">hasFeature</span><span class="token punctuation">(</span><span class="token string">'Core'</span><span class="token punctuation">,</span> <span class="token string">'3.0'</span><span class="token punctuation">)</span>
+document<span class="token punctuation">.</span>implementation<span class="token punctuation">.</span><span class="token function">hasFeature</span><span class="token punctuation">(</span><span class="token string">'HTML'</span><span class="token punctuation">,</span> <span class="token string">'2.0'</span><span class="token punctuation">)</span>
+document<span class="token punctuation">.</span>implementation<span class="token punctuation">.</span><span class="token function">hasFeature</span><span class="token punctuation">(</span><span class="token string">'Views'</span><span class="token punctuation">,</span> <span class="token string">'2.0'</span><span class="token punctuation">)</span>
+document<span class="token punctuation">.</span>implementation<span class="token punctuation">.</span><span class="token function">hasFeature</span><span class="token punctuation">(</span><span class="token string">'XML'</span><span class="token punctuation">,</span> <span class="token string">'2.0'</span><span class="token punctuation">)</span>
+document<span class="token punctuation">.</span>implementation<span class="token punctuation">.</span><span class="token function">hasFeature</span><span class="token punctuation">(</span><span class="token string">'CSS2'</span><span class="token punctuation">,</span> <span class="token string">'2.0'</span><span class="token punctuation">)</span>
+
+</code></pre></div><h3 id="针对xml命名空间的变化"><a href="#针对xml命名空间的变化" class="header-anchor">#</a> 针对XML命名空间的变化</h3> <p>针对XML命名空间的变化(p306), createElementNS()等，createElementNS() ，一般尾部带有NS的，基本就是命名空间相关的。</p> <h3 id="其他方面的变化"><a href="#其他方面的变化" class="header-anchor">#</a> 其他方面的变化</h3> <p>DOM的其他部分在&quot;DOM2级核心&quot;中也发生了一些变化，这些变化与XML命名空间无关，而是更倾向于确保API的可靠性及完整性。</p> <h4 id="documenttype类型的变化"><a href="#documenttype类型的变化" class="header-anchor">#</a> DocumentType类型的变化</h4> <p>DocumentType类型新增了三个属性： publicId, systemId, internalSubset ，document.doctype.xxx</p> <h4 id="document类型变化"><a href="#document类型变化" class="header-anchor">#</a> Document类型变化</h4> <p>新增importNode 类似cloneNode()</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> newNode <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">importNode</span><span class="token punctuation">(</span>oldNode<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 导入节点以及其所有子节点</span>
+document<span class="token punctuation">.</span><span class="token function">importNode</span><span class="token punctuation">(</span>oldNode<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 仅复制本节点，不包含子节点</span>
+</code></pre></div><ul><li>DOM3级方法，比较节点isSameNode()、isEqualNode()</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// A.isSameNode(B)，两节点是否引用的是同一个对象</span>
+<span class="token comment">// A.isEqualNode(B) 两节点是否有相同的类型、相同的属性等。</span>
+<span class="token keyword">var</span> div1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+div1<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'css'</span><span class="token punctuation">,</span> <span class="token string">'box'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">var</span> div2 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+div2<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'css'</span><span class="token punctuation">,</span> <span class="token string">'box'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+div1<span class="token punctuation">.</span><span class="token function">isSameNode</span><span class="token punctuation">(</span>div1<span class="token punctuation">)</span> <span class="token comment">// true</span>
+div1<span class="token punctuation">.</span><span class="token function">isSameNode</span><span class="token punctuation">(</span>div2<span class="token punctuation">)</span> <span class="token comment">// false</span>
+div1<span class="token punctuation">.</span><span class="token function">isEqualNode</span><span class="token punctuation">(</span>div2<span class="token punctuation">)</span> <span class="token comment">// true</span>
+
+</code></pre></div><h4 id="node类型的变化"><a href="#node类型的变化" class="header-anchor">#</a> Node类型的变化</h4> <ul><li>新增isSupported('HTML', &quot;2.0&quot;)，和hasFeature()方法类似</li> <li>DOM3级针对为DOM节点添加额外数据引入了新方法setUserData() 浏览器暂未实现 https://developer.mozilla.org/zh-CN/docs/Web/API/Node/setUserData</li></ul> <h4 id="框架的变化"><a href="#框架的变化" class="header-anchor">#</a> 框架的变化</h4> <p>框架和内嵌框架分别用HTMLFrameElement和HTMLIFrameElement表示，它们在DOM2级中新增了一个属性 contentDocument, 指向框架内容的文档对象。ie8+</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> iframe <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">&quot;myIframe&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> iframeDoc <span class="token operator">=</span> iframe<span class="token punctuation">.</span>contentDocument <span class="token operator">||</span> iframe<span class="token punctuation">.</span>contentWindow<span class="token punctuation">.</span>document
+</code></pre></div><h2 id="样式"><a href="#样式" class="header-anchor">#</a> 样式</h2> <p>js可以通过 element.style 可以访问和设置css样式，<strong>通过element.style获取、操作的只能是内联样式。</strong></p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> myDiv <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+myDiv<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>document<span class="token punctuation">.</span><span class="token function">createTextNode</span><span class="token punctuation">(</span><span class="token string">'测试'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>myDiv<span class="token punctuation">)</span>
+
+myDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>backgroundColor <span class="token operator">=</span> <span class="token string">'red'</span><span class="token punctuation">;</span>
+myDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>width <span class="token operator">=</span> <span class="token string">'100px'</span><span class="token punctuation">;</span>
+myDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>height <span class="token operator">=</span> <span class="token string">'200px'</span><span class="token punctuation">;</span> <span class="token comment">//标准模式下，style.width设置为20，会导致被忽略，因为没有度量单位</span>
+
+myDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>border <span class="token operator">=</span> <span class="token string">'1px solid black'</span><span class="token punctuation">;</span>
+
+</code></pre></div><h3 id="访问元素的样式"><a href="#访问元素的样式" class="header-anchor">#</a> 访问元素的样式</h3> <h4 id="dom样式属性和方法"><a href="#dom样式属性和方法" class="header-anchor">#</a> DOM样式属性和方法</h4> <blockquote><p>注意：style对象只能获取和操作内联样式</p></blockquote> <ul><li>cssText 读：获取元素的内联样式，写：设置元素的内联样式，非内联样式，值为&quot;&quot;</li> <li>length  获取内联style样式个数。无法写，赋值会无效</li> <li>getPropertyPriority() 获取css属性的优先级，如果是!important 返回 &quot;important&quot; 否则返回&quot;&quot;</li> <li>getProperyValue() 获取css属性的值</li> <li>item(index) 获取对应的样式属性</li> <li>setProperty()  设置css属性</li> <li>removeProperty()  移除css属性</li></ul> <div class="language-html extra-class"><pre class="language-html"><code><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>utf-8<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>测试Style<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span><span class="token style"><span class="token language-css">
+			<span class="token selector">#normal-div</span> <span class="token punctuation">{</span>
+				<span class="token property">color</span><span class="token punctuation">:</span> blue<span class="token punctuation">;</span>
+				<span class="token property">background-color</span><span class="token punctuation">:</span> #f00<span class="token punctuation">;</span>
+				<span class="token property">display</span><span class="token punctuation">:</span>block<span class="token punctuation">;</span>
+			<span class="token punctuation">}</span>
+		</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>inner-div<span class="token punctuation">&quot;</span></span><span class="token style-attr language-css"><span class="token attr-name"> <span class="token attr-name">style</span></span><span class="token punctuation">=&quot;</span><span class="token attr-value"><span class="token property">color</span><span class="token punctuation">:</span>red<span class="token punctuation">;</span><span class="token property">width</span><span class="token punctuation">:</span>100px<span class="token punctuation">;</span><span class="token property">height</span><span class="token punctuation">:</span> 200px<span class="token punctuation">;</span><span class="token property">font-size</span><span class="token punctuation">:</span>29px</span><span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+			内联样式div
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>normal-div<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+			正常样式
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+		  <span class="token keyword">let</span> innerDiv <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'inner-div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		  <span class="token keyword">let</span> normalDiv <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'normal-div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		  
+		  <span class="token comment">// 1. e.style.cssText 读：获取元素的内联样式，写：设置元素的内联样式，非内联样式，值为&quot;&quot;</span>
+		  <span class="token function">alert</span><span class="token punctuation">(</span>innerDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText<span class="token punctuation">)</span> <span class="token comment">// &quot;color: red; width: 100px; height: 200px; font-size: 29px;&quot;</span>
+		  <span class="token function">alert</span><span class="token punctuation">(</span>normalDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText<span class="token punctuation">)</span> <span class="token comment">// &quot;&quot;</span>
+		  normalDiv<span class="token punctuation">.</span>cssText <span class="token operator">=</span> <span class="token string">'color:white'</span> <span class="token comment">// 设置内联样式</span>
+		  
+		  <span class="token comment">// 2. e.style.length  获取内联style样式个数。无法写，赋值会无效</span>
+		  <span class="token function">alert</span><span class="token punctuation">(</span>innerDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token comment">// 4</span>
+		  normalDiv<span class="token punctuation">.</span>cssText <span class="token operator">=</span> <span class="token string">''</span> <span class="token comment">// 设置内联样式</span>
+		  <span class="token function">alert</span><span class="token punctuation">(</span>normalDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token comment">// 0</span>
+		  
+		  <span class="token comment">// 3. e.style[0] 或者 e.style.item(0) 遍历style</span>
+		  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> innerDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		    <span class="token keyword">let</span> propertyName <span class="token operator">=</span> innerDiv<span class="token punctuation">.</span>style<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token comment">// 或者 innerDiv.style.item(i), color、width、height</span>
+		    <span class="token function">alert</span><span class="token punctuation">(</span>propertyName<span class="token punctuation">)</span>
+		  <span class="token punctuation">}</span>
+		  
+		  <span class="token comment">// 4. e.style.getPropertyValue(propertyName) 获取css属性的值</span>
+		  <span class="token comment">//    e.style.getPropertyPriority(propertyName) 获取css属性的优先级，如果是!important 返回 &quot;important&quot; 否则返回&quot;&quot;</span>
+		  <span class="token keyword">let</span> pn <span class="token operator">=</span> innerDiv<span class="token punctuation">.</span>style<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// color</span>
+		  innerDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span><span class="token function">getPropertyValue</span><span class="token punctuation">(</span>pn<span class="token punctuation">)</span> <span class="token comment">// &quot;red&quot;</span>
+		  innerDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span><span class="token function">getPropertyPriority</span><span class="token punctuation">(</span>pn<span class="token punctuation">)</span> <span class="token comment">// &quot;&quot;</span>
+		  
+		  <span class="token comment">// 5. e.style.setProperty(pn, value, priority) 设置css属性，e.style.removeProperty(pn) 移除css属性</span>
+		  normalDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">'color'</span><span class="token punctuation">,</span> <span class="token string">'white'</span><span class="token punctuation">,</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">)</span> <span class="token comment">// normalDiV.style.cssText  // &quot;color: white&quot;</span>
+		  normalDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span><span class="token function">setProperty</span><span class="token punctuation">(</span><span class="token string">'font-size'</span><span class="token punctuation">,</span> <span class="token string">'20px'</span><span class="token punctuation">,</span> <span class="token string">&quot;important&quot;</span><span class="token punctuation">)</span> <span class="token comment">// &quot;color: white; font-size: 20px !important;&quot;</span>
+		  normalDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span><span class="token function">getPropertyPriority</span><span class="token punctuation">(</span><span class="token string">'font-size'</span><span class="token punctuation">)</span> <span class="token comment">// &quot;important&quot;</span>
+		  normalDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span><span class="token function">removeProperty</span><span class="token punctuation">(</span><span class="token string">'color'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 移除对应的css属性</span>
+		</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h4 id="访问计算后的样式"><a href="#访问计算后的样式" class="header-anchor">#</a> 访问计算后的样式</h4> <p>由于style对象只能读取内联的样式。&lt;style&gt;标签与内联样式计算后的样式可以通过document.defaultView.getComputedStyle来获取</p> <ul><li>获取所有样式属性（只读） document.defaultView.getComputedStyle(element, null)，第二个参数是伪元素字符串如&quot;:after&quot;,如果不需要，就传null</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">let</span> innerDiv <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'inner-div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> normalDiv <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'normal-div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+normalDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText <span class="token operator">=</span> <span class="token string">''</span><span class="token punctuation">;</span>
+
+<span class="token keyword">let</span> computedStyle <span class="token operator">=</span> document<span class="token punctuation">.</span>defaultView<span class="token punctuation">.</span><span class="token function">getComputedStyle</span><span class="token punctuation">(</span>normalDiv<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span> 
+innerDiv<span class="token punctuation">.</span>style<span class="token punctuation">.</span>color <span class="token comment">// &quot;&quot;</span>
+computedStyle<span class="token punctuation">.</span>color <span class="token comment">// rgb(0,0,255)</span>
+
+</code></pre></div><h3 id="操作样式表"><a href="#操作样式表" class="header-anchor">#</a> 操作样式表</h3> <blockquote><p>可以获取、操作&lt;style&gt;元素，<link>导入的样式信息，他们里面的每一个样式信息都是一条规则，可以进行读取和设置</p></blockquote> <p>CSSStyleSheet类型表示的是样式表，包括以下两个部分：</p> <ul><li>HTMLLinkElement类型，&lt;link&gt;元素导入的样式</li> <li>HTMLStyleElement类型，&lt;style&gt;元素中定义的样式</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// document.styleSheets返回的CSSStyleSheet对象包含：\&lt;style\&gt;元素和rel特性为&quot;stylesheet&quot;的link元素引入的样式表。</span>
+document<span class="token punctuation">.</span>styleSheets <span class="token comment">// StyleSheetList (CSSStyleSheet对象数组)，包含link、和style标签里的样式信息</span>
+document<span class="token punctuation">.</span>styleSheets<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>rules <span class="token comment">// CSSRuleList (CSSStyleRule对象数组) ，记录了css文件或style标签里的样式信息List</span>
+document<span class="token punctuation">.</span>styleSheets<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>rules<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token comment">// CSSStyleRule 对象，每一条记录，可以通过.selectorText和.cssText 获取到对应的选择器和样式信息</span>
+</code></pre></div><p>操作规则（获取、新增、删除）示例：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/*
+style例子：
+&lt;style&gt;
+  #normal-div {
+    color: blue;
+    background-color: #f00;
+    display:block;
+  }
+  div.box {
+    width: 100px;
+    height: 200px;
+    background-color: blue;
+  }
+&lt;/style&gt;
+*/</span>
+<span class="token comment">// 1.获取 &lt;style&gt; 里的样式信息CSSRule</span>
+<span class="token keyword">var</span> rules <span class="token operator">=</span> document<span class="token punctuation">.</span>styleSheets<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>rules<span class="token punctuation">;</span> <span class="token comment">// 获取第一个&lt;style&gt;里的样式信息  等价于.cssRules</span>
+rules<span class="token punctuation">.</span>length <span class="token comment">// 2   ，分别为 #normal-div 及 div.box 的相关样式</span>
+rules<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>selectorText <span class="token comment">// &quot;#normal-div&quot;</span>
+rules<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>cssText  <span class="token comment">// &quot;#normal-div { color: blue; background-color: rgb(255, 0, 0); display: block; }&quot;</span>
+rules<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText <span class="token comment">//  &quot;color: blue; background-color: rgb(255, 0, 0); display: block;&quot;</span>
+rules<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>style<span class="token punctuation">.</span>color <span class="token comment">// &quot;blue&quot;</span>
+rules<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>style<span class="token punctuation">.</span>color <span class="token operator">=</span> <span class="token string">'white'</span> <span class="token comment">// 可以直接设置样式</span>
+
+rules<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>selectorText <span class="token comment">// &quot;div.box&quot;</span>
+rules<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>cssText  <span class="token comment">// &quot;div.box { width: 100px; height: 200px; background-color: blue; }&quot;</span>
+rules<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>style<span class="token punctuation">.</span>cssText <span class="token comment">// &quot;width: 100px; height: 200px; background-color: blue;&quot;</span>
+rules<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>style<span class="token punctuation">.</span>width <span class="token comment">// &quot;100px&quot;</span>
+
+<span class="token comment">// 2. 创建CSSRule</span>
+<span class="token keyword">var</span> sheet <span class="token operator">=</span> document<span class="token punctuation">.</span>styleSheets<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token comment">// sheet.insertRule(cssText, pos)</span>
+sheet<span class="token punctuation">.</span><span class="token function">insertRule</span><span class="token punctuation">(</span><span class="token string">&quot;body {background-color: yellow;}&quot;</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>  <span class="token comment">// 页面被改为yellow背景</span>
+sheet<span class="token punctuation">.</span>rules<span class="token punctuation">.</span>length <span class="token comment">// 3</span>
+
+<span class="token comment">// 3. 移除CSSRule</span>
+sheet<span class="token punctuation">.</span><span class="token function">deleteRule</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment">// 删除一个rules里面的规则</span>
+</code></pre></div><h3 id="元素大小"><a href="#元素大小" class="header-anchor">#</a> 元素大小</h3> <p>从内到外：元素内容 - 内边距 - 边框 - 外边距</p> <h4 id="偏移量"><a href="#偏移量" class="header-anchor">#</a> 偏移量</h4> <ul><li>offsetHeight  元素内容 + 内边距(padding) + 边框(border)</li> <li>offsetWidth   元素内容 + 内边距(padding) + 边框(border)</li> <li>offsetTop     元素边框到父元素边框顶部之间的距离</li> <li>offsetLeft    元素边框到父元素边框左侧部之间的距离</li></ul> <h4 id="客户区大小"><a href="#客户区大小" class="header-anchor">#</a> 客户区大小</h4> <ul><li>clientHeight  元素内容 + 内边距</li> <li>clientWidth   元素内容 + 内边距</li></ul> <h4 id="滚动大小"><a href="#滚动大小" class="header-anchor">#</a> 滚动大小</h4> <p>结合滚动事件监听可以做一个页面百分比显示模块</p> <ul><li>scrollHeight  整个区域的高度</li> <li>scrollWidth  整个区域的宽度</li> <li>scrollLeft 被隐藏区域左侧的像素宽度</li> <li>scrollTop  被隐藏区域顶部的像素宽度</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// &lt;div id=&quot;inner-div&quot; style=&quot;height: 100px;overflow:scroll;color:red;width:100px;height: 200px;font-size:29px;margin:10px;padding:20px;border:2px solid #ccc;&quot;&gt;</span>
+<span class="token comment">// 	内联样式div</span>
+<span class="token comment">// &lt;/div&gt;</span>
+<span class="token keyword">var</span> k2 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'inner-div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+k2<span class="token punctuation">.</span>offsetHeight <span class="token comment">// 144 边框(border) + 内边距(padding) + 元素height</span>
+k2<span class="token punctuation">.</span>offsetWidth <span class="token comment">// 144 边框(border) + 内边距(padding) + 元素width</span>
+k2<span class="token punctuation">.</span>offsetLeft <span class="token comment">// 距离左边的距离</span>
+k2<span class="token punctuation">.</span>offsetTop <span class="token comment">// 距离顶部的距离</span>
+
+<span class="token comment">// clientWidth 内边距(padding) + 元素width</span>
+<span class="token comment">// clientHeight 内边距(padding) + 元素height</span>
+
+k2<span class="token punctuation">.</span>scrollHeight <span class="token comment">// 703  实际可见为100左右</span>
+k2<span class="token punctuation">.</span>scrollTop <span class="token comment">// 0 改变该参数，可以设置滚动位置</span>
+
+k2<span class="token punctuation">.</span>scrollWidth <span class="token comment">// 横向滚动相关</span>
+k2<span class="token punctuation">.</span>scrollLeft  <span class="token comment">// 可以设置横向滚动位置</span>
+</code></pre></div><ul><li>element.getBoundingClientRect()，返回一个矩形对象，left、top、right、bottom，元素相对于视窗的位置</li></ul> <h2 id="dom遍历"><a href="#dom遍历" class="header-anchor">#</a> DOM遍历</h2> <blockquote><p>NodeIterator, TreeWalker</p></blockquote> <div class="language-html extra-class"><pre class="language-html"><code><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>utf-8<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>Example<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>b</span><span class="token punctuation">&gt;</span></span>Hello<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>b</span><span class="token punctuation">&gt;</span></span> world!<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>sss
+</code></pre></div><p>遍历节点顺序：</p> <p><img src="/images/js/domIterator.png" alt="DOM Iterator"></p> <h3 id="nodeiterator"><a href="#nodeiterator" class="header-anchor">#</a> NodeIterator</h3> <ul><li>NodeIterator，节点遍历器，document.createNodeIterator()方法可以创建NodeIterator实列，然后用nextNode(), previousNode()，访问前一个节点，或后一个节点。更多参见https://www.cnblogs.com/venoral/archive/2016/05/16/5499358.html</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// document.createNodeIterator(root, whatToShow, filter, entityReferenceExpansion)</span>
+<span class="token comment">// - root [必选] 作为DOM树中搜索起点的元素节点 </span>
+<span class="token comment">// = hatToShow [可选] 表示需要访问哪些节点？可以过滤节点，可选值值如下：除了SHOW_ALL，其他的可以用 | 来组合多个</span>
+<span class="token comment">//   NodeFilter.SHOW_ALL: 显示所有类型的节点</span>
+<span class="token comment">//   NodeFilter.SHOW_ELEMENT：显示元素节点</span>
+<span class="token comment">//   NodeFilter.SHOW_TEXT：显示文本节点</span>
+<span class="token comment">//   NodeFilter.SHOW_COMMENT：显示注释节点</span>
+<span class="token comment">//   NodeFilter.SHOW_DOCUMENT：显示文档节点</span>
+<span class="token comment">//   NodeFilter.SHOW_DOCUMENT_TYPE：显示文档类型节点</span>
+<span class="token comment">//</span>
+<span class="token comment">// - filter [可选] 一个NodeFilter对象，</span>
+<span class="token comment">// - entiryReferenceExpansion [可选] 布尔值，是否要扩展实体引用，不适合</span>
+
+<span class="token keyword">let</span> iterator <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createNodeIterator</span><span class="token punctuation">(</span>document<span class="token punctuation">)</span>  <span class="token comment">// 第二个字段等同于 NodeFilter.SHOW_ALL</span>
+<span class="token keyword">let</span> node <span class="token operator">=</span> iterator<span class="token punctuation">.</span><span class="token function">nextNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">while</span> <span class="token punctuation">(</span>node <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">nodeType: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeType<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, nodeName: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, nodeValue: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeValue<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, tagName: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>tagName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  node <span class="token operator">=</span> iterator<span class="token punctuation">.</span><span class="token function">nextNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 所有节点，包含doctype、回车空的textNode</span>
+<span class="token comment">// nodeType: 9, nodeName: #document, nodeValue: null, tagName: undefined</span>
+<span class="token comment">// nodeType: 10, nodeName: html, nodeValue: null, tagName: undefined</span>
+<span class="token comment">// nodeType: 1, nodeName: HTML, nodeValue: null, tagName: HTML</span>
+<span class="token comment">// nodeType: 1, nodeName: HEAD, nodeValue: null, tagName: HEAD</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue: </span>
+<span class="token comment">// 		, tagName: undefined</span>
+<span class="token comment">// nodeType: 1, nodeName: META, nodeValue: null, tagName: META</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue: </span>
+<span class="token comment">// 		, tagName: undefined</span>
+<span class="token comment">// nodeType: 1, nodeName: TITLE, nodeValue: null, tagName: TITLE</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue: Example, tagName: undefined</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue: </span>
+<span class="token comment">// 	, tagName: undefined</span>
+<span class="token comment">// nodeType: 1, nodeName: BODY, nodeValue: null, tagName: BODY</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue: </span>
+<span class="token comment">// 		, tagName: undefined</span>
+<span class="token comment">// nodeType: 1, nodeName: P, nodeValue: null, tagName: P</span>
+<span class="token comment">// nodeType: 1, nodeName: B, nodeValue: null, tagName: B</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue: Hello, tagName: undefined</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue:  world!, tagName: undefined</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue: </span>
+<span class="token comment">// 	</span>
+<span class="token comment">// , tagName: undefined</span>
+<span class="token comment">// null</span>
+
+
+<span class="token keyword">let</span> filter <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function-variable function">acceptNode</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">node</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 如果是空的文本节点，过滤掉</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>node<span class="token punctuation">.</span>nodeType <span class="token operator">===</span> <span class="token number">3</span> <span class="token operator">&amp;&amp;</span> node<span class="token punctuation">.</span>nodeValue<span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token string">''</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> NodeFilter<span class="token punctuation">.</span><span class="token constant">FILTER_SKIP</span><span class="token punctuation">;</span> <span class="token comment">// 跳过该节点</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> NodeFilter<span class="token punctuation">.</span><span class="token constant">FILTER_ACCEPT</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> iterator2 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createNodeIterator</span><span class="token punctuation">(</span>document<span class="token punctuation">,</span> NodeFilter<span class="token punctuation">.</span><span class="token constant">SHOW_ELEMENT</span> <span class="token operator">|</span> NodeFilter<span class="token punctuation">.</span><span class="token constant">SHOW_TEXT</span><span class="token punctuation">,</span> filter<span class="token punctuation">)</span> <span class="token comment">// 只显示元素节点和文本节点</span>
+<span class="token keyword">let</span> node <span class="token operator">=</span> iterator2<span class="token punctuation">.</span><span class="token function">nextNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 第一个nextNode() 会返回根节点。遍历到最后一个节点，会是null</span>
+<span class="token keyword">while</span> <span class="token punctuation">(</span>node <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">nodeType: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeType<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, nodeName: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, nodeValue: '</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeValue<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">', tagName: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>tagName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  node <span class="token operator">=</span> iterator2<span class="token punctuation">.</span><span class="token function">nextNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// nodeType: 1, nodeName: HTML, nodeValue: 'null', tagName: HTML</span>
+<span class="token comment">// nodeType: 1, nodeName: HEAD, nodeValue: 'null', tagName: HEAD</span>
+<span class="token comment">// nodeType: 1, nodeName: META, nodeValue: 'null', tagName: META</span>
+<span class="token comment">// nodeType: 1, nodeName: TITLE, nodeValue: 'null', tagName: TITLE</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue: 'Example', tagName: undefined</span>
+<span class="token comment">// nodeType: 1, nodeName: BODY, nodeValue: 'null', tagName: BODY</span>
+<span class="token comment">// nodeType: 1, nodeName: P, nodeValue: 'null', tagName: P</span>
+<span class="token comment">// nodeType: 1, nodeName: B, nodeValue: 'null', tagName: B</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue: 'Hello', tagName: undefined</span>
+<span class="token comment">// nodeType: 3, nodeName: #text, nodeValue: ' world!', tagName: undefined</span>
+<span class="token comment">// null</span>
+
+
+<span class="token keyword">let</span> iterator3 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createNodeIterator</span><span class="token punctuation">(</span>document<span class="token punctuation">,</span> NodeFilter<span class="token punctuation">.</span><span class="token constant">SHOW_ELEMENT</span><span class="token punctuation">)</span> <span class="token comment">// 只显示元素节点</span>
+<span class="token keyword">let</span> node <span class="token operator">=</span> iterator3<span class="token punctuation">.</span><span class="token function">nextNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 第一个nextNode() 会返回根节点。遍历到最后一个节点，会是null</span>
+<span class="token keyword">while</span> <span class="token punctuation">(</span>node <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">nodeType: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeType<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, nodeName: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, nodeValue: '</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeValue<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">', tagName: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>tagName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  node <span class="token operator">=</span> iterator3<span class="token punctuation">.</span><span class="token function">nextNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// nodeType: 1, nodeName: HTML, nodeValue: 'null', tagName: HTML</span>
+<span class="token comment">// nodeType: 1, nodeName: HEAD, nodeValue: 'null', tagName: HEAD</span>
+<span class="token comment">// nodeType: 1, nodeName: META, nodeValue: 'null', tagName: META</span>
+<span class="token comment">// nodeType: 1, nodeName: TITLE, nodeValue: 'null', tagName: TITLE</span>
+<span class="token comment">// nodeType: 1, nodeName: BODY, nodeValue: 'null', tagName: BODY</span>
+<span class="token comment">// nodeType: 1, nodeName: P, nodeValue: 'null', tagName: P</span>
+<span class="token comment">// nodeType: 1, nodeName: B, nodeValue: 'null', tagName: B</span>
+<span class="token comment">// null</span>
+
+</code></pre></div><h3 id="treewalker"><a href="#treewalker" class="header-anchor">#</a> TreeWalker</h3> <ul><li>TreeWalker，是NodeIterator的一个更高级的版本，支持parentNode(), firstChild(), lastChild(), nextSibling(), previousSibling()，可以用document.createTreewalker()方法创建TreeWalker对象。参数和document.createNodeIterator()一致</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// TreeWalker 里面的filter 新增 NodeFilter.FILTER_REJECT参数</span>
+<span class="token comment">// NodeFilter.FILTER_SKIP  跳过节点，到子树的下一个节点</span>
+<span class="token comment">// NodeFilter.FILTER_REJECT 跳过节点及该节点的整个子树</span>
+<span class="token comment">// NodeFilter.FILTER_ACCEPT 不过滤节点</span>
+<span class="token keyword">let</span> walker <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createTreeWalker</span><span class="token punctuation">(</span>document<span class="token punctuation">,</span> NodeFilter<span class="token punctuation">.</span><span class="token constant">SHOW_ELEMENT</span><span class="token punctuation">)</span>
+<span class="token keyword">let</span> node <span class="token operator">=</span> walker<span class="token punctuation">.</span><span class="token function">nextNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 第一个nextNode() 会返回根节点。遍历到最后一个节点，会是null</span>
+<span class="token keyword">while</span> <span class="token punctuation">(</span>node <span class="token operator">!==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">nodeType: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeType<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, nodeName: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">, nodeValue: '</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>nodeValue<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">', tagName: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>node<span class="token punctuation">.</span>tagName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  node <span class="token operator">=</span> walker<span class="token punctuation">.</span><span class="token function">nextNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">// nodeType: 1, nodeName: HTML, nodeValue: 'null', tagName: HTML</span>
+<span class="token comment">// nodeType: 1, nodeName: HEAD, nodeValue: 'null', tagName: HEAD</span>
+<span class="token comment">// nodeType: 1, nodeName: META, nodeValue: 'null', tagName: META</span>
+<span class="token comment">// nodeType: 1, nodeName: TITLE, nodeValue: 'null', tagName: TITLE</span>
+<span class="token comment">// nodeType: 1, nodeName: BODY, nodeValue: 'null', tagName: BODY</span>
+<span class="token comment">// nodeType: 1, nodeName: P, nodeValue: 'null', tagName: P</span>
+<span class="token comment">// nodeType: 1, nodeName: B, nodeValue: 'null', tagName: B</span>
+<span class="token comment">// null</span>
+
+<span class="token comment">// walker.firstChild()</span>
+<span class="token comment">// walker.nextSibling()</span>
+<span class="token comment">// walker.currentNode // 当前节点，给该节点赋值，可以改变起点。</span>
+</code></pre></div><h2 id="_4-范围-range"><a href="#_4-范围-range" class="header-anchor">#</a> 4.范围(range)</h2> <p>DOM2级在Document类型中定义了createRange()方法。返回Range对象。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">let</span> range <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span> 
+range<span class="token punctuation">.</span>startContainer <span class="token comment">// 包含范围起点的节点。即选区中的第一个节点的父节点。就是docuemnt  </span>
+<span class="token comment">// range.startContainer === document // true</span>
+
+</code></pre></div><ul><li>用DOM范围实现简单选择</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// &lt;body&gt;</span>
+<span class="token comment">//   &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;Hello&lt;/b&gt; world!&lt;/p&gt;</span>
+<span class="token comment">// &lt;/body&gt;</span>
+
+<span class="token keyword">let</span> range1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> range2 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> p1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'p1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+range1<span class="token punctuation">.</span><span class="token function">selectNode</span><span class="token punctuation">(</span>p1<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// range1 包含 &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;Hello&lt;/b&gt; world!&lt;/p&gt;</span>
+range2<span class="token punctuation">.</span><span class="token function">selectNodeContents</span><span class="token punctuation">(</span>p1<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// range2 包含 &lt;b&gt;Hello&lt;/b&gt; world!</span>
+</code></pre></div><ul><li>用DOM范围实现复杂选择</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">let</span> p1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'p1'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    helloNode <span class="token operator">=</span> p1<span class="token punctuation">.</span>firstChild<span class="token punctuation">.</span>firstChild<span class="token punctuation">,</span> <span class="token comment">// &quot;hello&quot;</span>
+    worldNode <span class="token operator">=</span> p1<span class="token punctuation">.</span>lastChild<span class="token punctuation">;</span> <span class="token comment">// &quot; world!&quot; textNode</span>
+    
+<span class="token keyword">let</span> range <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">setStart</span><span class="token punctuation">(</span>helloNode<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">setEnd</span><span class="token punctuation">(</span>worldNode<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// rang   &quot;llo&lt;/b&gt; wo&quot;</span>
+</code></pre></div><ul><li>操作DOM范围中的内容</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 1. 删除范围中的文本内容 deleteContents()</span>
+<span class="token keyword">let</span> p1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'p1'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    helloNode <span class="token operator">=</span> p1<span class="token punctuation">.</span>firstChild<span class="token punctuation">.</span>firstChild<span class="token punctuation">;</span> <span class="token comment">// &quot;hello&quot;</span>
+    worldNode <span class="token operator">=</span> p1<span class="token punctuation">.</span>lastChild<span class="token punctuation">;</span> <span class="token comment">// &quot; world!&quot; textNode</span>
+    
+<span class="token keyword">let</span> range <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">setStart</span><span class="token punctuation">(</span>helloNode<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">setEnd</span><span class="token punctuation">(</span>worldNode<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// rang   &quot;llo&lt;/b&gt; wo&quot;</span>
+range<span class="token punctuation">.</span><span class="token function">deleteContents</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;He&lt;/b&gt;rld!&lt;/p&gt;</span>
+
+<span class="token comment">// 2. 删除范围中的文本内容，并返回对应的文档片段 extractContents()</span>
+<span class="token keyword">let</span> p1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'p1'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    helloNode <span class="token operator">=</span> p1<span class="token punctuation">.</span>firstChild<span class="token punctuation">.</span>firstChild<span class="token punctuation">;</span> <span class="token comment">// &quot;hello&quot;</span>
+    worldNode <span class="token operator">=</span> p1<span class="token punctuation">.</span>lastChild<span class="token punctuation">;</span> <span class="token comment">// &quot; world!&quot; textNode</span>
+    
+<span class="token keyword">let</span> range <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">setStart</span><span class="token punctuation">(</span>helloNode<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">setEnd</span><span class="token punctuation">(</span>worldNode<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// rang   &quot;llo&lt;/b&gt; wo&quot;</span>
+<span class="token keyword">let</span> fragment <span class="token operator">=</span> range<span class="token punctuation">.</span><span class="token function">extractContents</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+p1<span class="token punctuation">.</span>parentNode<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>fragment<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;He&lt;/b&gt;rld!&lt;/p&gt;</span>
+<span class="token comment">// &lt;b&gt;llo&lt;/b&gt; wo</span>
+
+<span class="token comment">// 3. range.cloneContents() // 克隆文档片段</span>
+</code></pre></div><ul><li>插入DOM范围中的内容 range.insertNode()，range.surroundContents()</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 1. range.insertNode(), 直接在range中插入内容</span>
+<span class="token keyword">let</span> p1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'p1'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    helloNode <span class="token operator">=</span> p1<span class="token punctuation">.</span>firstChild<span class="token punctuation">.</span>firstChild<span class="token punctuation">;</span> <span class="token comment">// &quot;hello&quot;</span>
+    worldNode <span class="token operator">=</span> p1<span class="token punctuation">.</span>lastChild<span class="token punctuation">;</span> <span class="token comment">// &quot; world!&quot; textNode</span>
+    
+<span class="token keyword">let</span> range <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">setStart</span><span class="token punctuation">(</span>helloNode<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">setEnd</span><span class="token punctuation">(</span>worldNode<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// rang   &quot;llo&lt;/b&gt; wo&quot;</span>
+
+<span class="token keyword">let</span> span <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'span'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+span<span class="token punctuation">.</span>style<span class="token punctuation">.</span>color <span class="token operator">=</span> <span class="token string">'red'</span><span class="token punctuation">;</span>
+span<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>document<span class="token punctuation">.</span><span class="token function">createTextNode</span><span class="token punctuation">(</span><span class="token string">'Inserted text'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">insertNode</span><span class="token punctuation">(</span>span<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;He  插入到这里  llo&lt;/b&gt; world!&lt;/p&gt;</span>
+<span class="token comment">// html 内容</span>
+<span class="token comment">// &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;He&lt;span style=&quot;color:red&quot;&gt;Inserted text&lt;/span&gt;llo&lt;/b&gt; world!&lt;/p&gt;</span>
+
+<span class="token comment">// 2. range.surroundContents(), 提取range中的内容，用对应的元素节点包裹，再插入对应的位置</span>
+<span class="token keyword">let</span> p1 <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'p1'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    helloNode <span class="token operator">=</span> p1<span class="token punctuation">.</span>firstChild<span class="token punctuation">.</span>firstChild<span class="token punctuation">;</span> <span class="token comment">// &quot;hello&quot;</span>
+    worldNode <span class="token operator">=</span> p1<span class="token punctuation">.</span>lastChild<span class="token punctuation">;</span> <span class="token comment">// &quot; world!&quot; textNode    </span>
+<span class="token keyword">let</span> range <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">selectNode</span><span class="token punctuation">(</span>helloNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">let</span> span <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'span'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+span<span class="token punctuation">.</span>style<span class="token punctuation">.</span>backgroundColor <span class="token operator">=</span> <span class="token string">'yellow'</span><span class="token punctuation">;</span>
+range<span class="token punctuation">.</span><span class="token function">surroundContents</span><span class="token punctuation">(</span>span<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// &lt;p id=&quot;p1&quot;&gt;&lt;b&gt;&lt;span style=&quot;background-color:yellow&quot;&gt;Hello&lt;/span&gt;&lt;/b&gt; world!&lt;/p&gt;</span>
+
+</code></pre></div><ul><li>折叠DOM范围</li></ul> <div class="language-js extra-class"><pre class="language-js"><code>range<span class="token punctuation">.</span><span class="token function">collapse</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token comment">// 折叠到起点位置</span>
+range<span class="token punctuation">.</span><span class="token function">collapse</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token comment">// 折叠到结束位置</span>
+</code></pre></div><ul><li>比较DOM范围 range1.compareBoundaryPoints(比较方式常量, range2)</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 比较方式常量值，可选如下，如果相等，返回 0，range1的点位于range2的点之前，返回 -1， 如果在之后，返回1</span>
+<span class="token comment">// Range.START_TO_START(0) 比较range1和range2的起点</span>
+<span class="token comment">// Range.START_TO_END(1) 比较range1的起点和range2的终点</span>
+<span class="token comment">// Range.END_TO_END(2) 比较range1和range2的终点</span>
+<span class="token comment">// Range.END_TO_START(3) 比较range1的终点和range2的起点</span>
+</code></pre></div><ul><li>复制DOM范围</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">let</span> newRange <span class="token operator">=</span> range<span class="token punctuation">.</span><span class="token function">cloneRange</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre></div><ul><li>清理DOM 范围</li></ul> <div class="language-js extra-class"><pre class="language-js"><code>range<span class="token punctuation">.</span><span class="token function">detach</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 从文档中分离</span>
+range <span class="token operator">=</span> <span class="token keyword">null</span> <span class="token comment">// 解除引用</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">10/28/2020, 6:32:03 PM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/js/ad3/js-ad3-11.html" class="prev">
+        11. DOM扩展
+      </a></span> <span class="next"><a href="/js/ad3/js-ad3-13.html">
+        13. 事件
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----><!----></div></div>
+    <script src="/assets/js/app.9db0a638.js" defer></script><script src="/assets/js/2.4b3539f1.js" defer></script><script src="/assets/js/65.6be1cbc1.js" defer></script><script src="/assets/js/3.e6a4dd76.js" defer></script>
+  </body>
+</html>

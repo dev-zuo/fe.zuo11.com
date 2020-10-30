@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>数据库编程 | 左小白的前端笔记</title>
+    <meta name="generator" content="VuePress 1.7.1">
+    <link rel="icon" href="/logo.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-152x152.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#3eaf7c">
+    <meta name="description" content="左小白的前端笔记，用于记录、完善个人前端知识体系结构">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileImage" content="/icons/msapplication-icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <link rel="preload" href="/assets/css/0.styles.594b47db.css" as="style"><link rel="preload" href="/assets/js/app.9db0a638.js" as="script"><link rel="preload" href="/assets/js/2.4b3539f1.js" as="script"><link rel="preload" href="/assets/js/14.c0b1490a.js" as="script"><link rel="preload" href="/assets/js/3.e6a4dd76.js" as="script"><link rel="prefetch" href="/assets/js/10.35d8cd15.js"><link rel="prefetch" href="/assets/js/100.01e41ee6.js"><link rel="prefetch" href="/assets/js/101.28f8026a.js"><link rel="prefetch" href="/assets/js/102.31d7d0e0.js"><link rel="prefetch" href="/assets/js/103.71225fe7.js"><link rel="prefetch" href="/assets/js/104.fe63eb6b.js"><link rel="prefetch" href="/assets/js/105.c0b31bc8.js"><link rel="prefetch" href="/assets/js/106.a7b64c67.js"><link rel="prefetch" href="/assets/js/107.35f43657.js"><link rel="prefetch" href="/assets/js/108.25e30499.js"><link rel="prefetch" href="/assets/js/109.865008b8.js"><link rel="prefetch" href="/assets/js/11.22ff506c.js"><link rel="prefetch" href="/assets/js/110.fb459190.js"><link rel="prefetch" href="/assets/js/111.1740bd73.js"><link rel="prefetch" href="/assets/js/112.ea5b5225.js"><link rel="prefetch" href="/assets/js/113.3e891c50.js"><link rel="prefetch" href="/assets/js/114.83254ffb.js"><link rel="prefetch" href="/assets/js/115.dcdb82ef.js"><link rel="prefetch" href="/assets/js/116.8cca1faf.js"><link rel="prefetch" href="/assets/js/117.f70c6759.js"><link rel="prefetch" href="/assets/js/118.ea15b201.js"><link rel="prefetch" href="/assets/js/119.51ac8585.js"><link rel="prefetch" href="/assets/js/12.66186d22.js"><link rel="prefetch" href="/assets/js/120.27fc9d41.js"><link rel="prefetch" href="/assets/js/121.4050195a.js"><link rel="prefetch" href="/assets/js/122.ae0aaf85.js"><link rel="prefetch" href="/assets/js/123.3412ab46.js"><link rel="prefetch" href="/assets/js/124.abd8c6d3.js"><link rel="prefetch" href="/assets/js/125.7cc27db5.js"><link rel="prefetch" href="/assets/js/126.af33ab3a.js"><link rel="prefetch" href="/assets/js/127.3170e8ab.js"><link rel="prefetch" href="/assets/js/128.c04c4bb0.js"><link rel="prefetch" href="/assets/js/129.4165d0ac.js"><link rel="prefetch" href="/assets/js/13.df602e5a.js"><link rel="prefetch" href="/assets/js/130.0d0d3cf7.js"><link rel="prefetch" href="/assets/js/131.c7db2083.js"><link rel="prefetch" href="/assets/js/132.79c11c42.js"><link rel="prefetch" href="/assets/js/133.9039bd5f.js"><link rel="prefetch" href="/assets/js/134.566c80ad.js"><link rel="prefetch" href="/assets/js/135.8d23eb58.js"><link rel="prefetch" href="/assets/js/136.f2879705.js"><link rel="prefetch" href="/assets/js/137.255c0784.js"><link rel="prefetch" href="/assets/js/138.304cbec6.js"><link rel="prefetch" href="/assets/js/139.7a7fc3e0.js"><link rel="prefetch" href="/assets/js/140.4abf26a8.js"><link rel="prefetch" href="/assets/js/141.81d4d878.js"><link rel="prefetch" href="/assets/js/142.cd404be7.js"><link rel="prefetch" href="/assets/js/143.0e44aa20.js"><link rel="prefetch" href="/assets/js/144.237a43d9.js"><link rel="prefetch" href="/assets/js/145.cede5af9.js"><link rel="prefetch" href="/assets/js/146.c9d3967b.js"><link rel="prefetch" href="/assets/js/147.080beb71.js"><link rel="prefetch" href="/assets/js/15.540e7ea4.js"><link rel="prefetch" href="/assets/js/16.eb71a02a.js"><link rel="prefetch" href="/assets/js/17.92df7b99.js"><link rel="prefetch" href="/assets/js/18.50bc4846.js"><link rel="prefetch" href="/assets/js/19.bb9e9c88.js"><link rel="prefetch" href="/assets/js/20.e5894862.js"><link rel="prefetch" href="/assets/js/21.8dd45d89.js"><link rel="prefetch" href="/assets/js/22.aab57678.js"><link rel="prefetch" href="/assets/js/23.5456b7dc.js"><link rel="prefetch" href="/assets/js/24.68f5b54e.js"><link rel="prefetch" href="/assets/js/25.f7468bea.js"><link rel="prefetch" href="/assets/js/26.2fa477e0.js"><link rel="prefetch" href="/assets/js/27.3b27afbb.js"><link rel="prefetch" href="/assets/js/28.5e4373e8.js"><link rel="prefetch" href="/assets/js/29.3980b790.js"><link rel="prefetch" href="/assets/js/30.8385df39.js"><link rel="prefetch" href="/assets/js/31.18be5061.js"><link rel="prefetch" href="/assets/js/32.7ebc4f72.js"><link rel="prefetch" href="/assets/js/33.eab97304.js"><link rel="prefetch" href="/assets/js/34.10d3aaea.js"><link rel="prefetch" href="/assets/js/35.cf227858.js"><link rel="prefetch" href="/assets/js/36.72eb2e1b.js"><link rel="prefetch" href="/assets/js/37.76967d57.js"><link rel="prefetch" href="/assets/js/38.1b8baf1e.js"><link rel="prefetch" href="/assets/js/39.305ba346.js"><link rel="prefetch" href="/assets/js/4.0ac4f1f6.js"><link rel="prefetch" href="/assets/js/40.2815fe02.js"><link rel="prefetch" href="/assets/js/41.2b41b172.js"><link rel="prefetch" href="/assets/js/42.1d69d4fa.js"><link rel="prefetch" href="/assets/js/43.d4971a84.js"><link rel="prefetch" href="/assets/js/44.0e04f785.js"><link rel="prefetch" href="/assets/js/45.9025c56f.js"><link rel="prefetch" href="/assets/js/46.a1ee9725.js"><link rel="prefetch" href="/assets/js/47.ee929b91.js"><link rel="prefetch" href="/assets/js/48.260b57c1.js"><link rel="prefetch" href="/assets/js/49.fc5704d5.js"><link rel="prefetch" href="/assets/js/5.5b94bff7.js"><link rel="prefetch" href="/assets/js/50.40b0ba28.js"><link rel="prefetch" href="/assets/js/51.549a6a9a.js"><link rel="prefetch" href="/assets/js/52.81153bb7.js"><link rel="prefetch" href="/assets/js/53.7fcef945.js"><link rel="prefetch" href="/assets/js/54.746a2bbd.js"><link rel="prefetch" href="/assets/js/55.29274bd7.js"><link rel="prefetch" href="/assets/js/56.1b76e54c.js"><link rel="prefetch" href="/assets/js/57.ef2bb07c.js"><link rel="prefetch" href="/assets/js/58.e2bac053.js"><link rel="prefetch" href="/assets/js/59.285e53f6.js"><link rel="prefetch" href="/assets/js/6.481b22df.js"><link rel="prefetch" href="/assets/js/60.00d6c919.js"><link rel="prefetch" href="/assets/js/61.af411822.js"><link rel="prefetch" href="/assets/js/62.a7e74f84.js"><link rel="prefetch" href="/assets/js/63.2cccfda3.js"><link rel="prefetch" href="/assets/js/64.5a4a2d69.js"><link rel="prefetch" href="/assets/js/65.6be1cbc1.js"><link rel="prefetch" href="/assets/js/66.7e93c722.js"><link rel="prefetch" href="/assets/js/67.11f563a3.js"><link rel="prefetch" href="/assets/js/68.ad75af4a.js"><link rel="prefetch" href="/assets/js/69.75221a93.js"><link rel="prefetch" href="/assets/js/7.cb937ed7.js"><link rel="prefetch" href="/assets/js/70.34f4dcf5.js"><link rel="prefetch" href="/assets/js/71.aa606e80.js"><link rel="prefetch" href="/assets/js/72.7486a2dd.js"><link rel="prefetch" href="/assets/js/73.2bbd3b87.js"><link rel="prefetch" href="/assets/js/74.3c64330c.js"><link rel="prefetch" href="/assets/js/75.b1cabeb6.js"><link rel="prefetch" href="/assets/js/76.1f563ab7.js"><link rel="prefetch" href="/assets/js/77.abb4ca5d.js"><link rel="prefetch" href="/assets/js/78.40ffda23.js"><link rel="prefetch" href="/assets/js/79.f3fe6eaa.js"><link rel="prefetch" href="/assets/js/8.f5dced20.js"><link rel="prefetch" href="/assets/js/80.3de3caa0.js"><link rel="prefetch" href="/assets/js/81.e2aa0b2b.js"><link rel="prefetch" href="/assets/js/82.d1ca99a1.js"><link rel="prefetch" href="/assets/js/83.dccf9b37.js"><link rel="prefetch" href="/assets/js/84.4dae5e5b.js"><link rel="prefetch" href="/assets/js/85.c6480fc2.js"><link rel="prefetch" href="/assets/js/86.d5480dce.js"><link rel="prefetch" href="/assets/js/87.01b022e2.js"><link rel="prefetch" href="/assets/js/88.02938c2d.js"><link rel="prefetch" href="/assets/js/89.d7e23c9c.js"><link rel="prefetch" href="/assets/js/9.e0f173ad.js"><link rel="prefetch" href="/assets/js/90.9ed16b8c.js"><link rel="prefetch" href="/assets/js/91.40909222.js"><link rel="prefetch" href="/assets/js/92.2f121267.js"><link rel="prefetch" href="/assets/js/93.80f9c1cd.js"><link rel="prefetch" href="/assets/js/94.b78709e4.js"><link rel="prefetch" href="/assets/js/95.71adfe21.js"><link rel="prefetch" href="/assets/js/96.41c9152f.js"><link rel="prefetch" href="/assets/js/97.b80c4bf0.js"><link rel="prefetch" href="/assets/js/98.e0a4d08a.js"><link rel="prefetch" href="/assets/js/99.38bc76b8.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.594b47db.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">左小白的前端笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/git.html" class="nav-link">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/git.html" class="nav-link">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/zuoxiaobai/fenote" target="_blank" rel="noopener noreferrer" class="repo-link">
+    Github
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>计算机基础</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>数据库系统原理笔记</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/base/dbtheory/1.html" class="sidebar-link">前言</a></li><li><a href="/base/dbtheory/2.html" class="sidebar-link">数据库系统概述</a></li><li><a href="/base/dbtheory/3.html" class="sidebar-link">关系数据库</a></li><li><a href="/base/dbtheory/4.html" class="sidebar-link">数据库设计</a></li><li><a href="/base/dbtheory/5.html" class="sidebar-link">SQL与关系数据库基本操作</a></li><li><a href="/base/dbtheory/6.html" aria-current="page" class="active sidebar-link">数据库编程</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#存储过程" class="sidebar-link">存储过程</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#存储过程的基本概念-领会" class="sidebar-link">存储过程的基本概念(领会)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#创建存储过程-综合应用" class="sidebar-link">创建存储过程(综合应用)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#存储过程体-简单应用" class="sidebar-link">存储过程体(简单应用)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#调用存储过程-综合应用" class="sidebar-link">调用存储过程(综合应用)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#删除存储过程-简单应用" class="sidebar-link">删除存储过程(简单应用)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#练习题" class="sidebar-link">练习题</a></li></ul></li><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#存储函数" class="sidebar-link">存储函数</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#什么是存储函数-领会" class="sidebar-link">什么是存储函数(领会)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#创建存储函数-综合应用" class="sidebar-link">创建存储函数(综合应用)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#调用存储函数-综合应用" class="sidebar-link">调用存储函数(综合应用)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#删除存储函数-简单应用" class="sidebar-link">删除存储函数(简单应用)</a></li><li class="sidebar-sub-header"><a href="/base/dbtheory/6.html#练习题-2" class="sidebar-link">练习题</a></li></ul></li></ul></li><li><a href="/base/dbtheory/7.html" class="sidebar-link">数据库安全与保护</a></li><li><a href="/base/dbtheory/8.html" class="sidebar-link">数据库应设计与开发实例</a></li><li><a href="/base/dbtheory/9.html" class="sidebar-link">数据管理技术的发展</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="数据库编程"><a href="#数据库编程" class="header-anchor">#</a> 数据库编程</h1> <h2 id="存储过程"><a href="#存储过程" class="header-anchor">#</a> 存储过程</h2> <h3 id="存储过程的基本概念-领会"><a href="#存储过程的基本概念-领会" class="header-anchor">#</a> 存储过程的基本概念(领会)</h3> <p><strong>存储过程</strong>是一组为了完成某项特定功能的<strong>SQL语句集</strong>，其实质就是一段存储在数据库中的<strong>代码</strong>，它可以由声明式的SQL语句和过程式SQL语句组成。</p> <p>声明式的SQL语句：CREATE、UPDATE、SELECT等</p> <p>过程式的SQL语句：CASE IF ELSE 等</p> <p>特点：</p> <ul><li>可增强SQL语言的功能和灵活性</li> <li>良好的封装性</li> <li>高性能</li> <li>可减少网络流量</li> <li>可作为一种安全机制来确保数据库的安全性和数据的完整性</li></ul> <h3 id="创建存储过程-综合应用"><a href="#创建存储过程-综合应用" class="header-anchor">#</a> 创建存储过程(综合应用)</h3> <p>DELIMITER命令，delimiter [dɪ'lɪmɪtə] 定界符，一般语句遇到 ; 就结束执行SQL语句</p> <div class="language-bash extra-class"><pre class="language-bash"><code>DELIMITER <span class="token variable">$$</span> <span class="token comment"># $$用户定义的结束符号</span>
+</code></pre></div><p>示例：将MySQL结束符修改为两个感叹号 &quot;!!&quot;</p> <div class="language-bash extra-class"><pre class="language-bash"><code>DELIMITER <span class="token operator">!</span><span class="token operator">!</span>
+
+<span class="token comment"># mysql&gt; select * from customers_view!!</span>
+
+<span class="token comment"># 回到分号结束</span>
+DELIMITER <span class="token punctuation">;</span>
+</code></pre></div><h4 id="create-procedure-创建"><a href="#create-procedure-创建" class="header-anchor">#</a> CREATE PROCEDURE 创建</h4> <p>procedure  [prəˈsiːdʒə(r)] 程序，步骤</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 语法</span>
+CREATE PROCEDURE sp_name<span class="token punctuation">(</span><span class="token punctuation">[</span>proc_parameter<span class="token punctuation">[</span>,<span class="token punctuation">..</span>.<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span> routine_body
+<span class="token comment"># 默认创建存储过程在当前的数据库</span>
+<span class="token comment"># sp_name 指定存储过程的名称，默认在当前数据库中创建</span>
+<span class="token comment"># proc_parameter 指定存储过程的参数列表 [IN | OUT | INOUT] param_name type 参数名 参数类型</span>
+<span class="token comment"># routine [ruːˈtiːn] 惯例，例行程序，存储过程的主题部分，也称为存储过程体。</span>
+</code></pre></div><p>示例：在mysql_test中创建一个存储过程，用于实现给定表customers中一个客户id号即可修改表customers中该客户的性别为一个指定的性别</p> <div class="language-bash extra-class"><pre class="language-bash"><code>USE mysql_test<span class="token punctuation">;</span>
+DELIMITER <span class="token variable">$$</span>
+CREATE PROCEDURE sp_update_sex<span class="token punctuation">(</span>IN cid INT,IN csex CHAR<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">))</span> 
+BEGIN
+UPDATE mysql_test.customers SET <span class="token assign-left variable">cust_sex</span><span class="token operator">=</span>csex WHERE <span class="token assign-left variable">cust_id</span><span class="token operator">=</span>cid<span class="token punctuation">;</span>
+END <span class="token variable">$$</span>
+</code></pre></div><h3 id="存储过程体-简单应用"><a href="#存储过程体-简单应用" class="header-anchor">#</a> 存储过程体(简单应用)</h3> <h4 id="使用declare声明局部变量"><a href="#使用declare声明局部变量" class="header-anchor">#</a> 使用DECLARE声明局部变量</h4> <p>desclare [dɪˈkleə(r)] 声明</p> <div class="language-bash extra-class"><pre class="language-bash"><code>DECLARE var_name<span class="token punctuation">[</span><span class="token punctuation">..</span>.<span class="token punctuation">]</span> <span class="token builtin class-name">type</span> <span class="token punctuation">[</span>DEFAULT value<span class="token punctuation">]</span>
+<span class="token comment"># 1.只能在存储过程体的BEGIN ... END语句块声明变量</span>
+<span class="token comment"># 2.必须在存储过程的开头处声明</span>
+<span class="token comment"># 3.作用范围仅限于声明它的BEGIN...END语句块</span>
+<span class="token comment"># 4.不同于用户变量</span>
+
+<span class="token comment"># 例子：声明一个整型局部变量cid</span>
+DECLARE cid INT<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>局部变量与用户变量的区别</p> <ol><li>用户变量前面有@，局部变量前面没@</li> <li>可用范围：用户变量在整个SQL里都可以使用，局部变量只能在BEGIN...END语句块中使用</li></ol> <h4 id="使用set为局部变量赋值"><a href="#使用set为局部变量赋值" class="header-anchor">#</a> 使用set为局部变量赋值</h4> <div class="language-bash extra-class"><pre class="language-bash"><code>SET <span class="token assign-left variable">var_name</span><span class="token operator">=</span>expr<span class="token punctuation">[</span>,var_name<span class="token operator">=</span>expr<span class="token punctuation">]</span><span class="token punctuation">..</span>.
+
+<span class="token comment"># 给局部变量cid赋予一个整数值 910</span>
+SET cid <span class="token operator">=</span> <span class="token number">910</span><span class="token punctuation">;</span>
+</code></pre></div><h4 id="使用select-into把选定列的值直接存储到局部变量中"><a href="#使用select-into把选定列的值直接存储到局部变量中" class="header-anchor">#</a> 使用SELECT...INTO把选定列的值直接存储到局部变量中</h4> <div class="language-bash extra-class"><pre class="language-bash"><code>SELECT col_name<span class="token punctuation">[</span>,<span class="token punctuation">..</span>.<span class="token punctuation">]</span> INTO var_name<span class="token punctuation">[</span>,<span class="token punctuation">..</span>.<span class="token punctuation">]</span> table_expr
+<span class="token comment"># col_name 指定列名</span>
+<span class="token comment"># var_name 指定要赋值的变量名</span>
+<span class="token comment"># table_expr 表示SELECT语句中的FROM子句及后面的语法部分</span>
+</code></pre></div><h4 id="流程控制语句"><a href="#流程控制语句" class="header-anchor">#</a> 流程控制语句</h4> <ol><li>条件判断语句 IF...THEN...ELSE语句 CASE语句</li> <li>循环语句 WHILE、REPEAT、LOOP语句</li></ol> <div class="language-bash extra-class"><pre class="language-bash"><code>IF 条件 THEN
+  表达式
+ELSE
+  表达式
+
+WHILE 条件
+  表达式
+END WHILE
+
+REPEAT
+  表达式
+END REPEAT
+
+LOOP
+  表达式
+END LOOP
+
+ITERATE语句 用于表示退出当前循环
+</code></pre></div><h4 id="使用declare-cursor语句创建游标"><a href="#使用declare-cursor语句创建游标" class="header-anchor">#</a> 使用DECLARE CURSOR语句创建游标</h4> <div class="language-bash extra-class"><pre class="language-bash"><code>DECLEAR cusor_name CURSOR FOR select_statement
+<span class="token comment"># cursor_name 指定要创建的游标的名称</span>
+</code></pre></div><h4 id="使用open打开游标"><a href="#使用open打开游标" class="header-anchor">#</a> 使用OPEN打开游标</h4> <div class="language-bash extra-class"><pre class="language-bash"><code>OPEN cusor_name <span class="token comment"># 指定要打开的游标</span>
+</code></pre></div><h4 id="使用fetch-into语句读取数据"><a href="#使用fetch-into语句读取数据" class="header-anchor">#</a> 使用FETCH...INTO语句读取数据</h4> <div class="language-bash extra-class"><pre class="language-bash"><code>FETCH cursor_name INTO var_name<span class="token punctuation">[</span>,val_name<span class="token punctuation">]</span><span class="token punctuation">..</span>.
+<span class="token comment"># cursor_name 指定已打开的游标</span>
+<span class="token comment"># var_name 指定存放数据的变量名</span>
+</code></pre></div><h4 id="使用close关闭游标"><a href="#使用close关闭游标" class="header-anchor">#</a> 使用CLOSE关闭游标</h4> <div class="language-bash extra-class"><pre class="language-bash"><code>CLOSE cursor_name 
+<span class="token comment"># cursor_name 用于要关闭的游标</span>
+</code></pre></div><h3 id="调用存储过程-综合应用"><a href="#调用存储过程-综合应用" class="header-anchor">#</a> 调用存储过程(综合应用)</h3> <p>使用CALL语句调用存储过程</p> <div class="language-bash extra-class"><pre class="language-bash"><code>CALL sp_name<span class="token punctuation">(</span><span class="token punctuation">[</span>parameter<span class="token punctuation">[</span>,<span class="token punctuation">..</span>.<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+CALL sp_name<span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+<span class="token comment"># sp_name 被调用存储过程的名称</span>
+</code></pre></div><p>示例：调用数据库mysql_test中的存储过程sp_update_sex，将客户id号为909的客户性别修改为女性 'F'</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 之前创建的存储过程 sp_update_sec</span>
+USE mysql_test<span class="token punctuation">;</span>
+DELIMITER <span class="token variable">$$</span>
+CREATE PROCEDURE sp_update_sex<span class="token punctuation">(</span>IN cid INT,IN csex CHAR<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">))</span> 
+BEGIN
+UPDATE mysql_test.customers SET <span class="token assign-left variable">cust_sex</span><span class="token operator">=</span>csex WHERE <span class="token assign-left variable">cust_id</span><span class="token operator">=</span>cid<span class="token punctuation">;</span>
+END <span class="token variable">$$</span>
+DELIMITER <span class="token punctuation">;</span>
+
+<span class="token comment"># 调用存储过程</span>
+CALL sp_update_sex<span class="token punctuation">(</span><span class="token number">909</span>, <span class="token string">'F'</span><span class="token punctuation">)</span>
+</code></pre></div><h3 id="删除存储过程-简单应用"><a href="#删除存储过程-简单应用" class="header-anchor">#</a> 删除存储过程(简单应用)</h3> <p>DROP PROCEDURE</p> <div class="language-bash extra-class"><pre class="language-bash"><code>DROP PROCEDURE <span class="token punctuation">[</span>IF EXIST<span class="token punctuation">]</span> sp_name
+</code></pre></div><h3 id="练习题"><a href="#练习题" class="header-anchor">#</a> 练习题</h3> <p>1.存储过程是一组为了完成某项特定功能的SQL语句集，其实质就是一段存储在数据库中的（  ）。答案：代码</p> <p>2.创建存储过程使用的语句是（  ）。单选题，A</p> <ul><li>A CREATE PROCEDURE</li> <li>B DROP PROCEDURE</li> <li>C CALL PROCEDURE</li> <li>D DECLARE PROCEDURE</li></ul> <p>3.下面哪个不是循环语句（  ）。单选题，B</p> <ul><li>A WHILE</li> <li>B CASE</li> <li>C REPEAT</li> <li>D LOOP</li></ul> <p>4.DECLARE CURSOR语句的作用是（  ）。单选题 B</p> <ul><li>A 打开游标</li> <li>B 声明游标</li> <li>C 读取数据</li> <li>D 关闭游标</li></ul> <h2 id="存储函数"><a href="#存储函数" class="header-anchor">#</a> 存储函数</h2> <h3 id="什么是存储函数-领会"><a href="#什么是存储函数-领会" class="header-anchor">#</a> 什么是存储函数(领会)</h3> <p>存储函数与存储过程一样，是由SQL语句和过程式语句组成的代码片段。</p> <table><thead><tr><th>存储函数</th> <th>存储过程</th></tr></thead> <tbody><tr><td>不能拥有输出参数</td> <td>可以拥有输出参数</td></tr> <tr><td>可以直接调用存储函数，不需要CALL语句</td> <td>需要CALL语句调用存储过程</td></tr> <tr><td>必须包含一条RETURN语句</td> <td>不允许包含RETURN语句</td></tr></tbody></table> <h3 id="创建存储函数-综合应用"><a href="#创建存储函数-综合应用" class="header-anchor">#</a> 创建存储函数(综合应用)</h3> <p>使用CREATE FUNCTION创建存储函数</p> <div class="language-bash extra-class"><pre class="language-bash"><code>CREATE FUNCTION sp_name<span class="token punctuation">(</span><span class="token punctuation">[</span>func_parameter<span class="token punctuation">[</span>,<span class="token punctuation">..</span>.<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+RETURNS <span class="token builtin class-name">type</span> routine_body
+<span class="token comment"># sp_name 指定存储函数的名称</span>
+<span class="token comment"># RETURNS type 声明存储函数返回值的数据类型；type指定返回值的数据类型</span>
+<span class="token comment"># routine_body 指定存储函数的主题部分，也称为存储函数体</span>
+</code></pre></div><p>示例：在数据库mysql_test中创建一个存储函数，要求该函数能根据给定的客户id号返回客户的性别，如果数据库中没有给定的客户id号，则返回 &quot;没有该客户&quot;</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># deterministic [dɪˌtɜːmɪˈnɪstɪk] 确定性的</span>
+<span class="token comment"># DETERMINISTIC </span>
+<span class="token comment"># USE mysql_test;</span>
+DELIMITER <span class="token variable">$$</span>
+CREATE FUNCTION get_sex_by_id<span class="token punctuation">(</span>cid INT<span class="token punctuation">)</span>
+  RETURNS VARCHAR<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span> 
+  DETERMINISTIC
+BEGIN
+  DECLARE SEX VARCHAR<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  SELECT cust_sex FROM customers WHERE <span class="token assign-left variable">cust_id</span><span class="token operator">=</span>cid INTO SEX<span class="token punctuation">;</span>
+  IF SEX IS NULL THEN
+    RETURN <span class="token string">'没有该客户'</span><span class="token punctuation">;</span>
+  ELSE IF <span class="token assign-left variable">SEX</span><span class="token operator">=</span><span class="token string">'F'</span> THEN
+    RETURN <span class="token string">'女'</span><span class="token punctuation">;</span>
+  ELSE 
+    RETURN <span class="token string">'男'</span><span class="token punctuation">;</span>
+  END IF<span class="token punctuation">;</span>
+  END IF<span class="token punctuation">;</span>
+END <span class="token variable">$$</span>
+DELIMITER <span class="token punctuation">;</span>
+</code></pre></div><h3 id="调用存储函数-综合应用"><a href="#调用存储函数-综合应用" class="header-anchor">#</a> 调用存储函数(综合应用)</h3> <p>使用SELECT调用存储函数</p> <div class="language-bash extra-class"><pre class="language-bash"><code>SELECT sp_name<span class="token punctuation">(</span><span class="token punctuation">[</span>func_parameter<span class="token punctuation">[</span>,<span class="token punctuation">..</span>.<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+SELECT get_sex_by_id<span class="token punctuation">(</span><span class="token number">901</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment"># mysql&gt; SELECT get_sex_by_id(909);</span>
++--------------------+
+<span class="token operator">|</span> get_sex_by_id<span class="token punctuation">(</span><span class="token number">909</span><span class="token punctuation">)</span> <span class="token operator">|</span>
++--------------------+
+<span class="token operator">|</span> 女                 <span class="token operator">|</span>
++--------------------+
+<span class="token number">1</span> row <span class="token keyword">in</span> set, <span class="token number">1</span> warning <span class="token punctuation">(</span><span class="token number">0.01</span> sec<span class="token punctuation">)</span>
+
+<span class="token comment"># mysql&gt; SELECT get_sex_by_id(9100);</span>
++---------------------+
+<span class="token operator">|</span> get_sex_by_id<span class="token punctuation">(</span><span class="token number">9100</span><span class="token punctuation">)</span> <span class="token operator">|</span>
++---------------------+
+<span class="token operator">|</span> 没有该客户          <span class="token operator">|</span>
++---------------------+
+<span class="token number">1</span> row <span class="token keyword">in</span> <span class="token builtin class-name">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+
+<span class="token comment"># mysql&gt; SELECT get_sex_by_id(904) as gender;</span>
++--------+
+<span class="token operator">|</span> gender <span class="token operator">|</span>
++--------+
+<span class="token operator">|</span> 男     <span class="token operator">|</span>
++--------+
+<span class="token number">1</span> row <span class="token keyword">in</span> <span class="token builtin class-name">set</span> <span class="token punctuation">(</span><span class="token number">0.00</span> sec<span class="token punctuation">)</span>
+</code></pre></div><h3 id="删除存储函数-简单应用"><a href="#删除存储函数-简单应用" class="header-anchor">#</a> 删除存储函数(简单应用)</h3> <p>使用DROP FUNCTION 删除存储函数</p> <div class="language-bash extra-class"><pre class="language-bash"><code>DROP FUNCTION <span class="token punctuation">[</span>IF EXISTS<span class="token punctuation">]</span> sp_name
+
+DROP FUNCTION IF EXISTS get_sex_by_id<span class="token punctuation">;</span>
+</code></pre></div><h3 id="练习题-2"><a href="#练习题-2" class="header-anchor">#</a> 练习题</h3> <p>1.创建存储函数会用的语句是（  ）。单选题，答案：C</p> <ul><li>A CREATE PROCEDURE</li> <li>B DROP PROCUDURE</li> <li>C CREATE FUNCTION</li> <li>D DROP FUNCTION</li></ul> <p>2.写出调用存储函数的语法格式。简答题</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 语法</span>
+SELECT sp_name<span class="token punctuation">(</span><span class="token punctuation">[</span>param1<span class="token punctuation">[</span>,param2,<span class="token punctuation">..</span>.<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">10/29/2020, 10:59:19 PM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/base/dbtheory/5.html" class="prev">
+        SQL与关系数据库基本操作
+      </a></span> <span class="next"><a href="/base/dbtheory/7.html">
+        数据库安全与保护
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----><!----></div></div>
+    <script src="/assets/js/app.9db0a638.js" defer></script><script src="/assets/js/2.4b3539f1.js" defer></script><script src="/assets/js/14.c0b1490a.js" defer></script><script src="/assets/js/3.e6a4dd76.js" defer></script>
+  </body>
+</html>
