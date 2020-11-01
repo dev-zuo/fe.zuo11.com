@@ -415,11 +415,11 @@ module.exports = {
         serviceWorker: true,
         updatePopup: true
       }
-    ],
-    ['sitemap', {
-      hostname: 'http://fe.zuo11.com',
-      exclude: ['/404.html']
-    },]
+    ]
+    // ['sitemap', {
+    //   hostname: 'http://fe.zuo11.com',
+    //   exclude: ['/404.html']
+    // },]
   ],
   markdown: {
     plugins: ['task-lists']

@@ -9,5 +9,5 @@ const app = new Koa()
 app.use(require('koa-static')(__dirname + '/docs/.vuepress/dist'))
 
 app.listen(3009, () => {
-  console.log('zuo11.com local server listen on 3001')
+  console.log('zuo11.com local server listen on 3009')
 })
