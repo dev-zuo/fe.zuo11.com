@@ -102,6 +102,7 @@ const cssSidebar = [
     sidebarDepth: 5,
     collapsable: false,
     children: [
+      'less',
       'flex-grid',
       {
         title: 'HTML5权威指南(CSS部分)笔记',
@@ -359,6 +360,7 @@ module.exports = {
           },
           {
             text: 'CSS/CSS3', items: [
+              { text: 'CSS 预处理器 Less.js', link: '/css/less.md' },
               { text: 'Flex与Grid布局', link: '/css/flex-grid.md' },
               { text: 'HTML5权威指南(CSS部分)笔记', link: '/css/html5-css-1.md' }
             ]
