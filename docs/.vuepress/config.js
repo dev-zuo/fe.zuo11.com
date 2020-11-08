@@ -129,6 +129,7 @@ const jsSidebar = [{
   title: "JS/ES6",
   sidebarDepth: 5,
   children: [
+    'js-deep',
     {
       title: 'ES6标准入门(第三版)笔记',
       sidebarDepth: 5,
@@ -153,9 +154,10 @@ const jsSidebar = [{
       ]
     },
     {
-      title: 'JavaScript高级程序设计(第三版)笔记',
+      title: 'JavaScript高级程序设计(第四版)笔记',
       sidebarDepth: 5,
       children: [
+        'ad3/js-ad4-diff',
         'ad3/js-ad3-1',
         'ad3/js-ad3-2',
         'ad3/js-ad3-3',
@@ -292,7 +294,7 @@ const vueSidebar = [
 module.exports = {
   // base: '/fenote/',
   title: '左小白的前端笔记',
-  description: '左小白的前端笔记，用于记录、完善个人前端知识体系结构',
+  description: '左小白的前端笔记，归纳整理自己在前端工作、学习中的一些心得笔记，有利于前端知识系统化。包括 Vue.js、前端工程化（TypeScript、Node.js、webpack）、Docker、JS/ES6、CSS/CSS3、HTML/HTML5、数据可视化、计算机基础、英语等笔记。',
   themeConfig: {
     // logo: '/logo.png',
     sidebar: {
@@ -353,8 +355,9 @@ module.exports = {
         text: '前端基础', items: [
           {
             text: 'JS/ES6', items: [
+              { text: 'JavaScript 小记', link: '/js/js-deep.md' },
               { text: 'ES6标准入门(第三版)笔记', link: '/js/es6/es6-1.md' },
-              { text: 'JavaScript高级程序设计(第三版)笔记', link: '/js/ad3/js-ad3-1.md' },
+              { text: 'JavaScript高级程序设计(第四版)笔记', link: '/js/ad3/js-ad4-diff.md' },
               { text: 'JavaScript DOM编程艺术(第二版)笔记', link: '/js/js-dom-art.md' },
             ]
           },

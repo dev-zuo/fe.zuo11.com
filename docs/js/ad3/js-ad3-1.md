@@ -1,6 +1,10 @@
-# 1. JavaScript简介
+---
+title: 1. 什么是JavaScript - JS高程4
+description: 1. JavaScript简介。为什么会有JS - JavaScript的诞生。JS诞生于1995年，由当时就职于Netscape公司的Brendan Eich开发，最初的目的是想通过JS在请求服务器之前做一些输入验证操作。在此之前空值判断等都在后端进行，之前的网速很慢，非常耗时。
+keywords: 为什么会有JS,什么是ECMAScript,JavaScript实现
+---
 
-
+# 1. 什么是JavaScript
 
 ## 为什么会有JS - JavaScript的诞生
 JS诞生于1995年，由当时就职于Netscape公司的Brendan Eich开发，最初的目的是想通过JS在请求服务器之前做一些输入验证操作。在此之前空值判断等都在后端进行，之前的网速很慢，非常耗时。
@@ -31,16 +35,19 @@ ECMAScript历史版本:
 - 2008年07月 第四版 ES4 发布前被废弃，由于改动较大，各方有分歧，不怎么愉快，导致难产，详情参见 [ES4相关历史](https://www.zhihu.com/question/24715618)
 - 2009年12月 第五版 ES5 澄清第三版中的歧义，新增原生JSON对象、继承的方法、高级属性的定义以及引入严格模式。
 - 2015年06月 第六版 ES6 官方名称为ECMAScript2015，之后都会这样命名，新增了许多特性，如Maps、Sets、Promise、生成器（Generators）等。
-- 2016年06月 第七版 ES2016 新增两个特性: Array.prototype.includes和取幂运算符 [官方文档](http://www.ecma-international.org/ecma-262/7.0/#sec-overview)
-- 2017年06月 第八版 ES2017 新增async/await等
-- 2018年06月 第九版 ES2018 新增共享内存和原子性、异步循环等 [官方文档](https://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf)
+- 2016年06月 第七版 ES2016 新增两个特性: Array.prototype.includes和取幂运算符。 [官方文档](http://www.ecma-international.org/ecma-262/7.0/#sec-overview)
+- 2017年06月 第八版 ES2017 新增 async/await、Object.values/Object.entries、Object.getOwnPropertyDescriptors、共享内存和原子性等。
+- 2018年06月 第九版 ES2018 新增 Promise.prototype.finally、异步循环、一些正则规则等。[官方文档](https://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf)
+- 2019年 第十版 ES2019 新增 catch 参数可选、Object.fromEntries、String.prototype.{trimStart,trimEnd}、Array.prototype.{flat,flatMap}}、import.meta 等。
+- 2020年 第十一版 ES2020 新增原生支持动态导入import()、bigint 数据类型、Optional Chaining（可选链?.）、Nullish coalescing Operator（空值合并操作符??）等。
+- 2021年 第十二版 ES2021 新增逻辑运算赋值（logical-assignment、||=）、String.prototype.replaceAll、Promise.any等
 
-相关资料
-- ES2016, 2017和2018到底有哪些新功能？https://mp.weixin.qq.com/s/A4Z8D3IlSsw1XnP3wFbJHg
-- ES2016与ES2017相关 http://www.css88.com/archives/7753
-- 阮一峰的 EMCAScript 6 入门(第三版) http://es6.ruanyifeng.com/#README
-- ECMAScript各版本及特性 https://segmentfault.com/a/1190000003493604
-- 关于ES5、ES6及之后版本的兼容性 http://kangax.github.io/compat-table/es6/
+::: tip
+由于出版时间是 2019 年，《JS高程4》 里面并没有介绍 ES2020 及其之后的阶段。虽然网上很多介绍 ES 历年版本更新内容的文章。但还是建议大家最好从源头获取知识。这样理解更透彻，下面给出了官方文档的地址。
+:::
+
+关于 ES 历年新增功能概览，请参考 TC39 权威官方仓库：[TC39 finished-proposals | Github](https://github.com/tc39/proposals/blob/master/finished-proposals.md)，中文相关介绍可以参考阮一峰的 [EMCAScript 6 入门](http://es6.ruanyifeng.com/)
+
 
 关于兼容性:
 - IE11支持ES5，基本不支持ES6，低版本的IE8、9等使用ES6语法需要用Babel插件
