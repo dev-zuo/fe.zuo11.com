@@ -78,7 +78,7 @@ ES3 有 5 种基本数据类型，1种复杂数据类型。ES6+ 后面新增了�
 注意：
 1. typeof 函数值为 `function`, typeof null 值为 `object`，本质上其实有 9 种数据类型。
 2. new String('12') 是字符串对象，不是 string，new Number(1) 是数字对象，不是 number，new Boolean(false) 是对象，不是 boolean
-3. 新增的 Symbol 以及 bigint 都是不能 new 的，没有 constructor 够着函数方法
+3. 新增的 Symbol 以及 bigint 都是不能 new 的，没有 constructor 构造函数方法
 
 ```js
 var a = null,       // null
