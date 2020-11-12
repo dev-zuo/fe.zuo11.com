@@ -11,6 +11,7 @@ UI框架 | [Element UI](https://element.eleme.cn/#/zh-CN/component/radio)、[Van
 微信开发 | [小程序运行环境](https://developers.weixin.qq.com/miniprogram/dev/framework/runtime/env.html) [NW.js(node-webkit)](https://github.com/nwjs/nw.js)
 JavaScript | [TC39 Finished Proposals](https://github.com/tc39/proposals/blob/master/finished-proposals.md)、[阮一峰 ES6 入门教程](https://es6.ruanyifeng.com/)
 CSS | [less.js Github](https://github.com/less/less.js)
+HTML | [HTML Standard - whatwg](https://html.spec.whatwg.org/multipage/)
 打包构建 | [webpack](https://www.webpackjs.com/)
 markdown | [markdown-it](https://github.com/markdown-it/markdown-it)、[emoji 表情](https://github.com/markdown-it/markdown-it-emoji/blob/master/lib/data/full.json)
 测试 | [Vue Test Utils](https://vue-test-utils.vuejs.org/zh/)、[istanbul 测试覆盖率](https://istanbul.js.org/)
