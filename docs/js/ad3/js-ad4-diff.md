@@ -40,11 +40,16 @@ keywords: JS高程4做了哪些更新,JS高程4与JS高程3对比,JS高程4笔�
 
 ## 第 5 章 基本引用类型 
 原第五章引用类型拆分为两个章节：基本引用类型、集合引用类型。
-1. 将原来的 Object 类型、Array 类型 放到了新增的第6章。
-2. 将 Function 类型，放到了第 10 章，也就是之前的函数表达式、闭包那一章。
+1. 将原来的 Object 类型、Array 类型 放到了新增的第 6 章 集合引用类型。
+2. 将 Function 类型，放到了第 10 章 函数，也就是之前的函数表达式、闭包那一章。
 
+5.2.3 RegExp 构造函数属性最后加了说明 **RegExp 构造函数的所有属性都没有任何 Web标准出处，因此不要用于生产环境。**
+
+5.3.2 原始值包装类型 - Number 新增 isInteger()、isSafeInteger() 介绍
+
+5.3.3 原始值包装类型 - String - 字符方法，之前仅介绍 charAt()、charCodeAt() 用法，第四版对 JS 字符做了更加详细的介绍。
 ## 第 6 章 集合引用类型
-除了将第五章的 Object 类型、Array 类型放到了这一章外，将原来 15.3.1 类型化数组移到了这一章，并改翻译为定型数组(typed array)，也就是 ArrayBuffer、DataView等。另外新增Map、WeakMap、Set、WeakSet
+除了将第五章的 Object 类型、Array 类型放到了这一章外，将原来 15.3.1 使用Canvas绘图 - WebGL - 类型化数组移到了这一章，并改翻译为定型数组(typed array)，也就是 ArrayBuffer、DataView等。另外新增Map、WeakMap、Set、WeakSet
 
 ## 第 7 章 迭代器与生成器(Iterator 与 Generator)
 新增的章节，ES6 入门里面有讲
@@ -141,13 +146,13 @@ keywords: JS高程4做了哪些更新,JS高程4与JS高程3对比,JS高程4笔�
 :::
 
 ## 第 25 章 客户端存储
-原第 23 章离线应用与客户端存储，原离线检测放到了第 13 章客户端检测。去除了应用缓存。其他变动不大。
+原第 23 章离线应用与客户端存储，原离线检测放到了第 13 章客户端检测。由于 HTML5 application cache 已废弃，由 Service Workers取代，去除了应用缓存的内容。参见: [Using_the_application_cache](https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache) 其他变动不大。
 
 ## 第 26 章 模块
 新增的章节，讲了 CommonJS、AMD、UMD、ES Modules 模块化相关内容
 
 ## 第 27 章 工作者线程(Worker)
-新增章节，将原 25.6 Web Workers 内容单独作为一章，做了更加详细的介绍。包括新增的服务工作者线程（Service Worker） 等。
+新增章节，将原 25.6 Web Workers 内容单独作为一章，基于最新的标准，做了详细的介绍。包括新增的专用工作者线程、共享工作者线程、服务工作者线程（Service Worker） 等。参考：[27. 工作者线程(Web Workers) | JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-27.html)
 
 ## 第 28 章 最佳实践
 原第 24 章 最佳实践。修改了部分翻译，使内容更简单易懂。参考：[28.最佳实践 | JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-28.html)
@@ -170,7 +175,7 @@ keywords: JS高程4做了哪些更新,JS高程4与JS高程3对比,JS高程4笔�
 ## 错误记录
 
 ::: danger
-p798 第二行，这也是为什么不会再打印 "foo" 的原因。这里的 foo 应该是 bar
-
-p862 4. 模块打包器中 Rollupt，应该是 Rollup
+- p117 String length 的 demo 里，  stringValue.length 的值是 "11"，是字符串。应该是 number 11 
+- p798 第二行，这也是为什么不会再打印 "foo" 的原因。这里的 foo 应该是 bar
+- p862 4. 模块打包器中 Rollupt，应该是 Rollup
 :::

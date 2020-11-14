@@ -1,371 +1,184 @@
-# 25. 新兴的API
+# 25. 客户端存储
 
+## 数据缓存
+> cookie和Storage可以用于存储客户端用户数据，可以用于同域下不同tab页面之间的通信。
+### Http Cookie(cookie)
+HTTP Cookie，通常直接叫做cookie，最初是在客户端用于存储会话信息的。该标准要求服务器对任意HTTP请求发送Set-Cookie HTTP头作为响应的一部分，其中包含会话信息。服务器响应头可能如下，设置了一个以name为名称、value为值的一个cookie，浏览器会存储这样的会话新，并在之后，通过为每个请求添加Cookie HTTP头将信息发送回服务器。
+```
+// 服务器响应头
+HTTP/1.1 200 OK
+Content-type: text/html
+Set-Cookie: name=value
+Other-header: other-header-value
 
-
-## requestAnimationFrame()
-> 很长时间以来，计时器何循环间隔一直都是JS动画的核心。但setInterval()和setTimeout()都不十分精确，他们只是把动画代码添加到浏览器UI线程队列，如果队列正在执行其他操作。实际实行时间会比正常时间晚一点。循环间隔会有误差。requestAnimation可以避免这个误差，创建平滑的动画效果
-
-他会告诉浏览器：有一个动画开始了，进而浏览器可以确定重绘的最佳方式。window.requestAnimationFrame(callback);
-理解参考: https://www.cnblogs.com/onepixel/p/7078617.html
+// 请求信息
+GET /index.html HTTP/1.1
+Cookie: name=value
+Other-header: other-header-value
+```
+- cookie 限制
 ```js
-// <div id="SomeElementYouWantToAnimate" style="position:absolute;height:100px;width:100px;border:1px solid #ccc;">111</div>
-// <script>
-  var progress = 0;
-  var element = document.getElementById('SomeElementYouWantToAnimate');
+// 1. cookie绑定在特定的域名下，其他域是无法访问
+// 2. Firefox 限制每个域最多50个cookie，Opera限制每个域最多30个cookie，Safari和chrome没有这方面的限制，不要超过限制，否则之前的cookie可能会被删除。
+// 3. 一般大小限制为4kb, 这个限制是所有cookie，不是针对单个cookie的限制
+```
 
-  //回调函数
-  function render() {
-    progress += 10; //修改图像的位置， 加快动画时间  progress += 100
-    element.style.left = progress + 'px'  // 自动控制速度
+- cookie构成 (域、路径、失效时间和secure标志都是服务器给浏览器的指示，以指定前端发送请求时何时发送cookie。这些参数并不会作为发送到服务器的cookie信息的一部分，只有name和value才能被发送)
+```js
+// 1.**名称** 不区分大小写，myCookie和MyCookie被认同是同一个cookie。名称尽量特殊点，防止其他子域设置了相同的cookie，导致异常，名称必须被URL编码
+// 2.**值** cookie名称对应的值，值必须被URL编码
+// 3.**域** cookie在哪个域是有效的，
+// 4.**路径** 对于指定域中的路径，应该向服务器发送cookie、可以指定cookie只从xx.com/books/中才能访问，那么 xx.com的页面就不会发送cookie信息，即使请求都是来自同一个域
+// 5.**失效时间** expires(HTTP/1.0)、max-age(Http/1.1) 如果不设置，浏览器会话结束即删除所有cookie，也可以自己设置删除事件。expires值为GMT格式的日期，如果设置为以前的时间，会立即删除，max-age为有效期，单位秒。expires和max-age: https://blog.csdn.net/yingzizizizizizzz/article/details/81347719
+// 6.**安全标志** secure 指定后只有使用SSL连接的时候才会发送到服务器 
+// 7.**HttpOnly** 为了帮助缓解跨站点脚本（XSS）攻击，JavaScript的Document.cookie API无法访问HttpOnly cookie; 它们只被发送到服务器。 例如，持久化服务器端会话的cookie不需要可用于JavaScript，并且应设置HttpOnly标志。
+```
+每一段信息都作为Set-Cookie头的一部分，使用分号加空格分隔每一段, 响应头示例:
+```
+// 对所有 wrox.com域名及子域名下(/)，所有页面都有效的cookie，且只能通过SSL连接才能传输
+HTTP/1.1 200 OK
+Content-type: text/html
+Set-Cookie: name=value; domain=.wrox.com; path=/; secure
+Other-header: other-header-value
 
-    if (progress < 200) {
-      //在动画没有结束前，递归渲染
-      window.requestAnimationFrame(render);
+// 指定了名为name的cookie，他会在2019/08/21 09:46:24失效，同时对于wwwx.wrox.com和wrox.com的任何子域都有效
+HTTP/1.1 200 OK
+Content-type: text/html
+Set-Cookie: name=value; expires=Wed, 21 Aug 2019 09:46:24 GMT; domain=.wrox.com;
+Other-header: other-header-value
+
+// 关于GMT时间 没有加时区，一般new Date() 默认加了时区
+// (new Date()).toGMTString()
+// "Wed, 21 Aug 2019 09:46:24 GMT"
+```
+
+- JS中的cookie，通过BOM的document.cookie属性可以获取，除非设置了HttpOnly，才无法访问
+```
+// js获取cookie，document.cookie, 名字和值都是通过URL编码的，必须使用decodeURIComponent()来解码
+name1=value1;name2=value2;name3=value3
+
+// 设置cookie格式如下，并不会覆盖原有的cookie，除非设置的cookie名称已存在
+document.cookie = "name=value; expires=expiration_time; path=domain_path; domain=domain_name; secure"
+// 除了name、value其他值为可选，且都需要用URL编码
+document.cookie = encodeURLComponent("name") + '=' + encodeURIComponent("guoqzuo")
+```
+cookie操作函数封装
+```js
+var CookieUtil = {
+
+  // 获取cookie值
+  get: function (name) {
+    var cookieName = encodeURIComponent(name) + '=';
+    var startIndex = document.cookie.indexOf(cookieName);
+    var cookieVal = null;
+
+    // 如果存在该cookie
+    if (startIndex !== -1) {
+      var endIndex = document.cookie.indexOf(';', startIndex);
+
+      if (endIndex === -1) { // 如果找不到，就是字符串末尾
+        endIndex = document.cookie.length;
+      }
+
+      cookieVal = decodeURIComponent(document.cookie.substring(startIndex + cookieName.length, endIndex));
     }
+
+    return cookieVal;
+  },
+
+  // 设置cookie
+  // options: { expires, maxAge, path, domain, secure, httpOnly}
+  set: function (name, value, options) {
+    var tempVal = encodeURIComponent(name) + '=' + encodeURIComponent(value);
+
+    if (options.expires instanceof Date) {
+      tempVal += "; expires=" + options.expires.toGMTString();
+    }
+
+    if (options.maxAge && typeof options.maxAge === 'number') {
+      tempVal += '; max-age=' + options.maxAge;
+    }
+
+    if (options.path) {
+      tempVal += '; path=' + options.path
+    }
+
+    if (options.domain) {
+      tempVal += '; domain=' + options.domain
+    }
+
+    if (options.secure) {
+      tempVal += '; secure';
+    }
+
+    if (options.HttpOnly) {
+      tempVal += '; HttpOnly';
+    }
+
+    document.cookie = tempVal
+  },
+
+  // 删除cookie
+  // options { path, domain, secure, ... }
+  unset: function (name, options) {
+    if (typeof options === 'object') {
+      options.expires = new Date(0);
+    } else {
+      options = {expires: new Date(0)}
+    }
+    this.set(name, "", options);
   }
+};
+```
+- 子cookie，为了绕开浏览器单域名下的cookie数限制，使用一个cookie值，来存储键值对。
 
-  //第一帧渲染
-  window.requestAnimationFrame(render);
-// </script>
+### web存储机制(Web Storage)
+Web Storage的目的是克服cookie的限制，当数据需要严格控制在客户端时，无需持续的将数据发回服务器，IE8+支持, Web Storage的两个主要目标是:
+- 提供了一种cookie之外存储会话数据的途径
+- 提供了一种存储大量可以跨会话存在的数据机制
+#### Storage类型
+Storage类型（localStorage、sessionStorage）提供最大的存储空间来存储键值对数据。Storage类型只能存储字符串，非字符串存储前需要转换为字符串。Storage实例与其对象有如下方法:
+```
+setItem(name, value) // 设置键值对
+getItem(name) // 根据指定的名字name获取对应的值，如果没值返回null
+removeItem(name) // 删除指定name的值。
+clear() // 删除所有值
+key(index) // 获取index位置处的key的名称, 可以用来遍历值
+lenth // 获取键值对数量
+.name // 点语法支持，设置或获取值
+```
+#### sessionStorage
+sessionStorage数据浏览器关闭后，会消失。主要用于仅针对会话的小段数据存储。2.5M - 5M
+```
+// MDN
+sessionStorage maintains a separate storage area for each given origin that's available for the duration of the page session (as long as the browser is open, including page reloads and restores)
+- Stores data only for a session, meaning that the data is stored until the browser (or tab) is closed.
+- Data is never transferred to the server.
+- Storage limit is larger than a cookie (at most 5MB).
+```
+#### localStorage
+修订过的HTML5规范中，localStorage取代globalStorage，作为持久保存客户端的数据的方案。**要访问同一个localStorage对象，页面必须来自同一个域名(子域名无效)。使用同一种协议，同一个端口**， 2.5M - 5M
+```
+// MDN
+localStorage does the same thing, but persists even when the browser is closed and reopened.
+- Stores data with no expiration date, and gets cleared only through JavaScript, or clearing the Browser cache / Locally Stored Data.
+- Storage limit is the maximum amongst the three.
 ```
 
-## Page Visibility API(页面可见性API)
-如果页面最小化了或者隐藏在了其他标签页面后面，有些功能可以停下来，比如轮询服务器或某些动画效果。而Page Visibility API就是为了让开发人员知道页面是否对用户可见而推出的。
+#### storage事件
 ```js
-// - document.hidden // 页面是否隐藏
-// - document.visibilityState(不推荐使用)  IE10和Chrome对应的状态值有较大差异
-// IE值为 document.MS_PAGE_HIDDEN(0) document.MS_PAGE_VISIBLE(1)，  
-// chrome值为: hidden, visible, prerender
-// - visibilitychange事件，当文档从可见变为不可见或从不可见变为可见时，触发该事件
-
-// 实现tab间切换时，隐藏页面title改变功能
-var title = document.title;
-document.addEventListener('visibilitychange', function (event) {
-  console.log('--------------------')
-  console.log(event)
-  console.log(document.hidden)
-  console.log(document.visibilityState)
-  console.log('--------------------')
-
-  document.title =  document.hidden ? '~ 你快回来 ~ ' : title
-  if (document.hidden) {
-    // 做一些暂停操作
-  } else {
-    // 开始操作
-  }
-}, false)
+// 单个页面里面storage事件不会触发，需要由其他tab页面触发, 触发的条件：
+// - 同一浏览器打开了两个同源页面
+// - 其中一个页面修改了localStorage或sessionStorage
+// - 另一个网页注册了这个事件
+// 参考资料: Storage事件无法触发解决(https://blog.csdn.net/jlin991/article/details/55855524)
+window.addEventListener('storage', function (event) {
+  console.log('storage chage');
+  console.log(event);
+}, false);
 ```
 
-## Geolocation API(地理位置)
-Geolocation API在浏览器中的实现是navigator.geolocation对象，IE9+支持，调用时会触发提示：xxx想要获取您的地址位置信息，是否允许？
-- 获取当前位置信息navigator.geolocation.getCurrentPosition()
-```js
-// 获取用户当前位置
-// successCallback为必须，后两个参数可选
-// navigator.geolocation.getCurrentPosition(successCallback, failCallback, options)
-navigator.geolocation.getCurrentPosition(function(position) {
-  // 获取位置信息成功(弹出是否允许使用地址位置信息时，点击了允许)
-  console.log(position) // coords,timestamp
-  console.log(position.coords.latitude, position.coords.longitude)
-}, function(error) {
-  // 获取位置信息失败或点击了不允许
-  console.log('获取用户地理位置信息失败')
-  console.log(error.message)
-}, {
-  //设定信息类型可选项
-  enableHighAccuracy: true, // 尽可能使用最准确的位置信息，默认为false，true需要更多的电量，获取更耗时
-  timeout: 5000, // 等待位置信息的最长时间，毫秒
-  maximumAge: 25000// 上一次取得的坐标的有效时间，毫秒，如果到时间需要重新取得坐标信息
-})
-```
-- 跟踪用户的位置, navigator.geolocation.watchPosition()，接收的参数完全与getCurrentPostion()一致
-```js
-// watchPosition 与定时调用getCurrentPostion的效果相同
-var watchId = navigator.geolocation.watchPosition(function(position) {
-  // 获取位置信息成功(弹出是否允许使用地址位置信息时，点击了允许)
-  console.log(position) // coords,timestamp
-  console.log(position.coords.latitude, position.coords.longitude)
-}, function(error) {
-  // 获取位置信息失败或点击了不允许
-  console.log('获取用户地理位置信息失败')
-  console.log(error.message)
-})
+### IndexedDB
+IndexedDB是一种低级API，用于存储大量结构化数据（包括文件/ blob）的客户端。 此API使用索引来启用对此数据的高性能搜索。 虽然Web存储对于存储较少量的数据很有用，但对于存储大量结构化数据却没那么有用，待后续用到时研究。
+https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
 
-// 取消监控
-clearWatch(watchId)
- ```
-
-## File API
-> 2000年以前，处理文件的唯一方式就是在表单中加入input type="file"字段。File API 在表单中的文件输入字段的基础上，添加了一些直接访问文件新兴的接口。HTML5在DOM中为文件输入元素添加了一个files集合。通过文件输入字段选择一个或多个文件时，files集合里面会包含一组File对象，一个File对象对应着一个文件。
-
-每个File对象，都有下列只读属性:
-- name 本地文件系统中的文件名
-- size 文件的字节大小
-- type 字符串，文件的MIME类型
-- lastModifiedDate: 字符串，文件上一次被修改的时间
-
-```html
-  <!-- 通过document.getElementById('file').files 即可获取对应的文件信息 -->
-  <input id="file" type="file">
-  <input id="files" type="file" multiple="multiple">
-  <script>
-    var file = document.getElementById('file')
-    var files = document.getElementById('files')
-
-    // 文件内容改变时，显示文件信息
-    file.addEventListener('change', fileChangeHandle, false)
-    files.addEventListener('change', fileChangeHandle, false)
-
-    function fileChangeHandle(e) {
-      for (var i = this.files.length - 1; i >= 0; i--) {
-        var fileInfo = this.files[i] // File对象
-        console.log('name: ', fileInfo.name)
-        console.log('lastModified: ', new Date(fileInfo.lastModified).toISOString()) // timestamp
-        console.log('type: ', fileInfo.type)
-        console.log('size: ', fileInfo.size)  // B 字节  /1000 kb
-      }
-    }
-  </script>
-```
-### FileReader
-FileReader是一种异步文件的读取机制，可以把FileReader想象成XMLHttpRequest，区别只是它读取的是文件系统，而不是远程服务器数据。FileReader提供了如下几个方法，来读取文件中的数据
-
-- readAsText(file, encoding): 以纯文本形式读取文件，将读取到的文本保存在对应FileReader实例的result属性中
-- reader.readAsDataURL(fileInfo): 读取文件，将文件以数据URI(base64格式字符串)的形式保存在result属性中
-- reader.readAsBinaryString(fileInfo): 读取文件，并将一个字符串保存在result中，字符串中的每个字符表示一字节。
-- reader.readAsArrayBuffer(fileInfo): 读取文件，并将一个包含文件内容的ArrayBuffer保存在result属性中
-
-```js
-var reader = new FileReader();
-// 如果是图片，直接获取数据URI直接显示
-// 如果是其他，直接读取文本
-if (this.files[0].type.includes('image')) {
-  reader.readAsText(this.files[0]) // 读取文件，file为 input type="file" 对象.files里面的子元素
-} else {
-  reader.readAsDataURL(this.files[0]) // 获取文件URL
-}
-
-// 由于读取是异步的，读取文件时，reader会触发三个事件，如果读取错误触发error事件，读取中触发progress事件，读完了整个文件会触发load事件
-reader.onerror = function() {
-  var errMsg = [null, '未找到文件', '安全性错误', '读取中断', '文件不可读', '编码错误']
-  let errCode = reader.error.code
-  console.log('读取文件错误, code: ' + errCode + '，错误提示: ' + errMsg[errCode])
-}
-reader.onprogress = function(e) {
-  // 文件读取中，大概 50ms 刷新一次
-  console.log(`加载进度 ${e.loaded} / ${e.total}`)
-}
-reader.onload = function(e) {
-  // 文件读取完成会存到 reader.result里面
-  console.log(reader.result)
-}
-```
-示例
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>文件操作</title>
-</head>
-<body>
-  <input id="file" type="file" style="border:1px solid #ccc;">
-  <input id="files" type="file" multiple="multiple">
-  <script>
-    var file = document.getElementById('file')
-    var files = document.getElementById('files')
-
-    // 文件内容改变时，显示文件信息
-    file.addEventListener('change', fileChangeHandle, false)
-    files.addEventListener('change', fileChangeHandle, false)
-
-    function fileChangeHandle(e) {
-      for (var i = this.files.length - 1; i >= 0; i--) {
-        var fileInfo = this.files[i] // File对象
-        console.log('name: ', fileInfo.name)
-        console.log('lastModified: ', new Date(fileInfo.lastModified).toISOString()) // timestamp
-        console.log('type: ', fileInfo.type)
-        console.log('size: ', fileInfo.size)  // B 字节  /1000 kb
-
-        let reader = new FileReader(); // for循环中的var变量要特别注意，如果是var，选择多个图片时，只能显示一个
-
-        if (fileInfo.type.includes('image')) {
-          reader.readAsDataURL(fileInfo)
-        } else {
-          reader.readAsText(fileInfo)
-        }
-
-        // 由于读取是异步的，读取文件时，reader会触发三个事件，如果读取错误触发error事件，读取中触发progress事件，读完了整个文件会触发load事件
-        reader.onerror = function() {
-          var errMsg = [null, '未找到文件', '安全性错误', '读取中断', '文件不可读', '编码错误']
-          let errCode = reader.error.code
-          console.log('读取文件错误, code: ' + errCode + '，错误提示: ' + errMsg[errCode])
-        }
-        reader.onprogress = function(e) {
-          // 文件读取中，大概 50ms 刷新一次
-          console.log(`加载进度 ${e.loaded} / ${e.total}`)
-        }
-        reader.onload = function(e) {
-          // 文件读取完成会存到 reader.result里面
-          // console.log(reader.result)
-          var fragment = document.createDocumentFragment();
-          if (fileInfo.type.includes('image')) {
-            var img = document.createElement('img')
-            img.src = reader.result
-            fragment.appendChild(img)
-          } else {
-            var div = document.createElement('div')
-            div.appendChild(document.createTextNode(reader.result.substr(0, 100)))
-            fragment.appendChild(div)
-          }
-          document.body.appendChild(fragment)
-        }
-      }
-    }
-  </script>
-</body>
-</html>
-```
-### 读取部分文件内容
-如果只想读取文件的一部分，而不是全部，可以使用File对象的 slice(起始字节，要读取的字节数)方法。会返回一个Blob实例，Blob是File了下的父类型
-```js
-console.log(File.__proto__  === Blob) // true
-```
-示例
-```js
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>blob slice</title>
-</head>
-<body>
-  <input type="file" id="file">
-  <script>
-    var file = document.getElementById('file')
-    file.onchange = function (e) {
-      var myfile = this.files[0]
-      var blob = myfile.slice(0, 32) // 只读取32B的内容
-      if (blob) {
-        var reader = new FileReader()
-        reader.readAsDataURL(blob)
-        reader.onerror = function() {
-          console.log('读取文件错误, ' + reader.error.code)
-        }
-        reader.onload = function() {
-          console.log('读取文件成功，' + reader.result)
-          var div = document.createElement('div')
-          div.appendChild(document.createTextNode(reader.result))
-          document.body.appendChild(div);
-        }
-        reader.onprogress = function(e) {
-          console.log('读取中.....' + e.loaded + '/' + e.total)
-        }
-      } else {
-        alert('您的浏览器不支持blob.slice()')
-      }
-    }
-  </script>
-</body>
-</html>
-```
-### 对象URL
-对象URL，也称为blob URL，引用保存在File或Blob中数据的URL，好处是，不必把文件内容读取到JS中而直接使用文件内容。IE10+支持
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
-  <input type="file" id="file">
-  <img src="" id="img">
-  <script>
-    var file = document.getElementById('file')
-    file.onchange = function (e) {
-      var myfile = this.files[0]
-      var img = document.getElementById('img')
-      var dataUrl = window.URL.createObjectURL(myfile)
-      console.log('dataURL: ' + dataUrl)
-      // dataURL: blob:http://localhost:63342/b42b5b0a-fef8-4cb2-b26d-1973517ac08a
-      img.src = dataUrl
-      // 页面卸载时会自动释放对象URL占用的内存。如果不用了，还是建议手工释放，节约内存，调用后，dataUrl还是会有值
-      setTimeout(function() {
-        window.URL.revokeObjectURL(myfile);
-      }, 3000)
-    }
-  </script>
-</body>
-</html>
-```
-### 读取拖拽文件并上传
-使用H5拖放API，从桌面上把文件拖放到浏览器中也会触发drop事件。在event.dataTransger.files中可以读取到防止的文件，与通过input取得的File一样
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <style>
-    #dragDiv { width:300px;height: 150px;border:2px dashed #ccc; }
-    .draging { border:2px dashed red !important; }
-  </style>
-</head>
-<body>
-  <div>拖拽文件到下面的方框区域</div>
-  <div id="dragDiv"></div>
-  <script>
-    var dragDiv = document.getElementById('dragDiv')
-
-    dragDiv.ondragenter = function(e) {
-      // 当文件拖动到区域，设置red边框样式
-      dragDiv.className = "draging"
-    }
-    dragDiv.ondragover = function (e) {
-      e.preventDefault() // 取消默认行为，设置可拖放
-    }
-    dragDiv.ondrop = function (e) { // 有文件拖放触发
-      dragDiv.className = ""
-      e.preventDefault() // drop默认行为会打开新的窗口，取消默认行为
-      console.log(e.dataTransfer.files)
-
-      // 这里只显示了一个文件，如果多个文件拖拽，需要用for循环显示
-      dragDiv.innerHTML = e.dataTransfer.files[0].name
-
-       // 将文件用XHR上传操作
-      // 1. 准备数据
-      var files = e.dataTransfer.files
-      var data = new FormData()
-      for (let i = files.length - 1; i >= 0; i--) {
-        data.append('file' + i, files[i])
-      }
-      console.log(data)
-
-      // 2. 开始上传
-      var xhr = new XMLHttpRequest()
-      xhr.open('post', '/fileupdate', true) // 异步发送请求
-      xhr.onload = function () {
-        if (xhr.status === 200) { // 请求成功
-          alert(xhr.responseText)
-        } else {
-          alert('请求异常', xhr.status)
-        }
-      }
-      xhr.send(data)
-    }
-    dragDiv.ondragleave = function (e) { // 文件移出
-      dragDiv.className = ""
-    }
-  </script>
-</body>
-</html>
-```
-
-## Web计时
-Web Timing API，核心是window.performance对象。可以全面的了解页面再被加载到浏览器的过程中都经历了哪些阶段，页面哪些阶段可能是影响性能的瓶颈。IE10+支持。
-- performance.navigation记录了页面加载器重定向的次数，导航类型(页面第一次加载，页面重载过等状态)
-- performance.timing 记录了开始导航到当前页面的时间，浏览器开始请求页面的时间、浏览器成功连接到服务器的时间等。
-
-## Web Wrokers
-使用Web Workers可以在后台异步执行JS，防止长时间运行的JS进程会导致浏览器"冻结"用户页面。IE10+支持，暂时没有想到应用场景，待后续研究。p718

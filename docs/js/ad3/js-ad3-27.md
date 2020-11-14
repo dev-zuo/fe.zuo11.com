@@ -12,7 +12,7 @@ JavaScript 是单线程的，这样可以保证它与浏览器 API 兼容。如�
 
 单线程意味着不能把工作委托给独立的线程、进程去做。这就是 **工作者线程（Web Workers）** 存在的价值所在：允许把主线的工作转嫁给独立的实体，而不会改变现有的单线程模型。它的特点是独立于 JavaScript 主执行环境。
 
-## 工作者线程简介
+## 工作者线程简介(Worker)
 JS 运行在虚拟环境，浏览器中，每打开一个页面，就会分配一个它自己的环境。每个页面都有自己的内存、事件循环、DOM，等等。每个页面相当于一个沙盒，不会干扰其他页面。对浏览器来说，这些环境都是并行执行的。
 
 使用 **工作者线程** 浏览器可以在环境之外再分配一个完全独立的二级子环境，这个子环境不能与依赖单线程交互的 API（如 DOM）互相操作，但可以与父环境并行执行代码。
@@ -62,7 +62,7 @@ Web Workers 规范中定义了三种主要的工作者线程：
 - 共享工作者线程 SharedWorkerGlobalScope
 - 服务工作者线程 ServiceWorkerGlobalScope
 
-## 专用工作者线程
+## 专用工作者线程(Dedicated Workers）
 可以把专用工作者线程称为 **后台脚本(background script)**，这样的线程可以与父页面交换信息、发送网络请求、执行文件输入/输出、进行密集计算、处理大量数据，以及实现其他不适合在页面执行线程里做的任务（否则会导致页面响应迟钝）。
 
 ```js
@@ -855,8 +855,44 @@ for (let i = 0; i < 5; ++i) {
 // 5 unique connected ports
 ```
 
-## 服务工作者线程(Service Worker)
+## 服务工作者线程(Service Workers)
 
+Service Worker 服务工作者线程，是一种类似浏览器中代理服务器的线程。**可以拦截请求、缓存响应**，可以让网页在没有网络连接的情况下正常使用。服务工作者线程也可以使用 Notifications API、Push API、Background Sync API 和 Channel Messaging API.
 
+与共享工作者线程类型，来自一个域的多个页面共享一个服务工作者线程。为了使用 Push API 等特性，服务工作者线程也**可以在相关的标签页或浏览器关闭后继续等待到来的推送事件**。
 
+对大多数开发者而言，**Service Worker 在两个主要任务上最有用：充当网络请求的缓存层、启用推送通知**。在这个意义上，Service Worker 就是用于把网页变成像原生应用程序一样的工具。
+
+::: tip
+Service Worker 涉及内容非常广，几乎可以单独写一本书了。推荐 Udacity 的课程 "Offline Web Applications"。也可以参考 Mozilla 维护的 Service Worker Cookbook，其中包含了常见的服务工作者线程模式。
+:::
+
+服务工作者线程 与 专用工作者线程 和 共享工作者线程 的一个区别是：没有全局构造函数。由 navigator.serviceWorker 来管理。它的类型是 ServiceWorkerContainer。
+
+```js
+console.log(navigator.serviceWorker)
+// ServiceWorkerContainer { controller: null, ready: Promise, oncontrollerchange: null, onmessage: null, onmessageerror: null}
+```
+创建服务工作者线程
+```js
+// 注册成功，走 console.log 逻辑
+navigator.serviceWorker.register('./serviceWorker.js')
+.then(console.log, console.error)
+// ServiceWorkerRegistration { .. }
+
+// 注册失败，走 console.error 逻辑
+navigator.serviceWorker.register('./notExistWorker.js')
+.then(console.log, console.error)
+// A bad HTTP response code (404) was received when fetching the script.
+// TypeError: Failed to register a ServiceWorker for scope ...
+```
+一般服务工作者线程对于何时注册是比较灵活的，多次调用 register()，后面的实际什么都不会执行。一般如果之前没有注册过，一般在 load 事件里注册，这样不会影响页面的首次加载。除非该服务工作者线程负责管理缓存（这样的话就要尽早注册，比如使用后面要介绍的 clients.claim()）。
+
+```js
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./serviceWorker.js');
+  });
+}
+```
 
