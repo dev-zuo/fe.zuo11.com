@@ -47,7 +47,10 @@ keywords: JS高程4做了哪些更新,JS高程4与JS高程3对比,JS高程4笔�
 
 5.3.2 原始值包装类型 - Number 新增 isInteger()、isSafeInteger() 介绍
 
-5.3.3 原始值包装类型 - String - 字符方法，之前仅介绍 charAt()、charCodeAt() 用法，第四版对 JS 字符做了更加详细的介绍。
+5.3.3 原始值包装类型 - String - 字符方法，之前仅介绍 charAt()、charCodeAt() 用法，第四版对 JS 字符做了更加详细的介绍。新增 ES6 字符串方法 includes、repeat等，新增字符串迭代与结构。
+
+详情参考：[5. 基本引用类型 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-5.html)
+
 ## 第 6 章 集合引用类型
 除了将第五章的 Object 类型、Array 类型放到了这一章外，将原来 15.3.1 使用Canvas绘图 - WebGL - 类型化数组移到了这一章，并改翻译为定型数组(typed array)，也就是 ArrayBuffer、DataView等。另外新增Map、WeakMap、Set、WeakSet
 

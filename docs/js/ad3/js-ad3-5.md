@@ -1,12 +1,12 @@
 ---
 title: 5. 基本引用类型 - JS高程4
-description: 
-keywords:
+description: 对象是某个特定引用类型的实例。在 ECMAScript 中，引用类型是一种用于将数据和功能组织在一起的结构，类似于类，可以简单的理解为一种数据类型。引用类型一般都有对应的 构造函数（constructor），通过 new 操作符后面加一个构造函数可以创建对应引用类型的实例。
+keywords: 基本引用类型,原始值包装类型,单例内置对象等
 ---
 
 # 5. 基本引用类型
 
-对象是某个特定引用类型的实例。在 ECMAScript 中，**引用类型** 是一种用于将数据和功能组织在一起的结构， 类似于类，可以简单的理解为 **一种数据类型**。
+对象是某个特定引用类型的实例。在 ECMAScript 中，**引用类型** 是一种用于将数据和功能组织在一起的结构，类似于类，可以简单的理解为 **一种数据类型**。
 
 引用类型一般都有对应的 **构造函数（constructor）**，通过 `new` 操作符后面加一个构造函数可以创建对应引用类型的 **实例**。
 
@@ -358,38 +358,6 @@ a.toLocaleString() // "/a/"
 RegExp 构造函数的所有属性都没有任何 Web标准出处，因此不要用于生产环境。所以这部分笔记未整理。
 :::
 
-### 字符串对象方法（扩展）
-**str.replace()** 根据正则，返回替换后的值
-```js
-let reg = "\d{2}";
-let str = "1sss23sss456";
-alert(str.replace(reg, "?")); // "1sss?sss456" 
-
-// 消除收尾多余的空格
-let str2 = "   abc def ggg   ";
-let reg2 = /\s/g;
-let reg3 = /^\s+|\s+$/g; // 匹配多个以空格开头/多个以空格结尾的字符
-str2.replace(reg2, ""); // abcdefggg  清除所有空格
-str2.replace(reg3, ""); // "abc def ggg" 清楚首尾空格
-```
-**str.match()** 返回匹配的子字符串数组
-```js
-let reg = /\d{2}/g;
-let str = "1sss23sss456";
-str.match(reg); // ["23","45"];
-```
-**str.search()** 查找匹配的首字符的位置, 没有返回 -1
-```js
-let reg = /\d{2}/;
-let str = "1sss23sss456";
-str.search(reg); // 4
-```
-**str.split()**  返回分割后的数组
-```js
-let reg = /\d{2}/;
-let str = "1sss23sss456";
-str.split(reg); //["1sss","sss","6"]
-```
 ### 练习（扩展）
 1. 写一个匹配手机号的正则（第一位是1，第二位是 [3,4,5,7,8] 中的一个，后面还有 9 位数字），为了防止新增的号码，如 199 等号段，第二位建议所有都加上，所以只匹配 1+10 个数字
 2. 写一个匹配 2017-01-01 或 2017/01/01 这两种格式日期的正则表达式
@@ -568,7 +536,7 @@ strValue.charCodeAt(2); // c 99 ，16进制为 0x63
 String.fromCharCode(0x61, 0x62, 0x63, 0x64, 0x65) // "abcde"
 String.fromCharCode(97, 98, 99, 100, 101) // "abcde"
 ```
-对于 U+0000 ~ U+FFFF 内的 65536 个字符，使用 length、chartAt()、charCodeAt()、fromCharCode() 返回的结果和预期的都一样。因为每个字符都是 16 位，**但是为了支持更多的字符，有的字符会使用两个 16 位表示，即 32 位**，这种情况就会有问题了。比如 "😊" 这个字符串。
+对于 U+0000 ~ U+FFFF，使用 length、chartAt()、charCodeAt()、fromCharCode() 返回的结果和预期的都一样。因为在这个范围内每个字符都是 16 位，但 16 位只能表示 65536 个字符，对大多数语言字符集来说足够了，在 Unicode 中称为 **基本多语言平面(BMP)**，**但是为了支持更多的字符，有的字符会使用两个 16 位表示，即 32 位，也称为 "代理对"**，这种情况就会有问题了。比如 "😊" 这个字符串。
 
 ```js
 // The "smiling face with smiling eyes" emoji is U+1F60A
@@ -597,60 +565,222 @@ console.log(message.codePointAt(1));  // 98
 console.log(message.codePointAt(2));  // 128522
 console.log(message.codePointAt(3));  // 56842 
 console.log(message.codePointAt(4));  // 100
+
+console.log([..."ab😊de"]);  // ["a", "b", "😊", "d", "e"]
+
+String.fromCharCode(97, 98, 55357, 56842, 100, 101) // ab😊de
+String.fromCodePoint(97, 98, 128522, 100, 101) // ab😊de
 ```
-
-
+**normalize() 方法**，对于某些 Unicode 字符，可能有多种编码方式，即可以使用 BMP 的 16位表示，也可以使用代理对 32 位表示。
 ```js
-let str = "hello ";
-str.concat("world","!"); // hello world!, 不改变str的值，生成新的字符串
-
-// - 截取部分字符串 slice() substring() substr()
-str.slice(3);     // "lo world"
-str.substring(3); // "lo world"
-str.substr(3);    // "lo world"
-
-str.slice(3,7);     // "lo w
-str.substring(3,7); // "lo w" // 不包括7
-str.substr(3,7);    // "lo wor" // 第二个参数为从后面取7个
-
-// 上面三个函数当传值时负数时，等价于字符串长度+负数
-// IE8在处理substr负数时会有问题，返回原始字符串，IE9修护了这个问题
-
-// - 位置方法 indexOf() lastIndexOf()(从字符串末尾开始搜索)
-str.indeOf("o");      // 4
-str.lastIndexOf("o"); // 7
-
-str.indexOf("o", 6);     // 7  从第6个位置开始，搜索
-str.lastIndexOf("o", 6); // 4  从第6个位置开始，反向搜索
-
-// - ES5删除前后置空格 trim(), IE8不支持，IE9支持
-let str2 = "  hello world   "; 
-alert(str2);        // "  hello world   "
-alert(str2.trim()); // "hello world";
-
-// - 比较字符串 localeCompare() 
-let str3 = "423"; 
-str3.localCompare("345");  // "345" < "423"   1
-str3.localCompare("445");  // "445" > "423"  -1, 相等则为0
-
-// - 构造函数方法 将一个或多个字符编码转成字符串 fromCharCode()
-String.fromCharCode(48,65,97,98); // "0Aab"
-"0Aab".charCodeAt(2); // 97
-
-// -HTML 方法 link(url)、anchor()尽量不要使用，创建的标记通常无法表达语义
-let str4 = "hello world";
-str4.anchor("myAnchor");  // <a name="myAnchor">hello world</a>
-str4.bold(); // <b>hello world</b>"
-let url = "zuo11.com"; 
-str4.link(url); // <a href="zuo11.com">hello world</a>
+// U+00C5: Latin capital letter A with ring above
+// 上面带圆圈的大写拉丁字母 A
+console.log(String.fromCharCode(0x00C5));          // Å
+// U+212B: Angstrom sign 长度单位 "埃"
+console.log(String.fromCharCode(0x212B));          // Å
+// U+0041: Latin captal letter A 大写拉丁字母A
+// U+030A: Combining ring above 上面加圆圈
+console.log(String.fromCharCode(0x0041, 0x030A));  // Å
 ```
+上面三个编码都是同样的字符，在使用 === 比较时 会出现不一相等的情况
+```js
+let a1 = String.fromCharCode(0x00C5),
+    a2 = String.fromCharCode(0x212B),
+    a3 = String.fromCharCode(0x0041, 0x030A);
+
+console.log(a1, a2, a3);  // Å, Å, Å
+
+console.log(a1 === a2);  // false
+console.log(a1 === a3);  // false
+console.log(a2 === a3);  // false
+```
+为了解决这个问题，Unicode 提供了 4 种规范化形式：`NFD`、`NFC`、`NFKD`、`NFKC` 使用 normalize(规范化形式) 可以对字符进行规范化，选择同一种规范会形式，=== 就正常了
+```js
+let a1 = String.fromCharCode(0x00C5),
+    a2 = String.fromCharCode(0x212B),
+    a3 = String.fromCharCode(0x0041, 0x030A);
+
+a1.normalize('NFD') === a2.normalize('NFD') // true
+a2.normalize('NFKC') === a3.normalize('NFKC') // true
+a1.normalize('NFC') === a3.normalize('NFC') // true
+```
+
+**字符串方法**
+
+- 字符串操作方法，不修改原字符串
+  - `concat()` 连接字符串 "a".concat("b") => "ab", "a".concat("b", "c“) => "abc"，基本等价于字符串向加 "+"
+  - `slice(start[, end])` 提取字符串，从 start 索引开始，到 end 索引结束（不包含 end 索引位置字符）
+  - `substring(start[, end])` 提取字符串，从 start 索引开始，到 end 索引结束（不包含 end 索引位置字符）
+  - `substr(start[, num])` 提取字符串，从 start 索引开始，向后取 num 个字符
+  ```js
+  let str = "hello ";
+  str.concat("world", "!"); // "hello world!", 不改变str的值，生成新的字符串
+
+  // - 截取部分字符串 slice() substring() substr()
+  str.slice(3);     // "lo world"
+  str.substring(3); // "lo world"
+  str.substr(3);    // "lo world"
+
+  str.slice(3, 7);     // "lo w
+  str.substring(3, 7); // "lo w" // 不包括7
+  str.substr(3, 7);    // "lo worl" // 第二个参数为从后面取7个
+
+  // 上面三个函数当传值时负数时，等价于字符串长度 + 负数
+  // IE8在处理 substr 负数时会有问题，返回原始字符串，IE9 修护了这个问题
+  ```
+- 字符串位置方法，用于在字符串中定位子字符串，找到了返回对应的索引 index，没找到返回 -1（~-1 = 0，判断是否等于 -1，**!~值**）
+  - `indexOf(str[, startIndex])` 判断 str 在 字符串中的位置索引
+  - `lastIndexOf(str[, startIndex])` 从字符串末尾开始搜索，判断 str 在字符串中的位置
+  ```js
+  // "hello world!"
+  str.indeOf("o");      // 4
+  str.lastIndexOf("o"); // 7
+
+  str.indexOf("o", 6);     // 7  从第6个位置开始，搜索
+  str.lastIndexOf("o", 6); // 4  从第6个位置开始，反向搜索
+  ```
+- 字符串包含方法，第四版，ES6 新增方法，用于判断一个字符串是否在另一个字符串中
+  - `includes(str[, startIndex])` 是否包含某个字符串
+  - `startsWith(str[, startIndex])` 是否以某个字符串开头
+  - `endsWith(str[, endIndex])` 是否以某个字符串结尾
+  ```js
+  let message = "foobarbaz";
+  console.log(message.startsWith("foo"));  // true
+  console.log(message.endsWith("baz"));    // true
+  console.log(message.includes("bar"));    // true
+  console.log(message.includes("qux"));    // false
+
+  console.log(message.startsWith("foo", 1));  // false
+  console.log(message.includes("bar"));       // true
+  console.log(message.includes("bar", 4));    // false
+  ```
+- 其他字符串方法，不修改原字符串
+  - `trim()` 去掉首尾空格 ES5，
+  - `repeat(字符串复制次数)` ES6 复制字符串多少次，返回对应的副本。
+  - `padStart(num[, 填充字符])` ES6 复制字符串到 num 长度的新字符串，如果不够将填充字符(如果没传就是空格)填充到字符串开始部分。
+  - `padEnd(num[, 填充字符])` ES6 复制字符串到 num 长度的新字符串，如果不够将填充字符(如果没传就是空格)填充到字符串结束部分。
+  - `localeCompare(str[, locales])`，比较两个字符串在字母表中的顺序，字符串排在 str 前面返回 1，排在 str 后面返回 -1。相等返回 0 。区分大小写英文字母，以大写字母在前。第二个参数可以传语言，比如 "ch"， 可以对中文按首字母进行排序，参考 [js使用localeCompare函数对中文进行首字母排序](http://fe.zuo11.com/daily/2020-10.html#js%E4%BD%BF%E7%94%A8localecompare%E5%87%BD%E6%95%B0%E5%AF%B9%E4%B8%AD%E6%96%87%E8%BF%9B%E8%A1%8C%E9%A6%96%E5%AD%97%E6%AF%8D%E6%8E%92%E5%BA%8F)
+  ```js
+  let str2 = "  hello world   "; 
+  str2.trim() // "hello world";
+  let stringValue = "foo";
+
+  console.log(stringValue.padStart(6));       // "   foo"
+  console.log(stringValue.padStart(9, "."));  // "......foo" 
+  console.log(stringValue.padEnd(6));         // "foo   "
+  console.log(stringValue.padEnd(9, "."));    // "foo......"
+
+  let stringValue = "yellow";   
+  console.log(stringValue.localeCompare("brick"));  // 1
+  console.log(stringValue.localeCompare("yellow")); // 0
+  console.log(stringValue.localeCompare("zoo"));  // -1
+
+  ['中文zw', '啊啊啊aaa', '猜猜猜ccc'].sort((a, b) => a.localeCompare(b, 'ch'))
+  //  ["啊啊啊aaa", "猜猜猜ccc", "中文zw"]
+  ```
+- 字符串大小写转换，不会改变原字符串
+  - toLocaleUpperCase() 带地域的 转大写字母
+  - toUpperCase() 转大写字母
+  - toLocaleLowerCase() 带地域的 转小写字母
+  - toLowerCase() 转小写字母
+  ```js
+  let stringValue = "hello world";
+  console.log(stringValue.toLocaleUpperCase());  // "HELLO WORLD"
+  console.log(stringValue.toUpperCase());        // "HELLO WORLD"
+  console.log(stringValue.toLocaleLowerCase());  // "hello world"
+  console.log(stringValue.toLowerCase());        // "hello world"
+  ```
+- 字符串模式匹配
+  - match(pattern) 返回匹配的子字符串数组
+  - search() 查找匹配的首字符的位置, 没有返回 -1
+  - replace() 替换字符串
+  - split() 返回分割后的数组
+  ```js
+  // match
+  let reg = /\d{2}/g;
+  let str = "1sss23sss456";
+  str.match(reg); // ["23","45"];
+
+  // search
+  let reg = /\d{2}/;
+  let str = "1sss23sss456";
+  str.search(reg); // 4
+
+  // replace
+  let reg = "\d{2}";
+  let str = "1sss23sss456";
+  alert(str.replace(reg, "?")); // "1sss?sss456" 
+  // 消除收尾多余的空格
+  let str2 = "   abc def ggg   ";
+  let reg2 = /\s/g;
+  let reg3 = /^\s+|\s+$/g; // 匹配多个以空格开头/多个以空格结尾的字符
+  str2.replace(reg2, ""); // abcdefggg  清除所有空格
+  str2.replace(reg3, ""); // "abc def ggg" 清楚首尾空格
+
+  let re = /(\w+)\s(\w+)/;
+  let str = "John Smith";
+  let newstr = str.replace(re, "$2, $1");
+  console.log(newstr); //Smith, John
+
+  // split
+  let reg = /\d{2}/;
+  let str = "1sss23sss456";
+  str.split(reg); //["1sss","sss","6"]
+  ```
+- 快速生成HTML字符串方法
+  - "hello world".anchor("myAnchor") => `<a name="myAnchor">hello world</a>`
+  - "hello world".bold() => `<b>hello world</b>`
+  - "hello world".link(url) => `<a href="url">hello world</a>`
+  - "hello world".fontcolor(color) => `<font color="color">hello world</font>`
+  ```js
+  // HTML 方法 link(url)、anchor()尽量不要使用，创建的标记通常无法表达语义
+  let str4 = "hello world";
+  str4.anchor("myAnchor");  // `<a name="myAnchor">hello world</a>`
+  str4.bold(); // `<b>hello world</b>`
+  let url = "zuo11.com"; 
+  str4.link(url); // `<a href="zuo11.com">hello world</a>`
+  srt4.fontcolor("red") // `<font color="red">hello world</font>`
+  ```
+- 字符串迭代与解构
+  ```js
+  let message = "abc";
+  let stringIterator = message[Symbol.iterator]();
+
+  console.log(stringIterator.next());  // {value: "a", done: false}
+  console.log(stringIterator.next());  // {value: "b", done: false}
+  console.log(stringIterator.next());  // {value: "c", done: false}
+  console.log(stringIterator.next());  // {value: undefined, done: true}
+
+  for (const c of "abcde") {
+    console.log(c);
+  }
+  // a b c d e
+
+  let msg = "abcde"
+  [...msg] // ["a", "b", "c", "d", "e"]
+  ```
 
 ## 单例内置对象（单体内置对象）
-内置对象不依赖宿主环境对象，这些对象在ECMAScript程序执行之前就已经存在了。如Object、Array、String
-ECMA-262还定义了两个单体内置对象: Global、Math
-### Global对象
-```js   
-// 1. URI编码方法 encodeURL() 和 encodeURLComponent  
+内置对象不依赖宿主环境对象，这些对象在 ECMAScript 程序执行之前就已经存在了。如 Object、Array、String
+ECMA-262还定义了两个单例内置对象: Global、Math
+
+### Global 对象
+Global 对象是 ES 中最特别的对象，代码不会显式的访问它，是一个兜底对象。针对的是不属于任何对象的属性和方法。全局变量和函数，都是 Global 对象的属性。包括 isNaN、isFinite()、parseInt()、parseFloat 等。Global 对象上还有另外一些方法，这里来看 URL 编码方法。
+
+URI编码方法 `encodeURL()` 和 `encodeURLComponent()`, URI 编码方法一般有3种类型的字符
+
+字符类型(中) | 字符类型(英) | 包含 | encodeURI | encodeURIComponent
+---|---|---|---|---
+URI保留字符 | Reserved Characters | `;,/?:@&=+$#` | 不转义 | 转义(escaped)
+非转义字符 | Unreserved Marks or Alphanumeric Characters | `-_.!~*'()`以及数字(0-9)、字母(a-zA-Z) | 不转义 | 不转义
+空格等其他字符/中文等 | space or other character etc | " 中文？"等其他字符 | 转义 | 转义
+
+- encodeURI 不会编码 URI 保留字符/非转义字符，只会对空格等其他字符(如中文字符，中文等)进行编码  
+- encodeURIComponent 不会编码非转义字符，URI保留字符和其他字符都会编码 
+
+encodeURI 与 encodeURIComponent 的区别是：encodeURIComponent 会对 URI 保留字符进行编码，而 encodeURI 则不会，其他逻辑基本一致。 更多细节参考：[为什么有效的URI不能包含空格等其他字符，URI编码方法详解 - 左小白的技术日常](http://www.zuo11.com/blog/2020/9/uri.html)
+
+```js
 // URI (Uniform Resource Identifiers，统一资源标识符) 在某个规则下把资源独一无二的标识出来
 // URL (Uniform Resource Locator，同一资源定位符) URL是用定位的方式实现的URI。
 // 区别详情参见: https://www.zhihu.com/question/21950864/answer/154309494
@@ -659,27 +789,30 @@ ECMA-262还定义了两个单体内置对象: Global、Math
 let uri = "http://www.zuo11.com/test value.html#start";
 encodeURI(url); // "http://www.zuo11.com/test%20value.html#start"  只转义空格
 encodeURIComponent(url); // "http%3A%2F%2Fwww.zuo11.com%2Ftest%20value.html%23start" 
-// encodeURI只转义空格, encodeURIComponent()会转义所有的非字母数字字符
+// encodeURI只转义空格中文字符, encodeURIComponent()除了会转义空格和中文字符外，还会转义URI保留字
 
 // 解码"http://www.zuo11.com/test value.html#start"
-// 只解码空格
+// 只解码空格、中文等
 decodeURI("http://www.zuo11.com/test%20value.html#start");
-// 解码非数字字母字符
+// 除了会解码空格和中文字符外，还会解码 URI 保留字
 decodeURIComponent("http%3A%2F%2Fwww.zuo11.com%2Ftest%20value.html%23start");
-
-// 2.eval() 方法，像是一个完整的ES解析器，只接收一个参数，即要执行的JS字符串
+```
+**eval() 方法**，整个 ES 语言中最强大的函数，这个方法就是一个完整的 ES 解释器。只接收一个参数，即要执行的 JS 字符串
+```js   
 eval("alert('123')") // alert("123");
-eval("let msg = 'hello'");
+eval("var msg = 'hello'");
 alert(msg); // hello
 
-// 3.Global对象的属性
-// undefined、NaN、Infinity等，ES5 禁止给 undefined\NaN\Infinity赋值
-
-// 4.window对象
-// JS中window对象除了扮演ES规定的Global对象角色外，还承担了很多别的任务如BOM
+// 注意作用域
+eval("let msg = 'hello'");
+alert(msg); // ReferenceError: msg is not defined
 ```
-### Math对象
-ES为保存数学公式和信息提供了Math对象。与js直接编写的计算功能相比，Math对象提供的功能执行会快得多
+**Global 对象的属性**，undefined、NaN、Infinity等，ES5 禁止给 undefined、NaN、Infinity赋值
+
+**window对象**，JS 中 window 对象除了扮演 ES 规定的 Global 对象角色外，还承担了很多别的任务如 BOM
+
+### Math 对象
+ES 为保存数学公式和信息提供了 Math 对象。与 js 直接编写的计算功能相比，Math 对象提供的功能执行会快得多
 ```js
 // 1. Math对象的属性 PI,E,SQRT2等
 Math.PI // π 的值， 3.141592653589793
@@ -711,4 +844,4 @@ Math.round(Math.random()*8 + 2); // 取 0-8之间的随机数+2 就是2-10之间
 
 // 5. 其他方法 Math.abs() 取绝对值等
 ```
-
+注意：Math.random() 方法出于演示目的可以，如果是为了加密而需要生成随机数，建议使用较高不确定性的 window.crypto.getRandomValues()
