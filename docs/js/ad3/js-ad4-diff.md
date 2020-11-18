@@ -52,13 +52,22 @@ keywords: JS高程4做了哪些更新,JS高程4与JS高程3对比,JS高程4笔�
 详情参考：[5. 基本引用类型 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-5.html)
 
 ## 第 6 章 集合引用类型
-除了将第五章的 Object 类型、Array 类型放到了这一章外，将原来 15.3.1 使用Canvas绘图 - WebGL - 类型化数组移到了这一章，并改翻译为定型数组(typed array)，也就是 ArrayBuffer、DataView等。另外新增Map、WeakMap、Set、WeakSet
+除了将第五章的 Object 类型、Array 类型放到了这一章外，将原来 15.3.1 使用Canvas绘图 - WebGL - 类型化数组移到了这一章，并改翻译为定型数组(typed array)，也就是 ArrayBuffer、DataView等。
+
+Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())、复制和填充方法(fill(), copyWithin)、断言函数(find()、findIndex())、...扩展等。
+
+另外新增 Map、WeakMap、Set、WeakSet。详情参考：[6. 集合引用类型 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-6.html)
 
 ## 第 7 章 迭代器与生成器(Iterator 与 Generator)
-新增的章节，ES6 入门里面有讲
+新增的章节，与《ES6 入门》中对应的核心内容基本一致。主要差异在于描述方法与知识点介绍的先后顺序。个人感觉这本书有些地方从概念上看好理解一点，最好两本书结合一起看。针对本书的重点内容作了一个整理，参考：[7. 迭代器与生成器(Iterator 与 Generator) - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-7.html)
 
 ## 第 8 章 对象、类与面向对象编程
-原第 6 章 面向对象的程序设计、新增了 `类` class。
+原第 6 章 面向对象的程序设计，
+- 8.1 理解对象 新增 ES6 对象的扩展介绍，比如对象解构、Object.assin()、变量属性，属性简写，函数简写等。
+- 8.2 创建对象，对原型的理解做了更多细节方面的介绍。删除 `组合使用构造函数和原型模式`、`动态原型模式`、`寄生构造函数模式`、`稳妥的构造函数模式` 内容
+- 8.4 新增 `类` class。
+
+详情参考：[8. 对象、类与面向对象编程 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-8.html)
 
 ## 第 9 章 代理与反射(Proxy 与 Reflect)
 新增的章节，ES6 入门里面有讲

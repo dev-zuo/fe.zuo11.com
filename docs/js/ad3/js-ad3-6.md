@@ -1,5 +1,5 @@
 ---
-title: 5. 集合引用类型 - JS高程4
+title: 6. 集合引用类型 - JS高程4
 description: 集合引用类型包括：Object、Array、定型数组(typed array)、Map、WeekMap、Set、WeekSet。Object 是 ES 中最常用的类型之一，可以使用 Object() 构造函数创建，也可以使用简写：字面量写法。推荐使用对象的字面量语法。MCAScript 中的数组 Array 是有序列表，和其他语言不同的是，它的每一项都可以保存任何数据类型。
 keywords: Object,Array,定型数组(typed array),Map,WeekMap,Set,WeekSet
 ---
