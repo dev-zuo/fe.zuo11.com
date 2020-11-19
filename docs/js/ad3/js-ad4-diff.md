@@ -70,7 +70,7 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 详情参考：[8. 对象、类与面向对象编程 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-8.html)
 
 ## 第 9 章 代理与反射(Proxy 与 Reflect)
-新增的章节，ES6 入门里面有讲
+新增的章节，和 《ES6入门》中对应的内容来讲，这一章内容的编排要好一点，系统性更强。详情参考：[9. 代理与反射(Proxy 与 Reflect) - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-9.html)
 
 ## 第 10 章 函数
 原第7章 函数表达式、闭包，将第 5 章 Function 引用类型放到了这一章。增加了**箭头函数**、**扩展参数**、 **尾调用优化**等。
