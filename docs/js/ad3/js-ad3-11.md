@@ -376,7 +376,9 @@ promise._then((data) => {
   console.log(err)
 })
 ```
-至少上面的例子要可以正常执行。首先要有一个构造函数，另外，要有 then, catch, finally 实例函数，resolve，reject 静态方法。还有支持链式调用。
+至少上面的例子要可以正常执行。首先要有一个构造函数 MyPromise，另外，要有 then, catch, finally 实例函数，由于和系统有冲突，实例函数都以 `_` 开头，resolve，reject 静态方法，还有支持链式调用。
+
+先来实现构造函数，与_then方法
 ```js
 class MyPromise {
   #status = 'pending'
@@ -411,20 +413,661 @@ class MyPromise {
       return this
     }
   }
+  _catch() {}
+  _finally() {}
+  static resolve() {}
+  static reject() {}
+}
+```
+测试函数，执行成功的测试
+```js
+// 测试
+a = new MyPromise(() => {})
+a._then((data) => console.log(data), (err) => console.log(err))
+// 执行正常
+// MyPromise {#status: "pending", #result: undefined}
+// MyPromise {#status: "pending", #result: undefined}
 
-  _catch() {
+b = new MyPromise((resolve) => resolve('success'))
+b._then((data) => console.log(data), (err) => console.log(err))
+// 执行正常
+// MyPromise {#status: "fulfilled", #result: "success"}
+// success
+// MyPromise {#status: "fulfilled", #result: undefined}
 
+c = new MyPromise((resolve, reject) => reject('error'))
+c._then((data) => console.log(data), (err) => console.log(err))
+// 执行正常
+// MyPromise {#status: "rejected", #result: "error"}
+// error
+// MyPromise {#status: "fulfilled", #result: undefined}
+```
+有问题的结果
+```js
+d = new MyPromise((resolve, reject) => {
+  resolve('sucess a')
+  reject('fail a')
+})
+// MyPromise {#status: "rejected", #result: "fail a"}
+// 错误，执行函数状态变为落定状态后，就不能再变了。这里要加一个判断
+
+e = new MyPromise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('sucess')
+  }, 2000)
+})
+e._then((data) => console.log(data), (err) => console.log(err))
+// MyPromise {#status: "pending", #result: undefined}
+// 错误，_then 如果是异步的，等异步结束之后 _then 后面的逻辑还会走
+// 这里需要一个通知，当执行成功失败后，再次调用对用的回调函数
+```
+改写上面的例子，使用发布订阅模式，来触发 _then 里面回调函数执行解决异步的问题。
+```js
+class MyPromise {
+  #status = 'pending'
+  #result = undefined
+  // 发布订阅
+  #listenObj = {}
+  #on(prop, cb) {
+    let listenObj = this.#listenObj
+    listenObj[prop] ? listenObj[prop].push(cb) : (listenObj[prop] = [cb])
+    // console.log('listenObj', listenObj)
   }
-  _finally() {
-
+  #emit(prop) {
+    let listeners = this.#listenObj[prop]
+    // console.log('listeners', listeners)
+    if (Array.isArray(listeners)) {
+      listeners.forEach(cb => cb())
+    }
   }
-  static relove() {
 
+  constructor(func) {
+    // new 的时候执行执行传入的函数，函数执行成功或失败改变状态
+    // 并将返回的结果记录到 #result 中
+    // 这里 #status 和 #result 都用的私有变量
+    func((data) => {
+      // 如果状态已经改变，就不能再改了
+      if (['fulfilled', 'rejected'].includes(this.#status)) {
+        return this
+      }
+      this.#status = 'fulfilled'
+      this.#result = data
+      // 触发 _then 里面的回调执行
+      this.#emit('fulfilled')
+    }, (err) => {
+      // 如果状态已经改变，就不能再改了
+      if (['fulfilled', 'rejected'].includes(this.#status)) {
+        return this
+      }
+      this.#status = 'rejected'
+      this.#result = err
+      // 触发 _then 里面的回调执行
+      this.#emit('rejected')
+    })
   }
 
-  static reject() {
+  // 用 _then 方法取值时，看 #status 的状态，决定执行哪个函数
+  _then(successCallback, failCallback) {
+    let successCb = () => {
+      // console.log('触发了 fulfilled 回调')
+      successCallback(this.#result)
+      this.#result = undefined
+      return this
+    }
+    let failCb = () => {
+      // console.log('触发了 rejected 回调')
+      failCallback(this.#result)
+      this.#status = 'fulfilled'
+      this.#result = undefined
+      return this
+    }
+    // 如果状态已经变更
+    if (['fulfilled', 'rejected'].includes(this.#status)) {
+      if (this.#status === 'fulfilled') {
+        return successCb()
+      } else {
+        return failCb()
+      }
+    } else {
+      // 状态未变更，异步
+      this.#on('fulfilled', successCb)
+      this.#on('rejected', failCb)
+      return this
+    }
+  }
+  _catch() {}
+  _finally() {}
+  static resolve() {}
+  static reject() {}
+}
+```
+至此上面的测试都过了，再来看看其他场景
+```js
+a = new Promise((resolve) => resolve(3))
+a // Promise {<fulfilled>: 3}
+b = a.then(() => console.log('success'))
+// success
+// b Promise {<fulfilled>: undefined}
+a // Promise {<fulfilled>: 3}
+a === b // false
+```
+我们的实现中 a 是全等于 b 的，还是有问题的。_then 执行后，会返回一个新的 Promise 实例，且当前实例的状态、结果值不会变更。相关变化会保存到新返回的 Promise 实例中。
 
+**核心问题是，如何返回一个新的 Promise 实例**，由于 then 回调函数的 return 也可能是一个新的 Promise，因此拿到 then 回调函数的返回值后，我们调用 Promise.resolve(返回值) 来创建一个新的 Promise 实例。这样既实现了 Promise.resolve，又实现了返回新 Promise，前面提到过 Promise.resolve 的参数如果是 Promise 实例，那么状态和参数的 Promise 保持一致。写个 demo 看看
+
+```js
+a = new Promise(resolve => resolve(3))
+a // Promise {<fulfilled>: 3}
+b = Promise.resolve(a)
+a === b // true
+```
+上面的例子中，可以看到，如果 Promise.resolve 参数是 Promise 实例，那么直接返回对应的实例。如果把上面的 Promise.resolve 换为 Promise.reject 会发现 a !== b，且状态不会变更。再回过头来看前面的对应知识点，是不是更清晰了呢？下面来改写之前的实现。
+
+```js
+class MyPromise {
+  #status = 'pending'
+  #result = undefined
+  // 发布订阅
+  #listenObj = {}
+  #on(prop, cb) {
+    let listenObj = this.#listenObj
+    listenObj[prop] ? listenObj[prop].push(cb) : (listenObj[prop] = [cb])
+    // console.log('listenObj', listenObj)
+  }
+  #emit(prop) {
+    let listeners = this.#listenObj[prop]
+    // console.log('listeners', listeners)
+    if (Array.isArray(listeners)) {
+      listeners.forEach(cb => cb())
+    }
+  }
+
+  constructor(func) {
+    // new 的时候执行执行传入的函数，函数执行成功或失败改变状态
+    // 并将返回的结果记录到 #result 中
+    // 这里 #status 和 #result 都用的私有变量
+    func((data) => {
+      // 如果状态已经改变，就不能再改了
+      if (['fulfilled', 'rejected'].includes(this.#status)) {
+        return this
+      }
+      this.#status = 'fulfilled'
+      this.#result = data
+      // 触发 _then 里面的回调执行
+      this.#emit('fulfilled')
+    }, (err) => {
+      // 如果状态已经改变，就不能再改了
+      if (['fulfilled', 'rejected'].includes(this.#status)) {
+        return this
+      }
+      this.#status = 'rejected'
+      this.#result = err
+      // 触发 _then 里面的回调执行
+      this.#emit('rejected')
+    })
+  }
+
+  // 用 _then 方法取值时，看 #status 的状态，决定执行哪个函数
+  _then(successCallback, failCallback) {
+    let successCb = () => {
+      // console.log('触发了 fulfilled 回调')
+      let cbResult = successCallback(this.#result)
+      // fulfilled 返回的状态还是 fulfilled，用 MyPromise.resolve 可以解决
+      return MyPromise.resolve(cbResult)
+    }
+    let failCb = () => {
+      // console.log('触发了 rejected 回调')
+      let cbResult = failCallback(this.#result)
+      // 貌似这里还是可以调用 MyPromise.resolve。接收 rejected 后，
+      // 如果参数不是 Promise 实例，默认状态会回 fulfilled
+      return MyPromise.resolve(cbResult)
+    }
+    // 如果状态已经变更
+    if (['fulfilled', 'rejected'].includes(this.#status)) {
+      if (this.#status === 'fulfilled') {
+        return successCb()
+      } else {
+        return failCb()
+      }
+    } else {
+      // 状态未变更，异步
+      this.#on('fulfilled', successCb)
+      this.#on('rejected', failCb)
+      return this
+    }
+  }
+  _catch() {}
+  _finally() {}
+  static resolve(value) {
+    if (typeof value === 'object' && value instanceof MyPromise) {
+      return value
+    } else {
+      return new MyPromise(resolve => resolve(value))
+    }
+  }
+  static reject(value) {
+    return new MyPromise((resolve, reject) => reject(value))
   }
 }
 ```
+再来写测试，就正常了。
+```js
+a = new MyPromise(resolve => resolve(3))
+// MyPromise {#on: ƒ, #emit: ƒ, #status: "fulfilled", #result: 3, #listenObj: {…}}
+b = a._then((data) => { console.log(data)})
+// 3
+// MyPromise {#on: ƒ, #emit: ƒ, #status: "fulfilled", #result: undefined, #listenObj: {…}}
+a === b  // false
+```
+再来看一个刚测试出的 bug，下面的例子中，没有加 success 的处理函数，正常的逻辑是如果没有接收，返回一个状态不变的新 Promise 实例。类似于 promise 实例的副本，里面保存了所有状态。
+```js
+a = new MyPromise(resolve => resolve(3))
+a._then(null, (err) => console.log(err))
+// TypeError: successCallback is not a function
+
+// 正常的逻辑如下
+a = new Promise(r => r(3))
+a // Promise {<fulfilled>: 3}
+b = a.then(null, (err) => console.log(err))
+// b Promise {<fulfilled>: 3}
+a === b // false
+
+a = new Promise(() => {})
+b = a.then(() => {})
+// b Promise {<pending>} 
+a === b // false
+
+// 返回的是完整的副本
+a = new Promise(r => setTimeout(r, 5000))
+a // Promise {<pending>} 
+b = a.then(() => {})
+// b Promise {<pending>} 
+a === b // false
+// 5 秒钟后 
+// b Promise {<fulfilled>: undefined}
+// a Promise {<fulfilled>: undefined}
+```
+再来改写上面的实现，顺便实现 catch 函数
+```js
+class MyPromise {
+  #status = 'pending'
+  #result = undefined
+  // 发布订阅
+  #listenObj = {}
+  #on(prop, cb) {
+    let listenObj = this.#listenObj
+    listenObj[prop] ? listenObj[prop].push(cb) : (listenObj[prop] = [cb])
+    // console.log('listenObj', listenObj)
+  }
+  #emit(prop) {
+    let listeners = this.#listenObj[prop]
+    // console.log('listeners', listeners)
+    if (Array.isArray(listeners)) {
+      listeners.forEach(cb => cb())
+    }
+  }
+
+  constructor(func) {
+    // new 的时候执行执行传入的函数，函数执行成功或失败改变状态
+    // 并将返回的结果记录到 #result 中
+    // 这里 #status 和 #result 都用的私有变量
+    func((data) => {
+      // 如果状态已经改变，就不能再改了
+      if (['fulfilled', 'rejected'].includes(this.#status)) {
+        return this
+      }
+      this.#status = 'fulfilled'
+      this.#result = data
+      // 触发 _then 里面的回调执行
+      this.#emit('fulfilled')
+    }, (err) => {
+      // 如果状态已经改变，就不能再改了
+      if (['fulfilled', 'rejected'].includes(this.#status)) {
+        return this
+      }
+      this.#status = 'rejected'
+      this.#result = err
+      // 触发 _then 里面的回调执行
+      this.#emit('rejected')
+    })
+  }
+
+  // 用 _then 方法取值时，看 #status 的状态，决定执行哪个函数
+  _then(successCallback, failCallback) {
+    let successCb = () => {
+      // 如果没有successCallback，创建一个保存当前状态的 promise 副本
+      if (typeof successCallback !== 'function') {
+        return MyPromise.resolve(this.#result)
+      }
+      // console.log('触发了 fulfilled 回调')
+      let cbResult = successCallback(this.#result)
+      // fulfilled 返回的状态还是 fulfilled，用 MyPromise.resolve 可以解决
+      return MyPromise.resolve(cbResult)
+    }
+    let failCb = () => {
+      if (typeof failCallback !== 'function') {
+        return MyPromise.reject(this.#result)
+      }
+      let cbResult = failCallback(this.#result)
+      // 貌似这里还是可以调用 MyPromise.resolve。接收 rejected 后，
+      // 如果参数不是 Promise 实例，默认状态会回 fulfilled
+      return MyPromise.resolve(cbResult)
+    }
+    // 如果状态已经变更
+    if (['fulfilled', 'rejected'].includes(this.#status)) {
+      if (this.#status === 'fulfilled') {
+        return successCb()
+      } else {
+        return failCb()
+      }
+    } else {
+      // 状态未变更，异步
+      this.#on('fulfilled', successCb)
+      this.#on('rejected', failCb)
+      // 如果是 pending 状态也要返回一个新的 Promise 实例副本
+      // 不知道执行完没有，需要保存执行状态，状态切换后，对应的状态也会切换
+      // TODO
+      return this
+    }
+  }
+  _catch(cb) {
+    return this._then(null, cb)
+  }
+  _finally() {}
+  static resolve(value) {
+    if (typeof value === 'object' && value instanceof MyPromise) {
+      return value
+    } else {
+      return new MyPromise(resolve => resolve(value))
+    }
+  }
+  static reject(value) {
+    return new MyPromise((resolve, reject) => reject(value))
+  }
+}
+```
+上面的例子中，实现了then中没有传接收参数的情况，创建一个对应的副本。顺便实现了 catch。pending 状态的情况，这里没有完全实现。没有创建副本，直接返回当前 this。
+
+再来看看执行顺序问题，对于非异步的情况，我们没有加入执行队列而是立即执行。
+```js
+a = new MyPromise(r => r('3')); 
+a._then((d) => console.log(d));
+console.log('done')
+// 3
+// done
+
+a = new Promise(r => r('3')); 
+a.then((d) => console.log(d));
+console.log('done')
+// done
+// 3
+```
+这里在 emit 事件时，加个 setTimeout 0, 另外实现下 finally，重构下代码
+```js
+class MyPromise {
+  #status = 'pending'
+  #result = undefined
+
+  // 发布订阅
+  #listenObj = {}
+  #on(prop, cb) {
+    let listenObj = this.#listenObj
+    listenObj[prop] ? listenObj[prop].push(cb) : (listenObj[prop] = [cb])
+  }
+  #emit(prop) {
+    let listeners = this.#listenObj[prop]
+    Array.isArray(listeners) && listeners.forEach(cb => cb())
+  }
+
+  /**
+   * new 的时候执行执行传入的函数 func，函数执行后改变状态 #status
+   * 并将返回的结果记录到 #result 中，这里 #status 和 #result 都用的私有变量
+   */
+  constructor(func) {
+     let exec = (data, status) => {
+      if (this.isStatusSettled()) {
+        return
+      }
+      this.#status = status
+      this.#result = data
+      setTimeout(() =>this.#emit(status), 0) // 触发 _then 里面的回调，支持异步
+    }
+    func(data => exec(data, 'fulfilled'), err => exec(err, 'rejected'))
+  }
+
+  /**
+   * 用 _then 方法取值时，看 #status 的状态，决定执行哪个函数
+   * 如果状态是 settled
+   * 1. 没有传入对应的 cb，创建保存当前状态的 promise 副本并返回
+   * 2. 传入了对应的 cb，创建一个基于 cb 返回值的副本
+   * 3. 如果 cb 没返回值时，fulfilled, rejected 都默认返回 fulfilled
+   * 如果状态时 pending，直接返回 this
+   */
+  _then(successCallback, failCallback) {
+    // 是否有传入对应的回调函数
+    const result = this.#result
+    const successCb = () => {
+      if (typeof successCallback !== 'function') {
+        return MyPromise.resolve(result)
+      }
+      let res = successCallback(result)
+      return MyPromise.resolve(res === undefined ? result : res)
+    }
+    const failCb = () => {
+      if (typeof failCallback !== 'function') {
+        return MyPromise.reject(result)
+      }
+      let res = failCallback(result)
+      return res === undefined ? MyPromise.reject(result) : MyPromise.resolve(res)
+    }
+
+    // 如果状态已经落定，不用监听了
+    if (this.isStatusSettled()) {
+      // 这里同步，执行顺序就不管了
+      return this.#status === 'fulfilled' ? successCb() : failCb()
+    } else {
+      // 状态没落定，开启监听，并先返回 pending 状态的 this
+      this.#on('fulfilled', successCb)
+      this.#on('rejected', failCb)
+      return this
+    }
+  }
+
+  _catch(cb) {
+    return this._then(null, cb)
+  }
+
+  _finally(cb) {
+    // 当状态落定后，且状态不是 pending 时执行
+    // 如果没有 cb，返回当前 Promise 状态副本，如果有 cb ，且 cb 返回值为 Promise 实例，
+    // 且实例的状态为 pending 或 reject，就返回对应的 Promise 实例副本
+    let finallyCb = () => {
+      if (typeof cb === 'function') {
+        let res = cb(this.#result)
+        let isNoChange = !(res instanceof MyPromise) || res.getData().status === 'fulfilled'
+        return isNoChange ? this.clone(this) : MyPromise.resolve(res)
+      } else {
+        return this.clone(this)
+      }
+    }
+    // 如果状态已落定
+    if (this.isStatusSettled()) {
+      return finallyCb()
+    } else {
+      // 状态没落定，开启监听，并先返回 pending 状态的 this
+      this.#on('fulfilled', finallyCb)
+      this.#on('rejected', finallyCb)
+      return this
+    }
+  }
+
+  // 如果是 Promise 实例，返回对应的实例，否则返回以 value 为值的结果
+  static resolve(value) {
+    let isPromiseInstance = typeof value === 'object' && value instanceof MyPromise
+    return isPromiseInstance ? value : new MyPromise(resolve => resolve(value))
+  }
+
+  static reject(value) {
+    return new MyPromise((resolve, reject) => reject(value))
+  }
+
+  // 状态是否是落定状态
+  isStatusSettled() {
+    return ['fulfilled', 'rejected'].includes(this.#status)
+  }
+
+  // 返回落定状态的实例副本，只是复制 status 和 result
+  clone(promise) {
+    let p = new MyPromise(r => r('test'))
+    p.setData(promise.getData())
+    return p
+  }
+
+  getData() {
+    return {
+      status: this.#status,
+      result: this.#result
+    }
+  }
+
+  setData({ status, result}) {
+    this.#status = status
+    this.#result = result
+  }
+}
+```
+## 怎么判断一个Promise实现是OK的（扩展）
+怎么判断一个 Promise 实现是 OK 的，下面来写一些例子，用于单元测试
+```js
+/**
+ * 基本功能，实例创建、三种状态
+ * 1. 返回一个 Promise 实例，状态为 pending，值为 undefined
+ * 2. 返回一个 Promise 实例，状态为 fulfilled，值为 'hello'
+ * 3. 返回一个 Promise 实例，状态为 reject，值为 error
+ * 4. 状态落定后测试，返回一个 Promise 实例，状态为 reject, 值为 error
+ */
+new Promise(() => {})
+new Promise(resolve => resolve('hello'))
+new Promise((resolve, reject) => reject('error'))
+new Promise((resolve, reject) => {
+  reject('error')
+  resolve('hello')
+})
+
+/**
+ * then 函数基本用法 - pending 状态时
+ * b 返回 pending 状态的 Promise 实例，且 then 传入的两个函数都没有执行
+ */
+a = new Promise(() => {})
+b = a.then(data => console.log(data), (err) => console.log(err))
+
+/**
+ * then 函数基本用法 - 异步触发
+ * 1. 3秒后，是否执行传入的第一个函数
+ * 2. 3秒后，是否执行传入的第二个函数
+ */
+a = new Promise(resolve => setTimeout(resolve, 3000))
+b = new Promise((resolve, reject) => setTimeout(reject, 3000))
+a.then(data => console.log('success'), err => console.log(err))
+b.then(data => console.log(data), err => console.log('error'))
+
+/**
+ * then 函数基本用法 - resolve 传值，回调函数返回值测试
+ * then 传入的第一个函数有执行，第二个函数未执行
+ * 1. 返回值 data 为 hello
+ * 1. b 返回 fulfilled 状态的 Promise 实例，值为 'abc', a !== b
+ * 2. b 返回 fulfilled 状态的 Promise 实例，值为 'test', a !== b
+ * 3. b 返回 rejected 状态的 Promise 实例，值为 'error', a !== b
+ * 4. b 返回 pending 状态的 Promise 实例，值为 undefined, a !== b
+ */
+a = new Promise(resolve => resolve('hello'))
+b = a.then(data => console.log(data), err => console.log(err))
+b = a.then(data => 'abc', err => console.log(err))
+b = a.then(data => new Promise(resolve => resolve('test')), err => console.log(err))
+b = a.then(data => new Promise((resolve, reject) => reject('error')), err => console.log(err))
+b = a.then(data => new Promise(() => {}), err => console.log(err))
+
+/**
+ * then 函数基本用法 - reject 传值，回调函数返回值测试
+ * then 传入的第二个函数有执行，第一个函数未执行
+ * 1. 返回值 err 为 "error"
+ * 2. b 返回 fulfilled 状态的 Promise 实例，值为 'abc', a !== b
+ * 3. b 返回 fulfilled 状态的 Promise 实例，值为 'test', a !== b
+ * 4. b 返回 rejected 状态的 Promise 实例，值为 'error', a !== b
+ * 5. b 返回 pending 状态的 Promise 实例，值为 undefined, a !== b
+ */
+a = new Promise((resolve, reject) => reject('error'))
+b = a.then(data => console.log(data), err => console.log(err))
+b = a.then(data => console.log(data), err => 'abc')
+b = a.then(data => console.log(data), err => new Promise(resolve => resolve('test')))
+b = a.then(data => console.log(data), err => new Promise((resolve, reject) => reject('error')))
+b = a.then(data => console.log(data), err => new Promise(() => {}))
+
+/**
+ * then 函数基本用法 - 回调函数不传时/catch，返回实例状态是否正常
+ * 1. b 是原 Promise 实例的副本，状态 fulfilled, 值 hello，a !== b
+ * 2. b 是原 Promise 实例副本，状态 rejected, 值 error, a2 !== b
+ * 3. 测试 catch 返回是否执行正常，返回 fulfilled，值为 undefiend, a2 !== c
+ */
+a = new Promise(resolve => resolve('hello'))
+b = a.then(null, err => console.log(err))
+a2 = new Promise((resolve, reject) => reject('error'))
+b = a2.then(data => console.log(data), null)
+c = a2.catch(err => console.log(err))
+
+/**
+ * then 回调执行顺序测试
+ * 打印顺序 done、done2、a1、a2
+ */
+a = new Promise(r => r('a1')); 
+a.then((d) => console.log(d));
+console.log('done')
+a2 = new Promise(r => r('a2')); 
+a2.then((d) => console.log(d));
+console.log('done2')
+
+/**
+ * Promise.resolve 与 Promise.reject 测试
+ * 1. 返回 Promise 实例, 状态 fulfilled, 值 123
+ * 2. 返回 Promise 实例, 状态 pending, 值 undefined
+ * 3. 返回 Promise 实例, 状态 fulfilled, 值 hello
+ * 4. 返回 Promise 实例, 状态 rejected, 值 err
+ * 5. 返回 Promise 实例, 状态 rejected, 值 err
+ * 6. 返回 Promise 实例, 状态 rejected, 值 Promise 实例 pending
+ * 7. 返回 Promise 实例, 状态 rejected, 值 Promise 实例 resolve
+ * 8. 返回 Promise 实例, 状态 rejected, 值 Promise 实例 reject
+ */
+a = Promise.resolve('123')
+a = Promise.resolve(new Promise(() => {}))
+a = Promise.resolve(new Promise(resolve => resolve('hello')))
+a = Promise.resolve(new Promise((resolve, reject) => reject('err')))
+a = Promise.reject('err')
+a = Promise.reject(new Promise(() => {}))
+a = Promise.reject(new Promise(resolve => resolve('hello')))
+a = Promise.reject(new Promise((resolve, reject) => reject('err')))
+
+
+/**
+ * Promise.prototype.finally 测试
+ * 1. 打印 a， b 返回新的 Promise 实例，状态为 fulfilled, 值 success
+ * 2. 打印 a2， b2 返回新的 Promise 实例，状态为 rejected, 值 error
+ * 3. 不打印 a3， b3 返回新的 Promise 实例，状态为 pending, 值 undefined
+ * 4. 返回值测试, c 返回新的 Promise 状态为 pending
+ * 5. d 返回新的 Promise 状态为 rejected
+ */
+a = new Promise(r => r('success')); 
+b = a.finally(() => console.log('a')) //
+a2 = new Promise((r, j) => j('error')); 
+b2 = a2.finally(() => console.log('a2')) // 
+a3 = new Promise(() => {})
+b3 = a3.finally(() => console.log('a3')) // 
+c =  a.finally(() => new Promise(() => {})) // 
+d =  a.finally(() => Promise.reject('error')) // 
+
+
+/**
+ * Promise.all 与 Promise.race 测试
+ */
+```
+
 ## 异步函数 async/await
