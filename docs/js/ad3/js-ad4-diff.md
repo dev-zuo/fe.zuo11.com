@@ -76,7 +76,7 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 原第7章 函数表达式、闭包，将原第 5 章 引用类型 - Function 类型放到了这一章。更加系统化，增加了**箭头函数**、**扩展参数**、**new.target** **尾调用优化** 等。参考：[10. 函数 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-10.html)
 
 ## 第 11 章 期约与异步函数(Promise与async/await)
-新增的章节，ES6 入门里面有讲
+新增的章节，和 ES6 入门内容有部分重复，详情参考：[11. 期约与异步函数(Promise与async/await) - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-11.html)
 
 ## --- 前 11 章分隔线
 ::: tip

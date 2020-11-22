@@ -1,6 +1,11 @@
+---
+title: 11. 期约与异步函数(Promise与async/await) - JS高程4
+description: 在 《ES6入门》中，介绍过 Promise 与 async/await，这里结合两本书的内容，加上自己的理解对本章的重点做一些总结，并自己实现一个 Promise。Promise 是 ES6 新增的引用类型，用于异步处理。假设你需要把一个不知道什么时候才能执行结束的异步任务封装成函数，你会怎么做？一般会使用 callback 回调函数来处理成功/失败后的逻辑。
+keywords: Promise,async/await,异步函数,期约
+---
 # 11. 期约与异步函数(Promise与async/await)
 
-在 《ES6入门》中，介绍过 Promise 与 async/await，这里结合两本书的内容，加上自己的理解对本章的重点做一些总结
+在 《ES6入门》中，介绍过 Promise 与 async/await，这里结合两本书的内容，加上自己的理解对本章的重点做一些总结，并自己实现一个 Promise。
 
 - [11. Promise对象 - ES6入门笔记](http://fe.zuo11.com/js/es6/es6-11.html)
 - [14. async函数 - ES6入门笔记](http://fe.zuo11.com/js/es6/es6-14.html)
@@ -802,7 +807,7 @@ console.log('done')
 // done
 // 3
 ```
-这里在 emit 事件时，加个 setTimeout 0, 另外实现下 finally，重构下代码
+这里在 emit 事件时，加个 setTimeout 0, 另外实现下 finally 实例方法、Promise.all、Promise.race，重构下代码。
 ```js
 class MyPromise {
   #status = 'pending'
@@ -911,6 +916,34 @@ class MyPromise {
     return new MyPromise((resolve, reject) => reject(value))
   }
 
+  static all(array) {
+    return new MyPromise((resolve, reject) => {
+      let successCount = 0
+      let resultArr = []
+      for (let i = 0; i < array.length; i++) {
+        let promise = MyPromise.resolve(array[i])
+        promise._then((data) => {
+          successCount++
+          resultArr.push(data)
+          successCount === array.length && resolve(resultArr)
+        }, (err) => {
+          reject(err)
+        })
+        // 函数参数 (err) => { reject(err) } 等价于 reject
+      }
+    })
+  }
+
+  static race(array) {
+    return new MyPromise((resolve, reject) => {
+      for (let i = 0; i < array.length; i++) {
+        let promise = MyPromise.resolve(array[i])
+        promise._then(resolve, reject)
+        // 函数参数 (err) => { reject(err) } 等价于 reject
+      }
+    })
+  }
+
   // 状态是否是落定状态
   isStatusSettled() {
     return ['fulfilled', 'rejected'].includes(this.#status)
@@ -936,6 +969,8 @@ class MyPromise {
   }
 }
 ```
+
+实现了 Promise.all 之后，再来看怎么处理 Promise.all 的错误，其实实现 Promise.all 很简单，我们自己自己实现一个  Promise.all 类似的逻辑即可。
 ## 怎么判断一个Promise实现是OK的（扩展）
 怎么判断一个 Promise 实现是 OK 的，下面来写一些例子，用于单元测试
 ```js
@@ -1067,7 +1102,291 @@ d =  a.finally(() => Promise.reject('error')) //
 
 /**
  * Promise.all 与 Promise.race 测试
+ * 1. 返回 Promise 实例，rejected 状态，值为 1
+ * 2. 返回 Promise 实例，fulfilled 状态，值为 ['a', 'b', 'c']
+ * 3. 返回 Promise 实例，rejected 状态，值为 1
+ * 4. 返回 Promise 实例，fulfilled 状态，值为 2
  */
+a = MyPromise.all([ 
+  MyPromise.resolve(),
+  MyPromise.reject('1'),
+  MyPromise.resolve()
+])
+b = MyPromise.all([ 
+  MyPromise.resolve('a'),
+  MyPromise.resolve('b'),
+  MyPromise.resolve('c')
+])
+c = MyPromise.race([ 
+  MyPromise.reject('1'),
+  MyPromise.reject('2'),
+  MyPromise.resolve()
+])
+d = MyPromise.race([ 
+  MyPromise.resolve('a'),
+  MyPromise.resolve('b'),
+  MyPromise.resolve('c')
+])
 ```
 
 ## 异步函数 async/await
+ES2017/ES8 新增的 async/await 关键字主要用于解决异步结构代码组织的问题。
+
+### async异步函数
+async 关键字用于声明异步函数，其返回值是一个 Promise 对象，相当于返回 return Promise.resolve(返回值)
+```js
+async function foo() {}
+let foo = async () => {} 
+let obj = {
+  async foo() {}
+}
+
+async function foo() {
+  console.log(1)
+}
+foo()
+console.log(2)
+// 1
+// 2
+
+async function foo() {
+  console.log(1)
+  return 3 // 等价于 return Promise.resolve(3)
+}
+foo().then(console.log)
+console.log(2)
+// 1
+// 2
+// 3
+```
+async 异步函数的返回值，如果是实现了 thenable 接口的对象（也就是按照规范实现了 then 方法），函数的返回值在执行 then 方法时就使用该方法。
+```js
+async function foo() {
+  const thenable = {
+    then(cb) {
+      cb('foo')
+    }
+  }
+  return thenable
+}
+foo() // Promise {<fulfilled>: "foo"}
+foo().then(console.log) // "foo"
+```
+在异步函数中 throw 错误，会返回 rejected 的 Promise 实例。但如果使用了 Promise.reject() 且没有 return，是不会返回 rejected 的 Promise 实例的。
+```js
+async function foo() {
+  throw 'error'
+}
+foo().catch(console.log)
+// error
+// Promise {<fulfilled>: undefined}
+
+async function foo() {
+  console.log(1)
+  Promise.reject(2)
+}
+foo().catch(console.log)
+// 1
+// Promise {<fulfilled>: undefined}
+// VM33271:3 Uncaught (in promise) 2
+
+async function foo() {
+  console.log(1)
+  return Promise.reject(2)
+}
+foo().catch(console.log)
+// 1
+// 2
+// Promise {<fulfilled>: undefined}
+```
+
+### await
+异步函数主要针对不会马上完成的任务，await 提供了一种暂停和恢复执行的能力。它必须在 async 异步函数中使用。await 关键字后面的值可以是以下 3 种类型：
+1. 常规值，会使用 Promise.resolve() 转换成 Promise 实例。
+2. Promise 实例
+3. 实现了 thenable 接口的对象
+
+await 类似于 generator 函数里面的 yield，可以暂停函数的执行。await 和 yield 有两个区别：
+1. yield 恢复执行需要自身调用 next() 方法。而 await 则是在后面的 Promise 状态 settled 落定后，自动恢复执行。
+2. yield 表达式的返回值依赖调用 next() 方法传入，await 表达式返回值是当 Promise 实例处于 fulfilled 状态落定后，自动执行 then 方法拿到的 resolve 的值。**如果落定状态是 rejected 会抛出异常。如果不使用 try/catch 捕获异常，async 函数会立即终止执行，并返回 rejected 状态的 Promise 实例。**
+```js
+// 例子 1 await 一直是 pending 的状态
+async function foo() {
+  await new Promise(() => {}); 
+  console.log('1')
+}
+foo() // 不会打印 1，状态未落定
+
+// 例子 2 generator 与 async/await
+function * foo() {
+  let x = yield new Promise(r => setTimeout(() => r('a'), 2000))
+  console.log(x)
+  console.log('b')
+}
+let res = foo()
+res.next() 
+// {value: Promise, done: false}
+res.next()
+// undefined
+// b
+// {value: undefined, done: true}
+
+async function foo() {
+  let x = await new Promise(r => setTimeout(() => r('a'), 2000))
+  console.log(x)
+  console.log('b')
+}
+// 两秒后打印 
+// a
+// b
+
+// 例子 3 await rejected 落定状态
+async function foo() {
+  let x = await Promise.reject('err')
+  console.log(x)
+  console.log('b')
+}
+a = foo()
+// Promise {<pending>}
+// Uncaught (in promise) err 抛出异常
+// 没有捕获异常，await 表达式后面的语句都不会执行
+a // Promise {<rejected>: "err"}
+a.catch(console.log)
+
+// 例子 4 thenable
+async function foo() {
+  const thenable = {
+    then(cb) {
+      cb('result')
+    }
+  }
+  let res = await thenable
+  console.log(res)
+}
+foo()
+// result
+// Promise {<fulfilled>: undefined}
+```
+
+### async/await 执行顺序
+只需要注意两点即可：
+1. 如果 async 异步函数中没有 await，那和普通函数没区别
+2. 如果有 await 会暂停，将后面内容 push 到任务队列，等状态落定后再继续执行。就算 await 的是立即可用的值，它也是异步的。
+```js
+async function a() {
+  console.log(2)
+}
+console.log(1)
+a()
+console.log(3)
+// 执行顺序
+// 1
+// 2
+// 3
+
+async function a() {
+  console.log(await Promise.resolve('a'))
+}
+async function b() {
+  console.log(await 'b')
+}
+async function c() {
+  console.log('c')
+}
+a()
+b()
+c()
+// 执行顺序
+// c
+// a
+// b
+
+async function a() {
+  console.log(2)
+  console.log(await Promise.resolve(8))
+  console.log(9)
+}
+async function b() {
+  console.log(4)
+  console.log(await 6)
+  console.log(7)
+}
+console.log(1)
+a()
+console.log(3)
+b()
+console.log(5)
+// 执行顺序
+// 1 2 3 4 5 8 9 6 7 
+```
+### async/await 实用场景与注意事项
+1. 按照同步的方式，写异步逻辑。不用写 xx.then，写法更优雅简单
+
+```js
+let getAsyncData() {
+  return new Promise((resolve, reject) => {
+    // ...
+    '正确' ? resolve('数据') : reject('错误')
+  })
+}
+
+// Promise 方法
+getAsyncData().then((data) => {
+  console.log(data)
+}).catch(err => {
+  // 错误处理
+})
+
+// async/await
+(async () => {
+  try {
+    let data = await getAsyncData()
+    console.log(data)
+  } catch (err) {
+    // 错误处理
+  }
+})() 
+```
+2. 实现 sleep 等待函数
+
+```js
+function sleep(delay) {
+  return new Promise(r => setTimeout(r, delay))
+}
+async function test() {
+  const start = Date.now()
+  await sleep(2000)
+  console.log(Date.now() - start)
+}
+test()
+// 2004
+```
+
+3. 如果是多个异步，不依赖顺序就不用 await 了。如果非要 await 可以等 Promise 都执行完成后，遍历对应的结果数组再 await。这样就不用等第一个执行完，再执行第二个，再执行第三个，顺序执行。
+
+4. **栈追踪与内存管理** Promise 和 异步函数 async 在功能上有重叠，但他们在内存中的表示差别很大。在创建 Promise 时，JS 引擎会尽量保留完整的调用栈。async/await 只会反映当前的调用栈，没有额外的消耗，可以优先考虑。 
+
+```js
+function execFunc(reslove, reject) {
+  setTimeout(reject, 1000, 'bar') // 等价于 setTimeout(() => { reject.call(this, 'bar')}, 1000)
+}
+
+function a() {
+  new Promise(execFunc)
+}
+a()
+// Uncaught (in promise) bar
+// setTimeout (async)
+// execFunc
+// a 
+
+async function a() {
+  await new Promise(execFunc)
+}
+a()
+// Uncaught (in promise) bar
+// a
+// async function (async)
+// a
+```
+
