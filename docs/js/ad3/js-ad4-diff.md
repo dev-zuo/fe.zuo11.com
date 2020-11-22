@@ -84,7 +84,7 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 :::
 
 ## 第 12 章 BOM
-原第 8 章 BOM，新增 history 历史状态管理，pushState、replaceSate 等
+原第 8 章 BOM，将 frame 窗口关系内容精简到最小、新增设备像素比、视口(滚动)位置、新增 history 历史状态管理，pushState、replaceSate 等，详情参考：[12. BOM - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-12.html)
 
 ## 第 13 章 客户端检测
 原第 9 章客户端检测，更新并新增了一些内容，将原 23.1 的离线检测放到了这章。
@@ -186,8 +186,8 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 
 ## 错误记录
 
-::: danger
-- p117 String length 的 demo 里，  stringValue.length 的值是 "11"，是字符串。应该是 number 11 
+::: warning
+- p353/355 async/await 执行顺序由于规范更新了，导致有误
 - p798 第二行，这也是为什么不会再打印 "foo" 的原因。这里的 foo 应该是 bar
 - p862 4. 模块打包器中 Rollupt，应该是 Rollup
 :::

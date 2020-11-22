@@ -1,15 +1,20 @@
+---
+title: 12. BOM - JS高程4
+description: 在 web 中使用 Javascript，离不开 BOM(Browser Object Model)，BOM 提供了很多对象，用于访问浏览器的功能。window 对象，全局作用域、打开窗口、窗口位置大小、setTimeout、setInterval，alert等。location 对象，主要是URL相关信息，href、hash、查询字符串 search，端口等信息。navigator 对象, 主要用来获取浏览器厂商、UA、平台、语言、是否有网、是否启用了 cookie、安装的插件等信息。screen 对象，记录屏幕相关信息，分辨率，screen.width * screen.height。history 对象, 访问的历史记录
+keywords: BOM,window,location,navigator,history,screen,设备像素比,dpr
+---
 # 12. BOM
-在web中使用Javascript，离不开BOM(Browser Object Model)，BOM提供了很多对象，用于访问浏览器的功能
-- window对象，全局作用域、打开窗口、窗口位置大小、setTimeout、setInterval，alert等
-- location对象，主要是URL相关信息，href、hash、查询字符串search，端口等信息
-- navigator对象, 主要用来获取浏览器厂商、UA、平台、语言、是否有网、是否启用了cookie、安装的插件等信息
-- screen对象，记录屏幕相关信息，分辨率，screen.width * screen.height
-- history对象, 访问的历史记录
+在 web 中使用 Javascript，离不开 BOM(Browser Object Model)，BOM 提供了很多对象，用于访问浏览器的功能
+- window 对象，全局作用域、打开窗口、窗口位置大小、setTimeout、setInterval，alert等
+- location 对象，主要是URL相关信息，href、hash、查询字符串 search，端口等信息
+- navigator 对象, 主要用来获取浏览器厂商、UA、平台、语言、是否有网、是否启用了 cookie、安装的插件等信息
+- screen 对象，记录屏幕相关信息，分辨率，screen.width * screen.height
+- history 对象, 访问的历史记录
 
 ## window对象
-BOM的核心对象是window，它表示浏览器的一个实例。在浏览器中，window对象有双重角色
-- 是通过JS访问浏览器窗口的一个接口
-- 是ECMAScript规定的Global对象，在全局作用域中定义的任何一个对象、变量、函数，都会变成window对象的属性和方法。
+BOM 的核心对象是 window，它表示浏览器的一个实例。在浏览器中，window 对象有双重角色
+- 一是浏览器窗口的 JS 接口
+- 二是 ES 中的 Global 对象，在全局作用域中使用定义的任何一个对象、变量、函数（let、const除外），都会变成 window 对象的属性和方法。
 ### 全局作用域
 - 全局定义的方法、属性都可以通过window对象调用；window.的属性、方法，其他位置都可以使用。
 ```js
@@ -22,7 +27,8 @@ alert(window.age); // 29
 sayAge(); // 29
 window.sayAge(); //29
 ```
-- window.设置的对象，与var对象声明的对象，虽然都可以通过window.访问，但还是有区别的
+- let 与 const 在全局作用域内声明的变量不会挂载到 window 上。这点和 var 是有区别的。
+- window.设置的对象，与 var 对象声明的对象，虽然都可以通过 window. 访问，但还是有区别的
 ```js
 // window.设置的变量可以通过 delete删除，而 var age，通过window.age是无法删除的。
 // 使用var添加的window属性，有一个名为[[Configurable]]的特性，被设置为false，所以无法删
@@ -33,16 +39,9 @@ delete window.test  // true
 delete window.age // false 
 ```
 
-### 窗口关系及框架frames
-一般一个页面只对应一个html文件，框架相关的frameset、frame元素可以让多个页面html在同一个窗口中显示。
-- 同页面的每个frame对应一个单独的html，都有独立的window
-- 可以通过 frames, top.frames，获取页面window数组，可以通过 frames[0] 或 frames["topFrame"] 来获取对应的window对象，子frame对象可以通过parent属性访问上层框架。
-- 框架的主页面，不需要包含body元素，写在body外才行
-```js
-top.frames[2].name  // "rightFrame"
-top.frames[2].location.href = "leftFrame.html" // 切换页面
-```
-- **注意：本地调试需要用nginx或其他方式开启http服务，不能直接访问页面文件路径，会出现跨域的错误，导致top无法访问frame内的页面window**
+### 窗口关系及框架frames(第4版已精简)
+一般一个页面只对应一个 html 文件，框架相关的 frameset、frame 元素可以让多个页面 html 在同一个窗口中显示。window.self 等同于 window，window.top 指向最外层的窗口。现在基本不会这样使用了，已过时，第 4 版只用了不到 10 行内容来说明。
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -62,75 +61,119 @@ top.frames[2].location.href = "leftFrame.html" // 切换页面
   <!-- </body> -->
 </html>
 ```
+
+- 同页面的每个 frame 对应一个单独的 html，都有独立的 window
+- 可以通过 window.frames, window.top.frames，获取页面 window 数组，可以通过 frames[0] 或 frames["topFrame"] 来获取对应的window对象，子 frame 对象可以通过 parent 属性访问上层框架。
+- 框架的主页面，不需要包含 body 元素，写在 body 外才行
+```js
+top.frames[2].name  // "rightFrame"
+top.frames[2].location.href = "leftFrame.html" // 切换页面
+```
+- **注意：本地调试需要用nginx或其他方式开启http服务，不能直接访问页面文件路径，会出现跨域的错误，导致top无法访问frame内的页面window**
+
 ![8_0_frame.png](/images/js/8_0_frame.png)
 
 ### 窗口位置、大小、打开新窗口
-- 窗口位置，浏览器窗口在屏幕中的位置，通过两个属性来确定：
+- 窗口位置，**浏览器窗口在屏幕中的位置**，通过两个属性来确定：
   - 浏览器窗口距离屏幕顶部距离(Number)：window.screenTop，window.screenY
   - 浏览器窗口距离屏幕左侧距离(Number)：window.screenLeft，window.screenX
-- 窗口大小，chrome浏览器，从外到内：
-  - 整个浏览器窗口的宽高：window.outerWidth, window.outerHeight
-  - 可视区域的宽高：window.innerWidth，window.innerHeight
-  - 可视区域的宽高-滚动条宽高: document.documentElement.clientWidth, document.documentElement.clientHeight
-  - body内容的宽高: document.body.clientWidth, document.body.clientHeight
+
 ```js
-// 打印窗口位置信息
-windowSiteBtn.onclick = function(e) {
-    info.innerHTML = `
-    <p>screenLeft: ${window.screenLeft}, screenTop: ${window.screenTop};</p>
-    <p>screenX：${window.screenX}, screenY: ${window.screenY};</p>
-    `
-}
+console.log(`screenLeft: ${window.screenLeft}, screenTop: ${window.screenTop}`)
+console.log(`screenX：${window.screenX}, screenY: ${window.screenY}`)
+```
+- 窗口大小，浏览器窗口大小(窗口缩放后，大小会跟着改变)，从外到内：
+  - 整个浏览器窗口的宽高，包含 console 调试区域：window.outerWidth, window.outerHeight
+  - 可视区域的宽高(包含滚动条宽高, 不包含console调试区域，不包括浏览器边框和工具栏)：window.innerWidth，window.innerHeight
+  - html整个文档宽高: document.documentElement.clientWidth, document.documentElement.clientHeight，**注意有的是视口宽高，有的是实际内容宽高**
+  - body内容的宽高(实际内容): document.body.clientWidth, document.body.clientHeight
+  - document 包含整个 文档信息, document.documentElement 是 html 元素不包含 document.doctype, document.body 是 body元素内容，不包含 document.head 部分
+  - 可通过 window.resizeTo,resizeBy 进行缩放，但一般可能会被禁用。
+```js
 // 打印窗口大小信息
-windowSizeBtn.onclick = function(e) {
-    info.innerHTML = `
-    <p>body元素的宽*高：（如果网页内容过少，body元素的实际宽高比可视区域要小, 如果内容过多，body的高度以实际内容为准）</p>
-    <p>document.body.clientWidth: ${document.body.clientWidth}, document.body.clientHeight: ${ document.body.clientHeight};</p>
-    <p>可视区域的宽*高 - 滚动条宽高</p>
-    <p>document.documentElement.clientWidth: ${ document.documentElement.clientWidth}, document.documentElement.clientHeight: ${ document.documentElement.clientHeight};</p>
-    <p>可视区域的宽*高：（包含滚动条宽高, 不包含console调试区域, 不包含浏览器顶部组件高度）</p>
-    <p>innerWidth: ${window.innerWidth}, innerHeight: ${window.innerHeight};</p>
-    <p>浏览器窗口宽*高：(包含console调试区域)</p>
-    <p>outerWidth: ${window.outerWidth}, outerHeight: ${window.outerHeight};</p>
-    `
+console.log(`浏览器窗口宽*高: outerWidth: ${window.outerWidth}, outerHeight: ${window.outerHeight};`)
+console.log(`可视区域的宽*高: innerWidth: ${window.innerWidth}, innerHeight: ${window.innerHeight}`)
+console.log(`html整个文档宽高: document.documentElement.clientWidth: ${ document.documentElement.clientWidth}, document.documentElement.clientHeight: ${ document.documentElement.clientHeight}`)
+console.log(`body内容的宽高: document.body.clientWidth: ${document.body.clientWidth}, document.body.clientHeight: ${ document.body.clientHeight}`)
+```
+- 打开新窗口 window.open()，该方法接收4个参数
+  - `url` 要打开的链接，默认在新标签页打开。如果为空，就会打开空白页面，如果非完整 url，会把它当前相对的 url。
+  - `target` 窗口目标, 已有窗口或框架名称，这样就会在对应的窗口或框架内打开页面。如果是 `_self` 则是不打开新窗口，在当前页面跳转。
+  - `settingStr` 一个特性字符串，窗口的宽、高、窗口位置等，如果不传，默认在tab页打开新窗口
+  - true or false 如果非新窗口打开，在当前页面跳转时，是否取代浏览器中的当前页面
+```js
+let newWindow = window.open('') // 新标签页打开空白页
+// 返回新窗口的 window，可以用该值修改空白页的内容
+newWindow.document.write('hello')
+// 一般新打开的 window，可以通过 window.opener 方法原 window
+// 为了安全起见，返回值的 opener 需要设置为 null
+newWindow.opener === window // true
+newWindow.opener = null
+
+// 打开一个相对的路径 http://xx.com/xxx/123
+let newWindow = window.open('123')
+
+// 当前页面跳转
+let newWindow = window.open('123', '_self')
+
+// 属性字符串，设置打开窗口的大小，这样打开的窗口，可以设置窗口位、resize大小
+myWindow = window.open("test", "", "width=300,height=400,resizable=no"); 
+// 打开console调试，如下命令
+// 改变窗口位置
+// myWindow.moveTo(100,100);  // 移动窗口位置到 (100, 100)
+// myWindow.moveBy(-50, 50); // 相对当前位置（x,y）, 将窗口移动到 (x-50, y+50) 位置
+// 改变窗口大小
+// myWindow.resizeTo(600,300); // 改变窗口大小为 600*300
+// myWindow.resizeBy(100,200); // 改变窗口大小为 (x-100)*(y+200)
+```
+有时间后再第一次使用 window.open 打开时，**浏览器可能会由于安全方面的原因，阻止打开，这样返回值就不会有新窗口的 window**。这种情况我们需要加一个提示，提示浏览器屏蔽了打开新窗口的操作，请手动允许打开。使用 close() 方法可以关闭打开的窗口。
+```js
+let newWindow = window.open('http://baidu.com')
+if (!newWindow) {
+	alert('浏览器不允许弹窗，请你手动设置允许打开') 
 }
-```
-- 打开窗口 window.open()，该方法接收4个参数
-  - 1.要加载的URL (如果没有，就会打开空白页面，用该函数返回值.document.write()，写入值到该页面)
-  - 2.窗口目标, 已有窗口或框架名称，这样就会在对应的窗口或框架内打开页面。
-  - 3.一个特性字符串，窗口的宽、高、窗口位置等，如果不传，默认在tab页打开新窗口
-  - 4.true or false， 新页面是否取代浏览器历史记录中当前页面
-```html
-<input type="button" value="打开 '我的窗口'" onclick="openWin()">
-<script>
-    var myWindow;
-    function openWin(){
-        // 1.打开一个新的窗口，一般浏览器可能会阻止，第一次运行需要允许, url为空，不打开其他链接
-        // myWindow = window.open("", "testWindow","height=400,width=400,top=200,left=400,location=no");
-        // myWindow = window.open("", "testWindow"); // 打开新的tab窗口，如果二参是frame名，会在该frame打开该窗口
-        myWindow = window.open("window.html", "", "width=300,height=400,resizable=no"); 
-        
-        if (myWindow === null) {
-            alert('浏览器不允许弹窗')
-        } else {
-            myWindow.document.write('test'); // 向窗口写入内容
-        }
 
-        // 打开console调试，如下命令
-        // 2.移动窗口位置
-        // myWindow.moveTo(100,100);  // 移动窗口位置到 (100, 100)
-        // myWindow.moveBy(-50, 50); // 相对当前位置（x,y）, 将窗口移动到 (x-50, y+50) 位置
-
-        // 3.改变窗口大小
-        // myWindow.resizeTo(600,300); // 改变窗口大小为 600*300
-        // myWindow.resizeBy(100,200); // 改变窗口大小为 (x-100)*(y+200)
-
-        // 4.关闭窗口
-        // myWindow.close(); // 关闭弹窗
-    }
-</script>
+// 可以使用 close() 关闭打开的窗口
+newWindow.close(); // 关闭弹窗
 ```
 
+### 设备像素比与视口位置(滚动距离)
+第四版新增。
+
+**设备像素比 window.devicePixelRatio**，这里要了解 **物理**分辨率 与 **逻辑**分辨率。一般情况下，屏幕分辨率越高就越清晰，更细腻。
+- 物理分辨率是屏幕的真实分辨率
+- 逻辑分辨率是当前屏幕尺寸逻辑上应该对应的分辨率
+- DPI (dots per inch) 每英寸像素，表示单位像素密度
+- window.devicePixelRatio 设备像素比表示物理像素与逻辑像素之间的缩放系数。用于把物理像素转换为 CSS 像素(浏览器报告的虚拟分辨率)
+
+举个例子，13.3 寸 MacBook Pro 的屏幕分辨率(物理分辨率)是 2880 * 1800，而老款 13.3 寸的 MacBook Air 的屏幕(物理)分辨率是 1440 * 900。
+
+屏幕物理尺寸都是 13.3 寸，Pro 的像素是 Air 的两倍。同样 12px（CSS像素）的文字，如果都按真实的物理像素显示。那么 Air 上看到的字体大小应该是 Pro 上的两倍。这样 Pro 上的字就会很小，看不清。
+
+因此在显示时，会按照一定的比例进行缩放。让内容在不同的分辨率下看到的都一致。缩放后的分辨率就是逻辑分辨率。物理像素比与逻辑像素比之间的缩放系数就是 **设备像素比**。
+
+同样的 100px * 100px 的内容在 Air 上使用 100 * 100 个物理像素表示。而 Pro 上，会使用 200 * 200 个物理像素表示。Pro 的 设备像素比是 2。Air 的像素比是 1。
+
+在 canvas 绘图时，一定要注意设备像素比。
+
+**视口位置/滚动距离**，一般文档实际内容要比视口的内容多，因此会有滚动。获取页面滚动距离可以使用:
+- window.pageXoffset; window.scrollX 水平滚动距离
+- window.pageYoffset; window.scrollY 垂直滚动距离
+有三种方法用于滚动页面，处理接收 x, y 参数外，还可以接收一个对象 `{ left: xx, top: xx, behavior: 'auto或smooth'}` 设置是否平滑滚动。
+- window.scroll(x, y) 滚动到距离左侧 x 像素，距离顶部 y 像素的位置 
+- window.scrollTo(x, y) 滚动到距离左侧 x 像素，距离顶部 y 像素的位置 
+- window.scrollBy(x, y) 相对当前滚动位置滚动，距离左侧 +x，距离顶部 +y
+```js
+window.scroll(100, 100)
+window.scrollBy(100, -100)
+window.scrollTo(100, 900)
+// 平滑滚动
+window.scrollTo({
+	left: 100, 
+	top: 900,
+	behavior: 'smooth'
+})
+```
 ### setTimeout与setInterval
 JS是单线程语言，它允许通过设置超时值和间歇时间值来调度代码在特定时间执行。
 - setTimeout() 在指定时间后将代码添加到执行队列，待空闲后执行, 清除：clearTimeout(timoutId)
@@ -142,7 +185,7 @@ JS是单线程语言，它允许通过设置超时值和间歇时间值来调度
 var test = 5;
 
 if (test === 1) {
-    // 1 2  基本同同时打印
+    // 1 3  基本同同时打印
     setTimeout(function () {
         console.log('1');
     }, 2000);
@@ -162,8 +205,13 @@ if (test === 2) {
 }
 
 if (test === 4) {
-    // 2 3 5 4 1
-    // 为什么这里后被执行，因为setTimeout是异步的（是注册事件），他会先把函数注册到事件队列当中，等待主程序走完，然后再被调用。
+	// 2 3 5 4 1
+	// 为什么这里后被执行，因为setTimeout是异步的（是注册事件），他会先把函数注册到事件队列当中，等待主程序走完，然后再被调用。
+	// JS 事件循环，宏任务与微任务。参考：js 事件循环消息队列和微任务宏任务 
+	// https://www.cnblogs.com/xingguozhiming/p/13276725.html
+	// 同步任务、I/O(比如文件读写等)、setTimeout、setInterval 是宏任务
+	// Promise.then/catch/finally,generator,async/await 是微任务
+	// 某个宏任务执行 ok 后，会看微任务队里是否有，有就执行，然后才是宏任务队列。
     setTimeout(function() {
         console.log(1);
     }, 0);
@@ -219,11 +267,14 @@ setTimeout(function() {
 ```
 
 ### 系统对话框
-浏览器可以通过alert()、confirm()、prompt()方法可以调用系统对话框向用户显示消息，系统对话框不包含html，外观有浏览器决定，不是由css决定。
-这几个方法打开的对话框都是同步和模态的，显示对话框会阻塞程序向下执行，关掉对话框后程序会继续执行
+浏览器可以通过alert()、confirm()、prompt()方法调用系统对话框向用户显示消息，系统对话框不包含 html，外观由浏览器决定，不是由 css 决定。
+
+这几个方法打开的对话框都是同步和模态的，**显示对话框会阻塞程序向下执行，关掉对话框后程序会继续执行**
+
 ```js
 // alert显示信息 "123"，点击确认关闭
 alert('123');
+console.log(456)
 ```
 ![alert](/images/js/alert.png)
 
@@ -274,8 +325,8 @@ location是最有用的BOM对象之一，提供了当前窗口中加载文档相
 ![window.location prop](/images/js/window_location_prop.png)
 
 ### 获取URL查询字符串
+在 URLSearchParams 没出现之前一般使用字符串切分来获取查询字符串，方法如下：
 ```js
-
 // 前端获取url里面的查询字符串
 console.log(getQueryStringArgs());
 
@@ -305,13 +356,44 @@ function getQueryStringArgs() {
     }
     return args;
 }
+```
+关于 URLSearchParams 的使用可以参考：[URLSearchParams URL查询字符串处理 - 左小白的技术日常](http://www.zuo11.com/blog/2019/10/web_url_searchparams.html)
 
-// 可以通过改变search的值刷新网页
+这里简单介绍下，URLSearchParams 构造函数接收 location.searh 查询字符串，生成一个 searchParams 实例，这个实例有下面几个方法
+- toString() 用于转字符串，会自动去掉首部 ?，不会进行 decodeURIComponent()
+- has(prop) 用于查询字符串中是否有该 prop 字段
+- get(prop) 用于获取该查询字段的值，会进行 decodeURIComponent()
+- delete(prop) 用于删除 prop 查询字段
+- set(prop, value) 用于设置查询字符串，会进行 encodeURIComponent()
+- for...of 遍历 `[["a", "1"], ["b", "测试"]]` 类似于 entries 对象后的结果
+- 使用 Object.fromEntries(实例)，可以直接转为键值对的形式
+```js
+let qs = '?a=1&b=%E6%B5%8B%E8%AF%95'; // '?a=1&b=测试' 转码后
+let searchParams = new URLSearchParams(qs)
+console.log(searchParams.toString()) // "a=1&b=%E6%B5%8B%E8%AF%95"
+console.log(searchParams.has('b')) // true
+console.log(searchParams.get('b')) // "测试"
+searchParams.set('c', '我们') 
+console.log(searchParams.toString()) // "a=1&b=%E6%B5%8B%E8%AF%95&c=%E6%88%91%E4%BB%AC"
+searchParams.delete('c') // a=1&b=%E6%B5%8B%E8%AF%95
 
+for(item of searchParams) {
+	console.log(item)
+}
+// ["a", "1"]
+// ["b", "测试"]
 
+for([key, value] of searchParams) {
+	console.log(key, value)
+}
+// a 1
+// b 测试
+
+Object.fromEntries(searchParams)
+// {a: "1", b: "测试"}
 ```
 ### 改变当前页面url
-使用location对象可以通过很多方式来改变当前页面url，每次修改location属性(hash除外)，页面都会以新的URL重新加载
+使用 location 对象可以通过很多方式来改变当前页面 url，每次修改 location 属性(hash 除外)，页面都会以新的 URL 重新加载(刷新)
 ```js
 location.assign("http://zuo11.com"); // 切换url
 // 如果将location.href与window.location 设置为一个url，会间接调用location.assign(对应的值)
@@ -333,7 +415,7 @@ location.pathname = "mydir";
 // 将URL修改为 http://www.zuo11.com:8080/test/
 location.port = 8080;
 ```
-location改变URL后，浏览器会产生一条新的记录，可以通过后退，返回到前一个页面，使用location.replace(),可以无法返回上一页
+location 改变 URL 后，浏览器会产生一条新的记录，可以通过后退，返回到前一个页面，使用 location.replace() ,无法返回上一页
 ```js
 location.reload();     // 重新加载 (可能是从缓存中加载)
 location.reload(true); // 重新加载 (从服务器重新加载)
@@ -341,7 +423,7 @@ location.reload(true); // 重新加载 (从服务器重新加载)
 
 ## navigator对象
 可以用来获取浏览器厂商、UA、平台、语言、是否有网、是否启用了cookie、安装的插件、
-navigator对象可以用来识别客户端浏览器信息，UA等。更多信息，参考 [Navigator - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Navigator)
+navigator对象可以用来识别客户端浏览器信息，UA等。更多信息，参考 [Navigator - Web APIs | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Navigator)。更多详情内容，参见下一章，里面会具体讲 navigator 对象的用法。
 ### 基本属性
 ```js
 // appCodeName: "Mozilla",  // 浏览器名称      Safari、Firefox、Chrome、IE 均是这个值
@@ -397,7 +479,7 @@ navigator.plugins 数组记录了当前浏览器上安装的插件
 // 检测插件 (非IE环境)
 function hasPlugin(name) {
     name = name.toLowerCase();
-    for (var i = 0; i < navigator.plugins.lenght; i++) {
+    for (var i = 0; i < navigator.plugins.length; i++) {
         if (navigator.plugins[i].name.toLowerCase().indexOf(name) > -1) {
             return true;
         }
@@ -421,18 +503,15 @@ function hasIEPlugin(name) {
 // 检测Falsh
 alert(hasIEPlugin("ShockwaveFlash.ShockwaveFlash"));
 ```
-### 待后续研究
-- Navigator.registerContentHandler()
-- Navigator.registerProtocolHandler()
-- Navigator.serviceWorker
-- Navigator.getUserMedia()
+### 注册处理程序
+HTML5 中定义了 Navigator.registerProtocolHandler() 可以把网站注册为处理某种特定类型信息应用程序。参考：[Navigator.registerProtocolHandler() | MDN](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler)
 
 
 ## screen对象
 可以查看屏幕分辩率，
 在编程中用处不大，screen对象基本上只用来表明客户端能力，记录了屏幕相关信息
  ```js
-// height：900  屏幕像素高的
+// height：900  屏幕像素高度
 // width：1400   屏幕像素宽度
 // availHeight: 841   有效高度
 // availLeft: 0
@@ -443,9 +522,34 @@ alert(hasIEPlugin("ShockwaveFlash.ShockwaveFlash"));
 ```
 
 ## history对象
-可以用来前进、后退，history对象保存着用户的上网记录，出入安全方面的考虑，开发人员无法获取具体访问的URL，但可以前进或后退
+可以用来前进、后退，history 对象保存着用户的访问记录，出于安全方面的考虑，开发人员无法获取具体访问的 URL，但可以前进或后退。
+
+利用 history 对象可以以编程的方式实现在历史中导航，而且可以修改历史记录。
 ```js
 history.go(-1); // 后退一页  相当于 histroy.back();
 
 history.go(1); // 前进一页 相当于  history.forward();
+
+history.go("字符串") // 导航到历史中包含该字符串的最近的页面
+
+if (history.length === 1) {
+	// 这是该窗口或标签页打开的第一个页面
+}
 ```
+### 历史状态管理
+现代 web 应用开发中，最难的一个环节之一就是历史记录管理。每次点击都会触发页面刷新的时代已经过去。 "后退" 和 "前进" 只是切换一个状态。
+
+HTML5 为 history 新增了 hashchange 事件，hash 改变时会触发。history.pushState/history.replacestate 可以让开发者在改变 URL 的情况下，不刷新页面。pushState 会创建新的 历史记录。
+
+```js
+let stateObj = { foo: "bar" }
+// state对象、新状态的标题、可选的相对 URL
+history.pushState(stateObj, "title", "xx.html")
+// 改变 URL，页面不刷新，
+
+// replace 不会创建新的历史记录，覆盖当前记录
+// history.replaceState(stateObj, "title", "xx.html")
+```
+pushstate 后，点击后退会触发 window 的 popstate 方法。
+
+HTML SPA 单页面应用需要确保 pushState 创建的每个假 URL 对应者服务器真实的 URL，防止刷新后 404 异常。
