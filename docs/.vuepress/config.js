@@ -8,6 +8,7 @@ const dailySidebar = [
     collapsable: false,
     children: [
       '',
+      '2020-11',
       '2020-10',
       '2020-09',
       '2020-08',
@@ -129,7 +130,6 @@ const jsSidebar = [{
   title: "JS/ES6",
   sidebarDepth: 5,
   children: [
-    'js-deep',
     {
       title: 'ES6标准入门(第三版)笔记',
       sidebarDepth: 5,
@@ -358,9 +358,8 @@ module.exports = {
         text: '前端基础', items: [
           {
             text: 'JS/ES6', items: [
-              { text: 'JavaScript 小记', link: '/js/js-deep.md' },
               { text: 'ES6标准入门(第三版)笔记', link: '/js/es6/es6-1.md' },
-              { text: 'JavaScript高级程序设计(第四版)笔记', link: '/js/ad3/js-ad4-diff.md' },
+              { text: 'JavaScript高级程序设计(第四版)笔记', link: '/js/ad3/js-ad3-1.md' },
               { text: 'JavaScript DOM编程艺术(第二版)笔记', link: '/js/js-dom-art.md' },
             ]
           },
@@ -391,13 +390,14 @@ module.exports = {
           { text: 'zuo-blog', link: 'http://zuoblog.zuo11.com' }
         ]
       },
-      { text: '博客', link: 'http://www.zuo11.com' }
+      { text: '博客', link: 'http://www.zuo11.com' },
+      { text: 'Github', link: 'https://github.com/zuoxiaobai' }
     ],
     lastUpdated: '上次更新', // string | boolean
     smoothScroll: true, // 滚动效果
     // 右上角自动生成 github 导航连接
-    repo: 'zuoxiaobai/fenote',
-    repoLabel: 'Github',
+    // repo: 'zuoxiaobai/fenote',
+    // repoLabel: 'Github',
   },
   // 完全兼容 PWA
   head: [
