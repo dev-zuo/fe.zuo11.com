@@ -581,38 +581,6 @@ dragdiv.onmousemove = function(event) {
 
 # 离线应用与客户端存储
 
-## 离线监测
-> 通过 navigator.onLine 可以获取当前网络状态，true 有网，false 没网。HTML5定义了两个事件，可以通过监听window的online和offline事件来监听网络状态发生改变。
-
-建议先通过navigator.onLine获取当前的网络状态，再通过监听上面两个事件来确定网络连接的状态是否改变
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>离线监测、监听</title>
-  </head>
-  <body>
-    <input type="button" id="checkIsOnline" value="点击检测是否有网">
-    <script>
-        var mybtn = document.getElementById("checkIsOnline")
-        // 点击检测是否有网
-        mybtn.onclick = function(event) {
-          alert(navigator.onLine ? '有网': '没有网')
-        }
-
-        // 当网络状态发生改变时（有网 => 无网，无网 => 有网），才会触发
-        window.ononline = function(event) {
-          alert('网络已连接')
-        }
-        window.onoffline = function(event) {
-          alert('网络已断开')
-        }
-    </script>
-  </body>
-</html>
-```
-
 ## 应用缓存
 HTML5 application cache 快要被废弃，由 Service Workers取代，参见: https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache , 后续要了解applicationCatch、Service Workers、PWA 的区别
 
@@ -672,45 +640,6 @@ document.addEventListener('visibilitychange', function (event) {
   }
 }, false)
 ```
-
-## Geolocation API(地理位置)
-Geolocation API在浏览器中的实现是navigator.geolocation对象，IE9+支持，调用时会触发提示：xxx想要获取您的地址位置信息，是否允许？
-- 获取当前位置信息navigator.geolocation.getCurrentPosition()
-```js
-// 获取用户当前位置
-// successCallback为必须，后两个参数可选
-// navigator.geolocation.getCurrentPosition(successCallback, failCallback, options)
-navigator.geolocation.getCurrentPosition(function(position) {
-  // 获取位置信息成功(弹出是否允许使用地址位置信息时，点击了允许)
-  console.log(position) // coords,timestamp
-  console.log(position.coords.latitude, position.coords.longitude)
-}, function(error) {
-  // 获取位置信息失败或点击了不允许
-  console.log('获取用户地理位置信息失败')
-  console.log(error.message)
-}, {
-  //设定信息类型可选项
-  enableHighAccuracy: true, // 尽可能使用最准确的位置信息，默认为false，true需要更多的电量，获取更耗时
-  timeout: 5000, // 等待位置信息的最长时间，毫秒
-  maximumAge: 25000// 上一次取得的坐标的有效时间，毫秒，如果到时间需要重新取得坐标信息
-})
-```
-- 跟踪用户的位置, navigator.geolocation.watchPosition()，接收的参数完全与getCurrentPostion()一致
-```js
-// watchPosition 与定时调用getCurrentPostion的效果相同
-var watchId = navigator.geolocation.watchPosition(function(position) {
-  // 获取位置信息成功(弹出是否允许使用地址位置信息时，点击了允许)
-  console.log(position) // coords,timestamp
-  console.log(position.coords.latitude, position.coords.longitude)
-}, function(error) {
-  // 获取位置信息失败或点击了不允许
-  console.log('获取用户地理位置信息失败')
-  console.log(error.message)
-})
-
-// 取消监控
-clearWatch(watchId)
- ```
 
 ## File API
 > 2000年以前，处理文件的唯一方式就是在表单中加入input type="file"字段。File API 在表单中的文件输入字段的基础上，添加了一些直接访问文件新兴的接口。HTML5在DOM中为文件输入元素添加了一个files集合。通过文件输入字段选择一个或多个文件时，files集合里面会包含一组File对象，一个File对象对应着一个文件。
