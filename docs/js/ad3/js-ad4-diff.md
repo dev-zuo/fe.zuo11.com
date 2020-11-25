@@ -89,17 +89,22 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 ## 第 13 章 客户端检测
 原第 9 章客户端检测，更新并新增了一些内容
 
-13.2.2 不再自己写代码实现 UA 解析，推荐使用 github 上第三方现有的 UA 解析程序。另外特别说明用户代理是可以伪造的。
-
-13.3 新增，软硬件检测，主要介绍了怎么使用 navigator 获取浏览器、操作系统、硬件的一些信息。将原来第 23 章的离线检测放到了这一章，将原来第 25 章 新兴的 API 里面的 Geolocation 地址位置信息 api 也放到了这一章。另外，新增电池信息、处理器核心、内存大小、屏幕触控点数等。
+- 13.2.2 不再自己写代码实现 UA 解析，推荐使用 github 上第三方现有的 UA 解析程序。另外特别说明用户代理是可以伪造的。
+- 13.3 新增，软硬件检测，主要介绍了怎么使用 navigator 获取浏览器、操作系统、硬件的一些信息。将原来第 23 章的离线检测放到了这一章，将原来第 25 章 新兴的 API 里面的 Geolocation 地址位置信息 api 也放到了这一章。另外，新增电池信息、处理器核心、内存大小、屏幕触控点数等。
 
 详情参考：[13.客户端检测 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-13.html)
 
 ## 第 14 章 DOM
-原第 10 章 DOM，除了修改了部分翻译外，新增 14.3 MutationObserver 用于替代 MutationEvent
+原第 10 章 DOM，除了修改了部分翻译外，新增 14.3 MutationObserver 用于替代 MutationEvent，参考：[14. DOM - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-14.html)
 
 ## 第 15 章 DOM 扩展
-原第 11 章 DOM 扩展，15.3.6 插入标记，新增 insertAdjacentHTML() 与 insertAdjacentText()、innerHTML 跨站点脚本 XSS。
+原第 11 章 DOM 扩展 
+- 15.1.3 matches 去掉规范草案中的 matchesSelector() 内容，改为最新规范
+- 15.3.6 插入标记，新增 insertAdjacentText()、innerHTML 跨站点脚本 XSS 攻击说明
+- 15.3.7 scrollIntoView 增加平滑滚动等参数说明。
+- 15.4.3 插入标记(文本)，innerText 不需要在做兼容性处理，去掉兼容性降级代码。
+
+详情参考：[15. DOM 扩展 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-15.html)
 
 ## 第 16 章 DOM2 和 DOM3 
 原第 12 章 DOM2 和 DOM3，除了修改了一些翻译，去掉一些老旧的知识点外，基本无变化
@@ -190,6 +195,8 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 
 ::: warning
 - p353/355 async/await 执行顺序由于规范更新了，导致有误
+- p439 观察字符数据的例子 innerText 后无法监听到回调。（环境：mac Chrome 浏览器）
+- p454 dom扩展，"beforeend" 应该是放在最后一个子节点后面。而不是前面。
 - p798 第二行，这也是为什么不会再打印 "foo" 的原因。这里的 foo 应该是 bar
 - p862 4. 模块打包器中 Rollupt，应该是 Rollup
 :::
