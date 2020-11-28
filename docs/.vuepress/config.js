@@ -52,8 +52,9 @@ const baseSidebar = [
   {
     title: '计算机基础',
     children: [
+      'js-data-struct',
       'git',
-      'markdown',
+      'markdown'
     ]
   },
   {
@@ -379,6 +380,7 @@ module.exports = {
       },
       {
         text: '计算机基础', items: [
+          { text: '学习JavaScript数据结构与算法(第三版)笔记', link: '/base/js-data-struct.md' },
           { text: 'Git 笔记', link: '/base/git.md' },
           { text: 'Markdown 基础语法', link: '/base/markdown.md' },
           { text: '数据库系统原理笔记', link: '/base/dbtheory/1.md' }
