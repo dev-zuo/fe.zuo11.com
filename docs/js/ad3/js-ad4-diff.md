@@ -110,7 +110,13 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 原第 12 章 DOM2 和 DOM3，除了修改了一些翻译，去掉一些老旧的知识点外，基本无变化，详情参考：[16. DOM2 和 DOM3 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-16.html)
 
 ## 第 17 章 事件
-原第 13 章事件，新增 17.4.10 事件参考，列出了当前已发布规范中定义的所有浏览器事件。
+原第 13 章事件
+- 优化第三版中的部分翻译，比如 shift、alt "修改键" 改为 "修饰键"。
+- 将示例代码中的 EventUtil 大致都改为了 addEventListener，不依赖 EventUtil.js
+- 移除已废弃的用于 DOM 变化监听的变动事件(Mutation Events) 相关内容
+- 新增 17.4.10 事件参考，列出了当前已发布规范中定义的所有浏览器事件。
+
+详情参见：[17. 事件 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-17.html)
 
 ## 第 18 章 动画与 Canvas 图形
 原第 15 章，章节顺序由原来的表单脚本后面一章，改为表单脚本前一章。另外原第 25 章新兴的 API requestAnimationFrame 放到了这一章。将WebGL 章节的 类型化数组移到了 第 6 章 结合引用类型。

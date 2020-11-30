@@ -176,6 +176,8 @@ const jsSidebar = [{
         'ad3/js-ad3-15',
         'ad3/js-ad3-16',
         'ad3/js-ad3-17',
+        'ad3/js-ad3-18',
+        'ad3/js-ad3-19',
         'ad3/js-ad3-20',
         'ad3/js-ad3-21',
         'ad3/js-ad3-22',

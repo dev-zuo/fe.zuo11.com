@@ -56,6 +56,7 @@ class Stack {
   }
   push(...args) {
     this.items.push(...args)
+    return this.items.length
   }
   pop() {
     return this.items.pop()
@@ -75,12 +76,25 @@ class Stack {
   get length() {
     return this.items.length
   }
+  toString() {
+    return this.items.join(',')
+  }
 }
 ```
 测试 demo
 ```js
 let stack = new Stack()
-
+stack.push(1) // 1 [1]
+stack.push('a', 'b', 'c') // 4 [1, 'a', 'b', 'c']
+stack.length // 4
+stack.size() // 4
+stack.pop() // "c"
+stack.toString() // "1,a,b"
+stack.peek() // "b"
+stack.toString() // "1,a,b"
+stack.isEmpty() // false
+stack.clear()
+stack.isEmpty() // true
 ```
 ### 实现一个基于对象的 Stack
 
