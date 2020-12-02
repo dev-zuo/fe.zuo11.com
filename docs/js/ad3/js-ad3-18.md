@@ -1,746 +1,946 @@
 # 18. 动画与 Canvas 图形
-HTML5加入了canvas元素，IE9+支持，这个元素负责在页面中设定一个区域，然后可以通过js动态的在这个区域中绘制图形。canvas 必须设置width和height属性，指定可以绘图区域的大小，如果不添加样式或绘制内容是看不到该元素的，可以设置下border看效果
-## canvas绘制2d图形
+早期 Web 中 JS 动画的实现使用的是 setTimeout() 与 setInterval()，但由于事件队列机制无法保证计时器的时间精度，无法创建平滑的动画。于是出现了 requestAnimationFrame() API，浏览器会使用最优的方式来绘制动画。
+
+HTML5 加入了 `<canvas>` 元素，IE9+ 支持，这个元素会占据一块页面区域，让 JavaScript 可以动态在上面绘制图片。canvas 仅支持基础绘图能力，是 2D、非矢量的。如果需要做 3D 绘图，可以使用 WebGL。
+
+## 使用 requestAnimationFrame
+很长时间以来，计时器和间隔执行一直都是 JavaScript 动画的核心。但 setTimeout() 和 setInterval() 计时器都不是十分精确，他们只是把动画代码添加到浏览器的任务队列，如果队列前面还有其他任务。实际执行时间会比正常时间晚一点。循环间隔会有误差。requestAnimationFrame() 可以避免这个误差，创建平滑的动画效果。
+
+下面是使用 setInterval() 控制动画执行的例子
 ```js
-// chrome 下下面的字是显示不出来的
-// <canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;">A draw of something.</canvas>
-// 如果需要在canvas上绘图，需要先获取绘图上下文，即 canvas元素.getContext('2d')
+(function() {
+  function updateAnimations() {
+    doAnimation1()
+    doAnimation2()
+  }
+  setInterval(updateAnimations, 100)
+})()
+
 ```
-- 用获取到的2d上下文绘制矩形、矩形边框、清除矩形，效果及代码如下：
+### 浏览器自身计时精度问题
+创建平滑动画的关键是知道如何绘制下一帧。随着 canvas 的流行和 HTML5 游戏的兴起，开发者发现 setTimeout() 和 setInterval() 不精确是个大问题。而且浏览器自身计时器的精度让这个问题更加明显，另外浏览器在对切换到后台或不活跃标签页中的计时器进行限流。即使将时间间隔设置到最优，也只能得到近似的结果。
+
+### requestAnimationFrame()
+浏览器知道 CSS 过渡和动画应该什么时候开始执行，并据此计算出正确的时间间隔，到时间就刷新 UI。
+
+对于 JS 而言，浏览器不知道动画什么时候开始，于是出现 requestAnimationFrame API，用来通知浏览器某些 JS 代码要执行动画了。这样浏览器就可以在运行某些代码后进行适当的优化。
+
+requestAnimationFrame(callback) 告诉浏览器——你希望执行一个动画，并且要求浏览器在下次重绘之前调用指定的回调函数更新动画。该方法需要传入一个回调函数作为参数，该回调函数会在浏览器下一次重绘之前执行。若你想在浏览器下次重绘之前继续更新下一帧动画，那么回调函数自身必须再次调用 window.requestAnimationFrame()
+
+下面是一个例子，用 JS 实现一个 width 从 5% 到 100% 的动画
+
+```html
+<div id="status" style="width:5%;background:red;">测试</div>
+<script>
+  function updateProgress() {
+    let div = document.getElementById("status")
+    div.style.width = (parseInt(div.style.width, 10) + 1) + '%'
+    if (div.style.width !== '100%') {
+      window.requestAnimationFrame(updateProgress)
+    }
+
+  }
+  window.requestAnimationFrame(updateProgress)
+</script>
+```
+上面我们并没有规定多长时间内执行完毕，其实也可以将时间作为判断条件。回调函数会默认接收一个 timestamp 参数，类似于当前页面打开时间 performance.now() 的返回值，单位是毫秒。下面的例子中，将首次执行动画时的时间，保存到了 start 里。后面每次执行动画时，都将最新的时间与 start 进行比较，如果间隔 2000（2秒）就停止动画。这样就可以指定动画执行时间。下面的动画是将 status 元素向右平移 200px 的动画，动画时间 2s。
+```js
+<div id="status" style="width:5%;background:red;">测试</div>
+<script>
+  const element = document.getElementById('status'); 
+  let start;
+
+  function step(timestamp) {
+    console.log('tiemstamp', timestamp, typeof timestamp)
+    if (start === undefined) {
+      start = timestamp;
+    }
+    console.log('start', start)
+    const elapsed = timestamp - start;
+
+    //这里使用`Math.min()`确保元素刚好停在200px的位置。
+    element.style.transform = 'translateX(' + Math.min(0.1 * elapsed, 200) + 'px)';
+
+    if (elapsed < 2000) { // 在两秒后停止动画
+      window.requestAnimationFrame(step);
+    }
+  }
+
+  window.requestAnimationFrame(step);
+</script>
+```
+### cancelAnimationFrame() 
+requestAnimationFrame() 返回一个请求 ID，可以用于通过 cancelAnimationFrame() 来取消重绘任务。下面的例子中，有一个 5 秒的动画，在 2 秒时取消。
+
+```html
+<script>
+  let start, requestID;
+  let cb = (t) => {
+    !start && (start = t)
+    console.log('重绘')
+    // console.log "重绘"，持续 5 秒
+    if (t - start < 5000) {
+      requestID = window.requestAnimationFrame(cb) 
+    } 
+  }
+  requestID = window.requestAnimationFrame(cb) 
+  // 2 秒后取消打印
+  setTimeout(() => {
+    window.cancelAnimationFrame(requestID)
+  }, 2000)
+</script>
+
+```
+
+### 通过 requestAnimationFrame 节流
+requestAnimationFrame 的每次调用，都会在队列上推入一个回调函数，浏览器可以保证每次重绘最多调用一次回调函数，可以用于节流。由于重绘是非常频繁的操作。所以需要加一个 setTimeout 限制重绘执行的频率。下面的例子中，限制 500ms 内只执行一次回调。
+```html
+<script>
+  // 创建可滚动的页面
+  let count = 100, 
+      htmlStr = '';
+  while(count--) {
+    htmlStr += '<li>test</li>'
+  }
+  document.body.innerHTML = `<ul>${htmlStr}</ul>`
+
+  // 监听滚动事件，使用 requestAnimationFrame 节流
+  let enabled = true
+  let cb = () => console.log('Invoked at ', Date.now())
+  window.addEventListener('scroll', () => {
+    if (enabled) {
+      enabled = false
+      window.requestAnimationFrame(cb)
+      setTimeout(() => { 
+        enabled = true 
+      }, 500)
+    }
+  })
+</script>
+```
+## 基本的 canvas 画布功能
+canvas 元素必须设置 width 和 height 属性，指定绘图区域的大小，如果不添加样式或绘制内容是看不到该元素的，可以设置 border 看效果。元素中间可以设置内容，当浏览器不支持 canvas 元素时会显示。
+```html
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;">
+  A draw of something. 当前浏览器不支持 canvas.
+</canvas>
+```
+在画布上绘制图形，需要先获取绘图上下文。使用 getContext() 方法可以获取绘图上下文的引用。对于 2D 平面图形，需要传入 "2d" 参数，表示获取 2D 绘图上下文对象。类型是 CanvasRenderingContext2D
+
+```js
+let drawing = document.getElementById('drawing')
+// 如果浏览器支持 canvas
+if (drawing.getContext) {
+  let ctx = drawing.getContext('2d')
+  // 开始使用 2d 绘图上下文对象 ctx 绘制图形
+}
+```
+
+可以使用 toDataURL() 方法，导出 canvas 元素上的图像。这个方法接收一个参数：要生成图像的 MIME 类型，下面是将 canvas 绘制的内容，导出为一张 png 格式的图片。导出的图片大小与画布大小一致。
+
+```html
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;">
+</canvas>
+<script>
+  let drawing = document.getElementById('drawing')
+  // 如果浏览器支持 canvas
+  if (drawing.getContext) {
+    // 在 (10,10) 位置上，绘制一个边长为 50 的正方形。
+    let ctx = drawing.getContext('2d')
+    ctx.fillStyle = "#ff0000"
+    ctx.fillRect(10, 10, 50, 50)
+    
+    // 获取图像数据 URI，base64
+    let imgURI = drawing.toDataURL('image/png')
+
+    // 显示图片
+    let img = document.createElement('img')
+    img.src = imgURI
+    document.body.appendChild(img)
+
+    // 自动下载该图片
+    let link = document.createElement('a')
+    link.download = 'img'
+    link.href = imgURI
+    document.body.appendChild(link)
+    link.click()
+  }
+</script>
+```
+
+## 2D 绘图上下文
+2D 绘图上下文提供了绘制 2D 图形的方法，包括矩形、弧形和路径。2D 上下文的坐标原点是 (0, 0)，即 canvas 元素的左上角。所有坐标值都相对于该点计算。为了方便描述 2D 绘图上下文对象提供的属性、方法，这里将 2D 绘图上下文对象简写为 ctx。
+
+### 填充和描边/绘制矩形
+填充和描边是 2D 上下文的两个基本绘制操作。fillStyle 和 strokeStyle 用于指定填充和描边的样式。值可以是字符串颜色、渐变对象或图案对象。颜色字符串可以是 CSS 支持的任意格式：名称、十六进制、rgb、rgba、hsl 等。另外在描边时，可以使用 lineWidth 指定线条宽度，lineCap 控制线条端点的形状，比如圆角等。lienJoin 控制线条交点的形状。
+
+- `ctx.fillStyle` 以指定样式，自动填充形状，默认值为 '#000000'
+- `ctx.strokeStyle` 描边只是为图形边界着色，默认值 '#000000'
+- `ctx.lineWidth` 整数，描边时，线条宽度
+- `ctx.lineCap` 字符串，描边时，线条端点形状 butt(平头)、round(圆角)、square(方头) 
+- `ctx.lineJoin` 字符串，描边时，线条交点形状 round(圆角)、bevel(取平)、miter(出尖)
+
+矩形是唯一可以直接在 2D 绘图上下文中绘制的形状。与矩形相关的有三个方法，他们都接收 4 个参数，矩形开始的 x 坐标，y 坐标，矩形宽度、矩形高度
+- `ctx.fillRect(x, y, w, h)` 绘制矩形，填充颜色使用 fillStyle 属性设置的颜色
+- `ctx.strokeRect(x, y, w, h)` 绘制矩形边框(轮廓)，颜色使用 strokeStyle 属性设置的颜色。
+- `ctx.clearRect(x, y, w, h)` 擦除画布中的某个矩形区域
+
+```html
+<canvas id="drawing" width="200" height="200" style='border:1px solid #ccc;'>
+  A draw of something.
+</canvas>
+<script>
+  var drawing = document.getElementById('drawing');
+  var context = drawing.getContext('2d');
+
+  // 设置描边颜色为红色，strokeRect画边框矩形时，边框的颜色，默认为黑色
+  context.strokeStyle = 'red'; 
+  // 设置填充颜色为蓝色，默认为黑色
+  context.fillStyle = '#0000ff'; 
+  // context.fillStyle = "rgba(0,0,255,0.1)";
+  
+  // 绘制矩形，在画布的 (10,10) 位置，填充宽 50 高 50 的蓝色矩形，
+  context.fillRect(10, 10, 50, 50);
+
+  // 修改填充颜色为蓝色透明，再在画布(30,30)位置，填充宽50高50的蓝色透明矩形
+  context.fillStyle = "rgba(0,0,255,0.5)";
+  context.fillRect(30, 30, 50, 50);
+
+  // 在(100,100)位置，描边宽50高50的红色矩形框
+  context.strokeRect(100, 100, 50, 50);
+
+  // 修改描边的颜色为黑色，然后在(120,120)位置，描边宽50高50黑色矩形框
+  context.strokeStyle = 'black';
+  context.strokeRect(120, 120, 50, 50);
+
+  // 清除指定位置的rect区域
+  context.clearRect(40, 40, 10, 10);
+</script>
+```
+
+绘制效果如下
 
 ![cavasrect](/images/js/cavasrect.png)
 
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>canvas base</title>
-  </head>
-  <body>
-    <canvas id="drawing" width="200" height="200" style='border:1px solid #ccc;'>A draw of something.</canvas>
-
-    <script>
-      var drawing = document.getElementById('drawing');
-      var context = drawing.getContext('2d');
-
-      context.strokeStyle = 'red'; // 设置描边颜色为红色，strokeRect画边框矩形时，边框的颜色，默认为黑色
-      context.fillStyle = '#0000ff'; // 设置填充颜色为蓝色，默认为黑色
-      // context.fillStyle = "rgba(0,0,255,0.1)";
-      
-      // 绘制矩形，fillRect()、strokeRect()、clearRect() 都接收4个参数：矩形的x坐标，矩形的y坐标，矩形的宽度，矩形的高度
-      // 在画布的(10,10)位置，填充宽50高50的蓝色矩形，
-      context.fillRect(10, 10, 50, 50);
-
-      // 修改填充颜色为蓝色透明，再在画布(30,30)位置，填充宽50高50的蓝色透明矩形
-      context.fillStyle = "rgba(0,0,255,0.5)";
-      context.fillRect(30, 30, 50, 50);
-
-      // 在(100,100)位置，描边宽50高50的红色矩形框
-      context.strokeRect(100, 100, 50, 50);
-
-      // 修改描边的颜色为黑色，然后在(120,120)位置，描边宽50高50黑色矩形框
-      context.strokeStyle = 'black';
-      context.strokeRect(120, 120, 50, 50);
-
-      // 清除指定位置的rect区域
-      context.clearRect(40, 40, 10, 10);
-    </script>
-  </body>
-</html>
-```
 ### 绘制路径
-通过路径绘制可以创造出复杂的形状和线条。要绘制路径必须先调用beginPath()方法, 表示要开始绘制新路径。然后通过方法来创建路径，然后通过 fill()、stroke()、clip()来填充、描边、剪切路径。
-```js
-// - ctx.arc(x, y, radius, startAngle, endAngle, counterclockwise) 
-// 以(x,y)为圆心绘制一条弧线，半径为radius, 起始角度和结束角度分别为startAngle、endAngle，counterclockwise：是否是逆时针方向？
-// - ctx.arcTo(x1, y1, x2, y2, radius) 
-// 从上一点开始绘制一条弧线，到(x2,y2)为止，并以给定的半径，穿过(x1, y1)，当(x1,y1)到(x2,y2)的距离，大于半径，可能到达不了x2,y2.停在中途
-// - lineTo(x, y) 从上一点开始绘制一条直线，到(x, y)为止
-// - moveTo(x, y) 将游标移动到(x, y)，不画线
-// - rect(x, y, width, height) 从点(x, y)开始绘制一个矩形，宽为widht，高为height，这个方法绘制的是矩形路径。
-// 绘制曲线的bezierCurveTo(c1x, c1y, c2x, c2y, x, y); quadraticCurveTo(cx, cy, x, y) 待后续研究 p449
+通过路径绘制可以创造出复杂的形状和线条。绘制路径前必须先调用 `ctx.beginPath()` 方法, 表示要开始绘制新路径。然后通过下面的方法来创建路径
+- `ctx.arc(x, y, radius, startAngle, endAngle, counterclockwise)` 以 (x, y) 为圆心绘制一条弧线，半径为 radius, 起始角度和结束角度分别为 startAngle、endAngle，counterclockwise 表示是否是逆时针方向绘制，默认为顺时针方向绘制
+- `ctx.arcTo(x1, y1, x2, y2, radius)` 从上一点开始绘制一条弧线，到 (x2, y2) 为止，并以给定的半径，穿过 (x1, y1)，当 (x1,y1) 到 (x2, y2) 的距离大于半径，可能到达不了 (x2, y2) 停在中途
+- `lineTo(x, y)` 从上一点开始绘制一条直线，到 (x, y) 为止
+- `moveTo(x, y)` 将游标移动到 (x, y) 不画线
+- `rect(x, y, width, height)` 从点 (x, y) 开始绘制一个矩形，宽为 widht，高为 height，与 strokeRect() 和 fillRect() 的区别在于这个方法绘制的是一条路径，而不是独立的图形。
+- `bezierCurveTo(c1x, c1y, c2x, c2y, x, y)` 以 (c1x, c1y) 和 (c2x, c2y) 为控制点，绘制一条从上一点到 (x, y) 的弧线（三次贝塞尔曲线）
+- `quadraticCurveTo(cx, cy, x, y)` 以 (cx, cy) 为控制点，绘制一条从上一点到 (x, y) 的弧线（二次贝塞尔曲线）
+
+绘制完路径后，可以调用下面的方法，来填充路径、描画路径或剪切路径
+- `ctx.closePath()` 绘制一条返回起点的线
+- `ctx.fill()` 填充路径
+- `ctx.stroke()` 描画路径 
+- `ctx.clip()` 剪切路径
+
+注意：使用 fill()、stroke()、clip() 绘制完后，如果需要继续绘制路径，需要重新调用 ctx.beginPath()
+
+使用 ctx.arc()、ctx.moveTo()、ctx.stroke() 绘制时钟表盘
+
+![canvas_clock.png](/images/js/canvas_clock.png)
+
+```html
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;"></canvas>
+<script>
+  var darwing = document.getElementById('drawing');
+  var ctx = darwing.getContext('2d');
+  // 开始路径
+  ctx.beginPath();
+
+  ctx.arc(100, 100, 99, 0, 2*Math.PI, false); // 外圆
+  // 由于画完圆后，坐标停留在(200, 100)的位置，需要移动下起点。
+  ctx.moveTo(192, 100);
+  ctx.arc(100, 100, 92, 0, 2*Math.PI, false); // 内圆
+
+  // 将绘图游标移动到中心点，画指针
+  ctx.moveTo(100, 100);
+  ctx.lineTo(100, 20);
+  ctx.moveTo(100, 100);
+  ctx.lineTo(50, 100);
+  ctx.stroke();
+</script>
 ```
-画线、移动游标，绘制矩形比较简单，就不举例子了，arc()、arcTo(),rect() demo如下：
+关于 arc()、arcTo() 函数的理解
+
 ![canvas_arc_arcTo绘制路线图](/images/js/canvas_arc_arcTo.png)
+
 ```html
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>canvas base</title>
-        <style>
-            .div { 
-                text-align: center; padding:5px; margin:10px; width: 200px;
-            }
-            .label { font-size: 13px; margin-bottom: 10px;} 
-            .highlight { color: red }
-            pre {
-                white-space: pre-line;margin-left:15px;
-                border-left: 5px solid #ccc;
-                padding-left: 10px;
-            }
-            .flex {
-                display: flex;
-            }
-            canvas {
-                border: 1px solid #ccc;
-            }
-        </style>
-    </head>
-    <body>
-        <div>
-            <h2>ctx.arc(x, y, radius, startAngle, endAngle, counterclockwise)</h2>
-            <blockquote>
-                以(x,y)为圆心绘制一条弧线，半径为radius, 起始角度和结束角度分别为startAngle、endAngle，counterclockwise：是否是逆时针方向？
-            </blockquote>
-            <div>
-                <pre>
-                    var drawing = document.getElementById('drawing');
-                    var ctx = drawing.getContext('2d');
-                    ctx.beginPath();
-                    ctx.arc(100, 100, 99, <span class="highlight">开始位置, 结束位置</span>, false) // 以(100,100)为中心，99半径，从开始位置到结束位置，顺时针绘制
-                    ctx.stroke()
-                </pre>
-            </div>
-            <div class="flex">
-                <div class="div">
-                    <div class="label">drawing: ctx.arc(100, 100, 99, <span class="highlight">0, 2*Math.PI</span>, false)</div>
-                    <canvas id="drawing" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing2: ctx.arc(100, 100, 99, <span class="highlight">0, 0.5*Math.PI</span>, false)</div>
-                    <canvas id="drawing2" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing3: ctx.arc(100, 100, 99, <span class="highlight">0.5*Math.PI, Math.PI</span>, false)</div>
-                    <canvas id="drawing3" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing4: ctx.arc(100, 100, 99, <span class="highlight">Math.PI, 1.5*Math.PI</span>, false)</div>
-                    <canvas id="drawing4" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing5: ctx.arc(100, 100, 99, <span class="highlight">1.5*Math.PI, 2*Math.PI</span>, false)</div>
-                    <canvas id="drawing5" width="200" height="200" >A draw of something.</canvas>
-                </div>
-            </div>
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;"></canvas>
+<script>
+  var drawing = document.getElementById('drawing');
+  var ctx = drawing.getContext('2d');
+  ctx.beginPath();
+  // 顺时针画圆 
+  // ctx.arc(100, 100, 99, 0, 2*Math.PI, false)
+  // ctx.arc(100, 100, 99, 0, 0.5*Math.PI, false)
+  // ctx.arc(100, 100, 99, 0.5*Math.PI, 1*Math.PI, false)
+  // ctx.arc(100, 100, 99, Math.PI, 1.5*Math.PI, false)
+  // ctx.arc(100, 100, 99, 1.5*Math.PI, 2*Math.PI, false)
 
-            <div>
-                <pre>
-                    var drawing6 = document.getElementById('drawing6');
-                    var ctx6 = drawing6.getContext('2d');
-                    ctx6.beginPath();
-                    ctx6.arc(100, 100, 99, <span class="highlight">开始位置, 结束位置</span>, <span style="color:blue">true</span>) // 以(100,100)为中心，99半径，从开始位置到结束位置，逆时针绘制
-                    ctx6.stroke()        
-                </pre>
-            </div>
-            <div class="flex">
-                <div class="div">
-                    <div class="label">drawing6: ctx.arc(100, 100, 99, <span class="highlight">2*Math.PI, 0</span>, true)</div>
-                    <canvas id="drawing6" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing7: ctx.arc(100, 100, 99, <span class="highlight">1.5*Math.PI, 0</span>, true)</div>
-                    <canvas id="drawing7" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing8: ctx.arc(100, 100, 99, <span class="highlight">1*Math.PI, 0</span>, true)</div>
-                    <canvas id="drawing8" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing9: ctx.arc(100, 100, 99, <span class="highlight">0.5*Math.PI, 0</span>, true)</div>
-                    <canvas id="drawing9" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing10: ctx.arc(100, 100, 99, <span class="highlight">0.3*Math.PI, 0</span>, true)</div>
-                    <canvas id="drawing10" width="200" height="200" >A draw of something.</canvas>
-                </div>
-            </div>
-        </div>
- 
-        <div>
-            <h2>ctx.arcTo(x1, y1, x2, y2, radius)</h2>
-            <blockquote>
-                从上一点开始绘制一条弧线，到(x2,y2)为止，并以给定的半径，穿过(x1, y1)，当(x1,y1)到(x2,y2)的距离，大于半径，可能到达不了x2,y2.停在中途
-            </blockquote>
-            <div>
-            <pre>
-                var drawing11 = document.getElementById('drawing11');
-                var ctx11 = drawing11.getContext('2d');
-                ctx11.beginPath();
-                ctx11.moveTo(0, 200);
-                ctx11.lineTo(200, 100);
-                ctx11.arcTo(<span class="highlight">圆弧经过点x1, , 圆弧经过点y1, 目的点x2, 目的点y2, 圆弧半径radius</span>)
-                ctx11.stroke()
-                // 开始绘制辅助线，有利于更好的理解arcTo函数
-                ctx11.beginPath();
-                ctx11.strokeStyle = "rgba(0, 0, 255, 0.2)"
-                ctx11.moveTo(100, 0);
-                ctx11.lineTo(100, 100);
-                ctx11.lineTo(200, 100);
-                ctx11.stroke()
-            </pre>
-            <div class="flex">
-                <div class="div">
-                    <div class="label">drawing11: ctx11.arcTo(<span class="highlight">100, 100, 100, 0, 100</span>)</div>
-                    <canvas id="drawing11" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing12: ctx11.arcTo(<span class="highlight">100, 100, 0, 0, 200</span>)</div>
-                    <canvas id="drawing12" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing13: ctx11.arcTo(<span class="highlight">100, 100, 0, 0, 60</span>)</div>
-                    <canvas id="drawing13" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing14: ctx.arc(<span class="highlight">100, 200, 0, 100, 30/80</span>)</div>
-                    <canvas id="drawing14" width="200" height="200" >A draw of something.</canvas>
-                </div>
-                <div class="div">
-                    <div class="label">drawing15: ctx.arc(<span class="highlight">0, 200, 100, 0, 10/30/80</span>)</div>
-                    <canvas id="drawing15" width="200" height="200" >A draw of something.</canvas>
-                </div>
-            </div>
-        </div>
-        
-        <div>
-            <h2>rect(x, y, width, height)</h2>
-            <blockquote>
-                从点(x, y)开始绘制一个矩形，宽为widht，高为height，这个方法绘制的是矩形路径。
-            </blockquote>
-            <div>
-            <pre>
-                var drawing16 = document.getElementById('drawing16');
-                var ctx16 = drawing16.getContext('2d');
-                ctx16.beginPath();
-                ctx16.rect(50,100,100,100)
-                ctx16.stroke();
-            </pre>
-            <div class="flex">
-                <div class="div">
-                    <div class="label">drawing16: ctx16.rect(50,100,100,100)</div>
-                    <canvas id="drawing16" width="200" height="200" >A draw of something.</canvas>
-                </div>
-            </div>
-        </div>
-        <script>
-            var drawing = document.getElementById('drawing');
-            var ctx = drawing.getContext('2d');
-            ctx.beginPath();
-            ctx.arc(100, 100, 99, 0, 2*Math.PI, false)
-            ctx.stroke()
-
-            var drawing2 = document.getElementById('drawing2');
-            var ctx2 = drawing2.getContext('2d');
-            ctx2.beginPath();
-            ctx2.arc(100, 100, 99, 0, 0.5*Math.PI, false)
-            ctx2.stroke()
-
-            var drawing3 = document.getElementById('drawing3');
-            var ctx3 = drawing3.getContext('2d');
-            ctx3.beginPath();
-            ctx3.arc(100, 100, 99, 0.5*Math.PI, 1*Math.PI, false)
-            ctx3.stroke()
-
-            var drawing4 = document.getElementById('drawing4');
-            var ctx4 = drawing4.getContext('2d');
-            ctx4.beginPath();
-            ctx4.arc(100, 100, 99, Math.PI, 1.5*Math.PI, false)
-            ctx4.stroke()
-
-            var drawing5 = document.getElementById('drawing5');
-            var ctx5 = drawing5.getContext('2d');
-            ctx5.beginPath();
-            ctx5.arc(100, 100, 99, 1.5*Math.PI, 2*Math.PI, false)
-            ctx5.stroke()
-            
-            var drawing6 = document.getElementById('drawing6');
-            var ctx6 = drawing6.getContext('2d');
-            ctx6.beginPath();
-            ctx6.arc(100, 100, 99, 2*Math.PI, 0, true)
-            ctx6.stroke()
-                    
-            var drawing7 = document.getElementById('drawing7');
-            var ctx7 = drawing7.getContext('2d');
-            ctx7.beginPath();
-            ctx7.arc(100, 100, 99, 1.5*Math.PI, 0, true)
-            ctx7.stroke()
-
-            var drawing8 = document.getElementById('drawing8');
-            var ctx8 = drawing8.getContext('2d');
-            ctx8.beginPath();
-            ctx8.arc(100, 100, 99, 1*Math.PI, 0, true)
-            ctx8.stroke()
-
-            var drawing9 = document.getElementById('drawing9');
-            var ctx9 = drawing9.getContext('2d');
-            ctx9.beginPath();
-            ctx9.arc(100, 100, 99, 0.5*Math.PI, 0, true)
-            ctx9.stroke()
-
-            var drawing10 = document.getElementById('drawing10');
-            var ctx10 = drawing10.getContext('2d');
-            ctx10.beginPath();
-            ctx10.arc(100, 100, 99, 0.3*Math.PI, 0, true)
-            ctx10.stroke()
-            
-            var drawing11 = document.getElementById('drawing11');
-            var ctx11 = drawing11.getContext('2d');
-            ctx11.beginPath();
-            ctx11.moveTo(200, 100);
-            ctx11.lineTo(200, 100);
-            ctx11.arcTo(100, 100, 100, 0, 100)
-            ctx11.stroke()
-            // 开始绘制圆弧辅助线
-            ctx11.beginPath();
-            ctx11.strokeStyle = "rgba(0, 0, 255, 0.2)"
-            ctx11.moveTo(100, 0);
-            ctx11.lineTo(100, 100);
-            ctx11.lineTo(200, 100);
-            ctx11.stroke()
-
-            var drawing12 = document.getElementById('drawing12');
-            var ctx12 = drawing12.getContext('2d');
-            ctx12.beginPath();
-            ctx12.moveTo(200, 100);
-            ctx12.lineTo(200, 100);
-            ctx12.arcTo(100, 100, 0, 0, 200)
-            ctx12.stroke()
-            // 开始绘制圆弧辅助线
-            ctx12.beginPath();
-            ctx12.strokeStyle = "rgba(0, 0, 255, 0.2)"
-            ctx12.moveTo(0, 0);
-            ctx12.lineTo(100, 100);
-            ctx12.lineTo(200, 100);
-            ctx12.stroke()
-
-            var drawing13 = document.getElementById('drawing13');
-            var ctx13 = drawing13.getContext('2d');
-            ctx13.beginPath();
-            ctx13.moveTo(200, 100);
-            ctx13.lineTo(200, 100);
-            ctx13.arcTo(100, 100, 0, 0, 60)
-            ctx13.stroke()
-            // 开始绘制圆弧辅助线
-            ctx13.beginPath();
-            ctx13.strokeStyle = "rgba(0, 0, 255, 0.2)"
-            ctx13.moveTo(0, 0);
-            ctx13.lineTo(100, 100);
-            ctx13.lineTo(200, 100);
-            ctx13.stroke()
-
-            var drawing14 = document.getElementById('drawing14');
-            var ctx14 = drawing14.getContext('2d');
-            ctx14.beginPath();
-            ctx14.moveTo(200, 100);
-            ctx14.lineTo(200, 100);
-            ctx14.arcTo(100, 200, 0, 100, 30)
-            ctx14.moveTo(200, 100);
-            ctx14.arcTo(100, 200, 0, 100, 80)
-            ctx14.stroke()
-            // 开始绘制圆弧辅助线
-            ctx14.beginPath();
-            ctx14.strokeStyle = "rgba(0, 0, 255, 0.2)"
-            ctx14.moveTo(0, 100);
-            ctx14.lineTo(100, 200);
-            ctx14.lineTo(200, 100);
-            ctx14.stroke()
-
-            var drawing15 = document.getElementById('drawing15');
-            var ctx15 = drawing15.getContext('2d');
-            ctx15.beginPath();
-            ctx15.moveTo(200, 100);
-            ctx15.lineTo(200, 100);
-            ctx15.arcTo(0, 200, 100, 0, 10)
-            ctx15.moveTo(200, 100);
-            ctx15.arcTo(0, 200, 100, 0, 30)
-            ctx15.moveTo(200, 100);
-            ctx15.arcTo(0, 200, 100, 0, 80)
-            ctx15.stroke()
-            // 开始绘制圆弧辅助线
-            ctx15.beginPath();
-            ctx15.strokeStyle = "rgba(0, 0, 255, 0.2)"
-            ctx15.moveTo(100, 0);
-            ctx15.lineTo(0, 200);
-            ctx15.lineTo(200, 100);
-            ctx15.stroke()
-
-            var drawing16 = document.getElementById('drawing16');
-            var ctx16 = drawing16.getContext('2d');
-            ctx16.beginPath();
-            ctx16.rect(50,100,100,100)
-            ctx16.stroke();
-
-            // ctx16.moveTo(200, 100);
-        </script>
-    </body>
-</html>
+  // 逆时针画圆
+  // ctx.arc(100, 100, 99, 2*Math.PI, 0, true)
+  // ctx.arc(100, 100, 99, 1.5*Math.PI, 0, true)
+  // ctx.arc(100, 100, 99, 1*Math.PI, 0, true)
+  // ctx.arc(100, 100, 99, 0.5*Math.PI, 0, true)
+  // ctx.arc(100, 100, 99, 0.3*Math.PI, 0, true)
+  ctx.stroke()
+</script>
 ```
-- 绘制时钟表盘
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>canvas clock</title>
-  </head>
-  <body>
-    <canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;"></canvas>
-    <script>
-      var darwing = document.getElementById('drawing');
-      var ctx = darwing.getContext('2d');
-      // 开始路径
-      ctx.beginPath();
+上面的例子中，注释的语句如果正常执行，按顺序绘制效果如下
 
-      ctx.arc(100, 100, 99, 0, 2*Math.PI, false); // 外圆
-      // 由于画完圆后，坐标停留在(200, 100)的位置，需要移动下起点。
-      ctx.moveTo(192, 100);
-      ctx.arc(100, 100, 92, 0, 2*Math.PI, false); // 内圆
+![canvas_arc_1.png](/images/js/canvas_arc_1.png)
 
-      // 将绘图游标移动到中心点，画指针
-      ctx.moveTo(100, 100);
-      ctx.lineTo(100, 20);
-      ctx.moveTo(100, 100);
-      ctx.lineTo(50, 100);
-      ctx.stroke();
-    </script>
-  </body>
-</html>
+![canvas_arc_2.png](/images/js/canvas_arc_2.png)
+
+再来看 arcTo() 的例子，图1 ~ 图5 的代码如下
+
+```js
+ctx.beginPath();
+ctx.moveTo(200, 100);
+ctx.arcTo(100, 100, 100, 0, 100)   // 图 1
+// ctx.arcTo(100, 100, 0, 0, 200)  // 图 2
+// ctx13.arcTo(100, 100, 0, 0, 60) // 图 3
+ctx.stroke()
+// 开始绘制圆弧辅助线
+ctx.beginPath();
+ctx.strokeStyle = "rgba(0, 0, 255, 0.2)"
+ctx.moveTo(100, 0);    // 图 1
+// ctx12.moveTo(0, 0); // 图 2、图 3
+ctx.lineTo(100, 100);
+ctx.lineTo(200, 100);
+ctx.stroke()
 ```
+
+![canvas_arcTo.png](/images/js/canvas_arcTo.png)
+
+```js
+// 图 4
+ctx14.beginPath();
+ctx14.moveTo(200, 100);
+ctx14.arcTo(100, 200, 0, 100, 30)
+ctx14.moveTo(200, 100);
+ctx14.arcTo(100, 200, 0, 100, 80)
+ctx14.stroke()
+// 开始绘制圆弧辅助线
+ctx14.beginPath();
+ctx14.strokeStyle = "rgba(0, 0, 255, 0.2)"
+ctx14.moveTo(0, 100);
+ctx14.lineTo(100, 200);
+ctx14.lineTo(200, 100);
+ctx14.stroke()
+
+// 图 5
+ctx15.beginPath();
+ctx15.moveTo(200, 100);
+ctx15.arcTo(0, 200, 100, 0, 10)
+ctx15.moveTo(200, 100);
+ctx15.arcTo(0, 200, 100, 0, 30)
+ctx15.moveTo(200, 100);
+ctx15.arcTo(0, 200, 100, 0, 80)
+ctx15.stroke()
+// 开始绘制圆弧辅助线
+ctx15.beginPath();
+ctx15.strokeStyle = "rgba(0, 0, 255, 0.2)"
+ctx15.moveTo(100, 0);
+ctx15.lineTo(0, 200);
+ctx15.lineTo(200, 100);
+ctx15.stroke()
+```
+
+完整代码：[canvas arc、arcTo demo | Github](https://github.com/zuoxiaobai/fedemo/blob/master/src/JS_ES6/JS%E9%AB%98%E7%A8%8B3/%E4%BD%BF%E7%94%A8Canvas%E7%BB%98%E5%9B%BE/2_cavasPath.html)，在线示例：[canvas arc、arcTo demo 在线示例](https://zuoxiaobai.github.io/fedemo/src/JS_ES6/JS%E9%AB%98%E7%A8%8B3/%E4%BD%BF%E7%94%A8Canvas%E7%BB%98%E5%9B%BE/2_cavasPath.html)
+
 ### 绘制文本
-fillText() 和 strokeText()绘制文本，或者文本边框。如fillRect类似，不必像绘制路径那样需要先beginPath()。绘制文本方法有4个参数，如下:
+ctx.fillText() 和 ctx.strokeText() 绘制文本，或者文本边框。如 fillRect 类似，不需要像绘制路径那样需要先 beginPath()。绘制文本方法有 4 个参数，如下:
 - text：要绘制的文本字符串
 - x：要绘制的x坐标
 - y: 要绘制的y坐标
-- with：可选，占用的最大像素宽度。
+- width：可选，占用的最大像素宽度。
 
-ctx，2D绘图上下文有三个关于绘制文本的基础属性，如下：
-- font: 表示文本样式字体，用css指定字体的格式来。 如 "bold 10px Arial"
-- textAlign: 水平对齐方式 默认为start，还有end，center
-- textBaseline: 垂直对齐方式，默认为bottom，还有 top, middle  
+2D 绘图上下文有 4 个关于绘制文本的基础属性、方法，如下：
+- `ctx.font` 表示文本样式字体，用css指定字体的格式来。 如 "bold 10px Arial"
+- `ctx.textAlign` 水平对齐方式 默认为start，还有end，center
+- `ctx.textBaseline` 垂直对齐方式，默认为bottom，还有 top, middle  
+- `ctx.measureText(text)` 返回一个 TextMetrics 对象，该对象只有一个 width 属性，表示绘制文本会占用的宽度。使用 while 循环调整 font size 再调用该函数，可以确定固定宽度时，什么字体大小刚好合适。
+
 ![canvas_drawtext](/images/js/canvas_fillText.png)
-示例代码如下：
+
+代码如下：
 ```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>canvas clock</title>
-  </head>
-  <body>
-    <p>208*200, 20*20小网格</p>
-    <canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;"></canvas>
-    <script>
-      var darwing = document.getElementById('drawing');
-      var ctx = darwing.getContext('2d');
-      // 开始路径
-      ctx.beginPath();
+<p>208*200, 20*20小网格</p>
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;"></canvas>
+<script>
+  var darwing = document.getElementById('drawing');
+  var ctx = darwing.getContext('2d');
+  // 开始路径
+  ctx.beginPath();
 
-      ctx.arc(100, 100, 99, 0, 2*Math.PI, false); // 外圆
-      // 由于画完圆后，坐标停留在(200, 100)的位置，需要移动下起点。
-      ctx.moveTo(192, 100);
-      ctx.arc(100, 100, 92, 0, 2*Math.PI, false); // 内圆
+  ctx.arc(100, 100, 99, 0, 2*Math.PI, false); // 外圆
+  // 由于画完圆后，坐标停留在(200, 100)的位置，需要移动下起点。
+  ctx.moveTo(192, 100);
+  ctx.arc(100, 100, 92, 0, 2*Math.PI, false); // 内圆
 
-      // 将绘图游标移动到中心点，画指针
-      ctx.moveTo(100, 100);
-      ctx.lineTo(100, 20);
-      ctx.moveTo(100, 100);
-      ctx.lineTo(50, 100);
-      ctx.stroke();
+  // 将绘图游标移动到中心点，画指针
+  ctx.moveTo(100, 100);
+  ctx.lineTo(100, 20);
+  ctx.moveTo(100, 100);
+  ctx.lineTo(50, 100);
+  ctx.stroke();
 
-      // 绘制参考线 20*20 的网格
-      ctx.beginPath();
-      ctx.strokeStyle = "rgba(0,0,0,.1)"
-      for (var i = 20; i < 200; i+=20) {
-        ctx.moveTo(0, i);
-        ctx.lineTo(200,i);
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, 200);
-      }
-      ctx.stroke();
+  // 绘制参考线 20*20 的网格
+  ctx.beginPath();
+  ctx.strokeStyle = "rgba(0,0,0,.1)"
+  for (var i = 20; i < 200; i+=20) {
+    ctx.moveTo(0, i);
+    ctx.lineTo(200,i);
+    ctx.moveTo(i, 0);
+    ctx.lineTo(i, 200);
+  }
+  ctx.stroke();
 
-      // 绘制参考中心点
-      fillPoint(100, 40);
-      fillPoint(100, 80);
-      fillPoint(100, 120);
-      fillPoint(140, 60);
-      fillPoint(140, 100);
-      fillPoint(140, 140);
-      function fillPoint(x, y, color) {
-        var radius = 3;
-        ctx.fillStyle = "rgba(0,0,255)"
-        ctx.beginPath();
-        ctx.moveTo(x+radius, y)
-        ctx.arc(x, y, radius, 0, 2*Math.PI, false)
-        ctx.fill();
-      }
+  // 绘制参考中心点
+  fillPoint(100, 40);
+  fillPoint(100, 80);
+  fillPoint(100, 120);
+  fillPoint(140, 60);
+  fillPoint(140, 100);
+  fillPoint(140, 140);
+  function fillPoint(x, y, color) {
+    var radius = 3;
+    ctx.fillStyle = "rgba(0,0,255)"
+    ctx.beginPath();
+    ctx.moveTo(x+radius, y)
+    ctx.arc(x, y, radius, 0, 2*Math.PI, false)
+    ctx.fill();
+  }
 
-      // 绘制文本
-      ctx.font = "bold 14px Arial"
-      ctx.fillStyle = "red"
-      // 默认textAlign为start
-      ctx.fillText('12', 100, 40, 20)
+  // 绘制文本
+  ctx.font = "bold 14px Arial"
+  ctx.fillStyle = "red"
+  // 默认textAlign为start
+  ctx.fillText('12', 100, 40, 20)
 
-      ctx.textAlign = "center"
-      ctx.fillText('12', 100, 80, 20)
+  ctx.textAlign = "center"
+  ctx.fillText('12', 100, 80, 20)
 
-      ctx.textAlign = "end"
-      ctx.fillText('12', 100, 120, 20)
+  ctx.textAlign = "end"
+  ctx.fillText('12', 100, 120, 20)
 
-      ctx.textBaseline = "bottom" // 默认textBaseline为bottom
-      ctx.fillText('12', 140, 60, 20)
+  ctx.textBaseline = "bottom" // 默认textBaseline为bottom
+  ctx.fillText('12', 140, 60, 20)
 
-      ctx.textBaseline = "top"
-      ctx.fillText('12', 140, 100, 20)
+  ctx.textBaseline = "top"
+  ctx.fillText('12', 140, 100, 20)
 
-      ctx.textBaseline = "middle"
-      ctx.fillText('12', 140, 140, 20)
+  ctx.textBaseline = "middle"
+  ctx.fillText('12', 140, 140, 20)
 
-      // 绘制measureText的测试矩形区域
-      ctx.beginPath();
-      ctx.strokeStyle = "rgb(0,0,255,.5)"
-      ctx.rect(40, 140, 40, 20)
-      ctx.stroke();
+  // 绘制measureText的测试矩形区域
+  ctx.beginPath();
+  ctx.strokeStyle = "rgb(0,0,255,.5)"
+  ctx.rect(40, 140, 40, 20)
+  ctx.stroke();
 
-      // 需要在40px宽度的位置绘制Hello，用measureText(str), 确定字体后再绘制
-      var fontsize = 100;
-      ctx.font = fontsize + "px Arial"
-      while (ctx.measureText('Hello').width > 40) {
-        fontsize--;
-        ctx.font = fontsize + "px Arial"
-      }
-      console.log(fontsize)
-      console.log(ctx.measureText('Hello').width)
-      ctx.textBaseline = "top";
-      ctx.textAlign = "start";
-      ctx.fillText('Hello', 40, 140)
-    </script>
-  </body>
-</html>
+  // 需要在40px宽度的位置绘制Hello，用measureText(str), 确定字体后再绘制
+  var fontsize = 100;
+  ctx.font = fontsize + "px Arial"
+  while (ctx.measureText('Hello').width > 40) {
+    fontsize--;
+    ctx.font = fontsize + "px Arial"
+  }
+  console.log(fontsize)
+  console.log(ctx.measureText('Hello').width)
+  ctx.textBaseline = "top";
+  ctx.textAlign = "start";
+  ctx.fillText('Hello', 40, 140)
+</script>
 ```
 
 ### 变换
-暂时未发现大的用途，p453，以后再看，无意中用setTimeout写了个动画。待用window.requestAnimationFrame()做出更细致的动画
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>canvas 变换</title>
-  </head>
-  <body>
-    <canvas id="drawing" width="200" height="200" style='border:1px solid #ccc;'>A draw of something.</canvas>
-
-    <script>
-      var drawing = document.getElementById('drawing');
-      var ctx = drawing.getContext('2d');
-
-      ctx.beginPath();
-      ctx.arc(100, 100, 99, 0, 2*Math.PI, false);
-      ctx.moveTo(192, 100);
-      ctx.arc(100, 100, 92, 0, 2*Math.PI, false);
-      ctx.moveTo(60,100);
-      ctx.lineTo(100,100);
-      ctx.lineTo(100, 40);
-      ctx.stroke();
-
-      let x = 200, y = 200;
-      var timer = setInterval(function() {
-        if (y === 0) {
-          clearInterval(timer)
-        }
-        ctx.beginPath();
-        ctx.moveTo(100, 100);
-        ctx.lineTo(x, y)
-        ctx.stroke();
-        y = y - 10
-      }, 1000)
-    </script>
-  </body>
-</html>
-```
-### 绘制图形
-drawImage()可以用来在画布上绘制图片，有三种传参方式：
-- 3参 ctx.drawImage(image, x, y) 在画布(x, y)位置，开始绘制image
-- 5参 ctx.drawImage(image, x, y, width, height)， 在画布(x, y)位置，开始绘制image，绘制的image宽为width,高为height
-- 9参 ctx.drawImage(image, 源图像x坐标, 源图像y坐标, 源图像width, 源图像height, 目标图像x坐标，目标图像y坐标，目标图像width，目标图像height)，从原图像的(x,y)坐标开始截图width*height大小的图片，绘制到画布(x,y)坐标位置
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>canvas 绘制图片</title>
-    <style>
-      canvas { border: 1px solid #ccc;}
-      .sec { margin-right:20px;}
-    </style>
-  </head>
-  <body>
-    <div>
-      <p>图片原大小: 1078*681，下面展示的大小 100*300</p>
-      <img src="cavasimg.png" width="1000" height="250">
-    </div>
-    <div style="display: flex;">
-      <div class="sec"> 
-        <p>ctx.drawImage(image, 10, 10)</p>
-        <canvas id="drawing" width="200" height="200">A draw of something.</canvas>
-      </div>
-      <div class="sec">
-        <p> ctx2.drawImage(image, 10, 10, 100, 50)</p>
-        <canvas id="drawing2" width="200" height="200">A draw of something.</canvas>
-      </div>
-      <div class="sec">
-        <p>ctx3.drawImage(image, 100, 0, 150, 150, 10, 10, 150, 150)</p>
-        <canvas id="drawing3" width="200" height="200">A draw of something.</canvas>
-      </div>
-    </div>
-
-    <script>
-      var image = document.images[0]
-
-      // 图片加载是异步的，如果不等image加载完，drawImage()会无效
-      // 参考：canvas的drawImage()方法，图片不显示。
-      // https://zhidao.baidu.com/question/500218334361912884.html
-
-      image.onload = function(e) {
-        var drawing = document.getElementById('drawing');
-        var ctx = drawing.getContext('2d');
-
-        ctx.drawImage(image, 10, 10) // 从(10,10) 开始绘制image，不改变原图大小
-
-        var drawing2 = document.getElementById('drawing2');
-        var ctx2 = drawing2.getContext('2d');
-        ctx2.drawImage(image, 10, 10, 100, 50) // 从(10,10) 开始绘制image，设置绘制的图片大小为100*50
-
-        var drawing3 = document.getElementById('drawing3');
-        var ctx3 = drawing3.getContext('2d');
-        ctx3.drawImage(image, 100, 0, 150, 150, 10, 10, 150, 150) 
-        // 从原图像的(100, 0)坐标开始，截图宽150高150的图片，然后在画布(10,10)的位置开始绘制图形，宽为1500,高为150
-      }
-    </script>
-  </body>
-</html>
-```
-### 阴影、渐变、模式(pattern)、合成(composite)
-![canvas_composite](/images/js/canvas_composite.png)
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>canvas shadow gradient</title>
-    <style>
-      canvas { border:1px solid #ccc; }
-    </style>
-  </head>
-  <body>
-    <div>
-      <img src="img.png" height="100" width="100">
-    </div>
-    <canvas id="drawing" width="200" height="200"></canvas>
-    <canvas id="drawing2" width="200" height="200"></canvas>
-    <canvas id="drawing3" width="200" height="200"></canvas>
-    <script>
-      var drawing = document.getElementById('drawing');
-      var ctx = drawing.getContext('2d');
-
-      // 设置阴影
-      ctx.shadowOffsetX = 5;
-      ctx.shadowOffsetY = 5;
-      ctx.shadowBlur = 4; // 模糊像素
-      ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
-
-      // 1.1 绘制红色矩形，会自带阴影
-      ctx.fillStyle = "#ff0000";
-      ctx.fillRect(10, 10, 50, 50);
-      // 1.2 绘制蓝色矩形，会自带阴影
-      ctx.fillStyle = "blue";
-      ctx.fillRect(30, 30, 50, 50);
-
-      // 清除阴影
-      ctx.shadowBlur = 0; // 模糊像素为0时，即没有模糊
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-
-      // 2.设置线性渐变
-      var gradient = ctx.createLinearGradient(130, 130, 160, 160); // 从(130,130)到(160,160)渐变
-      // var gradient = ctx.createLinearGradient(130, 130, 180, 180);
-      gradient.addColorStop(0, 'white'); // 渐变的起点色为白色
-      // gradient.addColorStop(0.4, 'pink'); 
-      // gradient.addColorStop(0.5, 'blue'); 
-      // gradient.addColorStop(0.7, 'red'); 
-      gradient.addColorStop(1, 'black'); // 渐变的结束色为白色
-      // 绘制红色矩形
-      ctx.fillStyle = 'red'
-      ctx.fillRect(100, 100, 50, 50);
-      // 绘制线性渐变矩形
-      ctx.fillStyle = gradient;
-      ctx.fillRect(130, 130, 50, 50)
-
-      // 3.绘制辐射渐变
-      var gradient = ctx.createRadialGradient(25, 175, 0, 25, 175, 30) // 绘制从(25,175)起点，0为半径到终点(25,175)，半径为30的渐变。
-      gradient.addColorStop(0, 'red')
-      gradient.addColorStop(1, 'blue')
-      ctx.fillStyle = gradient
-      ctx.fillRect(0, 150, 50, 50)
-
-      // 4.模式，其实就是重复的图像
-      var drawing2 = document.getElementById('drawing2');
-      var ctx2 = drawing2.getContext('2d');
-      var image = document.images[0]
-      image.onload = function(e) {
-        var pattern = ctx2.createPattern(image, 'repeat'); // 创建重复的模式
-        // var pattern = ctx2.createPattern(image, 'repeat-x'); // 创建重复的模式
-        // var pattern = ctx2.createPattern(image, 'repeat-y'); // 创建重复的模式
-        // var pattern = ctx2.createPattern(image, 'no-repeat'); // 创建重复的模式
-        ctx2.fillStyle = pattern;
-        ctx2.fillRect(10, 10, 150, 150)
-      }
-
-      // 5. 导出canvas为图片，透明无背景
-      var imgurl = drawing.toDataURL('image/png');
-      console.log(imgurl)
-      var imgEle = document.createElement('img');
-      imgEle.src = imgurl;
-      document.body.appendChild(imgEle);
-
-      // 6.设置全局透明度ctx.globalAlpha
-      var drawing3 = document.getElementById('drawing3');
-      var ctx3 = drawing3.getContext('2d');
-      // 绘制红色矩形
-      ctx3.fillStyle = 'red';
-      ctx3.fillRect(10, 10, 50, 50);
-      // 修改全局透明度
-      ctx3.globalAlpha = 0.5;
-      // 绘制蓝色矩形
-      ctx3.fillStyle = "blue";
-      ctx3.fillRect(30, 30, 50, 50);
-      // 重置全局透明度
-      ctx3.globalAlpha = 1; // p462， 值为0，貌似有问题
-
-      // 7.ctx.globalCompositeOperation 设置后绘制的矩形怎样与先绘制的矩形结合。默认值为后绘制的位于先绘制的上方， source-over
-      // 绘制红色矩形
-      // ctx3.globalAlpha = 1;
-      ctx3.fillStyle = 'red'
-      ctx3.fillRect(100, 100, 50, 50)
-      // 设置合成（composite）操作
-      // 默认为 source-over
-      ctx3.globalCompositeOperation = 'destination-over' // 后绘制的位于先绘制的下面
-      // ctx3.globalCompositeOperation = 'destination-out' // 后绘制的图形擦除与先绘制的图形重叠部分
-      // 更多参数见p463
-      ctx3.fillStyle = 'rgba(0,0,255,1)'
-      ctx3.fillRect(125, 125, 50, 50)
-    </script>
-  </body>
-</html>
-```
-### 动画、物理效果、碰撞检测等
-详情待后续学习 <<HTML5 Canvas核心技术>> 图形、动画与游戏开发 时再研究
-
-## WebGL绘制3D图形
-WebGL是针对Canvas的3D上下文，浏览器中使用的WebGL就是基于OpenGL ES2.0制定的，这里暂不讨论，后面有时间学习 <<WebGL入门指南>> 时，再研究这一块。
+2D 绘图上下文提供了多个用于变换画布的 API
+- `ctx.rotate(angle)` 围绕原点把图像旋转 angle 角度 Math.PI 为 180°，旋转后，整个画布都旋转了。初始坐标也会跟着旋转。
+- `scale(scaleX, scaleY)` 通过在 x 轴乘以 scaleX，在 y 轴乘以 scaleY 来缩放图像。默认值都是 1.0
+- `translate(x, y)` 把原点移动到 (x, y)，原点会从原来的 (0, 0) 变更到 (x, y)
+- `transform(m1_1, m1_2, m2_1, m2_2, dx, dy)` 通过矩阵乘法直接修改矩阵
 ```js
-var gl = drawing.getContext("experimental-webgl") // 创建webgl上下文，"experimental-webgl"，实验性的webgl
+m1_1 m1_2 dx
+m2_1 m2_2 dy
+0    0    1
 ```
+- setTransform(m1_1, m1_2, m2_1, m2_2, dx, dy) 把矩阵重置为默认值，再以传入的参数调用 transform
+
+来看一个例子
+```html
+<canvas id="drawing" width="200" height="200" style='border:1px solid #ccc;'>A draw of something.</canvas>
+<script>
+  let drawing = document.getElementById('drawing')
+  let ctx = drawing.getContext('2d')
+  ctx.beginPath()
+  // 绘制外圆
+  ctx.arc(100, 100, 99, 0, 2 * Math.PI, false)
+  // 绘制内圆
+  ctx.moveTo(194, 100)
+  ctx.arc(100, 100, 94, 0, 2 * Math.PI, false)
+
+  ctx.translate(100, 100) // 移动原点到表盘中心
+  
+  // 旋转图像
+  // ctx.rotate(Math.PI / 3) // 围绕原点将图像旋转 60°
+  // ctx.rotate(Math.PI / 2) // 围绕原点将图像旋转 90°
+  // ctx.rotate(Math.PI) // 围绕原点将图像旋转 180°
+
+  // 绘制分针与时针
+  ctx.moveTo(0, 0)   // 相当于原来的 (100, 100)
+  ctx.lineTo(0, -85) // 相当于原来的 (100, 15)
+  ctx.moveTo(0, 0)   // 相当于原来的 (100, 100)
+  ctx.lineTo(-65, 0) // 相当于原来的 (35, 100)
+
+  ctx.stroke()
+</script>
+```
+
+![canvas_change.png](/images/js/canvas_change.png)
+
+此外，2D 绘图上下文还提供了 2 个函数，用于保存和恢复 fillStyle、strokeStyle 和变换的设置。
+- `ctx.save()` 将当前的 fillStyle, strokeStyle，变换的设置保存到栈中
+- `ctx.restore()` 从栈中恢复之前保存的设置
+
+来看一个例子
+```html
+<canvas id="drawing" width="200" height="200" style='border:1px solid #ccc;width: 100px;'>A draw of something.</canvas>
+<script>
+  let drawing = document.getElementById('drawing')
+  let ctx = drawing.getContext('2d')
+
+  ctx.fillStyle = "red"
+  ctx.save() // 将当前设置存到栈中
+
+  ctx.fillStyle = "green"
+  ctx.translate(100, 100)
+  ctx.save() // 将当前设置存到栈中
+
+  ctx.fillStyle = 'blue'
+  ctx.fillRect(0, 0, 50, 50) // 在 (100, 100) 的位置绘制蓝色矩形
+
+  ctx.restore()
+  ctx.fillRect(10, 10, 50, 50) // 在 (110, 110) 的位置绘制绿色矩形
+
+  ctx.restore()
+  ctx.fillRect(0, 0, 50, 50) // 在 (0, 0) 的位置绘制红色矩形
+</script>
+```
+
+![save_restore.png](/images/js/save_restore.png)
+
+### 绘制图形
+`ctx.drawImage()` 可以用来在画布上绘制图片，有三种传参方式：
+- 3参 ctx.drawImage(image, x, y) 在画布 (x, y) 位置，开始绘制 image
+- 5参 ctx.drawImage(image, x, y, width, height)， 在画布 (x, y) 位置，开始绘制 image，绘制的 image 宽为 width, 高为 height
+- 9参 ctx.drawImage(image, 源图像x坐标, 源图像y坐标, 源图像width, 源图像height, 目标图像x坐标，目标图像y坐标，目标图像width，目标图像height)，从原图像的 (x, y) 坐标开始截图 width * height 大小的图片，绘制到画布 (x,y) 坐标位置
+
+注意：图片加载是异步的，如果不等 image 加载完，drawImage() 会无效，参考：[canvas的drawImage()方法，图片不显示](https://zhidao.baidu.com/question/500218334361912884.html)
+
+```html
+<style>
+  canvas { border: 1px solid #ccc; width: 100px; }
+  .sec { margin-right:20px;}
+</style>
+<div>
+  <p>图片原大小: 1078*681，下面展示的大小 100*300</p>
+  <img src="cavasimg.png" width="500">
+</div>
+<div style="display: flex;">
+  <div class="sec"> 
+    <p>ctx.drawImage(image, 10, 10)</p>
+    <canvas id="drawing" width="200" height="200"></canvas>
+  </div>
+  <div class="sec">
+    <p> ctx2.drawImage(image, 10, 10, 100, 50)</p>
+    <canvas id="drawing2" width="200" height="200"></canvas>
+  </div>
+  <div class="sec">
+    <p>ctx3.drawImage(image, 100, 0, 150, 150, 10, 10, 150, 150)</p>
+    <canvas id="drawing3" width="200" height="200"></canvas>
+  </div>
+</div>
+
+<script>
+  var image = document.images[0]
+  image.onload = function(e) {
+    var drawing = document.getElementById('drawing');
+    var ctx = drawing.getContext('2d');
+
+    // 从(10,10) 开始绘制 image，不改变原图大小
+    ctx.drawImage(image, 10, 10) 
+
+    var drawing2 = document.getElementById('drawing2');
+    var ctx2 = drawing2.getContext('2d');
+    // 从(10,10) 开始绘制 image，设置绘制的图片大小为 100*50
+    ctx2.drawImage(image, 10, 10, 100, 50) 
+
+    var drawing3 = document.getElementById('drawing3');
+    var ctx3 = drawing3.getContext('2d');
+    // 从原图像的 (100, 0) 坐标开始，截图宽 150 高 150 的图片，
+    // 然后在画布 (10,10) 的位置开始绘制图形，宽为 150, 高为150
+    ctx3.drawImage(image, 100, 0, 150, 150, 10, 10, 150, 150) 
+    
+  }
+</script>
+```
+
+![canvas_img.png](/images/js/canvas_img.png)
+
+### 阴影
+2D 绘图上下文可以根据以下属性的值，自动为已有形状或路径生成阴影
+- `ctx.shadowColor` css颜色值，阴影颜色，默认为黑色
+- `ctx.shadowOffsetX` 阴影相对于形状或路径的 x 坐标偏移量, 默认为 0
+- `ctx.shadowOffsetY` 阴影相对于形状或路径的 y 坐标偏移量, 默认为 0
+- `ctx.shadowBlur` 阴影的模糊量，默认为 0，表示不模糊
+
+```html
+<canvas id="drawing" width="200" height="200"></canvas>
+<script>
+  var drawing = document.getElementById('drawing');
+  var ctx = drawing.getContext('2d');
+  // 设置阴影
+  ctx.shadowOffsetX = 5;
+  ctx.shadowOffsetY = 5;
+  ctx.shadowBlur = 4; // 模糊像素
+  ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+  // 1.1 绘制红色矩形，会自带阴影
+  ctx.fillStyle = "#ff0000";
+  ctx.fillRect(10, 10, 50, 50);
+  // 1.2 绘制蓝色矩形，会自带阴影
+  ctx.fillStyle = "blue";
+  ctx.fillRect(30, 30, 50, 50);
+</script>
+```
+
+![canvas_shadow.png](/images/js/canvas_shadow.png)
+
+
+### 渐变
+渐变使用 CanvasGradient 实例表示。可以通过下面两个方法来创建渐变
+- `ctx.createLinearGradient(startX, startY, endX, endY)` 创建一个线性渐变 CanvasGradient 实例。
+- `ctx.createRadialGradient(起点圆心x, 起点圆心y, 起点圆半径r, 终点圆心x, 终点圆心y, 终点圆半径r)` 创建一个径向渐变（放射性渐变）实例。
+
+创建 CanvasGradient 实例后，可以使用实例的方法来指定渐变的过渡颜色
+
+- `addColorStop(渐变位置，颜色)` 渐变位置是 0 到 1 之间的值，0 表示开始位置，1 表示结束位置。0.5 表示中间位置。 
+
+来看一个实例
+
+```html
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;"></canvas>
+<script>
+  var drawing = document.getElementById('drawing');
+  var ctx = drawing.getContext('2d');
+  // 设置线性渐变 从(30 ,30) 到 (60,60) 渐变
+  var gradient = ctx.createLinearGradient(30, 30, 60, 60); 
+  gradient.addColorStop(0, 'white'); // 渐变的起点色为白色
+  // gradient.addColorStop(0.5, 'blue'); 
+  gradient.addColorStop(1, 'black'); // 渐变的结束色为白色
+  // 绘制红色矩形
+  ctx.fillStyle = 'red'
+  ctx.fillRect(0, 0, 50, 50);
+  // 绘制线性渐变矩形
+  ctx.fillStyle = gradient;
+  ctx.fillRect(30, 30, 50, 50)
+
+  // 绘制辐射渐变, 绘制从 (150, 25) 起点，0 为半径的圆。到终点 (150, 25)，半径为 30 的圆渐变。
+  var gradient = ctx.createRadialGradient(150, 25, 0, 150, 25, 30) 
+  gradient.addColorStop(0, 'red')
+  gradient.addColorStop(1, 'blue')
+  ctx.fillStyle = gradient
+  ctx.fillRect(125, 0, 50, 50)
+</script>
+```
+
+![canvas_gradient.png](/images/js/canvas_gradient.png)
+
+
+### 图案 pattern
+patter 图案，之前翻译为 模式，用于填充和描绘重复图像。创建新图案，可以使用下面的方法
+- `cxt.createPattern(html 中的 img 元素, 指定如果重复图像的字符串)` 第二个参数的值与 CSS 的 background-repeat 属性时一样的，包括：repeat、repeat-x、repeat-y、no-repeat
+
+```html
+<div>
+  <img src="images/img.png" height="50" width="50">
+</div>
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;width: 100px;"></canvas>
+<script>
+  var drawing = document.getElementById('drawing');
+  var ctx = drawing.getContext('2d');
+  var image = document.images[0]
+  image.onload = function(e) {
+    var pattern = ctx.createPattern(image, 'repeat'); // 创建重复的模式
+    // var pattern = ctx.createPattern(image, 'repeat-x'); // 创建重复的模式
+    // var pattern = ctx.createPattern(image, 'repeat-y'); // 创建重复的模式
+    // var pattern = ctx.createPattern(image, 'no-repeat'); // 创建重复的模式
+    ctx.fillStyle = pattern;
+    ctx.fillRect(10, 10, 150, 150)
+  }
+</script>
+```
+
+![canvas_pattern.png](/images/js/canvas_pattern.png)
+
+### 图像数据/调整图片像素
+
+- `ctx.getImageData(x, y, width, height)` 获取图像的原始数据。它返回的结果是 ImageData 对象，包含三个属性
+  - `width` 图像宽度 
+  - `height` 图像高度
+  - `data` 包含原始像素信息的数组。每个像素在数组中都由 4 个值表示：红、绿、蓝、透明度值。第一个像素的信息包含在第 0 - 3 个值中。第二个像素包含在第 4 - 7 个值中。
+- `ctx.putImageData(ImageData实例, x, y)` 将图像数据绘制到画布，从坐标 (x,y) 开始
+
+我们可以通过更改图像数据创建一个简单的灰阶过滤器，来看下面的例子
+
+```html
+<div>
+  <img src="images/img.png" height="50" width="50">
+</div>
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;width:100px;"></canvas>
+<script>
+  let drawing = document.getElementById('drawing');
+  let ctx = drawing.getContext('2d');
+  let img = document.images[0]
+  // 图片加载完成后再绘制到 canvas
+  img.onload = () => {
+    ctx.drawImage(img, 0, 0)
+    let imgData = ctx.getImageData(0, 0, img.width, img.height)
+    let { data } = imgData
+    console.log(imgData) // { data: Uint8ClampedArray(10000) [], height: 50, width: 50 } 
+    for (let i = 0, len = data.length; i < len; i += 4) {
+      let [red, green, blue] = data.slice(i, i + 3)
+      // 取得每个像素的 RGB 平均值
+      let average = Math.floor((red + green + blue) / 3)
+      // 设置 RGB 为平均值，不管透明度
+      data[i] = average
+      data[i + 1] = average
+      data[i + 2] = average
+    }
+    // 修改后将数据写回 ImageData 并应用到画布上
+    imgData.data = data
+    ctx.putImageData(imgData, 0, 0)
+  }
+</script>
+```
+
+效果如下，等价于 CSS 滤镜 `filter: grayscale(1)` 的效果
+
+![canvas_img_data.png](/images/js/canvas_img_data.png)
+
+### 合成(composite)
+2D 绘制上下文有两个属性，用于设置多个内容重叠时的行为
+- `ctx.globalAlpha` 全局透明度 0 到 1 之间，0.5 为半透明，1 为完全不透明，默认值。书中说的默认值为 0，是错误的，p568。参考：[CanvasRenderingContext2D.globalAlpha | MDN](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha)
+- `ctx.globalCompositeOperation` 设置新绘制的内容与之前绘制的内容重合时，怎么处理，有 11 种情况。需要注意：不同浏览器可能会有差异
+  - `source-over` 默认、新绘制内容在原图形上面，遮盖
+  - `source-in` 新图形只绘制出与原图形重叠的部分，原图中其他部分全部透明(不可见)
+  - `source-out` 新图形只绘制出不与原图形重叠的部分，原图中其他部分全部透明(不可见)
+  - `source-atop` 新图形只绘制出与原图形重叠的部分，原图不受影响
+  - `destination-over` 后绘制的内容在先绘制的下面
+  - `destination-in` 新图形绘制在原图形下面。原图只有与新图形重叠的部分显示，其他都不可见
+  - `destination-out` 新图形与原图形重叠的部分完全透明，其他不受影响
+  - `destination-atop` 新图形绘制在原图形的下面，原图形与新图形不重叠的部分全部透明
+  - `lighter` 新图形与原图形重叠的部分像素值相加，类似高亮的效果
+  - `copy` 新图形完全取代旧图形
+  - `xor` 新图形与原图形重叠部分的像素执行 "异或" 计算
+
+```html
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;width:100px;"></canvas>
+<script>
+  // 设置全局透明度 ctx.globalAlpha
+  var drawing = document.getElementById('drawing');
+  var ctx = drawing.getContext('2d');
+  // 绘制红色矩形
+  ctx.fillStyle = 'red';
+  ctx.fillRect(10, 10, 50, 50);
+  // 修改全局透明度
+  ctx.globalAlpha = 0.5;
+  // 绘制蓝色矩形
+  ctx.fillStyle = "blue";
+  ctx.fillRect(30, 30, 50, 50);
+  // 重置全局透明度
+  ctx.globalAlpha = 1; // p568， 值为 0，貌似有问题
+
+  ctx.fillStyle = 'red'
+  ctx.fillRect(100, 100, 50, 50)
+  // 设置合成（composite）操作
+  // ctx.globalCompositeOperation = 'source-over' // 默认、新图像绘制在原图形上面
+  // ctx.globalCompositeOperation = 'source-in' 
+  // ctx.globalCompositeOperation = 'source-out' 
+  // ctx.globalCompositeOperation = 'source-atop' 
+  // ctx.globalCompositeOperation = 'destination-over' // 后绘制的位于先绘制的下面
+  // ctx.globalCompositeOperation = 'destination-in' 
+  // ctx.globalCompositeOperation = 'destination-out'
+  // ctx.globalCompositeOperation = 'destination-atop'
+  // ctx.globalCompositeOperation = 'lighter'
+  // ctx.globalCompositeOperation = 'copy'
+  // ctx.globalCompositeOperation = 'xor'
+  ctx.fillStyle = 'rgba(0,0,255,1)'
+  ctx.fillRect(125, 125, 50, 50)
+</script>
+```
+
+上的例子中，在绘制蓝色矩形之前，将  ctx.globalCompositeOperation 设置为各种值，效果如下：
+
+![canvas_compsition.png](/images/js/canvas_compsition.png)
+
+## WebGL
+WebGL 是 canvas(画布) 的 3D 上下文。它不是 W3C 的标准，而是 Khronos Group 的标准。
+
+> Khronos Group 是非盈利性、会员资助的联盟，专注于多平台和设备下并行计算、图形和动态媒体的无专利费开放标准。Khronos Group 也定制了其他图形 API, 包括作为浏览器中 WebGL 基础的 OpenGL ES2.0
+
+建议先了解 OpenGL ES2.0 基本概念，再看本节内容，推荐一个 WebGL 教程网站：Learn WebGL。定型数组(typed array)/类型数组是 WebGL 中执行操作的重要数据结构，详情参见第 6 章。
+
+### WebGL 上下文
+2D 绘图上下文获取上下文时，使用的是 "2d"。3D 绘图上下文 WebGL 也有对应的值。WebGL 2.0 参数是 "webgl2"，返回类型为 WebGL2RenderingContext。WebGL 1.0 上下文参数为 "webgl"，类型为 WebGLRenderingContext。如果浏览器不支持 WebGL 则返回 null。
+```html
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;width: 100px;">
+</canvas>
+<script>
+  let drawing = document.getElementById('drawing')
+  let gl = drawing.getContext('webgl')
+  console.log(gl) // WebGLRenderingContext {}
+  // let gl= drawing.getContext('webgl1') // null
+  // console.log(gl) // null
+  // let gl = drawing.getContext('webgl2')
+  // console.log(gl) // WebGL2RenderingContext {}
+</script>
+```
+
+WebGL 上下文实例，一般命名为 gl
+
+### WebGL基础
+获取 WebGL 上下文后，就可以开始 3D 绘图了。由于 WebGL 是 OpenGL ES2.0 在 Web 中的实现，这里讨论的概率实际上都是 JS 实现的 OpenGL 概念。
+
+使用 getContext() 获取 WebGL 上下文时，还可以通过第二个参数指定一些选项，第二个参数是一个 options 对象。可以包含如下属性：
+- `alpha` 布尔值，是否为上下文创建透明通道缓冲区，默认为 true
+- `depth` 布尔值，是否使用 16 位深缓冲区，默认为 true
+- `stencil` 布尔值，是否使用 8 位魔板缓冲区，默认为 false
+- `antialias` 布尔值，是否使用默认机制执行抗锯齿操作，默认为 true
+- `premultipliedAlpha` 布尔值，绘图缓冲区是否预乘透明度值，默认为 true
+- `preserveDrawingBuffer` 布尔值，表示绘图完成后是否保留绘图缓冲区，默认为 false
+
+注意：修改默认值，可能会影响性能。由于有些浏览器在调用 getContext() 不能创建 WebGL上下文时会抛出错误，影响后面代码执行，因此使用时最好用 try/catch 包裹。
+
+```html
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;width: 100px;">
+</canvas>
+<script>
+  let drawing = document.getElementById('drawing'),
+      gl;
+  try {
+     gl = drawing.getContext('webgl', {
+      alpha: false
+    })
+  } catch(ex) {
+    // 什么也不做
+  }
+  console.log(gl) // WebGLRenderingContext {}
+  if (gl) {
+    // 如果 gl 存在
+  }
+</script>
+```
+
+**1. 常量**，在 OpenGL 中，用于操作的各种常量都是以 GL_ 开头，在 WebGL 上下文中，常量不包含 GL_ 前缀。例子 GL_COLOR_BUFFER_BIT 常量在 WebGL 中要使用 gl.COLOR_BUFFER_BIT 访问。
+
+**2. 方法命名**，WebGL 中的很多方法名中会包含数据类型，及参数个数信息。比如 gl.uniform4f() 表示需要 4 个浮点数值参数，而 gl.uniform3i() 表示需要 3 个整数值参数。数组类型一般使用字母 v 表示（"vector"）。gl.uniform3iv() 表示要接收一个包含三个值的数组参数。
+
+**3. 准备绘图**，在绘图之前，需要先指定一种颜色，清除绘制区域 gl.clearColor(r, g, b, a)。
+
+```js
+// 使用黑色清除绘制区域
+gl.clearColor(0, 0, 0, 1)
+// 使用之前定义的颜色填充画布，canvas 会被填充为黑色
+gl.clear(gl.COLOR_BUFFER_BIT)
+```
+
+**4. 视口与坐标**，绘图前还要定义 WebGL 视口，默认情况下视口使用整个 canvas 区域。要改变视口，可以调用 viewport() 方法并传入视口相对于 canvas 元素的 x, y 坐标及高度和高度。**注意：定义视口时 (0, 0) 是左下角**
+
+```js
+// 使用整个 canvas 区域作为视口
+gl.viewport(0, 0, drawing.width, drawing.height)
+// 视口是 canvas 左下角 1/4 区域
+gl.viewport(0, 0, drawing.width/2, drawing.height/2)
+// 视口是 canvas 左上角 1/4 区域
+gl.viewport(0, drawing.height/2, drawing.width/2, drawing.height/2)
+// 视口是右下角 1/4 区域
+gl.viewport(drawing.width/2, 0, drawing.width/2, drawing.height/2)
+```
+定义视口时的坐标系统和视口中的坐标系统不一样。(0, 0) 是视口的中心点。左下角是 (-1, -1)，右上角是 (1, 1)
+
+**5.缓冲区**，JS 中，定点信息保存在 typed array 中，要使用这些信息，需要先把他们转换为 WebGL 缓冲区。
+- `gl.createBuffer()` 创建 WebGL 缓冲区，返回一个 WebGLBuffer 实例。
+- `gl.bindBuffer(target, WebGLBuffer实例)` 将 WebGL 缓冲区，绑定到 WebGL 上下文，绑定后就可以用数据填充缓冲区了。target 的值可以是:
+  - `gl.ARRAY_BUFFER`：包含顶点属性的缓冲区，例如顶点坐标，纹理坐标数据或顶点颜色数据。
+  - `gl.ELEMENT_ARRAY_BUFFER` 用于元素数组缓冲区。
+- `gl.bufferData(target, typed array数据, 如果使用缓冲区)` 使用 JS typed array 数据初始化当前 WebGL 缓冲区，将 JS 数组内容写入 buffer。第 3 个参数表示如何使用缓冲区，可以是以下常量值：
+  - `gl.STATIC_DRAW` 数据加载一次，可以在多次绘制中使用。**最常用**
+  - `gl.STREAM_DRAW` 数据加载一次，只能在几次绘制中使用。
+  - `gl.DYNAMIC_DRAW` 数据可以重复修改，在多次绘制中使用。
+- `gl.deleteBuffer()` 缓冲区会一直驻留在内存中，知道页面 unload 卸载。可以使用 gl.deleteBuffer() 释放其占用的内容。
+
+```js
+// 创建 WebGL 缓存区
+let buffer = gl.createBuffer() 
+// 将 buffer 设置为上下文的当前缓冲区
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer) 
+// 使用一个 Float32Array 数组初始化 buffer（将内容写入 buffer）
+// 通常把所有顶点点信息保存在 Float32Array 中
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0.5, 1]), gl.STATIC_DRAW)
+
+// 如果不需要缓冲区了，可以释放其内存
+fl.deleteBuffer(buffer)
+```
+
+**6. 错误**，WebGL 通常不会像 JS 那样直接抛出错误。必须在可能会执行失败的方法后，调用 gl.getError() ，该方法返回一个常量，表示错误类型，其值可能是：
+- `gl.NO_ERROR` 上一次操作没错误发生 (0) 
+- `gl.INVALID_ENUM` 上一次操作没有传入 WebGL 预定义的常量
+- `gl.INVALID_VALE` 上一次操作需要无符号数，但传入了负数
+- `gl.INVALID_OPERATION` 上一次操作在当前状态下无法完成
+- `gl.OUT_OF_MEMORY` 上一次操作因内存不足无法完成
+- `gl.CONTEXT_LOST_WEBGL` 上一次操作因为外部事件（如停电）而丢失了 WebGL 上下文
+
+如果有多个错误，需要多次调用 gl.getError()，直到返回 gl.NO_ERROR（数值0）为止
+```js
+let errorCode = gl.getError()
+while (errorCode) {
+  console.log("Error: ", errorCode)
+  errorCode = gl.getError()
+}
+```
+
+**7. 着色器**，WebGL 中有两种着色器：
+- **顶点着色器**，用于把 3D 顶点转换为可以渲染的 2D 点。
+- **片段(或像素)着色器**，用于计算绘制一个像素的正确颜色。
+
+WebGL 着色器不是 JS 实现的，而是使用类似于 C 语言的 GLSL(OpenGL Shading Language) 语言写的。每个着色器都有一个 main() 方法，会绘制期间重复执行。给着色器传递数据的方式有两种：
+- attribute
+- uniform 
+
+```js
+```
+
+**8. 绘图**
+
+```js
+
+```
+
+**9. 纹理**
+
+```js
+```
+
+**10. 读取像素**
+
+```js
+```
+
+### WebGL1 与 WebGL2

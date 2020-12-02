@@ -587,33 +587,6 @@ HTML5 application cache 快要被废弃，由 Service Workers取代，参见: ht
 
 # 25. 新兴的API
 
-## requestAnimationFrame()
-> 很长时间以来，计时器何循环间隔一直都是JS动画的核心。但setInterval()和setTimeout()都不十分精确，他们只是把动画代码添加到浏览器UI线程队列，如果队列正在执行其他操作。实际实行时间会比正常时间晚一点。循环间隔会有误差。requestAnimation可以避免这个误差，创建平滑的动画效果
-
-他会告诉浏览器：有一个动画开始了，进而浏览器可以确定重绘的最佳方式。window.requestAnimationFrame(callback);
-理解参考: https://www.cnblogs.com/onepixel/p/7078617.html
-```js
-// <div id="SomeElementYouWantToAnimate" style="position:absolute;height:100px;width:100px;border:1px solid #ccc;">111</div>
-// <script>
-  var progress = 0;
-  var element = document.getElementById('SomeElementYouWantToAnimate');
-
-  //回调函数
-  function render() {
-    progress += 10; //修改图像的位置， 加快动画时间  progress += 100
-    element.style.left = progress + 'px'  // 自动控制速度
-
-    if (progress < 200) {
-      //在动画没有结束前，递归渲染
-      window.requestAnimationFrame(render);
-    }
-  }
-
-  //第一帧渲染
-  window.requestAnimationFrame(render);
-// </script>
-```
-
 ## Page Visibility API(页面可见性API)
 如果页面最小化了或者隐藏在了其他标签页面后面，有些功能可以停下来，比如轮询服务器或某些动画效果。而Page Visibility API就是为了让开发人员知道页面是否对用户可见而推出的。
 ```js
