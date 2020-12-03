@@ -1,3 +1,9 @@
+---
+title: 18. 动画与 Canvas 图形 - JS高程4
+description: 早期 Web 中 JS 动画的实现使用的是 setTimeout() 与 setInterval()，但由于事件队列机制无法保证计时器的时间精度，无法创建平滑的动画。于是出现了 requestAnimationFrame() API，浏览器会使用最优的方式来绘制动画。HTML5 加入了 canvas 元素，IE9+ 支持，这个元素会占据一块页面区域，让 JavaScript 可以动态在上面绘制图片。canvas 仅支持基础绘图能力，是 2D、非矢量的。如果需要做 3D 绘图，可以使用 WebGL。
+keywords: 动画,requestAnimationFrame,canvas,WebGL
+---
+
 # 18. 动画与 Canvas 图形
 早期 Web 中 JS 动画的实现使用的是 setTimeout() 与 setInterval()，但由于事件队列机制无法保证计时器的时间精度，无法创建平滑的动画。于是出现了 requestAnimationFrame() API，浏览器会使用最优的方式来绘制动画。
 
@@ -921,26 +927,250 @@ while (errorCode) {
 - **片段(或像素)着色器**，用于计算绘制一个像素的正确颜色。
 
 WebGL 着色器不是 JS 实现的，而是使用类似于 C 语言的 GLSL(OpenGL Shading Language) 语言写的。每个着色器都有一个 main() 方法，会绘制期间重复执行。给着色器传递数据的方式有两种：
-- attribute
-- uniform 
+- attribute 用于将顶点传入顶点着色器
+- uniform 用于将常量值传入任何着色器。
+
+```html
+<!-- 顶点着色器 -->
+<script type="x-webgl/x-vertex-shader" id="vertexShader">
+// 定义一个顶点着色器 aVertexPosition
+// vec2 数据类型，包含两项的数组，(x, y)
+attribute vec2 aVertexPosition; 
+void main() {
+  gl_position = vec4(aVertexPosition)
+}
+</script>
+
+<!-- 片段着色器 -->
+<script type="x-webgl/x-fragment-shader" id="fragmentShader">
+// 定义一个片段着色器 uColor
+uniform vec4 uColor;
+void main() {
+  gl_FragColor = uColor
+}
+</script>
+
+<script>
+  let vertexGlsl = document.getElmentById("vertexShader").text
+  let fragmentGlsl = document.getElementById("fragmentShader").text
+</script>
+```
+有了着色器代码的字符串，下一步是创建着色器（shader）对象 
+- `gl.createShader(shader_type)` 创建着色器（shader）对象，类型为 WebGLShader，着色器类型有两种：`gl.VERTEX_SHADER` 或 `gl.FRAGMENT_SHADER`。分别对应顶点着色器和片段着色器
+- `gl.shaderSource(着色器对象, GLSL着色器代码)` 将 GLSL 代码应用到着色器对象
+- `gl.compileShader(着色器对象)` 编译着色器
 
 ```js
+let vertexShader = gl.createShader(gl.VERTEX_SHADER)
+gl.shaderSource(vertexShader, vertexGlsl)
+gl.compileShader(vertexShader)
+
+let fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
+gl.shaderSource(fragmentShader, fragmentGlsl)
+gl.compileShader(fragmentShader)
+```
+上面的代码中，创建了两个着色器对象，还需要把着色器对象链接到着色器程序
+- `gl.createProgram()` 用于创建着色器程序（WebGLProgram）对象，它由两个编译过后的 WebGLShader 组成 - 顶点着色器和片段着色器（均由 GLSL 语言所写）。这些组合成一个可用的 WebGL 着色器程序。
+- `gl.attachShader(着色器程序对象, 着色器对象)` 负责向 WebGLProgram 对象添加一个片段或者顶点着色器。
+- `gl.linkProgram(着色器程序对象)` 链接着色器程序，完成片段着色器和顶点着色器 GPU 代码的准备工作
+- `gl.userProgram(着色器程序对象)` 应用着色器程序到当前渲染状态中，后续的绘制操作都会使用这个程序
+
+```js
+let program = gl.createProgram()
+gl.attachShader(program, vertexShader)
+gl.attachShader(program, fragmentShader)
+gl.linkProgram(program)
+gl.useProgram(program)
+```
+前面的着色器都需要传入一个值，才能工作。对于顶点
+- `gl.getUniformLocation(program, name)` 返回着色器程序 program 中名为 name 的片段着色器内存地址。类型：WebGLUniformLocation
+- `gl.uniform4fv(A WebGLUniformLocation object, value)` 为着色器设置值，参考：[WebGLRenderingContext.uniform[1234][fi][v] | MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniform)
+- `gl.getAttribLocation(program, name)` 返回着色器程序 program 中名为 name 的顶点着色器内存地址。类型：WebGLUniformLocation
+- `gl.enableVertexAttribArray(WebGLUniformLocation实例)` 激活内存地址（索引）
+- `gl.vertexAttribPointer(index, size, type, normalized, stride, offset)` 告诉显卡从当前绑定的缓冲区（bindBuffer()指定的缓冲区）中读取顶点数据。index 指定要修改的顶点属性的索引，size 指定每个顶点属性的组成数量，必须是1，2，3或4。type 指定数组中每个元素的数据类型，normalized 当转换为浮点数时是否应该将整数数值归一化到特定的范围。stride 指定连续顶点属性开始之间的偏移量(即数组中一行长度)。offset 指定顶点属性数组中第一部分的字节偏移量。参考：[WebGLRenderingContext.vertexAttribPointer() | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/vertexAttribPointer)
+```js
+// 在着色器程序 program 中，找到片段着色器 uColor 的内存位置
+let uColor = gl.getUniformLocation(program, "uColor")
+// 向 uColor 内存位置，写入值 [0, 0, 0, 1]
+gl.uniform4fv(uColor, [0, 0, 0, 1])
+
+// 取得顶点着色器 aVertexPosition 的内存位置(索引)
+let aVertexPpsition = gl.getAttribLocation(program, "aVertexPosition")
+// 激活索引
+gl.enableVertexAttribArray(aVertexPosition)
+// 从当前缓冲区(bindBuffer()指定的缓冲区)读取顶点数据
+let vertexSetSize = 2
+gl.vertexAttribPointer(aVertexPosition, vertexSetSize, gl.FLOAT, false, 0, 0)
 ```
 
-**8. 绘图**
+**一般着色器操作的失败是静默的，不会抛出真实的错误，需要自己去捕获。**，如果我们跑上面的例子会发现，在控制台有 warning：`WebGL: INVALID_OPERATION: useProgram: program not valid`，着色器程序是无效的。用以下方法可以进行调试
+- `gl.getShaderParameter(shader实例, pname)` 返回着色器实例的 pname 信息， pname 的可选值如下：
+  - `gl.COMPILE_STATUS` 着色器是否编译成功 true or false
+  - `gl.DELETE_STATUS` 着色器是否被删除 true or false
+  - `gl.SHADER_TYPE` 着色器类型（顶点着色器，还是片段着色器）
+- `gl.getShaderInfoLog(shader实例)` 获取着色器 log 信息，It contains warnings, debugging and compile information.
 
+我们使用上面的两个函数可以读取到 fragmentShader 编译的错误信息：`ERROR: 0:2: '' : No precision specified for (float)` 片段着色器代码没有添加精度描述，在前面加上一句 `precision mediump float;` 16 位浮点格式，即可
 ```js
+if(!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+  console.error(gl.getShaderInfoLog(fragmentShader));
+}
+```
+另外也可以通过 `gl.getProgramParameter()` 和 `gl.getProgramInfoLog()` 获取着色器程序的 log 信息
+```js
+if (gl.getProgramParameter(program, gl.LINK_STATUS)) {
+  console.log(gl.getProgramInfoLog(program))
+}
+```
+**8. 绘图** WebGL 只能绘制三种形状：点、线和三角形。绘图需要使用下面两个函数
+- `gl.drawArrays(mode, first, count)` Renders primitives from array data. 使用数组缓冲区绘制图元，first GLint 类型 ，指定从哪个点开始绘制。count GLsizei 类型，指定绘制需要使用到多少个点。
+- `gl.drawElements(mode, count, type, offset)` 使用 元素数组缓冲区绘制图元
 
+mode，GLenum 类型，指定绘制图元的方式，可能值如下。
+- `gl.POINTS` 绘制一系列点。
+- `gl.LINE_STRIP` 绘制一个线条。即，绘制一系列线段，上一点连接下一点。
+- `gl.LINE_LOOP` 绘制一个线圈。即，绘制一系列线段，上一点连接下一点，并且最后一点与第一个点相连。
+- `gl.LINES` 绘制一系列单独线段。每两个点作为端点，线段之间不连接。
+- `gl.TRIANGLE_STRIP` 绘制一个三角带。
+- `gl.TRIANGLE_FAN` 绘制一个三角扇。
+- `gl.TRIANGLES` 绘制一系列三角形。每三个点作为顶点。
+
+完整绘制三角形代码
+```html
+<canvas id="drawing" width="200" height="200" style="border:1px solid #ccc;width: 100px;">
+</canvas>
+<!-- 顶点着色器 -->
+<script type="x-webgl/x-vertex-shader" id="vertexShader">
+attribute vec2 aVertexPosition;
+void main() {
+  gl_Position = vec4(aVertexPosition, 0.0, 1.0);
+}
+</script>
+<!-- 片段着色器 -->
+<!-- precision mediump float; -->
+<script type="x-webgl/x-fragment-shader" id="fragmentShader">
+precision mediump float;
+uniform vec4 uColor;
+void main() {
+  gl_FragColor = uColor;
+}
+</script>
+<script>
+  let drawing = document.getElementById('drawing')
+  let gl = drawing.getContext('webgl')
+
+  // 使用白色清除绘制区域
+  gl.clearColor(255, 255, 255, 1)
+  // 使用之前定义的颜色填充画布，canvas 会被填充为黑色
+  gl.clear(gl.COLOR_BUFFER_BIT)
+
+  // 设置视口视口
+  gl.viewport(0, 0, drawing.width, drawing.height);
+
+  // 定义三角形，三个顶点信息 typed array 数组
+  let vertices = new Float32Array([0, 1, 1, -1, -1, -1])
+  // x, y 两个点坐标
+  let vertexSetSize = 2
+
+  // 创建 WebGL 缓冲区
+  let buffer = gl.createBuffer() 
+  // 将 buffer 设置为上下文的当前缓冲区
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer) 
+  // 使用一个 Float32Array 数组初始化 buffer（将内容写入 buffer）
+  // 通常把所有顶点点信息保存在 Float32Array 中
+  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+  
+  // 获取 glsl 着色器代码
+  let vertexGlsl = document.getElementById("vertexShader").text
+  let fragmentGlsl = document.getElementById("fragmentShader").text
+  console.log(vertexGlsl, fragmentGlsl)
+
+  // 根据着色器代码创建着色器实例 vertexShader、fragmentShader
+  let vertexShader = gl.createShader(gl.VERTEX_SHADER)
+  gl.shaderSource(vertexShader, vertexGlsl)
+  gl.compileShader(vertexShader)
+  let fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
+  gl.shaderSource(fragmentShader, fragmentGlsl)
+  gl.compileShader(fragmentShader)
+  // 测试片段着色器编译是否有异常
+  if(!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+    console.error(gl.getShaderInfoLog(fragmentShader));
+  }
+  console.log(vertexShader, fragmentShader) // WebGLShader {}
+
+  // 创建着色器程序
+  let program = gl.createProgram()
+  gl.attachShader(program, vertexShader)
+  gl.attachShader(program, fragmentShader)
+  gl.linkProgram(program)
+  gl.useProgram(program)
+  console.log(program) // WebGLProgram {}
+
+  // 给着色器赋值
+  // 在着色器程序 program 中，找到片段着色器 uColor 的内存位置
+  let uColorLocation = gl.getUniformLocation(program, "uColor")
+  // 向 uColor 内存位置，写入值 [0, 0, 0, 1]
+  gl.uniform4fv(uColorLocation, [0, 0, 0, 1])
+  // 取得顶点着色器 aVertexPosition 内存位置(索引)，并将顶点信息传入
+  let aVertexPosition = gl.getAttribLocation(program, "aVertexPosition")
+  // 激活索引
+  gl.enableVertexAttribArray(aVertexPosition)
+  // 从当前绑定的缓冲区（bindBuffer()指定的缓冲区）中读取顶点数据
+  gl.vertexAttribPointer(aVertexPosition, vertexSetSize, gl.FLOAT, false, 0, 0)
+
+  // 绘制三角形 从 index 0 开，3 个点
+  gl.drawArrays(gl.TRIANGLES, 0, vertices.length / vertexSetSize)
+  // gl.drawArrays(gl.LINE_LOOP, 0, vertices.length / vertexSetSize)
+  // gl.drawArrays(gl.LINE_STRIP, 0, vertices.length / vertexSetSize)
+</script>
 ```
 
-**9. 纹理**
+![webgl_triangle.png](/images/js/webgl_triangle.png)
 
-```js
+**9. 纹理** WebGL 纹理可以使用 DOM 中的图片，详情参考：[WebGL 纹理详解 - 知乎](https://zhuanlan.zhihu.com/p/52590272)
+
+```html
+<img src="img.png" height="50" width="50">
+<script>
+// 使用现有图片
+// let image = document.images[0]
+// 动态加载图片
+let image = new Image()
+image.src = "img.png"
+image.onload = function(e) {
+  // 创建纹理
+  let texture = gl.createTexture()
+  // 绑定纹理
+  gl.bindTexture(gl.TEXTURE_2D, texture)
+  // 开启 FlipY（UNPACK_FLIP_Y_WEBGL）不过不使用这个标准图片会倒过来
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
+  // 填充纹理内容
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
+  // 参数设置
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+  console.log(texture)
+
+  // 清除当前纹理
+  gl.bindTexture(gl.TEXTURE_2D, null)
+}
+</script>
 ```
 
-**10. 读取像素**
+**10. 读取像素**，类似于 2D 上下文中的 `ctx.getImage()`，WebGL 上下文可以通过 `gl.readPixels()` 读取像素信息
+- gl.readPixels(x, y, width, height, format, type, pixels) 参考: [WebGLRenderingContext.readPixels() | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLRenderingContext/readPixels)
 
+下面的代码是读取帧缓冲区中 25 x 25 像素区域，把读到的像素信息存入 pixels。其中每个像素的颜色都已 4 个值表示，rgba。每个数值取值 0 ~ 255。
 ```js
+let pixels = new Uint8Array(25 * 25)
+gl.readPixels(0, 0, 25, 25, gl.RGB, gl.UNSIGNED_BYTE, pixels)
 ```
 
 ### WebGL1 与 WebGL2
+WebGL1 与 WebGL2 几乎完全兼容，WebGL2 加入了一些扩展。WebGL1 的上下文与 WebGL2 向下文不同。
+- "webgl" (或"experimental-webgl") 这将创建一个 WebGLRenderingContext 三维渲染上下文对象。只在实现WebGL 版本1(OpenGL ES 2.0)的浏览器上可用。
+- "webgl2" (或 "experimental-webgl2") 这将创建一个 WebGL2RenderingContext 三维渲染上下文对象。只在实现 WebGL 版本2 (OpenGL ES 3.0)的浏览器上可用。
+
+WebGL2 着色器语言 GLSL 从 GLSL 100 升级到 GLSL 300
+
+更多 WebGL2 信息参考：[WebGL2RenderingContext | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/WebGL2RenderingContext)

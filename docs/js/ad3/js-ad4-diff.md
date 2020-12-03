@@ -119,8 +119,12 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 详情参见：[17. 事件 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-17.html)
 
 ## 第 18 章 动画与 Canvas 图形
-原第 15 章，章节顺序由原来的表单脚本后面一章，改为表单脚本前一章。另外原第 25 章新兴的 API requestAnimationFrame 放到了这一章。将WebGL 章节的 类型化数组移到了第 6 章结合引用类型。
+原第 15 章，章节顺序由原来的表单脚本后面一章，改为表单脚本前一章。
 
+- 将原第 25 章新兴的 API requestAnimationFrame 放到了这一章。将 WebGL 章节的 类型化数组移到了第 6 章结合引用类型。
+- 更新了 WebGL 内容, 之前是实验性功能
+
+详情参见：[18. 动画与 Canvas 图形 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-18.html)
 ## 第 19 章 表单脚本
 原第 14 章 表单脚本，除了和 Canvas 章节调换顺序，基本没有大的变动。
 
@@ -206,6 +210,8 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 - p568 合成，globalAlpha 默认值为 1，不是 0。（待确认勘误）
 - p569 WebGL 1.0 上下文的名字是 "webgl" 不是 "webgl1"
 - p570 try/catch 示例代码中，有多余的排版内容
+- p574 片段着色器代码会编译失败，需要加上精度描述 `precision mediump float;`
+- p577 gl.LINE_SET 应改为 gl.LINE_STRIP
 - p798 第二行，这也是为什么不会再打印 "foo" 的原因。这里的 foo 应该是 bar（已确认勘误）
 - p862 4. 模块打包器中 Rollupt，应该是 Rollup (已提交勘误)
 :::
