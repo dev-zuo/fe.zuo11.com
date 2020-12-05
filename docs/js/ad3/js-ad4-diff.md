@@ -126,7 +126,7 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 
 详情参见：[18. 动画与 Canvas 图形 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-18.html)
 ## 第 19 章 表单脚本
-原第 14 章 表单脚本，除了和 Canvas 章节调换顺序，基本没有大的变动。
+原第 14 章 表单脚本，除了和 Canvas 章节调换顺序，改变了一些翻译外，基本没有大的变动。详情参见：[19. 表单脚本 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-19.html)
 
 ## --- 中间 8 章分隔线
 ::: tip
