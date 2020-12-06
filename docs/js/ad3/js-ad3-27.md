@@ -559,7 +559,7 @@ self.onmessage = ({data}) => {
 ```
 
 ::: tip
-第 20 章 详细介绍了 SharedArrayBuffer 和 Atomics API
+第 20 章 详细介绍了 SharedArrayBuffer 与 Atomics API
 :::
 
 ### 线程池

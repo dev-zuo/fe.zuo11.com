@@ -134,7 +134,7 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 :::
 
 ## 第 20 章 JavaScript API
-原第 16 章，章节名变更，把 `HTML5 脚本编程`，改为 `JavaScript API`。将 history 历史状态管理移到第 12 章 BOM。将原第 25 章新兴的 API 里面的 Page Visibility API、Web计时（Timing API）和 File API 都移到了这一章。另外新增了一些新的内容：
+原第 16 章 `HTML5 脚本编程`。将 history 历史状态管理移到第 12 章 BOM。将原第 25 章新兴的 API 里面的 Page Visibility API、Web计时（Timing API）和 File API 都移到了这一章。另外新增了一些新的内容：
 
 20.1 新增 Atomics 与 SharedArrayBuffer 原子操作相关
 
@@ -212,6 +212,7 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 - p570 try/catch 示例代码中，有多余的排版内容
 - p574 片段着色器代码会编译失败，需要加上精度描述 `precision mediump float;`
 - p577 gl.LINE_SET 应改为 gl.LINE_STRIP
+- p624 FileReaderSync 示例代码中 readAsDataUrl 写错了，应该是 readAsDataURL
 - p798 第二行，这也是为什么不会再打印 "foo" 的原因。这里的 foo 应该是 bar（已确认勘误）
 - p862 4. 模块打包器中 Rollupt，应该是 Rollup (已提交勘误)
 :::

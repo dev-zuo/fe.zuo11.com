@@ -36,7 +36,7 @@ ECMAScript历史版本:
 - 2009年12月 第五版 ES5 澄清第三版中的歧义，新增原生JSON对象、继承的方法、高级属性的定义以及引入严格模式。
 - 2015年06月 第六版 ES6 官方名称为ECMAScript2015，之后都会这样命名，新增了许多特性，如Maps、Sets、Promise、生成器（Generators）等。
 - 2016年06月 第七版 ES2016 新增两个特性: Array.prototype.includes和取幂运算符。 [官方文档](http://www.ecma-international.org/ecma-262/7.0/#sec-overview)
-- 2017年06月 第八版 ES2017 新增 async/await、Object.values/Object.entries、Object.getOwnPropertyDescriptors、共享内存和原子性等。
+- 2017年06月 第八版 ES2017 新增 async/await、Object.values/Object.entries、Object.getOwnPropertyDescriptors、共享内存和 Atomics API 等。
 - 2018年06月 第九版 ES2018 新增 Promise.prototype.finally、异步循环、一些正则规则等。[官方文档](https://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf)
 - 2019年 第十版 ES2019 新增 catch 参数可选、Object.fromEntries、String.prototype.{trimStart,trimEnd}、Array.prototype.{flat,flatMap}}、import.meta 等。
 - 2020年 第十一版 ES2020 新增原生支持动态导入import()、bigint 数据类型、Optional Chaining（可选链?.）、Nullish coalescing Operator（空值合并操作符??）等。
