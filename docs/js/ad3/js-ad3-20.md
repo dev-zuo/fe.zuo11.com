@@ -783,82 +783,74 @@ self.onmessage = ({data}) => {
 ```js
 console.log(File.__proto__  === Blob) // true
 ```
-示例
+可以使用字符串数组、ArrayBuffers、ArrayBuffersViews、其他Blob实例来创建 Blob。它的构造函数可以接收一个 options 参数，并在其中指定 MIME 类型。
+
+- `new Blob(contentArray[, options])` 创建一个 Blob 对象，内容是 contentArray 拼接的内容。options 是一个可选的对象，支持传入文件 MIME type。Blob 实例包含两个属性 size，表示数据大小(字节)。type 表示文件 MIME 类型。
+
 ```js
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>blob slice</title>
-</head>
-<body>
-  <input type="file" id="file">
-  <script>
-    var file = document.getElementById('file')
-    file.onchange = function (e) {
-      var myfile = this.files[0]
-      var blob = myfile.slice(0, 32) // 只读取32B的内容
-      if (blob) {
-        var reader = new FileReader()
-        reader.readAsDataURL(blob)
-        reader.onerror = function() {
-          console.log('读取文件错误, ' + reader.error.code)
-        }
-        reader.onload = function() {
-          console.log('读取文件成功，' + reader.result)
-          var div = document.createElement('div')
-          div.appendChild(document.createTextNode(reader.result))
-          document.body.appendChild(div);
-        }
-        reader.onprogress = function(e) {
-          console.log('读取中.....' + e.loaded + '/' + e.total)
-        }
-      } else {
-        alert('您的浏览器不支持blob.slice()')
+console.log(new Blob(['foo'])) // Blob {size: 3, type: ""}
+console.log(new Blob(['{"a": "b"}'], { type: "application/json"}))
+// Blob {size: 10, type: "application/json"}
+console.log(new Blob(['<p>Foo</p>', '<p>Bar</p>'], { type: "text/html"}))
+// Blob {size: 20, type: "text/html"}
+```
+使用 slice() 切分文件，返回 blob 对象，使用 FileReader 读取，可以实现仅读取文件的部分内容。
+```html
+<input type="file" id="file">
+<script>
+  let fileInput = document.getElementById('file')
+  fileInput.onchange = function (e) {
+    let file = e.target.files[0]
+    let blob = file.slice(0, 32) // 只读取 32B（字节）的内容
+    console.log(blob) // Blob {size: 32, type: ""}
+    if (blob) {
+      let reader = new FileReader()
+      reader.readAsText(blob)
+      reader.onerror = function() {
+        console.log('读取文件错误, ' + reader.error.code)
       }
+      reader.onload = function() {
+        console.log('读取文件成功，' + reader.result)
+        let div = document.createElement('div')
+        div.appendChild(document.createTextNode(reader.result))
+        document.body.appendChild(div);
+      }
+      reader.onprogress = function(e) {
+        console.log('读取中.....' + e.loaded + '/' + e.total)
+      }
+    } else {
+      alert('您的浏览器不支持blob.slice()')
     }
-  </script>
-</body>
-</html>
+  }
+</script>
 ```
-### 对象URL
-对象URL，也称为blob URL，引用保存在File或Blob中数据的URL，好处是，不必把文件内容读取到JS中而直接使用文件内容。IE10+支持
+### 对象 URL 与 Blob
+对象 URL，也称为 Blob URL，引用保存在 File 或 Blob 中数据的 URL，它的优点是不必把文件内容读取到 JS 中也可以直接使用文件。创建对象 URL，可以使用 window.URL.createObjectURL() 方法并传入 File 或 Blob 对象。IE10+ 支持
+-  `window.URL.createObjectURL(File或Blob对象)` 创建对象 URL，返回一个 string 类型的 URL
+-  `window.URL.revokeObjectURL(objectURL)` 释放对应对象 URL 的内存。 虽然页面卸载时会自动释放对象URL占用的内存，但如果不用了，还是建议手工释放，节约内存。
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
-  <input type="file" id="file">
-  <img src="" id="img">
-  <script>
-    var file = document.getElementById('file')
-    file.onchange = function (e) {
-      var myfile = this.files[0]
-      var img = document.getElementById('img')
-      var dataUrl = window.URL.createObjectURL(myfile)
-      console.log('dataURL: ' + dataUrl)
-      // dataURL: blob:http://localhost:63342/b42b5b0a-fef8-4cb2-b26d-1973517ac08a
-      img.src = dataUrl
-      // 页面卸载时会自动释放对象URL占用的内存。如果不用了，还是建议手工释放，节约内存，调用后，dataUrl还是会有值
-      setTimeout(function() {
-        window.URL.revokeObjectURL(myfile);
-      }, 3000)
-    }
-  </script>
-</body>
-</html>
+<input type="file" id="file">
+<img src="" id="img">
+<script>
+  var file = document.getElementById('file')
+  file.onchange = function (e) {
+    var myfile = this.files[0]
+    var img = document.getElementById('img')
+    var dataUrl = window.URL.createObjectURL(myfile)
+    console.log('dataURL: ' + dataUrl)
+    // dataURL: blob:http://localhost:63342/b42b5b0a-fef8-4cb2-b26d-1973517ac08a
+    img.src = dataUrl
+    setTimeout(function() {
+      window.URL.revokeObjectURL(dataUrl);
+    }, 3000)
+  }
+</script>
 ```
+对象 URL 以及 FileReader.prototype.readAsDataURL 虽然都可以用于预览图片，但是他们的区别是 readAsDataURL 返回的是文件的 URI, base64 格式。而 createObjectURL() 返回的是一个链接 URL。对于比较大的文件 base64 会卡，对象 URL 不会，详情参见：[FileReader.readAsDataURL与URL.createObjectURL的区别 | 左小白的技术日常](http://www.zuo11.com/blog/2020/10/file_preview_download.html)
 ### 读取拖拽文件并上传
-使用H5拖放API，从桌面上把文件拖放到浏览器中也会触发drop事件。在event.dataTransger.files中可以读取到防止的文件，与通过input取得的File一样
+使用 H5 拖放 API，从桌面上把文件拖放到浏览器中会触发 drop 事件。在 event.dataTransger.files 中可以读取到放置的文件，与通过 type 为 file 的 input 获取的 File 一致
 ```html
-<!DOCTYPE html>
-<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
   <style>
     #dragDiv { width:300px;height: 150px;border:2px dashed #ccc; }
     .draging { border:2px dashed red !important; }
@@ -868,7 +860,7 @@ console.log(File.__proto__  === Blob) // true
   <div>拖拽文件到下面的方框区域</div>
   <div id="dragDiv"></div>
   <script>
-    var dragDiv = document.getElementById('dragDiv')
+    let dragDiv = document.getElementById('dragDiv')
 
     dragDiv.ondragenter = function(e) {
       // 当文件拖动到区域，设置red边框样式
@@ -880,22 +872,22 @@ console.log(File.__proto__  === Blob) // true
     dragDiv.ondrop = function (e) { // 有文件拖放触发
       dragDiv.className = ""
       e.preventDefault() // drop默认行为会打开新的窗口，取消默认行为
-      console.log(e.dataTransfer.files)
 
-      // 这里只显示了一个文件，如果多个文件拖拽，需要用for循环显示
-      dragDiv.innerHTML = e.dataTransfer.files[0].name
-
-       // 将文件用XHR上传操作
+      // 将文件用XHR上传操作
       // 1. 准备数据
-      var files = e.dataTransfer.files
-      var data = new FormData()
+      let files = e.dataTransfer.files
+      let data = new FormData()
+      let info = ''
       for (let i = files.length - 1; i >= 0; i--) {
+        console.log(files[i])
         data.append('file' + i, files[i])
+        info += `<div>文件名: ${files[i].name}，文件类型: ${files[i].type}}</div>`
       }
-      console.log(data)
+      dragDiv.innerHTML = info
+      console.log(Object.fromEntries(data.entries()))
 
       // 2. 开始上传
-      var xhr = new XMLHttpRequest()
+      let xhr = new XMLHttpRequest()
       xhr.open('post', '/fileupdate', true) // 异步发送请求
       xhr.onload = function () {
         if (xhr.status === 200) { // 请求成功
@@ -911,11 +903,15 @@ console.log(File.__proto__  === Blob) // true
     }
   </script>
 </body>
-</html>
 ```
 
 ## 媒体元素video/audio
 HTML5新增了两个与媒体相关的标签，让开发人员不必依赖任何插件就能在网页中嵌入音频与视频内容。标签为video和audio，IE9+ 支持。视频支持格式video/mp4; video/ogg; video/webm; 音频支持格式 audio/mp4; audio/mpeg(mp3); audio/ogg; audio/wav; 
+- video 和 audio 一般需要手动点击才能自动播放，如果 video 元素加了 muted 无声，是可以自动播放的。使用 Audio 构造函数创建音频播放时，只有等用户在页面上做了交互操作，才能播放。否则会报错 Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first
+- 一般只有在视频可以播放时才能通过 JS 获取到视频总时长
+- 更多属性、事件参考 p628
+
+下面来看 video 与 audio 元素的 demo
 
 ![video元素](/images/js/video.png)
 
@@ -951,7 +947,7 @@ HTML5新增了两个与媒体相关的标签，让开发人员不必依赖任何
       //   console.log(video)
       //   video.play()
       // }, 5000)
-      // 需要点击事件才能触发，如果一进来直接调用函数会无效，除非播放时加如muted属性无声音。放在oncanplay里也无效
+      // 需要点击事件才能触发，如果一进来直接调用函数会无效，除非播放时加入muted属性无声音。放在oncanplay里也无效
       function play() {
         console.log('video.play')
         video.play()
@@ -979,7 +975,7 @@ HTML5新增了两个与媒体相关的标签，让开发人员不必依赖任何
   </body>
 </html>
 ```
-- audio
+audio src 可以是声音，也可以是视频，如果是视频只会播放其声音
 ```html
 <!DOCTYPE html>
 <html>
@@ -1018,12 +1014,59 @@ HTML5新增了两个与媒体相关的标签，让开发人员不必依赖任何
   </body>
 </html>
 ```
+素材及完整 demo 参见：[video 与 audio demo | Github](https://github.com/zuoxiaobai/fedemo/blob/master/src/JS_ES6/JS高程3/HTML脚本编程/3_媒体元素video_audio/)
 
+### 指定多个媒体源/检测编解码器
+由于浏览器支持的媒体格式不同，可以在 video 或 audio 元素内部使用 source 元素指定多个不同的媒体源，这时需要删除 src 属性。
+```html
+<!-- 嵌入视频 -->
+<video id="video">
+  <source src="a.webm" type="video/webm; codecs='vp8, vorbis'">
+  <source src="a.ogv" type="video/ogg; codecs='theora, vorbis'">
+  <source src="a.mpg">
+  不支持 video 功能
+</video>
+<!-- 嵌入音频 -->
+<audio id="audio">
+  <source src="b.ogg" type="audio/ogg">
+  <source src="b.mp3" type="audio/mpeg">
+  不支持 audio 功能
+</audio>
+```
+可以使用 audio 和 video 元素的 canplayType() 方法来检测浏览器是否支持给定格式和编解码器。它返回一个字符串："probably", "maybe", ""
+```js
+if (audio.canPlayType('audio/mpeg')) {
+  // 支持
+}
+```
+
+### Audio 音频类型
+使用 Audio 构造函数与 audio 元素类似。不需要插入 dom 即可工作。创建实例后，等下载完毕后就可以调用 play() 播放音频。但浏览器为了安全考虑，一般需要和页面有交互时，才可以播放音乐。在 iOS 中调用 play() 会弹出对话框，请求用户授权播放声音。为了连续播放，必须在 onfinish 事件处理程序中立即调用 play()
+
+```html
+<div>123</div>
+<script>
+  window.onload = () => {
+    let audio = new Audio('王菲 - 匆匆那年.mp3')
+    audio.addEventListener('canplaythrough', (event) => {
+      // 延时 3 s，中途点击页面，完成用 dom 交互
+      // Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first.
+      setTimeout(() => {
+        console.log('开始自动播放')
+        audio.play()
+      }, 3000)
+    })
+  }
+</script>
+```
 ## 原生拖放
 **该章节由于没有实例，且重要部分介绍内容有两处与实际不符，不好理解，不建议阅读本章来学习原生拖放**
-> HTML标签draggable属性，表示是否可拖动，img和a标签、选中的文本默认为是可拖动的，其他元素默认为false, 无法拖动。如果想让某个区域成为可放置区域，只需要将该区域dragover事件，阻止其默认行为
+> HTML标签 draggabl e属性，表示是否可拖动，img 和 a 标签、选中的文本默认为是可拖动的，其他元素默认为 false, 无法拖动。如果想让某个区域成为可放置区域，只需要将该区域 dragover 事件，阻止其默认行为
 
 拖动某个元素时，会依次触发**dragstart, drag, dragend** 事件。当某个元素被拖动到一个有效的目标位置时，目标元素会依次触发**dragenter, dragover**，**dragleave(不可放置)或drop(可放置)**
+
+参考: [H5原生拖放(Drag and Drop)demo以及浏览器兼容性处理 | 左小白的技术日常](http://www.zuo11.com/blog/2020/8/js_drag_drop.html)
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -1109,15 +1152,82 @@ HTML5新增了两个与媒体相关的标签，让开发人员不必依赖任何
 ```
 
 ## Notifications API
-## Page Visibility API(页面可见性API)
-如果页面最小化了或者隐藏在了其他标签页面后面，有些功能可以停下来，比如轮询服务器或某些动画效果。而Page Visibility API就是为了让开发人员知道页面是否对用户可见而推出的。
-```js
-// - document.hidden // 页面是否隐藏
-// - document.visibilityState(不推荐使用)  IE10和Chrome对应的状态值有较大差异
-// IE值为 document.MS_PAGE_HIDDEN(0) document.MS_PAGE_VISIBLE(1)，  
-// chrome值为: hidden, visible, prerender
-// - visibilitychange事件，当文档从可见变为不可见或从不可见变为可见时，触发该事件
+Notifications API 可以用于向用户发送通知。它在 Service Worker 中非常有用。PWA（Progressive Web Application 渐进式 Web应用）通过触发通知可以在页面不活跃时向用户显示消息，看起来就像原生应用。
 
+通知权限需要用户授权，而且通知只能运行在安全上下文的代码中被触发，且必须按照每个源的原则，明确得到用户许可。可以使用下面的方法，触发用户授权
+```html
+<script>
+  Notification.requestPermission().then((permission) => {
+    console.log('用户响应通知授权请求', permission)
+  })
+</script>
+```
+第一次进入时，会有下面的弹窗提示。如果用户点击了运行，permission 的值为  `granted`，如果用户点击了禁止，返回 `denied`
+
+![notification_1.png](/images/js/notification_1.png)
+
+注意如果用户选择后，无法再通过代码的方式重新触发授权。只能手动设置浏览器，下图是 Chrome 浏览器设置的方法：点击页面 URL 前面的 `信息` 图标，会弹出一个下拉框。在通知那一栏，选择询问。再次调用上面的代码会重新触发通知授权。
+
+![notification_2.png](/images/js/notification_2.png)
+
+授权成功后的页面，调用 new Notification(title [, options]) 会立即发送通知
+
+```html
+<script>
+  Notification.requestPermission().then((permission) => {
+    console.log('用户响应通知授权请求', permission)
+
+    if (permission === 'granted') {
+      new Notification('Title Text!', {
+        body: 'Body Text',
+        image: 'notification_1.png', 
+        vibrate: true // 是否震动
+      })
+    }
+  })
+</script>
+```
+效果如下图，默认 4-5 s 关闭，也可以通过 Notification 实例的 close() 方法手动关闭
+
+![notification_3.png](/images/js/notification_3.png)
+
+通知不非只用于显示文本字符串，也可以用于交互，Notificaiton API 提供了 4 个用于添加回调的声明周期方法
+- `onshow` 在通知显示时触发
+- `onclick` 在通知被点击是触发
+- `onclose` 在通知消失或通过 close() 关闭时触发
+- `onerror` 在发生错误阻止通知显示时触发
+
+```html
+<script>
+  Notification.requestPermission().then((permission) => {
+    console.log('用户响应通知授权请求', permission)
+
+    if (permission === 'granted') {
+      let n =  new Notification('Title Text!', {
+        body: 'Body Text',
+        image: 'notification_1.png', 
+        vibrate: true // 是否震动
+      })
+      // 1s 后关闭通知
+      // setTimeout(() => n.close(), 1000)
+      n.onshow = () => console.log('notification show')
+      n.onclick = () => {
+        alert('onclick')
+        console.log('notification onclick')
+      }
+      n.onclose = () => console.log('notification close')
+      n.onerror = (e) => console.log('notification error', e)
+    }
+  })
+</script>
+```
+## Page Visibility API(页面可见性API)
+如果页面最小化了或者隐藏在了其他标签页面后面，有些功能可以停下来，比如轮询服务器或某些动画效果。而 Page Visibility API 就是为了让开发人员知道页面是否对用户可见而推出的。
+- `document.hidden` 页面是否隐藏
+- `document.visibilityState` IE10 和 Chrome 对应的状态值有较大差异 IE 值为 document.MS_PAGE_HIDDEN(0) document.MS_PAGE_VISIBLE(1)，chrome值为: hidden, visible, prerender(页面在屏外预渲染)
+- `visibilitychange 事件`，当文档从可见变为不可见或从不可见变为可见时，触发该事件
+
+```js
 // 实现tab间切换时，隐藏页面title改变功能
 var title = document.title;
 document.addEventListener('visibilitychange', function (event) {
@@ -1135,11 +1245,273 @@ document.addEventListener('visibilitychange', function (event) {
   }
 }, false)
 ```
-## 计时 API
-Web Timing API，核心是window.performance对象。可以全面的了解页面再被加载到浏览器的过程中都经历了哪些阶段，页面哪些阶段可能是影响性能的瓶颈。IE10+支持。
-- performance.navigation记录了页面加载器重定向的次数，导航类型(页面第一次加载，页面重载过等状态)
-- performance.timing 记录了开始导航到当前页面的时间，浏览器开始请求页面的时间、浏览器成功连接到服务器的时间等。
+## 计时 API（Performace性能）
+Web Timing API，核心是 window.performance 对象。可以全面的了解页面再被加载到浏览器的过程中都经历了哪些阶段，页面哪些阶段可能是影响性能的瓶颈。部分功能 IE10+ 支持，部分不支持 IE，更多兼容性参考：[Performance | MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Performance)
 
+Performance 接口由多个 API 组成
+- **High Resolution Time API**，高精确度的时间 API，performance.now()，微秒精度。
+- **Performance Timeline API**，性能条目（entry）时间轴 API，performace.getEntries()。按顺序记录页面加载过程中所有细节时间，包括导航时间、各资源加载时间(包括ajax请求)、渲染时间等，还可以自定义性能条目。
+- **Navigation Timing API**，导航计时API，根据 performance.getEntriesByType('navigation') 获取 PerformanceNavigationTiming 对象，描述页面是何时以及如何加载的。
+- **User Timing API**，用于自定义性能条目, performance.mark(), performance.measure()
+- **Resource Timing API**，资源加载时间
+- **Paint Timing API**, 渲染时间
+### High Resolution Time API
+High Resolution Time API 定义了 performance.now() 方法，返回一个微秒精度的浮点数。用以解决 Date.now() 毫秒级精度的一些缺陷。
+
+- `performance.now()` 采用相对时间，在页面打开或执行上下文创建时，从 0 开始计时。
+- `performance.timeOrigin` performance.now() 为 0 时，真实的时间戳
+
+```js
+// 页面打开时间不到 1 秒时执行
+performance.now() // 920.7399999722838
+// 页面打开 5 秒后执行
+performance.now() // 5289.069999940693
+
+let relativeTime = performance.now() 
+// performance.now() 为 0 时的真实时间
+performance.timeOrigin // 1607430305179.698
+let realTime = performance.timeOrigin + relativeTime
+new Date(realTime) // 当前时间
+```
+
+### performance.timing(扩展)
+performance.timing 记录了开始导航到当前页面的时间、浏览器开始请求页面的时间、浏览器成功连接到服务器的时间等。PerformanceTiming 类型。下面是按照顺序对各个字段的解释：
+
+![performance.png](/images/js/performance.png)
+
+- `navigationStart: 1607492537332` 同一个浏览器上一个页面卸载结束时的时间戳。如果没有上一个页面的话，那么该值会和 fetchStart 的值相同。
+- `redirectStart: 0` 第一个 HTTP 重定向开始的时间戳。如果没有重定向，或者重定向到一个不同源的话，那么该值返回为 0。
+- `redirectEnd: 0` 最后一个 HTTP 重定向完成时的时间戳。如果没有重定向，或者重定向到一个不同的源，该值也返回为 0。
+- `fetchStart: 1607492537338` 浏览器准备好使用 http 请求的时间(发生在检查本地缓存之前)。
+- `domainLookupStart: 1607492537349` DNS 域名查询开始的时间，如果使用了本地缓存（即无 DNS 查询）或持久连接，则与 fetchStart 值相等
+- `domainLookupEnd: 1607492537403` DNS 域名查询结束的时间，如果使用了本地缓存（即无 DNS 查询）或持久连接，则与 fetchStart 值相等
+- `connectStart: 1607492537403` HTTP（TCP）开始/重新 建立连接的时间，如果是持久连接，则与 fetchStart 值相等。
+- `secureConnectionStart: 1607492537472` HTTPS 连接开始的时间，如果不是安全连接，则值为 0。
+- `connectEnd: 1607492537600` HTTP（TCP） 完成建立连接的时间（完成握手），如果是持久连接，则与 fetchStart 值相等。
+- `requestStart: 1607492537601` HTTP 请求读取真实文档开始的时间（完成建立连接），包括从本地读取缓存。
+- `responseStart: 1607492537841`  HTTP 开始接收响应的时间（获取到第一个字节），包括从本地读取缓存。
+- `responseEnd: 1607492537996` HTTP 响应全部接收完成的时间（获取到最后一个字节），包括从本地读取缓存。
+- `unloadEventStart: 0` 前一个网页（和当前页面同域）unload的时间戳，如果没有前一个网页或前一个网页是不同的域的话，那么该值为0.
+- `unloadEventEnd: 0` 前一个页面 unload 时间绑定的回掉函数执行完毕的时间戳。
+- `domLoading: 1607492537852` 开始解析渲染 DOM 树的时间，此时 Document.readyState 变为 loading，并将抛出 readystatechange 相关事件。
+- `domInteractive: 1607492538002`  完成解析 DOM 树的时间，Document.readyState 变为 interactive，并将抛出 readystatechange 相关事件，注意只是 DOM 树解析完成，这时候并没有开始加载网页内的资源。
+- `domContentLoadedEventStart: 1607492538002` DOM 解析完成后，网页内资源加载开始的时间，在 DOMContentLoaded 事件抛出前发生。
+- `domContentLoadedEventEnd: 1607492538002` DOM 解析完成后，网页内资源加载完成的时间（如 JS 脚本加载执行完毕）。
+- `domComplete: 1607492544648` DOM 树解析完成，且资源也准备就绪的时间，Document.readyState 变为 complete，并将抛出 readystatechange 相关事件。
+- `loadEventStart: 1607492544648` load 事件发送给文档，也即 load 回调函数开始执行的时间。如果没有绑定load事件，该值为0.
+- `loadEventEnd: 1607492544653` load 事件的回调函数执行完毕的时间。如果没有绑定load事件，该值为0.
+
+```js
+function getPerfermanceTiming() {
+  let t = performance.timing
+
+  // 重定向结束时间 - 重定向开始时间
+  let redirect = t.redirectEnd - t.redirectStart
+  // DNS 查询开始时间 - fetech start 时间
+  let appCache = t.domainLookupStart - t.fetchStart
+  // DNS 查询结束时间 - DNS 查询开始时间
+  let dns = t.domainLookupEnd - t.domainLookupStart
+  // 完成 TCP 连接握手时间 - TCP 连接开始时间 
+  let tcp = t.connectEnd - t.connectStart
+  // 从请求开始到接收到第一个响应字符的时间 
+  let ttfb = t.responseStart - t.requestStart
+  // 资源下载时间，响应结束时间 - 响应开始时间
+  let contentDL = t.responseEnd - t.responseStart
+  // 从请求开始到响应结束的时间
+  let httpTotal = t.responseEnd - t.requestStart
+  // 从页面开始到 domContentLoadedEventEnd
+  let domContentloaded = t.domContentLoadedEventEnd - t.navigationStart
+  // 从页面开始到 loadEventEnd
+  let loaded = t.loadEventEnd - t.navigationStart
+
+  let result = [
+    { key: "Redirect", desc: "网页重定向的耗时", value: redirect }, 
+    { key: "AppCache", desc: "检查本地缓存的耗时", value: appCache },
+    { key: "DNS", desc: "DNS查询的耗时", value: dns },
+    { key: "TCP", desc: "TCP连接的耗时", value: tcp },
+    { key: "Waiting(TTFB)", desc: "从客户端发起请求到接收到响应的时间 / Time To First Byte", value: ttfb },
+    { key: "Content Download", desc: "下载服务端返回数据的时间", value: contentDL },
+    { key: "HTTP Total Time", desc: "http请求总耗时", value: httpTotal },
+    { key: "DOMContentLoaded", desc: "dom加载完成的时间", value: domContentloaded },
+    { key: "Loaded", desc: "页面load的总耗时", value: loaded }
+  ]
+  return result
+}
+getPerfermanceTiming()
+```
+参考: 
+- [Web 性能优化-首屏和白屏时间](https://blog.csdn.net/z9061/article/details/101454438)
+- [Performance --- 前端性能监控](https://www.jianshu.com/p/1355232d525a)
+### performance.navigation(扩展)
+performance.navigation 记录了页面加载器重定向的次数，导航类型(页面第一次加载，页面重载过等状态)
+- `redirectCount: 0` 页面经过了多少次重定向
+- `type: 0`
+  - 0 表示正常进入页面；"navigate"
+  - 1 表示通过 window.location.reload() 刷新页面；"reload"
+  - 2 表示通过浏览器前进后退进入页面；"back_forward"
+  - 255 表示其它方式 "TYPE_RESERVED"
+
+### performance.memory(扩展)
+MemoryInfo 记录了当前页面的内存信息
+- `jsHeapSizeLimit: 4294,705,152` 内存大小限制，以字节计算。4G 电脑本身内存是 16G
+- `totalJSHeapSize: 30,257,998` 可使用的内存，已分配的堆体积，示例中是 30M 左右，每个页面不一样，动态值
+- `usedJSHeapSize: 25,172,926` JS 对象占用的内存，示例中是 25M 左右，每个页面不一样，动态值
+
+### performance.eventCounts(扩展)
+EventCounts 用于统计页面事件触发次数。每个页面都是 36 个事件，可以使用 performance.eventCounts.get('事件名称') 获取对应事件在页面中触发的次数。比如发生一次点击后，改之就会加 1。可以使用 forEach，entries 等遍历
+```js
+performance.eventCounts // EventCounts {size: 36}
+[...performance.eventCounts.entries()]
+// [
+//   // ...
+//   ["click", 1]
+//   ["pointercancel", 0]
+//   ["dragover", 0]
+//   ["dragend", 0]
+//   ["beforeinput", 0]
+//   ["touchend", 0]
+//   ["compositionend", 0]
+//   ["mouseleave", 0]
+//   ["input", 0]
+// ]
+Object.fromEntries(performance.eventCounts.entries())
+// {
+//   // ....
+//   auxclick: 0
+//   beforeinput: 0
+//   click: 4
+//   compositionend: 0
+//   compositionstart: 0
+//   compositionupdate: 0
+//   contextmenu: 0
+//   dblclick: 0
+// }
+```
+### Performance Timeline API
+性能时间轴 API，记录页面打开过程中，各个性能条目 (entry，如导航、资源加载、绘制等) 的耗时。使用 `performance.getEntries()` 可以获取所有性能条目信息数组。数组中的每一个元素代表一个性能条目，他们都是 PerformanceEntry 的子类，比如
+- PerformanceNavigationTiming 导航时间对象，entryType: "navigation"
+- PerformanceResourceTiming 某个资源加载时间对象，entryType: "resource"。发起者类型(资源类型)initiatorType: "script"，还可能是："xmlhttprequest"、"css"、"img"、"other"
+- PerformancePaintTiming 绘制时间对象 entryType: "paint"
+
+除了系统自带的这些性能条目外，还支持用户自定义性能条目
+
+- PerformanceMark，用户自定义性能条目, entryType: "mark"
+- PerformanceMeasure，性能度量条目, entryType: "measure"
+
+可以使用  `performance.getEntriesByType(entryType)` 获取指定类型的性能条目，它返回一个数组 
+
+```js
+performance.getEntries()
+// [ 
+//   PerformanceNavigationTiming, 
+//   PerformanceResourceTiming, 
+//   ..., 
+//   PerformancePaintTiming, 
+//   ...
+// ]
+```
+### PerformanceNavigationTiming
+一般 performance.getEntries() 的第一个元素就是 PerformanceNavigationTiming，浏览器会在导航事件发生时自动记录该性能条目。 duration = loadEventEnd - startTime
+```js
+performance.getEntries()[0] // 或 performance.getEntriesByType('navigation')[0]
+// PerformanceNavigationTiming
+{
+  connectEnd: 2.0849999273195863
+  connectStart: 2.0849999273195863
+  decodedBodySize: 816
+  // domComplete: 9127.099999925122
+  // domContentLoadedEventEnd: 8586.609999998473 
+  // domContentLoadedEventStart: 8586.6049999604
+  // domInteractive: 8586.544999969192
+  domainLookupEnd: 2.0849999273195863
+  domainLookupStart: 2.0849999273195863
+  duration: 9127.134999958798 // PerformanceNavigationTiming.loadEventEnd - PerformanceEntry.startTime
+  encodedBodySize: 816
+  entryType: "navigation" // 条目类型
+  fetchStart: 2.0849999273195863 
+  initiatorType: "navigation" // 发起者类型
+  // loadEventEnd: 9127.134999958798   // load事件的回调函数执行完毕的时间，如果没有绑定load事件，该值为0.
+  // loadEventStart: 9127.124999999069 // load事件发送给文档。也即load回调函数开始执行的时间，如果没有绑定load事件，则该值为0.
+  name: "http://127.0.0.1:8080/js/ad3/js-ad3-20.html#high-resolution-time-api" // document's address.
+  nextHopProtocol: "http/1.1"
+  redirectCount: 0 // 如果有重定向的话，页面通过几次重定向跳转而来，默认为0；
+  redirectEnd: 0  // 
+  redirectStart: 0 // 该值的含义是第一个http重定向开始的时间戳，如果没有重定向，或者重定向到一个不同源的话，那么该值返回为0.
+  requestStart: 10.624999995343387
+  responseEnd: 8198.495000018738 
+  responseStart: 8198.014999972656
+  secureConnectionStart: 0
+  serverTiming: []
+  startTime: 0 // Returns a DOMHighResTimeStamp with a value of "0".
+  transferSize: 1100
+  type: "reload", // navigation type. Must be: 0: "navigate"（表示正常进入该页面(非刷新、非重定向)）, 1: "reload"(表示通过 window.location.reload 刷新的页面。如果我现在刷新下页面后，再来看该值就变成1了), 2: "back_forward"（表示通过浏览器的前进、后退按钮进入的页面。如果我此时先前进下页面，再后退返回到该页面后，查看打印的值，发现变成2了） or "prerender" (其他).
+  // unloadEventEnd: 8201.974999974482
+  // unloadEventStart: 8201.824999996461
+  workerStart: 0
+}
+```
+### PerformanceResourceTiming
+计算某个资源的加载时间 duration =  responseEnd - startTime
+```js
+// performance.getEntriesByType('resource')[0]
+connectEnd: 12499.234999995679
+connectStart: 12499.234999995679
+decodedBodySize: 4575838
+domainLookupEnd: 12499.234999995679
+domainLookupStart: 12499.234999995679
+duration: 134.51500004157424 // responseEnd - startTime
+encodedBodySize: 975116
+entryType: "resource"
+fetchStart: 12499.234999995679
+initiatorType: "script"
+name: "http://127.0.0.1:8080/assets/js/app.js"
+nextHopProtocol: "http/1.1"
+redirectEnd: 0
+redirectStart: 0
+requestStart: 12504.305000067689
+responseEnd: 12633.750000037253
+responseStart: 12512.550000101328
+secureConnectionStart: 0
+serverTiming: []
+startTime: 12499.234999995679
+transferSize: 975939
+workerStart: 0
+```
+
+### User Timing API 自定义
+performance.mark('foo') 可以在 performance.getEntries() 中新增一条自定义性能条目，可以用于自定义性能分析。
+```js
+performance.mark('foo') 
+// PerformanceMark {
+//   detail: null, 
+//   name: "foo", 
+//   entryType: "mark", 
+//   startTime: 39518.05999991484, 
+//   duration: 0
+// }
+```
+利用两个 mark 性能条目可以计算时间差
+```js
+performance.mark('foo') 
+for (let i = 0; i < 1E6; i++) {}
+performance.mark('bar') 
+let [startMark, endMark] = performance.getEntriesByType('mark')
+endMark.startTime - startMark.startTime // 4.205000004731119
+```
+performance.measure() 可以生成一个新的性能条目，度量(计算) 两个 mark 之间的持续时间（duration）
+```js
+performance.mark('foo') 
+for (let i = 0; i < 1E6; i++) {}
+performance.mark('bar') 
+performance.measure('newVal', 'foo', 'bar') 
+// PerformanceMeasure {
+//   detail: null
+//   duration: 4.055000026710331
+//   entryType: "measure"
+//   name: "newVal"
+//   startTime: 2636.534999939613
+// }
+```
 ## Web 组件（Web Components）
 
 ## Web Cryptography API
