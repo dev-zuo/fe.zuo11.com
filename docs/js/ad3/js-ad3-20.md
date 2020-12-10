@@ -1,3 +1,8 @@
+---
+title: 20. JavaScript API - JS高程4
+description: JHTML5 规范定义了一批增强已有标准的 API 和浏览器特性。另外一些规范，如 Web Cryptography 和 Notifications API 只为一个特性定义了一个 API。不同的浏览器对新 API 的实现情况不同，本章仅介绍与大多数开发者相关，已经得到多个浏览器支持，且本书中其他章节没有涵盖的内容。主要内容有 Atomics 与 SharedrrayBuffer、跨上下文消息、Encoding API、File API 与 Blob API、拖放、Notifications API、Page Visibility API、Streams API、计时 API、Web components、Web Cryptography API。
+keywords: Atomics 与 SharedrrayBuffer,跨上下文消息,Encoding API,File API 与 Blob API,拖放,Notifications API,Page Visibility API,Streams API,计时 API,Web components,Web Cryptography API
+---
 # 20. JavaScript API
 
 HTML5 规范定义了一批增强已有标准的 API 和浏览器特性。另外一些规范，如 Web Cryptography 和 Notifications API 只为一个特性定义了一个 API。不同的浏览器对新 API 的实现情况不同，本章仅介绍与大多数开发者相关，已经得到多个浏览器支持，且本书中其他章节没有涵盖的内容。主要内容有 Atomics 与 SharedrrayBuffer、跨上下文消息、Encoding API、File API 与 Blob API、拖放、Notifications API、Page Visibility API、Streams API、计时 API、Web components、Web Cryptography API。
@@ -1513,5 +1518,687 @@ performance.measure('newVal', 'foo', 'bar')
 // }
 ```
 ## Web 组件（Web Components）
+这里所说的 Web Components 是一套用于增强 DOM 行为的功能，包括 **影子 DOM（shadow DOM）**、**自定义元素** 和 **HTML 模板(template 元素)**，这一套浏览器 API 比较混乱：
+- 并没有统一的 "Web Components" 规范，每个 Web Components 都在不同的规范中定义
+- 有些 Web Components 如影子 DOM 和自定义元素，已经出现了向后不兼容的版本问题
+- 浏览器实现极其不一致
 
+由于存在上面的问题，一般使用 Web Components 时通常需要引入一个 Web 组件库，比如 Polymer，它可以模拟浏览器中缺失的 Web Components
+
+### HTML 模板(template 元素)
+在 Web Components 之前，一直缺少基于 HTML 解析构建 DOM 子树，然后在需要时把该子树渲染出来的机制。有两种替代的方法：
+- 使用 innerHTML 把标记字符串转为 DOM 元素，但它存在严重的安全隐患。
+- 使用 document.createElement 创建元素并拼接，这样非常麻烦
+
+HTML 模板 template 元素就是为了解决这个问题而出现的，可以提前在页面中写出 template 内容，浏览器自动将其解析为 DOM 子树，但跳过渲染。等需要时，再渲染。
+
+```html
+<template id="foo">
+  <p>模板内部p元素</p>  
+</template>
+```
+上面的例子中，使用 template 元素写了一个简单的模板，它的内容不属于活动的文档，内容不会渲染到页面上。使用 document.querySelector() 等 DOM 查询方法不会找到 p 元素，p 元素仅包含在 template 中的 DocumentFragment 内，审查元素时会看到下面的效果。可以通过 template 元素的 content 获取 DocumentFragment 节点的引用
+```html
+<template id="foo">
+  #document-fragment
+  <p>模板内部p元素</p>  
+</template>
+<script>
+  const fragment = document.querySelector("#foo").content 
+  // #document-fragment
+  console.log( document.querySelector("p")) // null
+  console.log( fragment.querySelector("p")) // <p>...</p>
+</script>
+```
+可以将 template 元素的内容，动态添加到 dom 中，仅一次重排。这就是 DocumentFragment 的优点
+```html
+<div id="foo"></div>
+<template id="bar">
+  <p>a</p>
+  <p>b</p>
+  <p>c</p>
+</template>
+
+<script>
+  // 将 template 元素的内容转移到 foo 元素内
+  const barTemplate = document.querySelector('#bar')
+  const fragment = barTemplate.content
+  const fooElement = document.querySelector('#foo')
+  // appendChild 会移动元素，之前的元素所在的位置会删除
+  fooElement.appendChild(fragment)
+  // 如果需要保留原元素，需要在 appendChild 时创建一个节点的副本
+  // fooElement.appendChild(document.importNode(fragment, true))
+  // fooElement.appendChild(fragment.cloneNode(true))
+  console.log(barTemplate.content.children) // HTMLCollection []
+</script>
+```
+模板内也可以使用 script 脚本，最开始不会执行，等 template 内容添加到真实的 DOM 树中时才会执行
+```html
+<div id="foo"></div>
+<template id="bar">
+  <script>console.log('template script execute')</script>
+</template>
+
+<script>
+  let fragment = document.querySelector('#bar').content
+  console.log('a')
+  document.querySelector('#foo').appendChild(fragment)
+  console.log('b')
+  // a
+  // template script execute
+  // b
+</script>
+```
+### 影子DOM(shadow DOM)
+shadow DOM 是什么？HTML 元素调用 attachShadow() 方法，可以给自己添加一个影子DOM。该影子 dom 是一个独立的 DOM 子树，内部的 style 只会在该 影子 DOM 中有效，不干扰全局。默认情况下，影子 DOM 的内容会覆盖原 HTML 元素的内容。
+
+注意：并不是所有的元素都可以添加影子 DOM，可以创建影子 DOM 的元素有 自定义元素、div、span、atricle、body 等，参见 p652
+
+下面的例子中，为 foo 和 bar 元素添加影子 DOM 后，原内容 a、b 会被影子 DOM 覆盖，默认显示为空白，因为还没有向影子 DOM 添加任何内容。其中
+- foo、bar 容纳影子 DOM 的元素被称为 **影子宿主（shadow host）**
+- 影子 DOM 的根节点被称为 **影子根（shadow root）**
+
+```html
+<div id="foo">a</div>
+<div id="bar">b</div>
+<script>
+  const foo = document.querySelector('#foo')
+  const bar = document.querySelector("#bar")
+  // 在 foo, bar 上创建影子 DOM，返回影子 dom 实例
+  const fooShadowDom = foo.attachShadow({ mode: "open"})
+  const barShadowDom = bar.attachShadow({ mode: "closed"})
+  console.log(fooShadowDom)   // #shadow-root（open）
+  console.log(barShadowDom)   // #shadow-root（closed）
+  console.log(foo.shadowRoot) // #shadow-root（open）
+  console.log(bar.shadowRoot) // null
+</script>
+``` 
+
+![shadowDom_1.png](/images/js/shadowDom_1.png)
+
+为元素添加影子 DOM 后，我们可以像常规 DOM 一样使用影子 DOM，来看下面的例子
+```js
+fooShadowDom.innerHTML = `
+  <p>颜色：red</p>
+  <style>p { color: red; }</style>
+`
+barShadowDom.innerHTML = `
+  <p>颜色：green</p>
+  <style>p { color: green; }</style>
+`
+document.querySelectorAll('p') // 无法获取影子 dom 中的 p元素
+// NodeList [] 
+document.querySelectorAll('div')[0].shadowRoot
+// #shadow-root (open)
+// <p>​颜色：red​</p>
+// ​<style>​p { color: red; }​</style>​
+```
+效果如下
+
+![shadowDom_2.png](/images/js/shadowDom_2.png)
+
+可以使用 appendChild() 向影子 DOM 中动态的添加元素，前面的例子中我们知道影子 DOM 会覆盖原元素的内容。如果我们想要在影子 DOM 中显示该内容，可以使用 slot 插槽元素来显示
+
+```html
+<div id="foo">我是被隐藏的内容，在影子 DOM 中可以使用 slot 插槽来显示</div>
+<script>
+  const foo = document.querySelector('#foo')
+  const fooShadowDom = foo.attachShadow({ mode: "open"})
+  // 仅显示 abc
+  // fooShadowDom.innerHTML = `
+  //   <div id="bar">
+  //     abc
+  //   </div>
+  // `
+  // 显示 abc，以及原元素中的内容
+  fooShadowDom.innerHTML = `
+    <div id="bar">
+      abc
+      <slot></slot>
+    </div>
+  `
+</script>
+```
+上面使用的是匿名插槽，如果有多个插槽内容，可以使用命名插槽（named slot），类似 Vue 中的具名插槽
+```html
+<div id="foo">
+  <div slot="a">我是a内容</div>
+  <div slot="b">我是b内容</div>
+</div>
+<script>
+  document.querySelector('#foo')
+    .attachShadow({ mode: "open"})
+    .innerHTML = `
+      内容b:
+      <slot name="b"></slot>
+      内容a: 
+      <slot name="a"></slot>
+    `
+  // 内容b:
+  // 我是b内容
+  // 内容a:
+  // 我是a内容
+</script>
+```
+影子 DOM 中的事件，如果影子 DOM 中发生了浏览器事件比如 click，事件会逃出影子 DOM 并经过事件重定向(event target)在外部被处理。
+```html
+<div onclick="console.log('在外部处理', event.target)"></div>
+<script>
+  document.querySelector('div')
+    .attachShadow({mode: 'open'})
+    .innerHTML = `
+      <button onclick="console.log('在内部处理', event.target)">Foo</button>
+    `
+  // 在内部处理 <button onclick=​"console.log('在内部处理', event.target)​">​Foo​</button>​
+  // 在外部处理 <div onclick=​"console.log('在外部处理', event.target)​">​…​</div>​
+</script>
+```
+### 自定义元素
+类似子框架中的自定义组件，比如 `<my-button />`，创建自定义元素有两种方法：
+- 直接在 html 中写自定义元素，比如 `<x-foo>我是自定义元素</x-foo>`
+- 使用 `customeElements.define(tagName, HTMLElementSubClass[, options])` 创建自定义元素
+
+```html
+<x-foo>我是自定义元素</x-foo>
+<script>
+  let xfooElement = document.querySelector('x-foo')
+  console.log(xfooElement instanceof HTMLElement) // true
+</script>
+```
+使用 JS 创建自定义元素，下面的例子中，console 中会打印 3 个 hello，页面上 body 中会包含 3 个自定义元素
+```html
+<div>1212</div>
+<script>
+  class FooElement extends HTMLElement {
+    constructor() {
+      super()
+      console.log('hello')
+    }
+  }
+  customElements.define('x-foo', FooElement);
+
+  document.body.innerHTML = `
+    <x-foo>a</x-foo>
+    <x-foo>b</x-foo>
+    <x-foo>c</x-foo>
+  `
+</script>
+```
+可以使用 customElements.define() 方法的第三个参数，可以标签(元素)指定为自定义元素的实例。注意自定义 FooElement 继承自 HTMLDivElement
+```html
+<div>1212</div>
+<script>
+  class FooElement extends HTMLDivElement {
+    constructor() {
+      super()
+      console.log('hello')
+    }
+  }
+  customElements.define('x-foo', FooElement, { extends: 'div' });
+
+  document.body.innerHTML = `
+    <div is="x-foo">a</div>
+    <div is="x-foo">b</div>
+    <div is="x-foo">c</div>
+  `
+</script>
+<!--
+hello
+hello
+hello 
+-->
+```
+可以结合影子 DOM 向自定义元素添加内容
+```html
+<div>123</div>
+<script>
+  class FooElement extends HTMLElement {
+    constructor() {
+      super()
+      this.attachShadow({ mode: 'open' })
+      this.shadowRoot.innerHTML = `
+        <p>我是自定义组件的内容</p>
+        <slot></slot>
+      `
+    }
+  }
+  customElements.define('x-foo', FooElement)
+  document.body.innerHTML = `
+    <x-foo>
+      <div>我是插槽内容</div>
+    </x-foo>
+  `
+  // 我是自定义组件的内容
+  // 我是插槽内容
+</script>
+```
+可以使用 template 重构上面的例子
+```html
+<div>123</div>
+<template id="x-foo-tpl">
+  <p>我是自定义组件的内容</p>
+  <slot></slot>
+  <style>
+    p { color: red }
+  </style>
+</template>
+<script>
+  const template = document.querySelector('#x-foo-tpl')
+  class FooElement extends HTMLElement {
+    constructor() {
+      super()
+      this.attachShadow({ mode: 'open' })
+      this.shadowRoot.appendChild(template.content.cloneNode(true))
+    }
+  }
+  customElements.define('x-foo', FooElement)
+  document.body.innerHTML += `
+    <x-foo>
+      <p>我是插槽内容</p>
+    </x-foo>
+  `
+  // 123
+  // 我是自定义组件的内容 // 红色
+  // 我是插槽内容 // 黑色 slot 内的内容不受影子 dom 内部样式影响
+</script>
+```
+自定义元素有 5 个生命周期方法
+- constructor() 在创建元素实例或将已有 DOM 元素升级为自定义元素时调用。
+- connectedCallback() 在每次将这个自定义元素实例添加到 DOM 中时调用。
+- disconnectedCallback() 在每次将这个自定义元素实例从 DOM 中移除时调用。
+- attributeChangeCallback() 自定义元素**可观察属性** 的值发生变化时调用。在初始化值时，也算一次变化。
+- adoptedCallback() 在通过 document.adoptNode() 将这个自定义元素移动到新文档对象时调用。
+
+```html
+<div>123</div>
+<script>
+  class FooElement extends HTMLElement {
+    constructor() {
+      super()
+      console.log('constructor')
+    }
+    connectedCallback() {
+      console.log('connected')
+    }
+    disconnectedCallback() {
+      console.log('disconnected')
+    }
+  }
+  customElements.define('x-foo', FooElement)
+  const fooElement = document.createElement('x-foo')
+  // constructor
+  document.body.appendChild(fooElement)
+  // connected
+  document.body.removeChild(fooElement)
+  // disconnected
+</script>
+
+```
+observedAttributes() 方法可以定义改变时触发 attributeChangedCallback() 的属性名。下面是一个例子
+```html
+<div>123</div>
+<script>
+  class FooElement extends HTMLElement {
+    get bar() {
+      return this.getAttribute('bar')
+    }
+    set bar(value) {
+      return this.setAttribute('bar', value)
+    }
+    // 可观察属性 bar
+    static get observedAttributes() {
+      return ['bar']
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue) {
+        console.log(`oldValue: ${oldValue} => newValue: ${newValue}`)
+        this[name] = newValue
+      }
+    }
+  }
+  customElements.define('x-foo', FooElement)
+  document.body.innerHTML = `<x-foo bar="false">abc</x-foo>`
+  // oldValue: null => newValue: false
+  document.querySelector('x-foo').setAttribute('bar', 'true')
+  // oldValue: false => newValue: true
+</script>
+```
+自定义元素 customElements 除了 define() 外，还有另外几个函数
+- `customElements.whenDefined(tagName)` 返回 promise，当定义后触发 resolve 函数
+- `customElements.get(tagName)` 返回对应的 class
+- `customElements.upgrade(customElement)` 强制升级自定义元素
+
+```html
+<script>
+  customElements.whenDefined('x-foo').then(() => console.log('defined'))
+  console.log(customElements.get('x-foo')) // undefined
+  customElements.define('x-foo', class {}) // defined!
+  console.log(customElements.get('x-foo')) // class {}
+</script>
+```
+当自定义元素没有创建时，也可以先创建该自定义元素，后面再使用  customElements.upgrade() 强制升级。
+```html
+<script>
+  // 在自定义元素没有定义之前会创建 hTMLUnkownElement 对象
+  const fooElement = document.createElement('x-foo')
+  
+  // 创建自定义元素
+  class FooElement extends HTMLElement {}
+  customElements.define('x-foo', FooElement)
+  console.log(fooElement instanceof FooElement) // false
+  // 强制升级
+  customElements.upgrade(fooElement)
+  console.log(fooElement instanceof FooElement) // true
+</script>
+```
 ## Web Cryptography API
+Web Cryptography API 描述了一套密码学工具，规范了 JS 如果以安全和符合惯例的方式实现加密。包括生成、使用加密秘钥对，加密、解密信息以及生成可靠的随机数。
+
+### 生成随机数
+一般我们生成随机数首先想到的是 Math.random()，这个方法在浏览器中是以 **伪随机数生成器（PRNG, PseudoRandom Number Generator）** 方式实现的。pseudo- `[ˈsuːdəʊ]` 假的。伪随机指的是只是模拟了随机的特性，并未使用真正的随机源。如果使用 PRNG 生成的私有秘钥用于加密，攻击者可以利用它的缺点推算出私有秘钥。详情参见 p663
+
+伪随机数生成器主要用于快速计算出看起来随机的值，并不适合用于加密计算。为了解决这个问题，引入了 **CSPRNG（密码学安全伪随机数，Cryptographically Secure PseudoRandom Number Generator）** 额外增加了一个熵作为输入。这样一来计算速度明显比 PRNG 慢很多，但 CSPRNG 生成的值很难预测，可以用于加密。
+
+Web Cryptography API 引入了 CSPRNG，可以通过 crypto.getRandomValues() 访问 ，crypto `[ˈkrɪptəʊ]` graphy `['ɡræfɪ]`。该函数会把随机值写入作为参数的定型数组，定型数组类型不重要，底层缓冲区会被随机的二进制位填充
+
+```js
+// 定义 1 个字节的 typed array，最大值 255
+const array = new Uint8Array(1)
+for (let i = 0; i < 5; i++) {
+  let n = crypto.getRandomValues(array)
+  console.log(n, n[0])
+}
+// Uint8Array [140] 140
+// Uint8Array [214] 214
+// Uint8Array [122] 122
+// Uint8Array [202] 202
+// Uint8Array [81] 81
+```
+getRandomValues() 最多可以生成 2 ** 16（65536）字节，超出则会抛出错误 `Failed to execute 'getRandomValues' on 'Crypto': The ArrayBufferView's byte length (65537) exceeds the number of bytes of entropy available via this API (65536).`
+```js
+const array = new Uint8Array(2 ** 16)
+console.log(window.crypto.getRandomValues(array))
+// Uint8Array(65536) [48, 96, 106, 4, 11, 72 186, 93, 44, 176, 156, 55, 178, 49, 255, 18, 173, 40, 193, 49, 3, 61, 194, 132, 190, 86, …]
+const array2 = new Uint8Array(2 ** 16 + 1)
+console.log(window.crypto.getRandomValues(array2))
+// Uncaught DOMException: Failed to execute 'getRandomValues' on 'Crypto': The ArrayBufferView's byte length (65537) exceeds the number of bytes of entropy available via this API (65536).
+```
+使用 CSPRNG 重新视线 Math.random() 通过随机生成一个随机的 32 位数值，然后用他去除以最大的值 `0xFFFFFFFF` ，这样就会获得一个介于 0 和 1 之间的数
+```js
+function randomFloat() {
+  const array = new Uint32Array(1)
+  // 0xFFFFFFFF === 2 ** 32 -1 // true
+  const maxUint32 = 0xFFFFFFFF
+  return crypto.getRandomValues(array)[0] / maxUint32
+}
+randomFloat()
+// 0.2779637703853575
+randomFloat()
+// 0.21668057078883995
+randomFloat()
+// 0.8739860593047892
+```
+
+### SubtleCrypto 对象
+subtle [ˈsʌtl] 精细的，Web Cryptography API 核心的特性都暴露在了 SubtleCrypto 对象上，可以使用 window.crypto.subtle 方法
+```js
+console.log(crypto.subtle) // SubtleCrypto {}
+```
+可以用于加密、散列、签名和生成秘钥。由于所有密码学操作都在原始的二进制数据上执行，所以 SubtleCrypto 的每个方法都要用到 ArrayBuffer 和 ArrayBufferView 类型。由于字符串是密码学操作的重要场景，因此用于二进制数据与字符串之间相互转换的 TextEncoder 和 TextDecoder 经常与 SubtleCrypto 一起使用。
+
+:::warning
+SubtleCrypto 对象只能在安全的上下文（https）中使用，不安全的上下文中，crypto.subtle 属性为 undefined  
+:::
+
+### 生成密码学摘要(crypto.subtle.digest())
+> digest `[dɪˈdʒɛst]` 消化/摘要、hash 哈希/散列、algorithm  `[ˈæl ɡə rɪðəm]` 算法
+
+`crypto.subtle.digest(hash(散列)算法类型, typedArray)` 用于生成消息摘要，支持 4 种摘要算法：SHA-1 和 3 种 SHA-2，分别对应字符串 "SHA-1"、"SHA-256"、"SHA-384"、"SHA-512"。
+- `SHA-1（Secure Hash Algorithm 1）` 构架类似 MD5 的散列函数。接收任意大小的输入，生成 160 位消息散列。容易受到碰撞攻击，该算法已经不再安全。
+- `SHA-2（Secure Hash Algorithm 2）` 构建于相同耐碰撞单向压缩函数之上的一套散列函数。规范支持其中三种 **SHA-256、SHA-384、SHA-512**。生成的摘要信息可以是 256位、384位、512位。该算法被认为是安全的，广泛应用于很多领域和协议，包括 TLS、PGP 和加密货币（如比特币）。
+
+```js
+(async function () {
+  const textEncoder = new TextEncoder()
+  const msg = textEncoder.encode('foo') // Uint8Array(3) [102, 111, 111]
+  const msgDigest = await crypto.subtle.digest('SHA-256', msg)
+  console.log(msgDigest) // ArrayBuffer(32)
+  console.log(new Uint32Array(msgDigest)) 
+  // Uint32Array(8) 
+  // [1806968364, 2412183400, 1011194873, 876687389, 
+  //  1882014227, 2696905572, 2287897337, 2934400610]
+})()
+```
+通常在使用时，二进制的消息摘要需要转换为 16 进制的字符串格式，256 位转 16 进制就是 64 位字符串。将二进制数据按照 8 位进行分割，再通过 toString(16) 就可以把任何数组缓冲区转换为 16 进制字符串
+```js
+(async function () {
+  const textEncoder = new TextEncoder()
+  const msg = textEncoder.encode('foo') // Uint8Array(3) [102, 111, 111]
+  const msgDigest = await crypto.subtle.digest('SHA-256', msg)
+  console.log(msgDigest) // ArrayBuffer(32)
+
+  // 8位分割后的数据大小为 0 - 255
+  b = 44
+  b.toString(16) // "2c"
+  c = 1
+  c.toString(16) // "1"
+  c.toString(16).padStart(2, '0') // "01"
+
+  const hexDigest = Array.from(new Uint8Array(msgDigest))
+    .map(i => i.toString(16))
+    .join("")
+  console.log(hexDigest)
+  // 2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae
+})()
+```
+在上面的例子中，把 new Uint8Array(msgDigest) 换成 16/32 位也可以生成字符串，就是和结果不一样，为什么一定要按照 8 位分割呢？二进制位以字节为单位？textEncoder.encode('foo') 默认编码后的就是 8 位？
+
+计算文件的散列(hash)字符串，可以用于确认文件是否被修改过。例子参见 p665
+### 根据秘钥算法生成秘钥(CryptoKey)实例(crypto.subtle.generateKey())
+
+crypto.subtle.generateKey() 方法用于生成秘钥，返回一个 CryptoKey 实例。CryptoKey 类支持多种加密算法，允许控制秘钥抽取和使用。CryptoKey 类支持以下算法：
+
+> 对称型加密算法(如 DES/AES 算法) 使用单个秘钥对数据进行加密或解密。非对称型加密算法（如 RSA 算法）也称为公用秘钥算法，有两个秘钥（公用秘钥和私用秘钥）。只有两者搭配才能完成加密或解密的全过程。
+
+- `RSA（Rivest-Shamir-Adleman）` 1978年，麻省理工学院的三名教授瑞斯特(Rivest)、沙米尔(Shamir)和艾德曼(Adleman) 开发了非对称 RSA 公共密钥算法。公钥密码系统，使用两大素数获得一对公钥和私钥，**可用于签名/验证或加密/解密消息**。
+  - 一些加密算法是对 RSA 的应用，比如：RSASSA-PKCS1-v1_5、RSA-PSS、RSA-OAEP 
+- `ECC（Elliptic-Curve Cryptography）` 公钥密码系统，**椭圆曲线密码**（Elliptic Curve `[ɪ'lɪptɪk]` `[kɜːv]`），使用一个素数和一个椭圆曲线获得一对公钥和私钥，**可用于签名/验证消息**，ECC 被认为优与 RSA，它比 RSA 秘钥短，且操作更快。
+  - 一些加密算法是对 ECC 的应用，比如：ECDSA、ECDH
+- `AES（Advanced Encryption Standard）` **高级加密标准**，属于对称秘钥密码系统。由于 DES 密钥太短已无法满足安全的需要，2000年10月美国国家标准与技术研究所(NIST)发布高级加密标准(AES)作为新的加密电子数据加密标准。使用派生自置换组合网络的分组密码加密和解密数据。AES 在不同模式下使用，不同模式算法的特性也不同。
+  - AES 有多种模式的算法，比如：AES-CTR（AES 计数模式 counter mode）、AES-CBC（AED 密码分组链模式 cipher block chaining mode）、AES-GCM、AES-KW
+- `HMAC（Hash-Based Message Authentication Code）` **哈希信息验证码**， n. 认证 [ɔːˌθentɪˈkeɪʃn]，用于生成消息认证码的算法，用于验证通过不可信网络接收的消息没有被修改过。两方使用hash函数和共享私钥来签名和验证消息。
+
+:::tip
+上面只是列出部分，更多信息参见 p667。CryptoKey 支持很多算法，但其中只有部分算法可以用于 SubtleCrypto 的方法。如果需要了解细节，可以参考 W3C 上 Web Cryptography API 规范的 "Algorithm Overview"
+:::
+
+`crypto.subtle.generateKey(algorithm, extractable, keyUsages)` 可以生成随机 CryptoKey，返回一个 Promise，resolve 是用来表示秘钥的一个或多个 CryptoKey 实例。它有三个参数：
+- `algorithm` 指定加密算法类型的对象
+- `extractable` `[ɪk'stræktəbl]` 布尔值，表示密码是否可以从 CryptoKey 中提取出来
+- `keyUsages` 表示这个秘钥可以与那些 SubtleCrypto 方法一起使用，类型为字符串数组，比如 "encrypt"、"decrypt"、"sign"、"verify"、"deriveKey"、"wrapKey" 等
+
+更多细节可以参考：[SubtleCrypto.generateKey() | MDN](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/generateKey)
+
+```js
+const key = await crypto.subtle.generateKey(
+  {
+    name: "AES-CTR",
+    length: 128
+  }, 
+  false, 
+  ['encrypt', 'decrypt']
+)
+// CryptoKey {type: "secret", extractable: false, algorithm: {…}, usages: Array(2)}
+
+const key2 = await crypto.subtle.generateKey(
+  {
+    name: "ECDSA",
+    namedCurve: 'P-256'
+  }, 
+  true,
+  ['sign', 'verify']
+)
+// {publicKey: CryptoKey, privateKey: CryptoKey}
+// privateKey: CryptoKey
+//   algorithm: {name: "ECDSA", namedCurve: "P-256"}
+//   extractable: true
+//   type: "private"
+//   usages: ["sign"]
+//   __proto__: CryptoKey
+// publicKey: CryptoKey
+//   algorithm: {name: "ECDSA", namedCurve: "P-256"}
+//   extractable: true
+//   type: "public"
+//   usages: ["verify"]
+```
+
+### 导出和导入秘钥(crypto.subtle.exportKey/importKey())
+
+如果秘钥是可以提取的，那么就可以在 CryptoKey 对象内部暴露秘钥原始的二进制内容。使用 exportKey() 可以获取秘钥
+- `crypto.subtle.exportKey(keyFormat, key)` 将秘钥 key 使用 format 指定的格式导出。format 格式可以使 "raw"（未加工的,原始的）、"pkcs8"、"spki" 或 "jwk"。该方法返回一个 Promise，resolve 一个包含秘钥的 ArrayBuffer 数组。
+- `crypto.subtle.importKey(keyFormat, keyData, algorithmName, extractable, keyUsages)` 将导出来的秘钥导入到一个新的秘钥对象中，相当于 generateKey() 和 exportKey() 的逆向操作。keyData 是使用 exportKey 导出的秘钥数据，algorithmName 是加密算法名称,  extractable, keyUsages 参数同 generateKey() 函数。
+
+```js
+(async function() {
+  const key = await crypto.subtle.generateKey(
+    {
+      name: "AES-CTR",
+      length: 128
+    }, 
+    true, 
+    ['encrypt', 'decrypt']
+  )
+  const rawKey = await crypto.subtle.exportKey('raw', key)
+  console.log(rawKey) // ArrayBuffer(16) {}
+  console.log(new Uint8Array(rawKey))
+  // Uint8Array(16) [126, 188, 169, 122, 134, 143, 90, 180, 153, 154, 133, 178, 133, 48, 217, 170]
+
+  let importedKey = await crypto.subtle.importKey('raw', rawKey, 'AES-CTR', true, ['encrypt', 'decrypt'])
+  console.log(importedKey)
+  // CryptoKey {type: "secret", extractable: true, algorithm: {…}, usages: Array(2)}
+})()
+```
+
+### 从主秘钥派生秘钥(crypto.subtle.deriveKey/deriveBits())
+derive `[dɪˈraɪv]` 派生，从已有秘钥获取新秘钥
+
+- `crypto.subtle.deriveBits(algorithm, baseKey, length)` 返回一个 resolve 为 ArrayBuffer 的 Promise。
+- `crypto.subtle.deriveKey(algorithm, baseKey, derivedKeyAlgorithm, extractable, keyUsages)` 返回一个 resolve 为 CryptoKey 的 Promise。与调用 deriveBits() 后再将结果传给 importKey() 结果相同。
+
+```js
+const keyA = await crypto.subtle.generateKey({
+  name: 'ECDH',
+  namedCurve: 'P-256'
+}, true, ['deriveBits'])
+const keyB = await crypto.subtle.generateKey({
+  name: 'ECDH',
+  namedCurve: 'P-256'
+}, true, ['deriveBits'])
+const deriveAB = await crypto.subtle.deriveBits({
+  name: 'ECDH',
+  namedCurve: 'P-256',
+  public: keyA.publicKey // A 的公钥
+}, keyB.privateKey, 128) // B 的私钥
+// ArrayBuffer(16) {} 
+const deriveBA = await crypto.subtle.deriveBits({
+  name: 'ECDH',
+  namedCurve: 'P-256',
+  public: keyB.publicKey // B 的公钥
+}, keyA.privateKey, 128)  // A 的私钥
+// ArrayBuffer(16) {}
+const arrayAB = new Uint32Array(deriveAB)
+const arrayBA = new Uint32Array(deriveBA)
+console.log(deriveAB, deriveBA, arrayAB, arrayBA)
+// ArrayBuffer(16) {}
+// ArrayBuffer(16) {}
+// Uint32Array(4) [434851524, 2869415471, 310093849, 3098225050] 
+// Uint32Array(4) [434851524, 2869415471, 310093849, 3098225050]
+```
+deriveKey 实例参见 p671
+
+### 使用非对称秘钥签名和验证消息(crypto.subtle.sign/verify())
+一般使用私钥生成签名，对应 sign() 方法。使用公钥验证签名，对应 verify()。
+
+```js
+(async function() {
+  const { publicKey, privateKey } = await crypto.subtle.generateKey({
+    name: 'ECDSA',
+    namedCurve: 'P-256'
+  }, true, ['sign', 'verify'])
+
+  // 使用私钥生成签名
+  const msg = (new TextEncoder()).encode("some info, some msg")
+  const signature = await crypto.subtle.sign({
+    name: 'ECDSA',
+    hash: 'SHA-256'
+  }, privateKey, msg)
+  console.log(signature) // ArrayBuffer(64) {}
+  console.log(new Uint32Array(signature))
+  // Uint32Array(16) [965020713, 1414793526, 3039910164, 2277130781, ...]
+
+  // 使用公钥验证消息是否正确
+  const verified = await crypto.subtle.verify({
+    name: 'ECDSA',
+    hash: 'SHA-256'
+  }, publicKey, signature, msg)
+  console.log(verified) // true
+})()
+```
+### 使用对称秘钥加密和解密(crypto.subtle.encrypt/descrypt())
+```js
+(async function() {
+  const key = await crypto.subtle.generateKey({
+    name: 'AES-CBC',
+    length: 256
+  }, true, ['encrypt', 'decrypt'])
+  const originalPlainText = (new TextEncoder()).encode("some info, some msg")
+
+  // cipher [ˈsaɪfər] 密码
+  // 加密信息
+  const params = {
+    name: 'AES-CBC',
+    iv: crypto.getRandomValues(new Uint8Array(16))
+  }
+  const cipherText = await crypto.subtle.encrypt(params, key, originalPlainText)
+  console.log(cipherText) // ArrayBuffer(32) {}
+
+  // 解密信息
+  const decryptedPlainText = await crypto.subtle.decrypt(params, key, cipherText)
+  console.log(decryptedPlainText) // ArrayBuffer(19) {}
+  console.log((new TextDecoder()).decode(decryptedPlainText))
+  // some info, some msg
+})()
+```
+### 包装和解包秘钥(crypto.subtle.wrapKey/unwrapKey())
+SubtleCrypto 支持包装（wrap）与解包（unwrap）秘钥，以便在非信任渠道传输信息，分别对应 crypto.subtle.wrapKey() 与 crypto.subtle.unwrapKey()，来看一个例子，生成对称 AES-GCM 秘钥，用 AES-KW 来包装秘钥，再解包
+
+```js
+(async function() {
+  // 对称 AES-GCM 秘钥
+  const key = await crypto.subtle.generateKey({
+    name: 'AES-GCM',
+    length: 256
+  }, true, ['encrypt'])
+
+  // 用于包装秘钥的 AES-KW 秘钥
+  const wrapKey = await crypto.subtle.generateKey({
+    name: 'AES-KW',
+    length: 256
+  }, true, ['wrapKey', 'unwrapKey'])
+
+  // 包装后的秘钥
+  const wrappedKey = await crypto.subtle.wrapKey('raw', key, wrapKey, 'AES-KW')
+  console.log(wrappedKey) // ArrayBuffer(40) {}
+
+  // 解包后的秘钥
+  const unwrappedKey = await crypto.subtle.unwrapKey('raw', wrappedKey, wrapKey, {
+    name: 'AES-KW',
+    length: 256
+  }, {
+    name: 'AES-GCM',
+    length: 256
+  }, true, ['encrypt'])
+  console.log(unwrappedKey)
+  // CryptoKey {type: "secret", extractable: true, algorithm: {…}, usages: Array(1)}
+})()
+```

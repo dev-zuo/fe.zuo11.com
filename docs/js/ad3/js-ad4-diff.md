@@ -148,6 +148,8 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 
 20.12 新增 Web Cryptography API, 用于生成随机数、加密和签名消息
 
+详情参见：[20. JavaScript API - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-20.html)
+
 ## 第 21 章 错误处理与调试
 原第 17 章，修改了部分翻译及老旧了内容，变动较小。
 
