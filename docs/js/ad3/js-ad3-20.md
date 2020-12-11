@@ -1,6 +1,6 @@
 ---
 title: 20. JavaScript API - JS高程4
-description: JHTML5 规范定义了一批增强已有标准的 API 和浏览器特性。另外一些规范，如 Web Cryptography 和 Notifications API 只为一个特性定义了一个 API。不同的浏览器对新 API 的实现情况不同，本章仅介绍与大多数开发者相关，已经得到多个浏览器支持，且本书中其他章节没有涵盖的内容。主要内容有 Atomics 与 SharedrrayBuffer、跨上下文消息、Encoding API、File API 与 Blob API、拖放、Notifications API、Page Visibility API、Streams API、计时 API、Web components、Web Cryptography API。
+description: HTML5 规范定义了一批增强已有标准的 API 和浏览器特性。另外一些规范，如 Web Cryptography 和 Notifications API 只为一个特性定义了一个 API。不同的浏览器对新 API 的实现情况不同，本章仅介绍与大多数开发者相关，已经得到多个浏览器支持，且本书中其他章节没有涵盖的内容。主要内容有 Atomics 与 SharedrrayBuffer、跨上下文消息、Encoding API、File API 与 Blob API、拖放、Notifications API、Page Visibility API、Streams API、计时 API、Web components、Web Cryptography API。
 keywords: Atomics 与 SharedrrayBuffer,跨上下文消息,Encoding API,File API 与 Blob API,拖放,Notifications API,Page Visibility API,Streams API,计时 API,Web components,Web Cryptography API
 ---
 # 20. JavaScript API

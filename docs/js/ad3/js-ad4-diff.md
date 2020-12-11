@@ -151,10 +151,12 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 详情参见：[20. JavaScript API - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-20.html)
 
 ## 第 21 章 错误处理与调试
-原第 17 章，修改了部分翻译及老旧了内容，变动较小。
+原第 17 章，减少浏览器控制台描述篇幅，增加移动端调试说明。7 种错误类型校正为 8 种错误类型，新增 InternalError。在调试技术中简化老旧内容，新增 debbuger、拦截原生 console 内容。
+
+详情参见：[21. 错误处理与调试 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-21.html)
 
 ## 第 22 章 处理 XML
-原第 18 章 JavaScript 与 XML，对原来的内容作了精简，知识大致介绍了下。相对来说，这一样不怎么重要。我之前第三版是旧没做 XML 两个章节的笔记
+原第 18 章 JavaScript 与 XML，对原来的内容作了精简，知识大致介绍了下。相对来说，这一章不怎么重要。可以先了解下，需要用到时再深入了解。详情参见：[22. 处理 XML - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-22.html)
 
 ::: warning
 第四版删除了原第 19 章 E4X 的内容，也就是 ECMAScript for XML。XML在前端基本很少使用。
