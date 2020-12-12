@@ -1865,7 +1865,7 @@ observedAttributes() 方法可以定义改变时触发 attributeChangedCallback(
 ```
 自定义元素 customElements 除了 define() 外，还有另外几个函数
 - `customElements.whenDefined(tagName)` 返回 promise，当定义后触发 resolve 函数
-- `customElements.get(tagName)` 返回对应的 class
+- `customElements.get(tagName)` 返回该自定义元素对应的构造函数（类 class）
 - `customElements.upgrade(customElement)` 强制升级自定义元素
 
 ```html
@@ -1951,7 +1951,7 @@ SubtleCrypto 对象只能在安全的上下文（https）中使用，不安全�
 :::
 
 ### 生成密码学摘要(crypto.subtle.digest())
-> digest `[dɪˈdʒɛst]` 消化/摘要、hash 哈希/散列、algorithm  `[ˈæl ɡə rɪðəm]` 算法
+> digest `[dɪˈdʒɛst]` 消化/摘要、hash `[hæʃ]` 哈希/散列、algorithm  `[ˈæl ɡə rɪðəm]` 算法、Secure `[sɪˈkjʊər]` adj. 安全的
 
 `crypto.subtle.digest(hash(散列)算法类型, typedArray)` 用于生成消息摘要，支持 4 种摘要算法：SHA-1 和 3 种 SHA-2，分别对应字符串 "SHA-1"、"SHA-256"、"SHA-384"、"SHA-512"。
 - `SHA-1（Secure Hash Algorithm 1）` 构架类似 MD5 的散列函数。接收任意大小的输入，生成 160 位消息散列。容易受到碰撞攻击，该算法已经不再安全。

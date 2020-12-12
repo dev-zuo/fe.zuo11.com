@@ -524,10 +524,10 @@ for (let i = 0, len = imgs.length; i < len; i++) {
 }
 ```
 
-发生以下情况会返回HTMLCollection对象:
+发生以下情况会返回 HTMLCollection 对象:（或者其类似的对象，比如 NodeList、NamedNodeMap）
 - 进行了 getElementsByTagName()
-- 获取了元素的 childNodes
-- 获取了元素的 attributes 属性
+- 获取了元素的 childNodes（NodeList），元素的 children 属性是 HTMLCollection
+- 获取了元素的 attributes 属性，NamedNodeMap，属性集合类似 HTMLCollection
 - 访问了特殊的集合，如 document.forms，document.images 等
 
 ## 部署

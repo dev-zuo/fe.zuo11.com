@@ -215,7 +215,7 @@ imgs.namedItem('myImg') === imgs["myImg"] // 2.png那张图片
 document.getElementsByName('color') // 获取name属性为color的元素
 ```
 #### 特殊集合
-document 对象上海暴露了几个特殊的集合，这些集合也是 HTMLCollection 的实例
+document 对象上还暴露了几个特殊的集合，这些集合也是 HTMLCollection 的实例
 - document.anchors 获取文档中所有带 name 特性的 a 元素，必须要有 name 属性
 - document.forms 相当于 document.getElementsByTagName('form')
 - document.images 相当于 document.getElementsByTageName('img')
