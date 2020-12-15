@@ -168,11 +168,13 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 ## 第 24 章 网络请求与远程资源
 原第 21 章， Ajax 与 Comet，去除了原来的的 Comet（服务器推送） 以及与其相关的 SSE(Server-Sent Events，服务器发送事件)。
 
-24.5 新增 Fetch API，相对 XHR 来说，做了一些改进，返回 Promise结构，接口更直观，对 Stream API 支持更好。
+24.5 新增 Fetch API，相对 XHR 来说，做了一些改进，返回 Promise 结构，接口更直观，对 Stream API 支持更好。
 
 24.6 新增 Beacon API，主要用于离开页面 unload 后，埋点请求发送不出去的问题。由浏览器 navigator 对象来处理，浏览器就算已经关闭的情况也会发送请求。
 
 24.7 Web Socket，将 socket 相关内容从跨域部分，移到单独的部分。
+
+详情参见：[24. 网络请求与远程资源 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-24.html)
 
 ::: warning
 第四版删除了原第 22 章高级技巧，主要是一些比较碎片化、零散的知识点

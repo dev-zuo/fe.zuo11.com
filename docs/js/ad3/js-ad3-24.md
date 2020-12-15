@@ -1,6 +1,11 @@
+---
+title: 24. 网络请求与远程资源 - JS高程4
+description: Ajax(Asynchronous JS + XML) 异步的 JS 和 XML，是一种用于 http 请求的技术。是 Jesse James Garrett 在 2005 年提出的方案。主要用于在不刷新页面的情况下，请求服务器接口获取数据，从而实现了更好的用户体验。现在可能觉得没什么，但以前请求服务器接口获取数据时都需要刷新页面，体验较差。Ajax 技术的核心是 XMLHttpRequest（XHR 对象），为什么是 XML 开头呢？因为在 JSON 出现之前，网络请求使用的数据都是 XML 类型的。 XHR 对象普遍认为比较难用，而 Fetch API 支持 Promise 和 Service Worker，已经成为极其强大的 Web 开发工具
+keywords: Ajax,Fetch API,WebSocket
+---
 # 24. 网络请求与远程资源
 
-Ajax(Asynchronous JS + XML) 异步的 JS 和 XML，是一种用于 http 请求的技术。是 Jesse James Garrett 在 2005 年提出的方案。主要用于在不刷新页面的情况下，请求服务器接口获取数据，从而实现了更好的用户体验。现在可能觉得没什么，但以前请求服务器接口获取数据时都需要刷新页面，体验较差。Ajax 技术的核心是 XMLHttpRequest（XHR 对象），为什么是 XML 开头呢？因为在 JSON 出现之前，网络请求使用的数据都是 XML 类型的。 
+Ajax(Asynchronous JS + XML) 异步的 JS 和 XML，是一种用于 http 请求的技术。是 Jesse James Garrett 在 2005 年提出的方案。主要用于在不刷新页面的情况下，请求服务器接口获取数据，从而实现了更好的用户体验。现在可能觉得没什么，但以前请求服务器接口获取数据时都需要刷新页面，体验较差。Ajax 技术的核心是 XMLHttpRequest（XHR 对象），为什么是 XML 开头呢？因为在 JSON 出现之前，网络请求使用的数据都是 XML 类型的。 XHR 对象普遍认为比较难用，而 Fetch API 支持 Promise 和 Service Worker，已经成为极其强大的 Web 开发工具
 
 Asynchronous `[eɪˈsɪŋkrənəs]` 异步的
 
@@ -1057,4 +1062,176 @@ navigator.sendBeacon() 有点像 POST 请求的语法糖，它有下面几个重
 - 该请求会携带相关 cookie
 
 ## Web Socket
+普通的 http 请求中，服务端无法主动向客户端发送消息。Web Socket（套接字）支持客户端与服务端全双工、双向通信。在 JS 中创建 WebSocket 时，会先发送一个 HTTP 请求用来初始化连接，socket 服务器接收到请求后，使用 Upgrade 响应头，将 HTTP 协议切换到 WebSocket 协议。后面发送、接收信息就都使用该连接了。socket 服务 url 不再是 `http://` 或 `https://`，而是 `ws://` 或 `wss://`。目的是更快的发送小数据块，不会对 HTTP 照成任何负担。需要专用的服务器，速度更快。
+
+![socket_con_1.png](/images/js/socket_con_1.png)
+
+前端创建一个 Web Sockert 可以使用 WebSocket 构造函数，参数为 socket 服务 URL，不受跨域限制。在创建 WebSocket 实例之后会立即创建连接。WebSocket 实例支持如下属性、方法、事件：
+- `readyState 属性` 表示 socket 连接状态
+  - WebSocket.OPENING（0）连接正在建立
+  - WebSocket.OPEN（1）连接已经建立
+  - WebSocket.CLOSING（2）连接正在关闭
+  - WebSocket.CLOSE（3）连接已经关闭
+- `binaryType 属性` message 事件后接收到的数据类型，可能是 "blob" 或 "arraybuffer"
+- `bufferedAmount 属性` 在发送大量数据到服务端时，由于网络的原因，send 的数据不会立即全部到达服务端，而是依次进入队列再发送。bufferedAmount 表示已进度队列但尚未发送到服务器的字节数
+- `protocol 属性` new WebSocket 时可以指定一组客户端支持的协议，让服务器选择使用哪一种，protocol 字段就是服务端使用的协议名。默认为空字符串 ""
+- `send() 方法`，向服务端发送数据，数据可以是字符串、ArrayBuffer、Blob
+- `close() 方法`，关闭 socket 连接，调用后 readyState 立即变为 2，并会在关闭后变为 3
+- `open 事件` 在连接成功时触发
+- `message 事件` 接收到服务器发送的消息时触发，通过 event.data 访问
+- `error 事件` 在发生错误时触发，连接无法续存
+- `close() 事件` 在连接关闭时触发，通过参数可以指定关闭类型
+
+下面来看一个例子
+```js
+// 创建一个 socket 连接
+let socket = new WebSocket("ws://127.0.0.1:3000/socket.io/")
+
+// socket 连接成功
+socket.onopen = () => {
+  console.log('socket 已连接')
+  // 发送字符串数据
+  socket.send('Hello Socket')
+  // 发送 ArrayBuffer 数据
+  socket.send(Uint8Array.from(['f', 'o', 'o']).buffer)
+  // 发送 Blob 数据
+  socket.send(new Blob(['f', 'o', 'o']))
+}
+
+socket.onmessage = (event) => {
+  let data = { event }
+  console.log('接收到数据', data) 
+}
+
+socket.onerror = (err) => {
+  console.log('socket 连接发生错误', err)
+}
+
+socket.onclose = () => {
+  console.log('socket 连接已关闭')
+}
+```
+
+下面是使用 socket.io 的 demo。前端、Node.js 端都需要引入 socket.io
+
+前端 vue.html
+```html
+<script src="https://cdn.bootcss.com/socket.io/2.3.0/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<body>
+  <div id="app">
+    <div>
+      <input type="text" v-model="message">
+      <input type="button" value="发送" @click="send">
+      <!-- <input type="button" value="清除" @click="clear"> -->
+    </div>
+    <div>
+      <ul>
+        <li v-for="item in msgList">{{ item }}</li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    let vm = new Vue({
+      el: '#app',
+      data: {
+        message: '',
+        msgList: [],
+      },
+      mounted() {
+        this.socket = io()
+        this.socket.on('chat message', (msg) => {
+          console.log(msg)
+          console.log(this.socket)
+          this.msgList.push(msg)
+        })
+        this.socket.on('connect', function(data){
+          console.log("Socket.io connected...");
+        });
+
+        this.socket.on('time', function (data) {
+            console.log(data);
+        });
+        this.socket.on('error', function (data) {
+            console.log(data);
+        });
+      },
+      beforeDestroy() {
+        this.socket.close()
+      },
+      methods: {
+        async send() {
+          try {
+            const msg = this.message
+            console.log('send msg', msg)
+            this.socket.emit('chat message', msg)
+            this.message = ''
+          } catch(e) {
+            console.log(e)
+          }
+        }
+      }
+    })
+  </script>
+</body>
+```
+服务端 app.js，注意服务端 socket.io 版本最好与客户端保持一致
+```js
+const Koa = require('koa')
+const app = new Koa()
+const server = require('http').createServer(app.callback());
+const io = require('socket.io')(server);
+
+app.use(require('koa-static')(__dirname + '/public'))
+
+let users = []
+
+io.on('connection', (socket) => {
+  console.log('a user connect')
+  console.log(socket.id) // 每个链接都是一个新的连接
+  users.push(socket.id)
+  console.log('在线人数', users.length)
+
+  // 接收到消息
+  socket.on('chat message', (msg) => {
+    console.log('chat msg', socket.id + ': ' + msg)
+    // 广播给所有人
+    io.emit('chat message', socket.id + ': ' + msg)
+    // 广播给除了发送者的所有人
+    // socket.broadcast.emit('chat message', socket.id + ': ' + msg)
+  })
+  // 如果有连接离线
+  socket.on('disconnect', () => {
+    console.log(socket.id + '已离线')
+    users.splice(users.indexOf(socket.id), 1)
+    console.log('在线人数', users.length)
+  })
+})
+
+server.listen(3000, () => console.log('服务开启成功，3000端口'))
+```
+
+Chrome NetWork 面板中 Socket 数据如下图
+
+![socket_con_2.png](/images/js/socket_con_2.png)
+
+完成 demo 代码参见：[soket.io 前端后测试 demo - Github](https://github.com/zuoxiaobai/fedemo/blob/master/src/JS_ES6/JS%E9%AB%98%E7%A8%8B3/socket/)
+
+更多详情参考：
+- 《HTML5 WebSocket 权威指南》
+- [socket.io-client 前端源码 - Github](https://github.com/socketio/socket.io-client)
+- [socket.io - 服务端源码 - Github](https://github.com/socketio/socket.io#readme)
+
 ## 安全
+在 Web 中需要考虑的安全问题非常多，这里只是简单的提一下。对于常规的 Get 请求，比如接口地址为 `/user?id=12`，如果更换 id 为其他数字，比如 25、26 时需要校验是否用对于的访问权限，现在一般使用 token 的方式验证。
+
+在未经授权可以访问某个资源时，可以将其视为 **跨站点请求伪造（CSRF，cross-site request forgery `['fɔ:dʒəri]`）攻击**。
+
+一些建议：
+- 接口使用 SSL 证书，支持 https
+- 每个请求都发送一个按约定算法计算好的令牌（token）
+
+注意，以下手段对防止 CSRF 攻击是无效的 
+- 使用 POST 而非 GET
+- 使用来源的 URL 验证来源，来源 URL 很容易伪造，referer
+- 基于 cookie 验证，cookie 容易伪造
