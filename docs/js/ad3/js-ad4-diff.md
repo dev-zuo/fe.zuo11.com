@@ -181,7 +181,9 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 :::
 
 ## 第 25 章 客户端存储
-原第 23 章离线应用与客户端存储，原离线检测放到了第 13 章客户端检测。由于 HTML5 application cache 已废弃，由 Service Workers取代，去除了应用缓存的内容。参见: [Using_the_application_cache](https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache) 其他变动不大。
+原第 23 章离线应用与客户端存储，原离线检测放到了第 13 章客户端检测。由于 HTML5 application cache 已废弃，由 Service Workers 取代，去除了应用缓存的内容，参见: [Using_the_application_cache](https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache) 。去除 IE 用户数据内容，更新部分老旧内容。
+
+详情参见：[25. 客户端存储 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-25.html)
 
 ## 第 26 章 模块
 新增的章节，讲了 CommonJS、AMD、UMD、ES Modules 模块化相关内容
