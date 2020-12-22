@@ -185,8 +185,8 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 
 详情参见：[25. 客户端存储 - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-25.html)
 
-## 第 26 章 模块
-新增的章节，讲了 CommonJS、AMD、UMD、ES Modules 模块化相关内容
+## 第 26 章 模块(Modules)
+新增的章节，讲了 CommonJS、AMD、UMD、ES Modules 模块化相关内容，相比 ES6 入门教程来说讲的更仔细一点，详情参见：[26. 模块(Modules) - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-26.html)
 
 ## 第 27 章 工作者线程(Worker)
 新增章节，将原 25.6 Web Workers 内容单独作为一章，基于最新的标准，做了详细的介绍。包括新增的专用工作者线程、共享工作者线程、服务工作者线程（Service Worker） 等。参考：[27. 工作者线程(Web Workers) | JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-27.html)
