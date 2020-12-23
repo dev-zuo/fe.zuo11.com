@@ -189,7 +189,9 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 新增的章节，讲了 CommonJS、AMD、UMD、ES Modules 模块化相关内容，相比 ES6 入门教程来说讲的更仔细一点，详情参见：[26. 模块(Modules) - JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-26.html)
 
 ## 第 27 章 工作者线程(Worker)
-新增章节，将原 25.6 Web Workers 内容单独作为一章，基于最新的标准，做了详细的介绍。包括新增的专用工作者线程、共享工作者线程、服务工作者线程（Service Worker） 等。参考：[27. 工作者线程(Web Workers) | JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-27.html)
+新增章节，将原 25.6 Web Workers 内容单独作为一章，基于最新的标准，做了详细的介绍。包括新增的专用工作者线程、共享工作者线程、服务工作者线程（Service Worker） 等。感觉 Service Worker 部分比较晦涩难懂，偏理论。
+
+参考：[27. 工作者线程(Web Workers) | JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-27.html)
 
 ## 第 28 章 最佳实践
 原第 24 章 最佳实践。修改了部分翻译，使内容更简单易懂。参考：[28.最佳实践 | JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-28.html)
@@ -210,6 +212,8 @@ Array 新增 ES6 新增方法：迭代器方法(keys()、values()、entries())�
 :::
 
 ## 错误记录
+
+具体错误信息，参考 [JavaScript高级程序设计（第4版）- 图灵社区](https://www.ituring.com.cn/book/2472) 提交/查看勘误
 
 ::: warning
 - p353/355 async/await 执行顺序由于规范更新了，导致有误 (待确认勘误)

@@ -577,17 +577,3 @@ dragdiv.onmousemove = function(event) {
   </body>
 </html>
 ```
-
-
-# 离线应用与客户端存储
-
-## 应用缓存
-HTML5 application cache 快要被废弃，由 Service Workers取代，参见: https://developer.mozilla.org/en-US/docs/Web/HTML/Using_the_application_cache , 后续要了解applicationCatch、Service Workers、PWA 的区别
-
-
-# 25. 新兴的API
-
-
-
-## Web Wrokers
-使用Web Workers可以在后台异步执行JS，防止长时间运行的JS进程会导致浏览器"冻结"用户页面。IE10+支持，暂时没有想到应用场景，待后续研究。p718
