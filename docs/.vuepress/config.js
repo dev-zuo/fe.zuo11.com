@@ -187,7 +187,8 @@ const jsSidebar = [{
         'ad3/js-ad3-25',
         'ad3/js-ad3-26',
         'ad3/js-ad3-27',
-        'ad3/js-ad3-28'
+        'ad3/js-ad3-28',
+        'ad3/js-ad3-old'
       ]
     },
     // {title: 'JavaScript DOM编程艺术(第二版)笔记', }

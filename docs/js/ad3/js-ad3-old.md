@@ -1,5 +1,9 @@
-
-# 22. 高级技巧
+---
+title: 第三版其他内容(高级技巧) - JS高程4
+description: 主要介绍第四版中删除的内容，安全的类型检测 instanceof 在多个全局作用域下（一个页面多个frame），可能会出现误判的情况，建议用 **Object.prototype.toString.call(value)** 转换为String来判断
+keywords: 高级技巧,安全的类型检测
+---
+# 第三版其他内容(高级技巧)
 
 ## 高级函数
 ### 安全的类型检测
