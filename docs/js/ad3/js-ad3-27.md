@@ -1490,5 +1490,5 @@ self.onnotificationclick = (event) => {
 
 参考：
 - [Service Worker学习与实践（三）——消息推送 - 知乎](https://zhuanlan.zhihu.com/p/57225424)
-- [Service Worker学习与实践（三）——消息推送 - CSDNs](https://blog.csdn.net/weixin_33841722/article/details/88731760)
+- [Service Worker学习与实践（三）——消息推送 - CSDN](https://blog.csdn.net/weixin_33841722/article/details/88731760)
 - [Push API - W3C Editor's Draft 07 October 2020](https://w3c.github.io/push-api/#widl-PushManager-subscribe-Promise-PushSubscription--PushSubscriptionOptions-options)
