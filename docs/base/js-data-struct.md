@@ -34,21 +34,23 @@ Array.prototype.deleteFirstPosition = function () {
 }
 ```
 
-## 第 4 章 栈
+## 第 4 章 栈（Stack）
+> Stack `[stæk]` 
+
 LIFO(last in first out) 后进先出，类似于一摞书或者餐厅里叠放的盘子。
 - 实现一个基于数组的栈
-- 实现一个基于对象的 Stack
+- 实现一个基于对象的栈
 - 用栈解决问题
 
 ### 实现一个基于数组的栈
 创建一个 Stack 类，用于实现栈，通过数组来实现栈。需要实现的方法、属性如下
-- push() 添加一个或多个元素到栈顶
-- pop() 移除栈顶的元素，同时返回被删除的元素
-- peek() 返回栈顶的元素，不对栈做任何修改
-- isEmpty() 返回布尔值，栈里是否没有任何元素
-- clear() 移除栈里的所有元素
-- size() 返回栈里元素个数，和 length 类似
-- length 返回栈里元素个数
+- `push()` 添加一个或多个元素到栈顶
+- `pop()` 移除栈顶的元素，同时返回被删除的元素
+- `peek()` 返回栈顶的元素，不对栈做任何修改
+- `isEmpty()` 返回布尔值，栈里是否没有任何元素
+- `clear()` 移除栈里的所有元素
+- `size()` 返回栈里元素个数，和 length 类似
+- `length` 返回栈里元素个数
 ```js
 class Stack {
   constructor() {
@@ -97,5 +99,59 @@ stack.clear()
 stack.isEmpty() // true
 ```
 ### 实现一个基于对象的 Stack
+实现栈的最简单方式是用数组来存储其元素。但它有以下缺点
+- 使用数组时，大部分方法时间复杂度是 O(n)，需要迭代整个数组直到找到对应的元素
+- 数组是一个有序集合，为了保证元素排列有序，会占用更多空间
 
+使用对象来存储栈元素，也可以保证 LIFO 原则，下面来看看基于对象的栈实现
+```js
+class Stack {
+  constructor() {
+    this.count = 0
+    this.items = {}
+  }
+  // 向栈中插入元素
+  push(element) {
+    this.items[this.count] = element
+    this.count++
+  }
+  isEmpty() {
+    return this.count === 0
+  }
+  size() {
+    return this.count
+  }
+  // 从栈中弹出元素
+  pop() {
+    if (this.isEmpty) {
+      return undefined
+    }
+    this.count--
+    const result = this.items[this.count]
+    delete this.items[this.count]
+    return result
+  }
+  peek() {
+    if (this.isEmpty) {
+      return undefined
+    }
+    return this.items[this.count - 1]
+  }
+  clear() {
+    this.items = {}
+    this.count = 0
+    // 或者 
+    // while(!this.isEmpty()) {
+    //   this.pop()
+    // }
+  }
+  toString() {
+     if (this.isEmpty) {
+      return ''
+    }
+
+  }
+}
+```
+以上方法中，除了 toString() 方法，其他方法复杂度均为 O(1)
 ### 用栈解决问题

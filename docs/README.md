@@ -12,5 +12,5 @@ JS/ES6 | [ES6标准入门(第三版) 笔记 ](./js/es6/es6-1.md) 、 [JavaScript
 CSS/CSS3 | [CSS 预处理器 Less.js](/css/less.md)、[Flex与Grid布局](./css/flex-grid.md) 、 [HTML5权威指南(CSS部分) 笔记](./css/html5-css-1.md)
 HTML/HTML5 | [HTML5权威指南(HTML部分)笔记 ](./html5/html/1.md)
 数据可视化 | [Echars笔记](/visual/echarts.md)
-计算机基础 | [Git 笔记](./base/git.md) 、 [Markdown 基础语法](./base/markdown.md)、[数据库系统原理笔记](./base/dbtheory/1.md)
+计算机基础 | [学习JavaScript数据结构与算法(第三版)笔记](./base/js-data-struct.md')、[Mocha - JavaScript测试框架](./base/mocha-test.md)、[Git 笔记](./base/git.md) 、 [Markdown 基础语法](./base/markdown.md)、[数据库系统原理笔记](./base/dbtheory/1.md)
 英语 | [轻松地搞定英语语法](./en/grammer-base.md) 、 [英语(二)笔记](./en/en2/1.md)
