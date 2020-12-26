@@ -173,6 +173,7 @@ describe('Array', function() {
       [1, 2, 3].indexOf(5).should.equal(-1);
       [1, 2, 3].indexOf(0).should.equal(-1);
       [1, 2, 3].should.have.length(3);
+      'abc'.should.be.a('string');
 
       // chai expect 断言
       expect([1, 2, 3].length).to.equal(3);
@@ -181,6 +182,7 @@ describe('Array', function() {
       expect(123).to.not.be.an('undefined');
       expect('abc').to.be.an('string');
       expect(2).to.greaterThan(0);
+      expect([1, 2, 3]).to.have.lengthOf(3);
     });
   });
 });

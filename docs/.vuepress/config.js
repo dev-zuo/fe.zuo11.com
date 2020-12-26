@@ -52,6 +52,7 @@ const englishSidebar = [
 const baseSidebar = [
   {
     title: '计算机基础',
+    sidebarDepth: 5,
     children: [
       'js-data-struct',
       'mocha-test',
