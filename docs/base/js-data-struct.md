@@ -2,7 +2,7 @@
 
 原书名为 Learning JavaScript Data Structures and Algorithms, Thrid Edition。作者 Loiane Groner（罗伊安妮·格罗纳），翻译：吴双、邓钢、孙晓博等。
 
-这是一本用 JavaScript/TypeScript 介绍数据结构与算法的书，比较适合前端开发人员。书中的示例代码比较全，JS/TS 都有，而且还有测试用例。示例代码地址：[PacktPublishing/Learning-JavaScript-Data-Structures-and-Algorithms-Third-Edition | Github](https://github.com/PacktPublishing/Learning-JavaScript-Data-Structures-and-Algorithms-Third-Edition)
+这是一本用 JavaScript/TypeScript 介绍数据结构与算法的书，比较适合前端开发人员。书中的示例代码比较全，JS/TS 都有，而且还有单元测试。示例代码地址：[PacktPublishing/Learning-JavaScript-Data-Structures-and-Algorithms-Third-Edition | Github](https://github.com/PacktPublishing/Learning-JavaScript-Data-Structures-and-Algorithms-Third-Edition)
 
 ## 第 1~3 章 JS/TS简介、数组基础
 
@@ -37,7 +37,7 @@ Array.prototype.deleteFirstPosition = function () {
 ## 第 4 章 栈（Stack）
 > Stack `[stæk]` 
 
-LIFO(last in first out) 后进先出，类似于一摞书或者餐厅里叠放的盘子。
+第三章介绍了最常用的数据结构 - 数组，本章会介绍栈数据结构。栈是一种遵循 LIFO(last in first out) 后进先出原则的有序集合，类似于一摞书或者餐厅里叠放的盘子。
 - 实现一个基于数组的栈
 - 实现一个基于对象的栈
 - 用栈解决问题
@@ -98,7 +98,7 @@ stack.isEmpty() // false
 stack.clear()
 stack.isEmpty() // true
 ```
-以上是手动测试的 demo，我们可以使用 Mocha 来写测试用例。
+以上是手动测试的 demo，我们可以使用 Mocha 来写单元测试。
 ```js
 // test/1-stack-array.spec.js 
 const StackArray = require('../src/1-stack-array')
@@ -530,3 +530,471 @@ describe('Hanoi Test', () => {
   })
 })
 ```
+
+## 第 5 章 队列和双端队列
+队列和栈非常相似，栈是 LIFO（last in first out）后进先出。队列是遵循先进先出（FIFO，first in first out）原则的一组有序的集合。最常见的队列的例子就是排队。排在第一位的会先接受服务。本章内容包括
+- 队列数据结构
+- 双端队列数据结构
+- 用队列和双端队列来解决问题
+
+### 队列数据结构
+我们使用 Queue 类表示队列，队列可以使用数组和对象来实现，这里为了在获取元素时更高效，使用对象实现
+```js
+class Queue {
+  constructor() {
+    this.count = 0
+    this.lowestCount = 0 // 标记队列的最开始的一位
+    this.items = {}
+  }
+}
+```
+> enqueue [ɪn'kjuː] 入队，排队； dequeue [di'kju:] 出列、出队
+
+队列需要实现如下方法
+- `enqueue(element(s))` 向队列尾部添加一个或多个新的项
+- `dequeue()` 移除队列中的第一个元素（排在队列最前面的项），并返回该元素
+- `peek()` 返回队列中第一个元素（最先被添加的元素）队列不做任何变动
+- `isEmpty()` 队列是否为空
+- `size()` 返回队列包含的元素个数
+- `clear()` 清空队列
+- `toString()` 转为字符串
+
+```js
+class Queue {
+  constructor() {
+    this.count = 0
+    this.lowestCount = 0
+    this.items = {}
+  }
+  // 入队
+  enqueue(element) {
+    this.items[this.count] = element
+    this.count++
+  }
+  // 出列
+  dequeue() {
+    if (this.isEmpty()) {
+      return undefined
+    }
+    let result = this.items[this.lowestCount]
+    delete this.items[this.lowestCount]
+    this.lowestCount++ // 标记队列的最开始的一位
+    return result
+  }
+  isEmpty() {
+    return this.count - this.lowestCount === 0
+    // return this.size() === 0
+  }
+  peek() {
+    return this.isEmpty() ? undefined : this.items[this.lowestCount]
+  }
+  size() {
+    return this.count - this.lowestCount
+  }
+  clear() {
+    this.items = {}
+    this.count = 0
+    this.lowestCount = 0
+  }
+  toString() {
+    if (this.isEmpty()) {
+      return ''
+    }
+    let result = ''
+    for (let i = this.lowestCount; i < this.count; i++) {
+      result += this.items[i]
+      if (i !== this.count - 1) {
+        result += ','
+      }
+    }
+    return result
+  }
+}
+
+module.exports = Queue
+```
+单元测试
+```js
+// test/7-queue-obj.spec.js
+const expect = require('chai').expect
+const Queue = require('../src/7-queue-obj')
+let queue = ''
+
+describe('Queue Test', () => {
+  beforeEach(() => {
+    queue = new Queue()
+  })
+
+  it('enqueue()/size()/toString() test', () => {
+    queue.enqueue('a')
+    expect(queue.size()).to.equal(1)
+    queue.enqueue('b')
+    expect(queue.size()).to.equal(2)
+    queue.enqueue('c')
+    expect(queue.size()).to.equal(3)
+    expect(queue.toString()).to.equal('a,b,c')
+  })
+
+  it('dequeue()/peek()', () => {
+    queue.enqueue('a')
+    queue.enqueue('b')
+    queue.enqueue('c')
+    expect(queue.dequeue()).to.equal('a')
+    expect(queue.peek()).to.equal('b')
+    expect(queue.size()).to.equal(2)
+    expect(queue.dequeue()).to.equal('b')
+    expect(queue.peek()).to.equal('c')
+    expect(queue.size()).to.equal(1)
+    expect(queue.dequeue()).to.equal('c')
+    expect(queue.size()).to.equal(0)
+    expect(queue.dequeue()).to.equal(undefined)
+  })
+
+  it('clear()/isEmpty()', () => {
+    queue.enqueue('a')
+    queue.enqueue('b')
+    queue.enqueue('c')
+    expect(queue.isEmpty()).to.be.false
+    queue.clear()
+    expect(queue.peek()).to.be.undefined
+    expect(queue.isEmpty()).to.be.true
+  })
+})
+```
+
+### 双端队列数据结构
+**双端队列**（deque `[dek]`，或称为 double-ended queue）是一种允许同时从前端和后端添加和移除元素的特殊队列，比如在电影院、餐厅排队的队伍中，一个刚买票的人需要在询问一些简单信息，可以直接回到队伍的头部，另外再队伍末尾的人，如果赶时间，可以离开队伍
+
+在计算机科学中，双端队列的一个常见应用是存储一系列的撤销操作，**将每个操作依次保存在双端队列中，当需要撤销时，最后的操作会从双端队列中移除。另外，当记录的操作数达到上限时，最先的操作会从双端队列前端移除。**
+
+由于双端队列同时遵循先进先出、后进先出原则，因此它是队列和栈相结合的一种数据结构。
+
+创建一个 Deque 类
+```js
+class Deque {
+  constructor() {
+    this.count = 0
+    this.lowestCount = 0
+    this.items = {}
+  }
+}
+```
+它支持如下方法：
+- `addFront(element)` 在双端队列前端添加新元素
+- `addBack(element)` 在双端队列后端添加新元素
+- `removeFront()` 从双端队列的前端移除第一个元素
+- `removeBack()` 从双端队列的后端移第一个元素
+- `peekFront()` 返回双端队列前端的第一个元素
+- `peekBack()` 返回双端队列后端的第一个元素
+- `isEmpty()` 判断是否为空
+- `clear()` 清空
+- `size()` 返回队列长度
+- `toString()` 转字符串
+
+```js
+// 8-deque-obj.js
+class Deque {
+  constructor() {
+    this.count = 0
+    this.lowestCount = 0
+    this.items = {}
+  }
+  addFront(element) {
+    if (this.isEmpty()) {
+      this.addBack(element)
+    } else if (this.lowestCount > 0) {
+      // 如果之前队列从前端移出过元素
+      this.lowestCount--
+      this.items[this.lowestCount] = element
+    } else {
+      // 如果队列没有从前端移出过元素  this.lowestCount = 0
+      // 新进来的需要替换原来的 lowestCount = 0 的元素
+      // 新增 this.items[this.count] 且把每个值向后移动一位
+      for (let i = this.count; i > 0; i--) {
+        this.items[i] = this.items[i - 1]
+      }
+      this.count++
+      this.items[this.lowestCount] = element
+    }
+  }
+  addBack(element) {
+    this.items[this.count] = element
+    this.count++
+  }
+  removeFront() {
+    if (this.isEmpty()) {
+      return undefined
+    }
+    let result = this.items[this.lowestCount]
+    delete this.items[this.lowestCount]
+    this.lowestCount++
+    return result
+  }
+  removeBack() {
+    if (this.isEmpty()) {
+      return undefined
+    }
+    let result = this.items[this.count - 1]
+    delete this.items[this.count - 1]
+    this.count--
+    return result
+  }
+  peekFront() {
+    return this.isEmpty() ? undefined : this.items[this.lowestCount]
+  }
+  peekBack() {
+    return this.isEmpty() ? undefined : this.items[this.count - 1]
+  }
+  isEmpty() {
+    return this.size() === 0
+  }
+  clear() {
+    this.items = {}
+    this.count = 0
+    this.lowestCount = 0
+  }
+  size() {
+    return this.count - this.lowestCount
+  }
+  toString() {
+    if (this.isEmpty()) {
+      return ''
+    }
+    let result = ''
+    for (let i = this.lowestCount; i < this.count; i++) {
+      result += this.items[i]
+      if (i !== this.count - 1) {
+        result += ','
+      }
+    }
+    return result
+  }
+}
+
+module.exports = Deque
+```
+单元测试
+```js
+// 8-deque-obj.spec.js
+const expect = require('chai').expect
+const Deque = require('../src/8-deque-obj')
+let deque = ''
+
+describe('Deque Test', () => {
+  beforeEach(() => {
+    deque = new Deque()
+  })
+
+  it('基础功能测试', () => {
+    deque.addFront('a') // a
+    deque.addBack('b') // a b
+    deque.addFront('c') // c a b
+    deque.addFront('d') // d c a b
+    deque.addBack('e') // d c a b e
+    expect(deque.toString()).to.equal('d,c,a,b,e')
+    expect(deque.peekBack()).to.equal('e')
+    expect(deque.peekFront()).to.equal('d')
+    expect(deque.removeBack()).to.equal('e') // d c a b
+    expect(deque.removeFront()).to.equal('d') // c a b
+    deque.addFront('f') // f c a b
+    expect(deque.peekBack()).to.equal('b')
+    expect(deque.peekFront()).to.equal('f')
+    expect(deque.toString()).to.equal('f,c,a,b')
+  })
+
+  it('clear()/size()/isEmpty()', () => {
+    deque.addBack('a')
+    deque.addBack('b')
+    deque.addBack('c')
+    expect(deque.size()).to.equal(3)
+    expect(deque.isEmpty()).to.be.false
+    deque.clear()
+    expect(deque.size()).to.equal(0)
+    expect(deque.isEmpty()).to.be.true
+  })
+})
+```
+
+### 用队列和双端队列来解决问题
+使用队列模拟击鼓传花游戏，使用双端队列检测是否是回文字符串
+#### 循环队列 - 击鼓传花游戏
+> hot potato 烫手山芋 potato [pəˈteɪtəʊ] n. [作物] 土豆
+
+循环队列是队列中的一种，击鼓传花（hot potato）游戏就是其中的例子。在这个游戏中，孩子们围成一个圆圈，把花尽快的传递给旁边的人，某一时刻传花停止，这个时候花在谁手里，谁就退出圆圈，重复这个过程，直到只剩下一个孩子，即为胜者。
+
+使用队列，不停的将出列(dequeue)的元素入列(enqueue)，这样就模拟了一个循环队列。循环到某个次数后，淘汰(dequeue)一个再继续，直到只有一个为止。
+
+```js
+const Queue = require('./7-queue-obj')
+
+/**
+ * 进行击鼓传花游戏，每循环 num 次时踢出一个人
+ * @param {*} elementList 名单 ['张三', '李四', '王五']
+ * @param {*} num 每循环多少次踢出去一个人
+ */
+function hotPotato(elementList, num) {
+  const queue = new Queue()
+  const eliminateList = [] // 淘汰列表 [ɪˈlɪmɪneɪt]
+  // 将名单中的人加入队列
+  elementList.forEach((item) => queue.enqueue(item))
+  while (queue.size() > 1) {
+    for (let i = 0; i < num; i++) {
+      queue.enqueue(queue.dequeue())
+    }
+    // 传递 num 次后踢出一个人
+    eliminateList.push(queue.dequeue())
+  }
+  return {
+    eliminateList: eliminateList,
+    winner: queue.dequeue(),
+  }
+}
+
+module.exports = hotPotato
+```
+单元测试
+```js
+// test/9-queue-hot-patato.spec.js
+const expect = require('chai').expect
+const hotPotato = require('../src/9-queue-hot-patato')
+
+describe('hotPotato Test', () => {
+  it('击鼓传花游戏测试', () => {
+    let names = ['张三', '李四', '王五', '赵六', '陈七']
+    let { eliminateList, winner } = hotPotato(names, 7)
+    let expectList = ['王五', '李四', '陈七', '赵六']
+    expect(eliminateList).to.deep.equal(expectList)
+    expect(winner).to.equal('张三')
+  })
+})
+```
+整个过程
+```js
+// 初始值  '张三', '李四', '王五', '赵六', '陈七'
+// 开始游戏
+0 '李四' '王五' '赵六' '陈七' '张三'
+1 '王五' '赵六' '陈七' '张三' '李四'
+2 '赵六' '陈七' '张三' '李四' '王五'
+3 '陈七' '张三' '李四' '王五' '赵六'
+4 '张三' '李四' '王五' '赵六' '陈七'
+5 '李四' '王五' '赵六' '陈七' '张三'
+6 '王五' '赵六' '陈七' '张三' '李四'
+淘汰 '王五'
+0 '陈七' '张三' '李四' '赵六'
+1 '张三' '李四' '赵六' '陈七'
+2 '李四' '赵六' '陈七' '张三'
+3 '赵六' '陈七' '张三' '李四'
+4 '陈七' '张三' '李四' '赵六'
+5 '张三' '李四' '赵六' '陈七'
+6 '李四' '赵六' '陈七' '张三'
+淘汰 '李四'
+0 '陈七' '张三' '赵六'
+1 '张三' '赵六' '陈七'
+2 '赵六' '陈七' '张三'
+3 '陈七' '张三' '赵六'
+4 '张三' '赵六' '陈七'
+5 '赵六' '陈七' '张三'
+6 '陈七' '张三' '赵六'
+淘汰 '陈七'
+0 '赵六' '张三'
+1 '张三' '赵六'
+2 '赵六' '张三'
+3 '张三' '赵六'
+4 '赵六' '张三'
+5 '张三' '赵六'
+6 '赵六' '张三'
+淘汰 '赵六'
+winner '张三'
+```
+#### 回文检查器（palindrome checker）
+> palindrome `[ˈpalɪndrəʊm]` 回文 是正反都能读通的单词、词组、数或一系列字符的序列，例如 madam 或 racecar
+
+有不同的算法可以检查一个词组或字符串是否为回文
+- 将字符串反向排列并检查它和原字符串是否相同
+- 也可以用栈来完成，push 后，再 pop 出来，比较是否相同
+- 利用数据结构来解决这个问题最简单的方式是使用双端队列，通过不断比较 deque.removeFront() 是否等于 deque.removeBack()，即可判断是否是回文
+
+```js
+const Deque = require('./8-deque-obj')
+const Stack = require('../src/2-stack-obj')
+
+// 字符串方式
+function palindromeChecker(str) {
+  let reverseStr = str.split('').reverse().join('')
+  // return arr.join('') === str
+  // 比较之前，消除空格、大小写影响
+  function clear(src) {
+    src = src.split(' ').join('').toLowerCase()
+    return src
+  }
+  return clear(reverseStr) === clear(str)
+}
+
+// 栈方式
+function palindromeChecker(str) {
+  let stack = new Stack()
+  let result = ''
+  // 比较之前，消除空格、大小写影响
+  function clear(src) {
+    src = src.split(' ').join('').toLowerCase()
+    return src
+  }
+  str = clear(str)
+  for (let i = 0, len = str.length; i < len; i++) {
+    stack.push(str[i])
+  }
+  while (!stack.isEmpty()) {
+    result += stack.pop()
+  }
+  return str === result
+}
+
+// 双端队列方式
+function palindromeChecker(str) {
+  let deque = new Deque()
+  let result = ''
+  // 比较之前，消除空格、大小写影响
+  function clear(src) {
+    src = src.split(' ').join('').toLowerCase()
+    return src
+  }
+  str = clear(str)
+  for (let i = 0, len = str.length; i < len; i++) {
+    deque.addBack(str[i])
+  }
+  while (deque.size() > 1) {
+    if (deque.removeFront() !== deque.removeBack()) {
+      return false
+    }
+  }
+  return true
+}
+
+module.exports = palindromeChecker
+```
+单元测试
+```js
+const expect = require('chai').expect
+const palindromeChecker = require('../src/a-deque-palindrome')
+
+describe('palindrome Test', () => {
+  it('回文测试', () => {
+    expect(palindromeChecker('ak')).to.be.false
+    expect(palindromeChecker('akkac')).to.be.false
+    expect(palindromeChecker('a')).to.be.true
+    expect(palindromeChecker('aa')).to.be.true
+    expect(palindromeChecker('kayak')).to.be.true
+    expect(palindromeChecker('level')).to.be.true
+    expect(palindromeChecker('madam')).to.be.true
+    expect(palindromeChecker('racecar')).to.be.true
+    expect(palindromeChecker('Was it a Car or a cat I saw')).to.be.true
+    expect(palindromeChecker('Step on no pets')).to.be.true
+  })
+})
+```
+#### JavaScript 任务队列/事件循环
+当我们在浏览器中打开新标签时，会创建一个任务队列。这是因为每个标签都是单线程处理所有的任务，称为**事件循环**。详情参考：[Tasks, microtasks, queues and schedules - JakeArchibald.com](https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/)
+
+除了比较好理解的宏任务与微任务外，还有 JS 调用栈概念，主要是 UI 事件相关的细节
+- 如果是用户点击 UI 触发的事件，事件分派（dispatch）后，JS 调用栈仅有一个事件分派。执行完该事件的微任务队列后，事件冒泡，这才开始执行对应事件处理函数。
+- 如果是 JS 触发 xx.click() 事件，冒泡事件会同步分派，JS 调用栈会有两个事件回调等待执行。
