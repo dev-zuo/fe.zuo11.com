@@ -998,3 +998,741 @@ describe('palindrome Test', () => {
 除了比较好理解的宏任务与微任务外，还有 JS 调用栈概念，主要是 UI 事件相关的细节
 - 如果是用户点击 UI 触发的事件，事件分派（dispatch）后，JS 调用栈仅有一个事件分派。执行完该事件的微任务队列后，事件冒泡，这才开始执行对应事件处理函数。
 - 如果是 JS 触发 xx.click() 事件，冒泡事件会同步分派，JS 调用栈会有两个事件回调等待执行。
+
+## 第 6 章 链表
+链表是一种数据结构，数组数据结构的缺陷：大小是固定的，从数组起点或终点添加到或删除元素的成本较高，因为要移动元素。链表相比数组的优点：**无需移动元素就能轻松添加或移除元素**
+
+
+链表和数组类似，存储有序元素集合。链表的元素在内存中并不是连续的。链表中每个元素节点都存放当前节点本身内容，以及下一个元素的引用(指针)，生活中类似链表的例子：火车、寻宝游戏
+
+### 单向链表
+下面来实现链表 LinkedList 类，需要借助节点 Node 类
+```js
+class Node {
+  constructor(element) {
+    this.element = element
+    this.next = undefined
+  }
+}
+
+class LinkedList {
+  constructor() {
+    this.count = 0
+    this.head = undefined
+  }
+}
+
+let list = new LinkedList()
+list.push(1)
+list.push(2)
+```
+链表支持如下方法
+- `push(element)` 在链表尾部添加一个元素
+- `removeAt(pos)` 从链表特定位置移除一个元素，返回移除的元素
+- `getElementAt(index)` 返回链表指定位置的元素，如果不存在返回 undefined
+- `insert(element, position)` 向链表指定位置插入元素，成功 true，失败 false
+- `indexOf(element)` 返回元素在链表中的索引
+- `remove(element)` 移除元素
+- `isEmpty()` 判断链表是否为空
+- `size()` 链表元素个数，和数组 length 类似
+- `getHead()` 获取链表 head
+- `toString()` 返回表示链表的字符串
+
+完整实现如下
+```js
+class Node {
+  constructor(element) {
+    this.element = element
+    this.next = undefined
+  }
+}
+
+class LinkedList {
+  constructor() {
+    this.count = 0
+    this.head = undefined
+  }
+
+  // 向尾部添加元素
+  push(element) {
+    const node = new Node(element)
+    // 如果链表为空
+    if (!this.head) {
+      this.head = node
+    } else {
+      // 找到尾部节点
+      let lastNode = this.head
+      while (lastNode.next) {
+        lastNode = lastNode.next
+      }
+      lastNode.next = node
+    }
+    this.count++
+  }
+
+  // 从指定位置移除元素
+  removeAt(index) {
+    // 越界检查
+    if (index < 0 || index >= this.count) {
+      return undefined
+    }
+    let current = this.head
+    // 如果是移除 head 节点
+    if (index === 0) {
+      this.head = current.next
+    } else {
+      // index >= 1 找到前一个元素，找到后一个元素(current.next)
+      let prevNode = undefined
+      while (index--) {
+        prevNode = current
+        current = current.next
+      }
+      prevNode.next = current.next
+      // let prevNode = this.getElementAt(index - 1)
+      // current = prevNode.next
+      // prevNode.next = current.next
+    }
+    this.count--
+    return current
+  }
+
+  // 获取指定位置的元素
+  getElementAt(index) {
+    // 越界检查
+    if (index < 0 || index >= this.count) {
+      return undefined
+    }
+    let current = this.head
+    while (index--) {
+      current = current.next
+    }
+    return current
+  }
+
+  // 指定位置插入元素
+  insert(element, index) {
+    // 越界检查
+    if (index < 0 || index > this.count) {
+      return false
+    }
+    let node = new Node(element)
+    if (index === 0) {
+      node.next = this.head
+      this.head = node
+    } else {
+      // index >= 1
+      let prevNode = this.getElementAt(index - 1)
+      // prevNode xxx xxx
+      node.next = prevNode.next
+      prevNode.next = node
+    }
+    this.count++
+    return true
+  }
+
+  indexOf(element) {
+    let current = this.head
+    for (let i = 0; i < this.count; i++) {
+      // 可以在构造函数中传入 equalsFn，判定节点相等的函数
+      if (current.element === element) {
+        return i
+      }
+      current = current.next
+    }
+    return -1
+  }
+
+  remove(element) {
+    let index = this.indexOf(element)
+    return this.removeAt(index)
+  }
+
+  isEmpty() {
+    return this.size() === 0
+  }
+  size() {
+    return this.count
+  }
+  getHead() {
+    return this.head
+  }
+  toString() {
+    if (!this.head) {
+      return ''
+    }
+    // 链表不为空
+    let current = this.head
+    let str = ''
+    for (let i = 0; i < this.count; i++) {
+      str += current.element
+      if (i !== this.count - 1) {
+        str += ','
+      }
+      current = current.next
+    }
+    return str
+  }
+}
+
+module.exports = LinkedList
+```
+单元测试
+```js
+// test/b-linked-list.spec.js
+const expect = require('chai').expect
+const LinkedList = require('../src/b-linked-list')
+let list = null
+
+describe('LinkedList test', () => {
+  beforeEach(() => {
+    list = new LinkedList()
+  })
+
+  it('push(),isEmpty(),size(),toStriing() test', () => {
+    expect(list.isEmpty()).to.be.true
+    list.push(1)
+    list.push(3)
+    list.push(2)
+    expect(list.isEmpty()).to.be.false
+    expect(list.size()).to.equal(3)
+    expect(list.toString()).to.equal('1,3,2')
+  })
+
+  it('getElementAt(),removeAt() test', () => {
+    expect(list.getElementAt(0)).to.be.undefined
+    list.push(1)
+    list.push(3)
+    list.push(2)
+    expect(list.getElementAt(3)).to.be.undefined
+    expect(list.getElementAt(2).element).to.equal(2)
+    expect(list.getElementAt(1).element).to.equal(3)
+    expect(list.getElementAt(0).element).to.equal(1)
+    expect(list.removeAt(0).element).to.equal(1)
+    expect(list.size()).to.equal(2)
+    expect(list.toString()).to.equal('3,2')
+    expect(list.removeAt(2)).to.be.undefined
+  })
+
+  it('insert(),indexOf(),remove() test', () => {
+    list.insert(1, 0)
+    list.insert(2, 0) // 2 1
+    list.insert(3, 1) // 2 3 1
+    list.insert(4, 3) // 2 3 1 4
+    expect(list.insert(5, 5)).to.be.false
+    expect(list.toString()).to.equal('2,3,1,4')
+    expect(list.indexOf(12)).to.equal(-1)
+    expect(list.indexOf(4)).to.equal(3)
+    expect(list.indexOf(2)).to.equal(0)
+    expect(list.indexOf(3)).to.equal(1)
+    expect(list.remove(4).element).to.equal(4)
+    expect(list.size()).to.equal(3)
+    expect(list.remove(2).element).to.equal(2)
+    expect(list.size()).to.equal(2)
+  })
+})
+```
+
+链表有多种不同的类型，除了上面介绍的单向链表外，还有双向链表、循环链表等
+### 双向链表
+双向链表在单向链表的基础上，多了一个尾节点引用（指针）tail，每个节点多了一个 prev 引用
+```js
+class DoublyNode extends Node {
+  constructor(element) {
+    super(element)
+    this.prev = undefined
+    // 等价于
+    // this.element = element
+    // this.next = undefined
+    // this.prev = undefined
+  }
+}
+class DoublyLinkedList extends LinkedList {
+  constructor() {
+    super()
+    this.tail = undefined // 尾巴
+    // 等价于
+    // this.count = 0
+    // this.head = undefined
+    // this.tail = undefined
+  }
+}
+```
+需要重写 push()、removeAt()、insert()、getElementAt() 方法
+```js
+const LinkedList = require('./b-linked-list')
+
+class Node {
+  constructor(element) {
+    this.element = element
+    this.next = undefined
+  }
+}
+
+class DoublyNode extends Node {
+  constructor(element) {
+    super(element)
+    this.prev = undefined
+  }
+}
+
+class DoublyLinkedList extends LinkedList {
+  constructor() {
+    super()
+    this.tail = undefined // 尾部节点
+  }
+
+  // 向尾部添加元素（重写）
+  push(element) {
+    const node = new DoublyNode(element)
+    // 如果链表为空
+    if (!this.head) {
+      this.head = node
+      this.tail = node
+    } else {
+      // 首尾相连
+      this.tail.next = node
+      node.prev = this.tail
+      this.tail = node
+    }
+    this.count++
+  }
+
+  // 从指定位置移除元素
+  removeAt(index) {
+    // 越界检查
+    if (index < 0 || index >= this.count) {
+      return undefined
+    }
+    let current = this.head
+    // 如果是移除 head 节点
+    if (index === 0) {
+      this.head = current.next
+      this.head && (this.head.prev = undefined)
+      // this.tail 可能会发生变更
+      if (this.size() === 1) {
+        this.tail = undefined
+      }
+    } else if (index === this.count - 1) {
+      // 如果是末尾，可以不用遍历，直接使用 tail 指针
+      // index >= 1, count >= 2
+      current = this.tail
+      this.tail = this.tail.prev
+      this.tail.next = undefined
+    } else {
+      // index >= 1, count >= 2，不是末尾
+      while (index--) {
+        current = current.next
+      }
+      let prevNode = current.prev
+      let nextNode = current.next
+      prevNode.next = nextNode
+      nextNode.prev = prevNode
+    }
+    this.count--
+    return current
+  }
+
+  // 获取指定位置的元素
+  getElementAt(index) {
+    // 越界检查
+    if (index < 0 || index >= this.count) {
+      return undefined
+    }
+    if (index === this.count - 1) {
+      return this.tail
+    }
+    let current = this.head
+    while (index--) {
+      current = current.next
+    }
+    return current
+  }
+
+  // 指定位置插入元素
+  insert(element, index) {
+    // 越界检查
+    if (index < 0 || index > this.count) {
+      return false
+    }
+    let node = new DoublyNode(element)
+    if (index === 0) {
+      if (!this.head) {
+        this.head = node
+        this.tail = node
+      } else {
+        node.next = this.head
+        this.head.prev = node
+        this.head = node
+      }
+    } else if (index === this.count) {
+      // 尾部插入
+      this.tail.next = node
+      node.prev = this.tail
+      this.tail = node
+    } else {
+      // index >= 1，非尾部
+      let prevNode = this.getElementAt(index - 1)
+      node.next = prevNode.next
+      prevNode.next.prev = node
+      prevNode.next = node
+      node.prev = prevNode
+    }
+    this.count++
+    return true
+  }
+}
+
+module.exports = DoublyLinkedList
+```
+单元测试可以直接使用单向链表的单元测试，替换下 class 即可
+### 循环链表
+循环链表指的是，尾部节点的 next 指向头部节点
+
+```js
+class CircularLinkedList extends LinkedList {
+}
+```
+需要重写 push()、removeAt()、insert() 方法
+```js
+const LinkedList = require('./b-linked-list')
+class Node {
+  constructor(element) {
+    this.element = element
+    this.next = undefined
+  }
+}
+class CircularLinkedList extends LinkedList {
+  // 向尾部添加元素
+  push(element) {
+    const node = new Node(element)
+    node.next = this.head
+    // 如果链表为空
+    if (!this.head) {
+      this.head = node
+      this.head.next = this.head
+    } else {
+      // 找到尾部节点
+      let lastNode = this.head
+      while (lastNode.next !== this.head) {
+        lastNode = lastNode.next
+      }
+      lastNode.next = node
+    }
+    this.count++
+  }
+
+  // 从指定位置移除元素
+  removeAt(index) {
+    // 越界检查
+    if (index < 0 || index >= this.count) {
+      return undefined
+    }
+    let current = this.head
+    // 获取尾部节点
+    let tail = this.getElementAt(this.count - 1)
+    // 如果是移除 head 节点
+    if (index === 0) {
+      if (this.size() === 1) {
+        this.head = undefined
+      } else {
+        this.head = current.next
+        tail.next = this.head
+      }
+    } else {
+      // index >= 1 找到前一个元素，找到后一个元素(current.next)
+      let prevNode = undefined
+      while (index--) {
+        prevNode = current
+        current = current.next
+      }
+      prevNode.next = current.next
+      // let prevNode = this.getElementAt(index - 1)
+      // current = prevNode.next
+      // prevNode.next = current.next
+    }
+    this.count--
+    return current
+  }
+
+  // 指定位置插入元素
+  insert(element, index) {
+    // 越界检查
+    if (index < 0 || index > this.count) {
+      return false
+    }
+    let node = new Node(element)
+    if (index === 0) {
+      if (!this.head) {
+        this.head = node
+        this.head.next = this.head
+      } else {
+        let tail = this.getElementAt(this.count - 1)
+        node.next = this.head
+        this.head = node
+        tail.next = this.head
+      }
+    } else {
+      // index >= 1
+      let prevNode = this.getElementAt(index - 1)
+      // prevNode xxx xxx
+      node.next = prevNode.next
+      prevNode.next = node
+    }
+    this.count++
+    return true
+  }
+}
+
+module.exports = CircularLinkedList
+```
+单元测试和单向链表单元测试基本一致，修改个 class 即可
+
+### 有序链表
+有序链表，一般指的是按大小顺序存放的链表，当然也可以使用其他指标来排序
+
+```js
+function defaultCompare(a, b) {
+  if (a === b) {
+    return 0
+  }
+  return a > b ? 1 : -1
+}
+
+class SortedLinkedList extends LinkedList {
+  constructor(compareFn = defaultCompare) {
+    super()
+    this.compareFn = compareFn
+  }
+}
+```
+需要重写 insert()，push() 方法，完整实现如下：
+```js
+const LinkedList = require('./b-linked-list')
+class Node {
+  constructor(element) {
+    this.element = element
+    this.next = undefined
+  }
+}
+
+function defaultCompare(a, b) {
+  if (a === b) {
+    return 0
+  }
+  return a > b ? 1 : -1
+}
+
+class SortedLinkedList extends LinkedList {
+  constructor(compareFn = defaultCompare) {
+    super()
+    this.compareFn = compareFn
+  }
+
+  getInsertIndex(element) {
+    let current = this.head
+    for (let i = 0; i < this.count; i++) {
+      if (this.compareFn(element, current.element) < 0) {
+        return i
+      }
+      current = current.next
+    }
+    return this.count
+  }
+
+  // 向尾部添加元素
+  push(element) {
+    const pos = this.getInsertIndex(element)
+    return super.insert(element, pos)
+  }
+
+  // 指定位置插入元素
+  insert(element) {
+    const pos = this.getInsertIndex(element)
+    // console.log(pos)
+    return super.insert(element, pos)
+  }
+}
+
+module.exports = SortedLinkedList
+
+```
+单元测试
+```js
+// test/e-sorted-linked-list.js
+const expect = require('chai').expect
+const SortedLinkedList = require('../src/e-sorted-linked-list')
+let list = null
+
+describe('SortedLinkedList test', () => {
+  beforeEach(() => {
+    list = new SortedLinkedList()
+  })
+
+  it('push(),isEmpty(),size(),toStriing() test', () => {
+    expect(list.isEmpty()).to.be.true
+    list.push(1)
+    list.push(3)
+    list.push(2)
+    expect(list.isEmpty()).to.be.false
+    expect(list.size()).to.equal(3)
+    expect(list.toString()).to.equal('1,2,3')
+  })
+
+  it('getElementAt(),removeAt() test', () => {
+    expect(list.getElementAt(0)).to.be.undefined
+    list.push(1)
+    list.push(3)
+    list.push(2)
+    expect(list.getElementAt(3)).to.be.undefined
+    expect(list.getElementAt(2).element).to.equal(3)
+    expect(list.getElementAt(1).element).to.equal(2)
+    expect(list.getElementAt(0).element).to.equal(1)
+    expect(list.removeAt(0).element).to.equal(1)
+    expect(list.size()).to.equal(2)
+    expect(list.toString()).to.equal('2,3')
+    expect(list.removeAt(2)).to.be.undefined
+  })
+
+  it('insert(),indexOf(),remove() test', () => {
+    list.insert(1, 0)
+    list.insert(2, 0) // 1 2
+    list.insert(3, 1) // 1 2 3
+    list.insert(4, 3) // 1 2 3 4
+    expect(list.insert(5, 5)).to.be.true
+    expect(list.toString()).to.equal('1,2,3,4,5')
+    expect(list.indexOf(12)).to.equal(-1)
+    expect(list.indexOf(4)).to.equal(3)
+    expect(list.indexOf(2)).to.equal(1)
+    expect(list.indexOf(3)).to.equal(2)
+    expect(list.remove(4).element).to.equal(4)
+    expect(list.size()).to.equal(4)
+    expect(list.remove(2).element).to.equal(2)
+    expect(list.size()).to.equal(3)
+  })
+})
+
+```
+### 使用链表实现栈
+我们可以使用链表来实现栈、队列、双向队列等数据结构，下面使用 双向链表来创建 栈 数据结构，可以重用链表数据结构内部的方法，快速的实现栈
+
+```js
+const DoublyLinkedList = require('./c-doubly-linked-list')
+
+class StackLinkedList {
+  constructor() {
+    this.items = new DoublyLinkedList()
+  }
+
+  push(element) {
+    this.items.push(element)
+  }
+
+  pop() {
+    if (this.isEmpty()) {
+      return undefined
+    }
+    return this.items.removeAt(this.size() - 1).element
+  }
+
+  peek() {
+    if (this.isEmpty()) {
+      return undefined
+    }
+    return this.items.getElementAt(this.size() - 1).element
+  }
+
+  isEmpty() {
+    return this.items.isEmpty()
+  }
+
+  get length() {
+    return this.size()
+  }
+
+  size() {
+    return this.items.size()
+  }
+
+  clear() {
+    this.items = new DoublyLinkedList()
+  }
+
+  toString() {
+    return this.items.toString()
+  }
+}
+
+module.exports = StackLinkedList
+```
+单元测试
+```js
+// test/f-stack-linked-list.spec.js
+const StackLinkedList = require('../src/f-stack-linked-list')
+const expect = require('chai').expect
+let stack = null
+
+describe('StackLinkedList Test', () => {
+  beforeEach(() => {
+    stack = new StackLinkedList()
+  })
+
+  it('empty test', () => {
+    expect(stack.isEmpty()).to.equal(true)
+    expect(stack.size()).to.equal(0)
+  })
+
+  it('push()/size()/toString() test', () => {
+    stack.push('a')
+    expect(stack.isEmpty()).to.equal(false)
+    expect(stack.size()).to.equal(1)
+    stack.push('b')
+    expect(stack.size()).to.equal(2)
+    stack.push('c')
+    expect(stack.size()).to.equal(3)
+    stack.push('d')
+    stack.push('e')
+    stack.push('f')
+    expect(stack.length).to.equal(6)
+    expect(stack.toString()).to.equal('a,b,c,d,e,f')
+  })
+
+  it('pop()/length test', () => {
+    // stack.push('a', 'b', 'c', 'd')
+    const arr = ['a', 'b', 'c', 'd']
+    arr.forEach((item) => stack.push(item))
+    expect(stack.pop()).to.equal('d')
+    expect(stack.length).to.equal(3)
+    expect(stack.pop()).to.equal('c')
+    expect(stack.length).to.equal(2)
+    expect(stack.pop()).to.equal('b')
+    expect(stack.length).to.equal(1)
+    expect(stack.pop()).to.equal('a')
+    expect(stack.length).to.equal(0)
+    expect(stack.pop()).to.equal(undefined)
+    expect(stack.length).to.equal(0)
+  })
+
+  it('peek() test', () => {
+    const arr = ['a', 'b', 'c', 'd']
+    arr.forEach((item) => stack.push(item))
+    expect(stack.peek()).to.equal('d')
+    expect(stack.length).to.equal(4)
+    stack.pop()
+    stack.pop()
+    expect(stack.peek()).to.equal('b')
+  })
+
+  it('clear()/isEmpty() test', () => {
+    const arr = ['a', 'b']
+    arr.forEach((item) => stack.push(item))
+    expect(stack.length).to.equal(2)
+    expect(stack.isEmpty()).to.equal(false)
+    stack.clear()
+    expect(stack.length).to.equal(0)
+    expect(stack.isEmpty()).to.equal(true)
+  })
+})
+```
+## 勘误
+- p101 getElementAt() 中 index <= this.count 应该是 index < this.count
+- p111 CircularLinkedList 前少了个 class
