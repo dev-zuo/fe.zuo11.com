@@ -1733,6 +1733,656 @@ describe('StackLinkedList Test', () => {
   })
 })
 ```
+
+## 第 7 章 集合
+前面介绍了数组、栈、队列、链表这些 **顺序** 数据结构，本章介绍集合，**它是一种不允许值重复的顺序数据结构**
+- 从头创建一个 Set 类
+- 用 Set 进行数学运算：交集、并集、差集、子集
+- ES6 原生 Set 类型
+
+**集合** 是由一组无序且唯一的项组成的，使用了与有限集合相同数学概念。例如：集合 N = { 0, 1, 2, 3, ..}
+
+**空集** 就是不包含任何元素的集合
+
+可以把集合想象成一个没有重复元素、没有顺序概念的数组
+
+### 创建集合类
+这里我们使用 对象 而不是 数组 来表示集合 items，因为 JS 中不允许一个键指向两个不同的属性，这就保证了集合中元素的唯一性，也可以使用数组来实现。
+```js
+class Set {
+  constructor() {
+    this.items = {}
+  }
+}
+```
+集合需要实现如下方法
+- `add(element)` 将 element 添加到集合
+- `delete(element)` 删除集合中的 element 元素
+- `has(element)` 判断元素是否在集合中
+- `clear()` 清空集合
+- `size()` 返回结合长度
+- `values()` 方法一个包含集合中所有元素的数组
+
+```js
+class Set {
+  constructor() {
+    this.items = {}
+  }
+
+  has(element) {
+    return element in this.items
+    // return this.items.hasOwnProperty(element)
+    // return Object.prototype.hasOwnProperty.call(this.items, element)
+  }
+
+  add(element) {
+    if (this.has(element)) {
+      return false
+    }
+    this.items[element] = element
+    return true
+  }
+
+  delete(element) {
+    if (this.has(element)) {
+      delete this.items[element]
+      return true
+    }
+    return false
+  }
+
+  clear() {
+    this.items = {}
+  }
+
+  size() {
+    return Object.keys(this.items).length
+    // let keys = []
+    // for (key in this.items) {
+    //   if (this.items.hasOwnProperty(key)) {
+    //     keys.push(key)
+    //   }
+    // }
+    // return keys.length
+  }
+
+  values() {
+    return Object.values(this.items)
+    // let values = []
+    // for (key in this.items) {
+    //   if (this.items.hasOwnProperty(key)) {
+    //     values.push(this.items[key])
+    //   }
+    // }
+    // return values
+  }
+}
+
+module.exports = Set
+```
+单元测试
+```js
+// test/g-set.spec.js
+const Set = require('../src/g-set')
+const expect = require('chai').expect
+let set = null
+
+describe('Set Test', () => {
+  beforeEach(() => {
+    set = new Set()
+  })
+
+  it('has(),add(),size(),values(),delete(),clear() test', () => {
+    set.add(1)
+    expect(set.values()).to.deep.equal([1])
+    expect(set.has(1)).to.be.true
+    expect(set.size()).to.equal(1)
+    set.add(2)
+    expect(set.values()).to.deep.equal([1, 2])
+    expect(set.has(2)).to.be.true
+    expect(set.size()).to.equal(2)
+    set.add(3)
+    expect(set.has(9)).to.be.false
+    expect(set.values()).to.deep.equal([1, 2, 3])
+    set.delete(2)
+    set.delete(4)
+    set.delete(5)
+    expect(set.size()).to.equal(2)
+    set.clear()
+    expect(set.size()).to.equal(0)
+  })
+})
+
+```
+
+### 集合运算
+集合是数学中的概念，在计算机领域也非常重要，主要应用之一是 **数据库**。集合被用于查询的设计和处理，当创建一条关系型数据库的查询语句时，使用的就是集合运算，返回一个数据集合。我们创建 SQL 查询命令时
+- 可以指定从表中获取全部数据还是获取其中的子集
+- 也可以获取两张表共有的数据或者只存在于一张表中（不存在与另一张表中）的数据。
+
+这些 SQL 领域的运算叫做 **联接**，而 **SQL 联接** 的基础就是集合运算。可以对集合进行如下运算
+- `并集 union` **A ∪ B = { x | x ∈ A 或 x ∈ B }** 返回一个包含两个集合中所有元素的新集合 
+- `交集 intersection` **A ∩ B = { x | x ∈ A 且 x ∈ B }** 返回一个包含两个集合中共有元素的新集合
+- `差集 difference` **A - B = { x | x ∈ A 且 x ∉ B }** 返回一个包含所有存在于第一个集合且不存在于第二个集合的元素的新集合
+- `子集 isSubsetOf` **A ⊆ B** 验证一个给定集合是否是另一个集合的子集
+
+```js
+class Set {
+  // .... 
+  // 集合其他方法
+
+  union(otherSet) {
+    let unionSet = new Set()
+    this.values().forEach((item) => unionSet.add(item))
+    otherSet.values().forEach((item) => unionSet.add(item))
+    return unionSet
+  }
+
+  intersection(otherSet) {
+    let intersectionSet = new Set()
+    // 使用比较小的集合来遍历
+    let curValues = this.values()
+    let otherValues = otherSet.values()
+    let smallerSet = curValues
+    let biggerSet = otherValues
+    if (curValues.length > otherValues.length) {
+      smallerSet = otherValues
+      biggerSet = curValues
+    }
+    smallerSet.forEach((item) => {
+      if (biggerSet.includes(item)) {
+        intersectionSet.add(item)
+      }
+    })
+    return intersectionSet
+  }
+
+  difference(otherSet) {
+    let differenceSet = new Set()
+    this.values().forEach((value) => {
+      if (!otherSet.has(value)) {
+        differenceSet.add(value)
+      }
+    })
+    return differenceSet
+  }
+
+  isSubsetOf(otherSet) {
+    if (this.size() > otherSet.size()) {
+      return false
+    }
+    for (let i = 0, len = this.size(); i < len; i++) {
+      if (!otherSet.has(this.values()[i])) {
+        return false
+      }
+    }
+    return true
+  }
+}
+```
+单元测试部分
+```js
+// ...
+it('union(),intersection(),difference(),isSubsetOf() test', () => {
+  let setArr = [1, 2, 3]
+  let setBArr = [3, 4, 5, 6]
+  let setCArr = [4, 5]
+  let setB = new Set()
+  let setC = new Set()
+  setArr.forEach((value) => set.add(value))
+  setBArr.forEach((value) => setB.add(value))
+  setCArr.forEach((value) => setC.add(value))
+  expect(set.union(setB).values()).to.deep.equal([1, 2, 3, 4, 5, 6])
+  expect(set.union(setC).values()).to.deep.equal([1, 2, 3, 4, 5])
+  expect(set.intersection(setB).values()).to.deep.equal([3])
+  expect(setB.intersection(setC).values()).to.deep.equal([4, 5])
+  expect(set.difference(setB).values()).to.deep.equal([1, 2])
+  expect(setB.difference(setC).values()).to.deep.equal([3, 6])
+  expect(set.isSubsetOf(setB)).to.be.false
+  expect(setC.isSubsetOf(setB)).to.be.true
+})
+// ...
+```
+
+### ES6 原生 Set
+ES6 原生支持 Set，使用方法如下
+```js
+let set = new Set()
+set.add(1)
+set.add(2)
+console.log(set.values()) // SetIterator {1, 2}
+console.log(set.has(1)) // true
+console.log(set.size) // 2
+```
+另外还支持 delete()，clear(), forEach(), entries() 等
+
+原生 Set 也可以自己实现并集、交集、差集，另外也可以通过扩展运算符(...) 来实现
+
+```js
+let setA = new Set([1, 3, 2])
+let setB = new Set([2, 5])
+// 并集 Set(4) {1, 3, 2, 5}
+console.log(new Set([...setA, ...setB]))
+// 交集 Set(1) {2}
+console.log(new Set([...setA].filter(x => setB.has(x))))
+// 差集 Set(2) {1, 3}
+console.log(new Set([...setA].filter(x => !setB.has(x)))) 
+```
+### 多重集或袋
+前面了解到，集合数据结构不允许重复的元素，但数学中，有一种叫做 **多重集（multiset）** 的概念，允许我们向集合中添加之前已经添加的元素。它在计算集合中元素的出现次数时很有用，在数据库系统中得到了广泛的应用。
+
+## 第 8 章 字典和散列表
+字典和散列表是非顺序结构，和集合类似，也是存储唯一值（不重复值）的数据结构。**字典和散列表是以键、值对的形式来存储数据**，两种数据结构的实现方式略有不同，字典中每个键只能有一个值，散列表中，一个键可以有多个值。本章主要介绍如下内容
+- 字典数据结构
+- 散列表数据结构
+- 处理散列表中的冲突
+- ES6 Map、WeakMap 和 WeakSet
+
+### 字典
+字典也称作 **映射、符号表或关联数组**，对应 ES6 中的 Map 实现
+
+在字典中，理想的情况是使用字符串作为键名，值可以是任何类型，由于 JS 不是强类型的语言，所以我们这里使用一个函数将 key 转换为字符串
+
+```js
+class Dictionary {
+  constructor(toStrFn = defaultToString) {
+    this.toStrFn = toStrFn
+    this.table = {}
+  }
+}
+```
+字典需要实现如下方法
+- `set(key, value)` 向字典中添加新元素，如果 key 已经存在，原来的 value 值会被新值覆盖
+- `remove(key)` 通过 key 移除字典中对应的数据值
+- `hasKey(key)` 字段中是否有对应的 key
+- `get(key)` 获取 key 对应的值
+- `clear()` 清空字典中的所有值
+- `size()` 返回字典中包含值的数量
+- `isEmpty()` 判断字典是否为空
+- `keys()` 将字典中的所有键名，以数组的方式返回
+- `values()` 将字典中的所有数值，以数组的方式返回
+- `keyValues()` 将字典中所有的 `[{key: xx, value: ''}, ...]` 对返回
+- `forEach(callbackFn)` 迭代字典中所有的键值对，callbackFn 有两个参数，key 和 value，callbackFn 中 return false 会结束循环
+
+完整代码如下
+```js
+function defaultToString(item) {
+  if (item === null) {
+    return 'NULL'
+  } else if (item === undefined) {
+    return 'UNDEFINED'
+  } else if (typeof item === 'string' || item instanceof String) {
+    return `${item}`
+  }
+  return item.toString()
+}
+
+class ValuePair {
+  constructor(key, value) {
+    this.key = key
+    this.value = value
+  }
+  toString() {
+    return `[#${this.key}: ${this.value}]`
+  }
+}
+
+class Dictionary {
+  constructor(toStrFn = defaultToString) {
+    this.toStrFn = toStrFn
+    this.table = {}
+  }
+
+  set(key, value) {
+    if (key != null && value != null) {
+      this.table[this.toStrFn(key)] = new ValuePair(key, value)
+      return true
+    }
+    return false
+  }
+
+  remove(key) {
+    if (this.hasKey(key)) {
+      delete this.table[this.toStrFn(key)]
+      return true
+    }
+    return false
+  }
+
+  hasKey(key) {
+    return this.table[this.toStrFn(key)] != null
+  }
+
+  get(key) {
+    let valuePair = this.table[this.toStrFn(key)]
+    return valuePair == null ? undefined : valuePair.value
+  }
+
+  keyValues() {
+    return Object.values(this.table) // 键值对数组
+  }
+
+  keys() {
+    return Object.values(this.table).map((item) => item.key)
+  }
+
+  values() {
+    return Object.values(this.table).map((item) => item.value)
+  }
+
+  forEach(callbackFn) {
+    let valuePairs = this.keyValues()
+    for (let i = 0, len = valuePairs.length; i < len; i++) {
+      let result = callbackFn(valuePairs[i].key, valuePairs[i].value)
+      if (result === false) {
+        break
+      }
+    }
+  }
+
+  clear() {
+    this.table = {}
+  }
+
+  size() {
+    return Object.keys(this.table).length
+  }
+
+  isEmpty() {
+    return this.size() === 0
+  }
+
+  toString() {
+    if (this.isEmpty()) {
+      return ''
+    }
+    let valuePairs = this.keyValues()
+    let str = ''
+    for (let i = 0, len = valuePairs.length; i < len; i++) {
+      str += valuePairs[i].toString()
+      if (i !== len - 1) {
+        str += ','
+      }
+    }
+    return str
+  }
+}
+
+module.exports = Dictionary
+```
+单元测试
+```js
+// test/h-dictionary.spec.js
+const Dictionary = require('../src/h-dictionary')
+const expect = require('chai').expect
+let dictionary = null
+
+describe('Dictionary Test', () => {
+  beforeEach(() => {
+    dictionary = new Dictionary()
+  })
+
+  it('set(),hasKey(),size(),keys(),values(),get(),keyValues() test', () => {
+    dictionary.set('a', 'a@gmail.com')
+    dictionary.set('b', 'b@gmail.com')
+    dictionary.set('c', 'c@gmail.com')
+    expect(dictionary.hasKey('a')).to.be.true
+    expect(dictionary.hasKey('e')).to.be.false
+    expect(dictionary.size()).to.equal(3)
+    expect(dictionary.keys()).to.deep.equal(['a', 'b', 'c'])
+    expect(dictionary.values()).to.deep.equal(['a@gmail.com', 'b@gmail.com', 'c@gmail.com'])
+    expect(dictionary.get('a')).to.equal('a@gmail.com')
+    dictionary.remove('b')
+    expect(dictionary.keys()).to.deep.equal(['a', 'c'])
+    expect(dictionary.keyValues()).to.deep.equal([
+      { key: 'a', value: 'a@gmail.com' },
+      { key: 'c', value: 'c@gmail.com' },
+    ])
+  })
+
+  it('forEach(),isEmpty(),clear(),toString test', () => {
+    dictionary.set('a', '1')
+    dictionary.set('b', '2')
+    expect(dictionary.isEmpty()).to.be.false
+    expect(dictionary.toString()).to.equal('[#a: 1],[#b: 2]')
+    let arr = []
+    dictionary.set('c', '3')
+    dictionary.forEach((key, value) => {
+      arr.push([key, value])
+      if (key === 'b') {
+        return false
+      }
+    })
+    expect(arr).to.deep.equal([
+      ['a', '1'],
+      ['b', '2'],
+    ])
+    expect(dictionary.size()).to.equal(3)
+    dictionary.clear()
+    expect(dictionary.isEmpty()).to.be.true
+  })
+})
+```
+
+### 散列表
+散列表 HashTable 类，也叫 HashMap 类，他是 Dictionary 类的一种散列（hash）实现方式
+
+**散列** 算法的作用是尽可能快的在数据结构中找到一个值。
+
+在 Dictionary 中获取一个值，使用 get 方法，需要迭代整个数据结构来找到它，如果使用散列表，就知道值的具体位置，因此能够快速的检索到该值。**散列函数的作用是给定一个键值，然后返回值在表中的地址。**
+
+- 散列表可以用来对数据库进行索引，它可以保存键和表中记录的引用
+- JS 语言内部使用散列表来表示每个对象
+
+```js
+class HashTable {
+  constructor(toStrFn = defaultToString) {
+    this.toStrFn = toStrFn
+    this.table = {}
+  }
+}
+
+```
+实现如下方法
+- `put(key, value)` 向删列表增加一个新项，或更新值
+- `remove(key)` 根据键值，移除散列表中的值
+- `get(key)` 获取散列表中 key 对应的值
+
+和字典不同的地方在于，字典的 key 是将用户传入的 key 转换字符串当做键值。散列表是将用户传入的 key 通过 hash 函数，转为 hash code 后当做存储时的键值。keyValues()、keys()、values()、size()、isEmpty()、toString() 等方法和 字典 基本一致
+```js
+class HashTable {
+  constructor(toStrFn = defaultToString) {
+    this.toStrFn = toStrFn
+    this.table = {}
+  }
+
+  // 简单的散列函数，容易生成重复的 hash code，后面会介绍怎么解决
+  loseloseHashCode(key) {
+    if (typeof key === 'number') {
+      return key
+    }
+    let tableKey = this.toStrFn(key)
+    let hash = 0
+    for (let i = 0, len = tableKey.length; i < len; i++) {
+      hash += tableKey.charCodeAt(i)
+    }
+    return hash % 37
+  }
+
+  // 将用户传入的 key ，通过 hash 函数转为 hash code 用于内部实际的键值
+  hashCode(key) {
+    return this.loseloseHashCode(key)
+    // return this.djb2HashCode(key)
+  }
+
+  put(key, value) {
+    if (key != null && value != null) {
+      let position = this.hashCode(key)
+      this.table[position] = new ValuePair(key, value)
+      return true
+    }
+    return false
+  }
+
+  get(key) {
+    let valuePair = this.table[this.hashCode(key)]
+    return valuePair == null ? undefined : valuePair.value
+  }
+
+  remove(key) {
+    let hash = this.hashCode(key)
+    let valuePair = this.table[hash]
+    if (valuePair !== null) {
+      delete this.table[hash]
+      return true
+    }
+    return false
+  }
+  // ... 省略和字典一致的一些方法
+}
+
+// ... 省略和字典一致的内容
+
+module.exports = HashTable
+```
+单元测试
+```js
+const HashTable = require('../src/i-hash-table')
+const expect = require('chai').expect
+let hashTable = null
+
+describe('HashTable Test', () => {
+  beforeEach(() => {
+    hashTable = new HashTable()
+  })
+
+  it('put(),remove(),get() test', () => {
+    hashTable.put('zhangsan', '1')
+    hashTable.put('lisi', '2')
+    console.log(hashTable)
+    // table: {
+    //   '7': ValuePair { key: 'zhangsan', value: '1' },
+    //   '26': ValuePair { key: 'lisi', value: '2' }
+    // }
+    expect(hashTable.get('lisi')).to.equal('2')
+    expect(hashTable.get('zhangsan')).to.equal('1')
+    expect(hashTable.toString()).to.equal('[#zhangsan: 1],[#lisi: 2]')
+    hashTable.remove('lisi')
+    expect(hashTable.toString()).to.equal('[#zhangsan: 1]')
+  })
+})
+```
+#### 更好的散列函数
+上面的散列函数中，生成的 hash code 很容易重复，会导致数据有问题，可以使用更加更高级的散列函数，这样生成的 hash code 重复率会大大减少
+```js
+// 并不是最好的散列函数，但这是最受社区推崇的散列函数之一
+djb2HashCode(key) {
+  const tableKey = this.toStrFn(key)
+  let hash = 5381
+  for (let i = 0; i < tableKey.length; i++) {
+    hash = hash * 33 + tableKey.charCodeAt(i)
+  }
+  return hash % 1013
+}
+// table: {
+//   '142': ValuePair { key: 'zhangsan', value: '1' },
+//   '920': ValuePair { key: 'lisi', value: '2' }
+// }
+```
+#### 散列值重复时的处理（散列集合）
+当散列函数生成的散列值，不可避免重复时，有三种解决方法
+1. **分离链接 separate chaining**，每个散列表的值都是一个链表(linked list)，每次新增 (put) 值时，如果该 key 的值不是 链表，创建一个链表。向链表中 push 键值对对象 ValuePair
+```js
+put(key, value) {
+  if (key != null && value != null) {
+    const position = this.hashCode(key);
+    if (this.table[position] == null) {
+      this.table[position] = new LinkedList();
+    }
+    this.table[position].push(new ValuePair(key, value));
+    return true;
+  }
+  return false;
+}
+
+get(key) {
+  const position = this.hashCode(key);
+  const linkedList = this.table[position];
+  if (linkedList != null && !linkedList.isEmpty()) {
+    let current = linkedList.getHead();
+    while (current != null) {
+      if (current.element.key === key) {
+        return current.element.value;
+      }
+      current = current.next;
+    }
+  }
+  return undefined;
+}
+```
+2. **线性探查 linear probing**, 如果 position 位置被占用了，就尝试找 position++ 的位置，直到找到空闲位置存储
+```js
+put(key, value) {
+  if (key != null && value != null) {
+    const position = this.hashCode(key);
+    if (this.table[position] == null) {
+      this.table[position] = new ValuePair(key, value);
+    } else {
+      let index = position + 1;
+      while (this.table[index] != null) {
+        index++;
+      }
+      this.table[index] = new ValuePair(key, value);
+    }
+    return true;
+  }
+  return false;
+}
+
+get(key) {
+  const position = this.hashCode(key);
+  if (this.table[position] != null) {
+    if (this.table[position].key === key) {
+      return this.table[position].value;
+    }
+    let index = position + 1;
+    while (this.table[index] != null && this.table[index].key !== key) {
+      index++;
+    }
+    if (this.table[index] != null && this.table[index].key === key) {
+      return this.table[position].value;
+    }
+  }
+  return undefined;
+}
+```
+3. 双散列法，参考: [散列（2）线性探测法和双重散列法 - CSDN](https://blog.csdn.net/quzhongxin/article/details/45197553)
+
+### ES6 原生 Map 类
+与字典不同的是 Map 的 values 和 keys 等方法都返回一个 Iterator 迭代器，而不是值或键构成的数组，另外 size 是属性，而不是方法。
+
+Map 的键可以是对象、数组等
+
+```js
+const map = new Map()
+map.set('zhangsan', '1')
+map.set('lisi', '2')
+map.set('wangwu', '3')
+console.log(map.has('zhangsan')) // true
+console.log(map.size) // '3'
+console.log(map.keys()) // MapIterator {"zhangsan", "lisi", "wangwu"}
+console.log(map.values()) // MapIterator {"1", "2", "3"}
+console.log(map.get('lisi')) // '2'
+```
+另外它还支持 delete()、entries() 等方法
+
+### ES6 WeakMap 类和 WeakSet 类 
+除了 Set 和 Map 外，ES6 还增加了他们的弱化版本 WeakSet 和 WeakMap。他们的区别是
+- WeakSet 和 WeakMap 不可迭代，没有 keys, values, entries 等方法
+- 只能用对象作为键
+
+创建这两个类主要是为了性能，没有强引用的键，有利于垃圾回收。由于不可迭代，因此必须知道键才能取到值，类似于私有属性。
+
 ## 勘误
 - p101 getElementAt() 中 index <= this.count 应该是 index < this.count
 - p111 CircularLinkedList 前少了个 class
