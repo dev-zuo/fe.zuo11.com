@@ -2383,6 +2383,179 @@ console.log(map.get('lisi')) // '2'
 
 创建这两个类主要是为了性能，没有强引用的键，有利于垃圾回收。由于不可迭代，因此必须知道键才能取到值，类似于私有属性。
 
+## 第 9 章 递归
+之前的章节中，我们学习了不同的可迭代数据结构，后面我们在操作 **树** 和 **图** 数据结构时，使用 **递归** 会更简单。学习树和图之前，需要先理解递归是如何工作的。
+
+**递归 recursion** `[rɪˈkɜːʃn]` 是一种解决问题的方法，函数自己调用自己
+
+```js
+function recursionFn(someParam) {
+  // 退出递归条件
+  if (condition) {
+    return 
+  }
+  recursionFn(someParam)
+}
+```
+### factorial 阶乘
+计算一个数的阶乘，n! = 1 * 2 * ... * n。其中 0 的阶乘为 1
+
+使用循环（迭代）来计算阶乘
+```js
+function factorialIterative(n) {
+  if (n < 0) {
+    return 
+  }
+  let total = 1
+  for (let i = 1; i <= n; i++) {
+    total *= i
+  }
+  return total
+}
+```
+使用递归来计算阶乘
+```js
+function factorial(n) {
+  console.trace() // 调试 Call Stack
+  if (n === 0 || n === 1) {
+    return 1
+  }
+  return n * factorial(n - 1)
+}
+factorial(5) // 120
+```
+
+#### 调用栈
+每当函数被调用时，函数会进入 **调用栈** 的顶端，每个调用函数都依赖前一个调用的结果
+
+![递归调用栈](/images/base/callstack.png)
+
+```js
+// 顺序执行 
+// factorial(5) 5 * factorial(4) 
+// factorial(4) 4 * factorial(3) 
+// factorial(3) 3 * factorial(2) 
+// factorial(2) 2 * factorial(1)
+// factorial(1) 1
+
+// 调用栈
+// factorial(1) 1 
+// factorial(2) 2 * 1
+// factorial(3) 3 * 2
+// factorial(4) 4 * 6
+// factorial(5) 5 * 24
+// 返回 120
+```
+
+#### JS 调用栈大小的限制
+如果递归忘记加停止条件，会形成死循环，一般会抛出 stack overflow 栈溢出的错误
+
+ES6 新增了尾调用优化（tail call optimization），可以不创建新的栈帧，而是清除并重用当前栈帧
+
+问题：在ES5中，尾调用的实现与其他函数调用实现类似：创建一个新的栈帧（stack frame），将其推入调用栈来表示函数调用。也就是说，在循环调用中，每一个未用完的栈帧都会被保存在内存中，当调用栈变得过大时会造成程序问题，也就是我们常说的栈溢出（stack overflow）。
+
+尾调用优化是 ES6 中在系统引擎优化上做的一个改进, 如果满足以下条件，尾调用不再创建新的栈帧，而是清除并重用当前栈帧。
+
+- 尾调用不访问当前栈帧的变量（也就是说函数不是一个闭包）；
+- 在函数内部，尾调用是最后一条语句；
+- 尾调用的结果作为函数值返回；
+
+更多细节参考：[函数的扩展 - 尾调用优化 - ES6入门笔记](http://fe.zuo11.com/js/es6/es6-6.html#%E5%B0%BE%E8%B0%83%E7%94%A8%E4%BC%98%E5%8C%96)
+
+### fibonacci 数列
+斐波那契数：1 1 2 3 5 8 ....
+
+使用迭代方法计算 fibonacci 数
+```js
+function fibonacciIterative(n) {
+  if (n < 1) {
+    return 0
+  }
+  if (n <= 2) {
+    return 1
+  }
+  let numA = 1
+  let numB = 1
+  let result = 0
+  // numA numbB x
+  for (let i = 3; i <= n; i++) {
+    result = numA + numB
+    numA = numB
+    numB = result
+  }
+  return result
+}
+```
+递归方式
+```js
+function fibonacci(n) {
+  if (n < 1) {
+    return 0
+  }
+  if (n <= 2) {
+    return 1
+  }
+  return fibonacci(n - 1) + fibonacci(n - 2)
+}
+```
+执行过程如下，可以看到 fibonacci(3) 会被重复计算，为了优化该算法，可以把之前计算的值存起来，称之为记忆化
+```js
+// fibonacci(5)
+// fibonacci(4) + fibonacci(3)
+// fibonacci(3) + fibonacci(2) | fibonacci(2) +  fibonacci(1)
+```
+记忆化菲波那切数
+```js
+function fibonacciMemorization(n) {
+  const memory = [0, 1]
+  const fobonacci = (n) => {
+    if (memory[n] != null) {
+      return memory[n]
+    }
+    return (memory[n] = fibonacci(n - 1, memory) + fibonacci(n - 2, memory))
+  }
+  return fobonacci
+}
+```
+单元测试
+```js
+const { fibonacci, fibonacciIterative, fibonacciMemorization } = require('../src/k-fibonacci')
+const expect = require('chai').expect
+
+describe('Fibonacci Test', () => {
+  it('fibonacciIterative(), fibonacci(),fibonacciMemorization() test', () => {
+    expect(fibonacciIterative(1)).to.equal(1)
+    expect(fibonacciIterative(2)).to.equal(1)
+    expect(fibonacciIterative(3)).to.equal(2)
+    expect(fibonacciIterative(5)).to.equal(5)
+    expect(fibonacciIterative(12)).to.equal(144)
+    expect(fibonacciIterative(10)).to.equal(55)
+    expect(fibonacciIterative(30)).to.equal(832040)
+    expect(fibonacci(0)).to.equal(0)
+    expect(fibonacci(2)).to.equal(1)
+    expect(fibonacci(3)).to.equal(2)
+    expect(fibonacci(5)).to.equal(5)
+    expect(fibonacci(12)).to.equal(144)
+    expect(fibonacci(10)).to.equal(55)
+    expect(fibonacci(30)).to.equal(832040)
+    expect(fibonacciMemorization()(1)).to.equal(1)
+    expect(fibonacciMemorization()(2)).to.equal(1)
+    expect(fibonacciMemorization()(3)).to.equal(2)
+    expect(fibonacciMemorization()(5)).to.equal(5)
+    expect(fibonacciMemorization()(12)).to.equal(144)
+    expect(fibonacciMemorization()(10)).to.equal(55)
+    expect(fibonacciMemorization()(30)).to.equal(832040)
+  })
+})
+```
+### 为什么要用递归，它更快吗？
+上面三种不同的 fibonacci 函数执行顺序分别是
+
+迭代版本 > 记忆化递归 > 递归
+
+迭代版本比递归快很多，但递归代码量少更容易理解。对于有些算法迭代可能无法使用。使用尾递归优化，递归多余消耗甚至可能被消除。
+
+因此，我们经常使用递归，因为用它来解决问题会更简单。
 ## 勘误
 - p101 getElementAt() 中 index <= this.count 应该是 index < this.count
 - p111 CircularLinkedList 前少了个 class
