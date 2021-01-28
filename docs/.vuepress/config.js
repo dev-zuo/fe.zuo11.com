@@ -203,17 +203,23 @@ const nodejsSidebar = [{
   title: 'Node.js',
   sidebarDepth: 5,
   children: [
-    {
-      title: 'Node.js 笔记',
-      sidebarDepth: 5,
-      children: [
-        'base/1',
-        'base/2',
-        'base/3',
-        'base/4',
-        'base/5'
-      ]
-    }
+    // {
+    //   title: 'Node.js 笔记',
+    //   sidebarDepth: 5,
+    //   children: [
+    //     'base/1',
+    //     'base/2',
+    //     'base/3',
+    //     'base/4',
+    //     'base/5'
+    //   ]
+    // },
+    'node-doc',
+    'base/1',
+    'base/2',
+    'base/3',
+    'base/4',
+    'base/5'
   ]
 }]
 
