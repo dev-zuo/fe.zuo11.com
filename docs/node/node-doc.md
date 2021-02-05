@@ -1,7 +1,10 @@
 # Node.js 内置模块笔记
 
+参考
+- [Node.js 中文文档](http://nodejs.cn/api/) 
+- [Node.js 英文文档](https://nodejs.org/dist/latest-v14.x/docs/api/index.html)
+
 ## dns 模块
-可以用于
 ### dns.lookup() 
 DNS 查询，根据 hostname（主机名） 获取 IP 地址以及对应的版本。内部使用 getaddrinfo 系统调用，会读取 `/etc/hosts` 的配置
 ```js
@@ -117,9 +120,178 @@ dnsPromises.reverse('120.77.166.5').then(console.log).catch(err => {
 ```
 
 ## http 模块
-### http.get()、http.request()
-可以使用 http.get()、http.request() 发送 http 请求。这两个函数返回 http.ClientRequest 对象，
-### http.createServer()
+### http.ClientRequest 类 http.get()、http.request()
+可以使用 http.get()、http.request() 发送 http 请求。这两个函数返回 http.ClientRequest 对象
+- `http.request(url[, options][, callback])` 发送 http 请求
+- `http.get(url[, options][, callback])` 发送 get 请求方式的 http 请求，自动调用 req.end()
+
+http.ClientRequest 对象(假设命名为 request，一般简写为 req) 支持以下方法、事件
+- `request.write(chunk[, encoding][, callback])` Sends a chunk of the body 发送一个请求主体(body)的数据块。POST 传送数据时使用
+- `request.end([data[, encoding]][, callback])` 完成发送请求。 req.end(data, encoding, cb) 相当于调用 req.write(data, encoding) 后再调用 req.end(cb)
+- `request.destroy([error])` 销毁请求，用于替代之前的 request.abort()
+- `error 事件` req.on('error', cb) 如果请求出错，需要监听该事件接收错误，使用 try/catch 是无法捕获错误的。
+
+**发送 GET 请求**
+```js
+const http = require('http')
+const req = http.request('http://fe.zuo11.com', {
+  // hostname: 'localhost',
+  // port: 80,
+  // agent: false, // 是否使用代理
+  path: '/'
+}, (res) => {
+  const { statusCode } = res;
+  const contentType = res.headers['content-type'];
+  console.log(statusCode, contentType) // 200 text/html; charset=utf-8
+  res.setEncoding('utf8');
+  let rawData = '';
+  res.on('data', (chunk) => { rawData += chunk; });
+  res.on('end', () => {
+    // res 文本数据，如果是 JSON 字符串数据，需使用 JSON.parse(rawData);
+    console.log(rawData)
+  });
+}).on('error', (e) => {
+  // 请求返回的 http.ClientRequest 类，可以监听上面的一些方法
+  console.error(`请求出现错误: ${e.message}`);
+});
+req.end() // 必须
+```
+由于大多请求是不带请求体(body data)的 GET 请求，于是 Node.js 提供了更便捷的 http.get() 方法，和 http.request 的区别是无法设置 method 为 POST 等，而且内部会自动调用 req.end() 完成发送请求。
+```js
+const http = require('http')
+http.get('http://fe.zuo11.com', {
+  // hostname: 'localhost',
+  // port: 80,
+  // agent: false, // 是否使用代理
+  path: '/'
+}, (res) => {
+  const { statusCode } = res;
+  const contentType = res.headers['content-type'];
+  console.log(statusCode, contentType) // 200 text/html; charset=utf-8
+  res.setEncoding('utf8');
+  let rawData = '';
+  res.on('data', (chunk) => { rawData += chunk; });
+  res.on('end', () => {
+    // res 文本数据，如果是 JSON 字符串数据，需使用 JSON.parse(rawData);
+    console.log(rawData)
+  });
+}).on('error', (e) => {
+  // 请求返回的 http.ClientRequest 类，可以监听上面的一些方法
+  console.error(`请求出现错误: ${e.message}`);
+});
+```
+**发送 POST 请求**，如果需要在请求体携带数据，注意设置 `Content-Type` 请求头
+```js
+const http = require('http')
+const querystring = require('querystring')
+const req = http.request('http://127.0.0.1', {
+  path: '/user',
+  port: 8000,
+  method: 'POST',
+  headers: {
+    // 'Content-Type': 'application/json',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    // 'Content-Length': Buffer.byteLength(postData)
+    'Referer': 'www.zuo11.com'
+  }
+}, (res) => {
+  // res IncomingMessage
+  const { statusCode } = res;
+  const contentType = res.headers['content-type'];
+  console.log(statusCode, contentType) // 200 application/json; charset=utf-8
+  res.setEncoding('utf8');
+  let rawData = '';
+  res.on('data', (chunk) => { rawData += chunk; });
+  res.on('end', () => {
+    // res 文本数据，如果是 JSON 字符串数据，需使用 JSON.parse(rawData);
+    console.log(rawData) // {"code":200,"msg":"Success","data":{"b":1}}
+  });
+}).on('error', (e) => {
+  // 请求返回的 http.ClientRequest 类，可以监听上面的一些方法
+  console.error(`请求出现错误: ${e.message}`);
+});
+// req.write(JSON.stringify({ a: 1, b: 2 }))
+req.write(querystring.stringify({ a: 1, b: 2 })) // 'a=1&b=2'
+req.end() // 必须
+```
+对应的 koa 接口服务
+```js
+const Koa = require('koa')
+const Router = require('koa-router')
+const app = new Koa()
+app.use(require('koa-bodyparser')())
+const router = new Router()
+
+router.post('/user', ctx => {
+  console.log(ctx)
+  console.log(ctx.request.body)
+  ctx.body = {
+   code: 200,
+   msg: 'Success',
+   data: {
+     b: 1
+   }
+  }
+})
+
+app.use(router.routes())
+app.listen(8000, () => console.log('server listen on 8000 port'))
+```
+注意：使用 http 模块发送请求时，可以伪造 Referer。上面的测试中，在 Koa 里可以接收到 headers 参数
+
+![referer伪造.png](/images/node/referer伪造.png)
+
+### http.Server 类 http.createServer()
+http 模块除了可以发送 http 请求外，还可以使用创建 http 服务，监听处理 http 请求。使用 http.createServer() 创建 http 服务，返回 http.Server 实例，该实例调用 listen 方法开始监听服务
+```js
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  // console.log('req', req) // req IncomingMessage
+  // console.log('res', res) // res ServerResponse 
+  res.end('123'); // 接收到请求后，返回 "123"
+});
+console.log(server)
+server.on('clientError', (err, socket) => {
+  socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+});
+server.listen(8000);
+```
+### http.ServerResponse 类
+http.createServer 用于 http 模块在接收到 http 请求后，响应数据。是  http.createServer() 回调函数的第二个参数。
+```js
+// http.ServerResponse 类实例 response
+response.end([data[, encoding]][, callback])
+```
+
+### http.IncomingMessage 类
+http.IncomingMessage 类有两个常见的用处
+1. 在接收到 http 请求时，用于接收请求信息，是 http.createServer() 回调函数的第一个参数。
+2. 在发送 http 请求后，用于接收响应数据，是http.request() 和 http.get() 回调函数的参数
+
+用法大致如下
+```js
+const http = require('http')
+const querystring = require('querystring')
+const req = http.request('http://127.0.0.1', {
+  path: '/',
+}, (res) => {
+  console.log(res) // IncomingMessage
+  const { statusCode } = res;
+  const contentType = res.headers['content-type'];
+  console.log(statusCode, contentType)
+  res.setEncoding('utf8');
+  let rawData = '';
+  res.on('data', (chunk) => { rawData += chunk; });
+  res.on('end', () => {
+    console.log(rawData)
+  });
+}).on('error', (e) => {
+  // 请求返回的 http.ClientRequest 类，可以监听上面的一些方法
+  console.error(`请求出现错误: ${e.message}`);
+});
+req.end() // 必须
+```
 ### http.METHODS、http.STATUS_CODES
 http 模块包含两个常量属性，分别表示支持 http 请求方法，http 响应状态码集合。
 ```js
@@ -204,5 +376,100 @@ STATUS_CODES: {
 }
 ```
 ## https 模块
+http 模块不支持发送 https 请求，不支持监听 https 服务。这就需要使用 https 模块了。
+
+发送 https 请求，和 http 模块基本一致，将 https 换成 http 即可，注意 options 里面的 port 默认为 443
+
+在创建 https 服务时，需要增加 SSL 证书相关文件
+
+```js
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+  key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
+  cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
+};
+
+// 或者
+// const options = {
+//   pfx: fs.readFileSync('test/fixtures/test_cert.pfx'),
+//   passphrase: '密码'
+// };
+
+https.createServer(options, (req, res) => {
+  res.writeHead(200);
+  res.end('你好，世界\n');
+}).listen(8000);
+```
 ## http2
-HTTP/2 相关
+由于 HTTP/2 相比 HTTP 1.x 增加了很多特殊处理，需要使用专门的 http2 模块来处理。HTTP/2 必须是 https，不支持 http
+
+客户端发送 http 请求
+```js
+const http2 = require('http2');
+const fs = require('fs');
+const client = http2.connect('https://localhost:8443', {
+  ca: fs.readFileSync('证书.pem')
+});
+client.on('error', (err) => console.error(err));
+
+const req = client.request({ ':path': '/' });
+
+req.on('response', (headers, flags) => {
+  for (const name in headers) {
+    console.log(`${name}: ${headers[name]}`);
+  }
+});
+
+req.setEncoding('utf8');
+let data = '';
+req.on('data', (chunk) => { data += chunk; });
+req.on('end', () => {
+  console.log(`\n${data}`);
+  client.close();
+});
+req.end();
+```
+
+创建监听 http 服务
+```js
+const http2 = require('http2');
+const fs = require('fs');
+
+const server = http2.createSecureServer({
+  key: fs.readFileSync('密钥.pem'),
+  cert: fs.readFileSync('证书.pem')
+});
+server.on('error', (err) => console.error(err));
+
+server.on('stream', (stream, headers) => {
+  // 流是一个双工流。
+  stream.respond({
+    'content-type': 'text/html; charset=utf-8',
+    ':status': 200
+  });
+  stream.end('<h1>你好世界</h1>');
+});
+
+server.listen(8443);
+```
+
+## querystring 模块
+可以用于发送 `Content-Type` 为 `application/x-www-form-urlencoded` 时的数据处理
+
+```js
+const querystring = require('querystring');
+querystring.stringify({ foo: 'bar', baz: ['qux', 'quux'], corge: '' });
+// 返回 'foo=bar&baz=qux&baz=quux&corge='
+
+querystring.stringify({ foo: 'bar', baz: 'qux' }, ';', ':');
+// 返回 'foo:bar;baz:qux'
+
+querystring.parse('foo=bar&abc=xyz&abc=123') 
+// {
+//   foo: 'bar',
+//   abc: ['xyz', '123']
+// }
+```
+
