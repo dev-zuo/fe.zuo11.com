@@ -215,6 +215,7 @@ const nodejsSidebar = [{
     //   ]
     // },
     'node-doc',
+    'node-third-party',
     'base/1',
     'base/2',
     'base/3',

@@ -4,7 +4,7 @@
 - [Node.js 中文文档](http://nodejs.cn/api/) 
 - [Node.js 英文文档](https://nodejs.org/dist/latest-v14.x/docs/api/index.html)
 
-## dns 模块
+## dns
 ### dns.lookup() 
 DNS 查询，根据 hostname（主机名） 获取 IP 地址以及对应的版本。内部使用 getaddrinfo 系统调用，会读取 `/etc/hosts` 的配置
 ```js
@@ -119,7 +119,7 @@ dnsPromises.reverse('120.77.166.5').then(console.log).catch(err => {
 // Error: getHostByAddr ENOTFOUND 120.77.166.5
 ```
 
-## http 模块
+## http
 ### http.ClientRequest 类 http.get()、http.request()
 可以使用 http.get()、http.request() 发送 http 请求。这两个函数返回 http.ClientRequest 对象
 - `http.request(url[, options][, callback])` 发送 http 请求
@@ -375,7 +375,7 @@ STATUS_CODES: {
   '511': 'Network Authentication Required'
 }
 ```
-## https 模块
+## https
 http 模块不支持发送 https 请求，不支持监听 https 服务。这就需要使用 https 模块了。
 
 发送 https 请求，和 http 模块基本一致，将 https 换成 http 即可，注意 options 里面的 port 默认为 443
@@ -455,7 +455,7 @@ server.on('stream', (stream, headers) => {
 server.listen(8443);
 ```
 
-## querystring 模块
+## querystring
 可以用于发送 `Content-Type` 为 `application/x-www-form-urlencoded` 时的数据处理
 
 ```js
