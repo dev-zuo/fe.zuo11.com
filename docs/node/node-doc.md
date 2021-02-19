@@ -4,121 +4,69 @@
 - [Node.js 中文文档](http://nodejs.cn/api/) 
 - [Node.js 英文文档](https://nodejs.org/dist/latest-v14.x/docs/api/index.html)
 
-## dns
-### dns.lookup() 
-DNS 查询，根据 hostname（主机名） 获取 IP 地址以及对应的版本。内部使用 getaddrinfo 系统调用，会读取 `/etc/hosts` 的配置
+## child_process
+child_process 模块允许打开一个子进程去执行其他任务，该功能使 node 程序可以执行指定的 shell 脚本，可以用于自动化部署、定时任务
+
 ```js
-// dns.js
-const dns = require('dns');
+const { spawn } = require('child_process');
+const ls = spawn('ls', ['-lh', '/usr']); // 执行 ls -lh /usr 命令
 
-// 注意不能使用 http 等协议
-const arr = [
-  'www.zuo11.com',
-  'fe.zuo11.com'
-]
-
-arr.forEach(host => {
-  // dns 查询，
-  dns.lookup(host, (err, address, family) => {
-    console.log('host: %j \naddress: %j family: IPv%s', host, address, family);
-  });
-})
-
-// node dns.js
-// host: "fe.zuo11.com" 
-// address: "120.77.166.5" family: IPv4
-// host: "zuo11.com" 
-// address: "47.107.190.93" family: IPv4
-```
-### dns.resolveAny() 
-DNS 解析记录查询，比 dns.lookup() 查询的信息更详细，准确。忽略 `/etc/hosts` 的配置，始终通过网络执行 DNS 查询。可以根据 hostname 获取对应的解析类型、解析值。
-```js
-const dns = require('dns');
-
-// 注意不能使用 http 等协议
-const arr = [
-  'www.zuo11.com',
-  'fe.zuo11.com'
-]
-
-arr.forEach(host => {
-  dns.resolveAny(host, (err, ret) => {
-    console.log(err, ret)
-  })
-})
-// null [
-//   { value: 'fe-zuo11-com.oss-cn-shenzhen.aliyuncs.com', type: 'CNAME' }
-// ]
-// null [ { address: '47.107.190.93', ttl: 600, type: 'A' } ]
-```
-除了 dns.resolveAny() 外，还有粒度更细的相关 API，参考 [ns_dns_resolve_hostname](https://nodejs.org/dist/latest-v14.x/docs/api/dns.html#dns_dns_resolve_hostname_rrtype_callback)
-- `dns.resolveAny()` Uses the DNS protocol to resolve all records (also known as ANY or * query).
-- `dns.resolve4()` Uses the DNS protocol to resolve a IPv4 addresses (A records) for the hostname.
-- `dns.resolve6()` Uses the DNS protocol to resolve a IPv6 addresses (AAAA records) for the hostname.
-- `dns.resolveCname()` Uses the DNS protocol to resolve CNAME records for the hostname. 
-- `dns.resolveNs()` Uses the DNS protocol to resolve name server records (NS records) for the hostname.
-- ...
-
-### dns.reverse() 
-反向 DNS 查询
-```js
-const ipArr = [
-  '47.107.190.93',
-]
-
-ipArr.forEach(ip => {
-  // 使用 getHostByAddr 系统调用
-  // 执行一个反向 DNS 查询，将 IPv4 或 IPv6 地址解析为主机名数组。
-  dns.reverse(ip, (err, hostnames) => {
-    console.log('dns.reverse', err, hostnames)
-  })
-})
-```
-一般服务供应商不允许反向 DNS 查询，会报错 **Error: getHostByAddr ENOTFOUND 47.107.190.93**，参考: [Firebase reverse dns lookup ENOTFOUND error node.js dns](https://stackoverflow.com/questions/48548085/firebase-reverse-dns-lookup-enotfound-error-node-js-dns)
-```js
-// dns.reverse Error: getHostByAddr ENOTFOUND 47.107.190.93
-//     at QueryReqWrap.onresolve [as oncomplete] (dns.js:203:19) {
-//   errno: 'ENOTFOUND',
-//   code: 'ENOTFOUND',
-//   syscall: 'getHostByAddr',
-//   hostname: '47.107.190.93'
-// } undefined
-
-// don't allow reverse DNS lookups
-```
-
-参考: [DNS | Node.js v14.15.4 Documentation](https://nodejs.org/dist/latest-v14.x/docs/api/dns.html#dns_dns_lookup_hostname_options_callback)
-
-### dns.getServers()
-返回 IP 地址字符串的数组，该字符串根据 RFC 5952 进行了格式化，作为当前 DNS 解析。如果使用自定义端口，则字符串将包含端口部分。
-```js
-console.log(`dns.getServers()`, dns.getServers())
-// dns.getServers() [ '192.168.31.1' ] 本地路由地址
-```
-
-### dns Promise 形式接口
-使用 require('dns').promises 相当于之前的 dns，相关 API 都是 Promise 形式
-```js
-const dnsPromises = require('dns').promises
-
-dnsPromises.lookup('fe.zuo11.com').then((result) => {
-  console.log('address: %j family: IPv%s', result.address, result.family);
-  // address: "120.77.166.5" family: IPv4
+ls.stdout.on('data', (data) => {
+  // ls 产生的 terminal log 在这里 console
+  console.log(`stdout: ${data}`);
 });
 
-dnsPromises.resolveAny('fe.zuo11.com').then((ret) => {
-  console.log(ret)
+ls.stderr.on('data', (data) => {
+  // 如果发生错误，错误从这里输出
+  console.error(`stderr: ${data}`);
 });
-// [
-//   { value: 'fe-zuo11-com.oss-cn-shenzhen.aliyuncs.com', type: 'CNAME' }
-// ]
 
-dnsPromises.reverse('120.77.166.5').then(console.log).catch(err => {
-  console.log(err) // 错误
-})
-// Error: getHostByAddr ENOTFOUND 120.77.166.5
+ls.on('close', (code) => {
+  // 执行完成后正常退出就是 0 
+  console.log(`child process exited with code ${code}`);
+});
 ```
+执行写好的 shell 脚本
+```bash
+# deploy.sh
+# chmod +x deploy.sh 注意要加可执行权限
+# 执行 ./deploy.sh  或者 sh ./deploy.sh
 
+echo "开始部署"
+
+# 显示当前执行路径，用于排查路径错误
+pwd 
+
+# 拉取最新代码
+git pull
+
+# pm2 重启服务 node 服务，也可以是其他逻辑
+pm2 stop xxx
+pm2 start src/index.js -n 'xxx'
+
+echo "完成部署"
+```
+用于执行 shell 脚本的 node 程序
+```js
+// deploy.js
+const { spawn } = require('child_process');
+const child = spawn('sh', ['./deploy.sh']); // sh ./deploy.sh 运行脚本
+
+child.stdout.on('data', (data) => {
+  // 运行命令产生的 terminal log 在这里 console
+  console.log(`stdout: ${data}`);
+});
+
+child.stderr.on('data', (data) => {
+  // 如果发生错误，错误从这里输出
+  console.error(`stderr: ${data}`);
+});
+
+child.on('close', (code) => {
+  // 执行完成后正常退出就是 0 
+  console.log(`child process exited with code ${code}`);
+});
+```
 ## http
 ### http.ClientRequest 类 http.get()、http.request()
 可以使用 http.get()、http.request() 发送 http 请求。这两个函数返回 http.ClientRequest 对象
@@ -472,4 +420,117 @@ querystring.parse('foo=bar&abc=xyz&abc=123')
 //   abc: ['xyz', '123']
 // }
 ```
+## dns
+### dns.lookup() 
+DNS 查询，根据 hostname（主机名） 获取 IP 地址以及对应的版本。内部使用 getaddrinfo 系统调用，会读取 `/etc/hosts` 的配置
+```js
+// dns.js
+const dns = require('dns');
 
+// 注意不能使用 http 等协议
+const arr = [
+  'www.zuo11.com',
+  'fe.zuo11.com'
+]
+
+arr.forEach(host => {
+  // dns 查询，
+  dns.lookup(host, (err, address, family) => {
+    console.log('host: %j \naddress: %j family: IPv%s', host, address, family);
+  });
+})
+
+// node dns.js
+// host: "fe.zuo11.com" 
+// address: "120.77.166.5" family: IPv4
+// host: "zuo11.com" 
+// address: "47.107.190.93" family: IPv4
+```
+### dns.resolveAny() 
+DNS 解析记录查询，比 dns.lookup() 查询的信息更详细，准确。忽略 `/etc/hosts` 的配置，始终通过网络执行 DNS 查询。可以根据 hostname 获取对应的解析类型、解析值。
+```js
+const dns = require('dns');
+
+// 注意不能使用 http 等协议
+const arr = [
+  'www.zuo11.com',
+  'fe.zuo11.com'
+]
+
+arr.forEach(host => {
+  dns.resolveAny(host, (err, ret) => {
+    console.log(err, ret)
+  })
+})
+// null [
+//   { value: 'fe-zuo11-com.oss-cn-shenzhen.aliyuncs.com', type: 'CNAME' }
+// ]
+// null [ { address: '47.107.190.93', ttl: 600, type: 'A' } ]
+```
+除了 dns.resolveAny() 外，还有粒度更细的相关 API，参考 [ns_dns_resolve_hostname](https://nodejs.org/dist/latest-v14.x/docs/api/dns.html#dns_dns_resolve_hostname_rrtype_callback)
+- `dns.resolveAny()` Uses the DNS protocol to resolve all records (also known as ANY or * query).
+- `dns.resolve4()` Uses the DNS protocol to resolve a IPv4 addresses (A records) for the hostname.
+- `dns.resolve6()` Uses the DNS protocol to resolve a IPv6 addresses (AAAA records) for the hostname.
+- `dns.resolveCname()` Uses the DNS protocol to resolve CNAME records for the hostname. 
+- `dns.resolveNs()` Uses the DNS protocol to resolve name server records (NS records) for the hostname.
+- ...
+
+### dns.reverse() 
+反向 DNS 查询
+```js
+const ipArr = [
+  '47.107.190.93',
+]
+
+ipArr.forEach(ip => {
+  // 使用 getHostByAddr 系统调用
+  // 执行一个反向 DNS 查询，将 IPv4 或 IPv6 地址解析为主机名数组。
+  dns.reverse(ip, (err, hostnames) => {
+    console.log('dns.reverse', err, hostnames)
+  })
+})
+```
+一般服务供应商不允许反向 DNS 查询，会报错 **Error: getHostByAddr ENOTFOUND 47.107.190.93**，参考: [Firebase reverse dns lookup ENOTFOUND error node.js dns](https://stackoverflow.com/questions/48548085/firebase-reverse-dns-lookup-enotfound-error-node-js-dns)
+```js
+// dns.reverse Error: getHostByAddr ENOTFOUND 47.107.190.93
+//     at QueryReqWrap.onresolve [as oncomplete] (dns.js:203:19) {
+//   errno: 'ENOTFOUND',
+//   code: 'ENOTFOUND',
+//   syscall: 'getHostByAddr',
+//   hostname: '47.107.190.93'
+// } undefined
+
+// don't allow reverse DNS lookups
+```
+
+参考: [DNS | Node.js v14.15.4 Documentation](https://nodejs.org/dist/latest-v14.x/docs/api/dns.html#dns_dns_lookup_hostname_options_callback)
+
+### dns.getServers()
+返回 IP 地址字符串的数组，该字符串根据 RFC 5952 进行了格式化，作为当前 DNS 解析。如果使用自定义端口，则字符串将包含端口部分。
+```js
+console.log(`dns.getServers()`, dns.getServers())
+// dns.getServers() [ '192.168.31.1' ] 本地路由地址
+```
+
+### dns Promise 形式接口
+使用 require('dns').promises 相当于之前的 dns，相关 API 都是 Promise 形式
+```js
+const dnsPromises = require('dns').promises
+
+dnsPromises.lookup('fe.zuo11.com').then((result) => {
+  console.log('address: %j family: IPv%s', result.address, result.family);
+  // address: "120.77.166.5" family: IPv4
+});
+
+dnsPromises.resolveAny('fe.zuo11.com').then((ret) => {
+  console.log(ret)
+});
+// [
+//   { value: 'fe-zuo11-com.oss-cn-shenzhen.aliyuncs.com', type: 'CNAME' }
+// ]
+
+dnsPromises.reverse('120.77.166.5').then(console.log).catch(err => {
+  console.log(err) // 错误
+})
+// Error: getHostByAddr ENOTFOUND 120.77.166.5
+```

@@ -729,9 +729,9 @@ function run_cmd(cmd, args, callback) {
 // 接收到 push 事件时，执行 sh ./deploy-master.sh
 handler.on('push', function (event) {
   console.log('Received a push event for %s to %s', event.payload.repository.name, event.payload.ref);
-  // 分支判断，如果是master
-  if(event.payload.ref === 'refs/heads/master'){
-    console.log('deploy master..')
+  // 分支判断，如果是master，已改名 main
+  if(event.payload.ref === 'refs/heads/main'){
+    console.log('deploy main..')
     run_cmd('sh', ['./deploy-master.sh'], function(text){ console.log(text) });
   }
 })
@@ -764,5 +764,18 @@ docker-compose up -d --force-recreate --build
 这里我们要先在 ubuntu 系统里 git clone github的仓库，建议使用 ssh 的方法， 使用 `ssh-keygen -t rsa -C "xxx@qq.com"` 生成公钥私钥，然后再把公钥配置到 github 个人账号 setting 里的 ssh keys里面。就可以使用 ssh 地址正常拉取了。
 
 这样就可以实现提交代码到master分支就自动部署最新代码了
+
+## 常见错误
+
+### Is the docker daemon running?
+运行 docker 命令时，如果出现提示 `Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?`。
+
+一般是 docker 没有启动，如果是 mac，打开 docker app 即可启动 docker 服务。对于 linux 系统，使用 `systemctl start docker` 即可开启 docker 守护进程。参考 [Is the docker daemon running? - Stack Overflow](https://stackoverflow.com/questions/44678725/cannot-connect-to-the-docker-daemon-at-unix-var-run-docker-sock-is-the-docker)
+### failed to solve with frontend dockerfile
+运行 `docker build -t 镜像名 .` 使用当前目录的 Dockerfile 创建定制的镜像时，如果出现以下错误
+
+failed to solve with frontend dockerfile.v0: failed to read dockerfile: open /var/lib/docker/tmp/buildkit-mount477390958/Dockerfile: no such file or directory
+
+**一般是 Dockerfile 命名错误，注意大小写，不能是 DockerFile、dockerfile**
 
 

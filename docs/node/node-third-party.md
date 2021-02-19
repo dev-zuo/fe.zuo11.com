@@ -1,4 +1,33 @@
 # Node.js 第三方模块笔记
+
+## log4js
+部署到服务器时，console.log 打印的 log 是没有时间戳的，不利于线上查 bug，[log4js](https://github.com/log4js-node/log4js-node) 最基础的一个作用就是可以打印带时间戳的 log，当然它的功能不仅仅如此。对于 node 相关程序，建议都使用 log4js 来管理 log
+
+```js
+const log4js = require('log4js')
+const logger = log4js.getLogger()
+logger.level = 'debug' // default level is OFF - which means no logs at all.
+logger.info("打印带时间戳的基本信息")
+logger.error("打印带时间戳的错误信息")
+```
+
+## pm2
+使用 ssh 在终端连接 linux 服务器时，只有一个 terminal。对于 node http 服务，运行 node 项目后，终端会被占用。如果想运行其他程序需要 ctrl + c 结束当前 node 服务。[pm2(Process Manager 2)](https://github.com/Unitech/pm2) 可以很好的解决这个问题，使用 pm2 start 运行 node 项目，不会占用当前终端。相关 log 可以通过 pm2 logs 查看，如果想停止服务，使用 pm2 stop。
+
+```bash
+pm2 start index.js # 使用 pm2 运行 Node.js 项目
+pm2 start index.js -n '重命名服务' # 默认名为 index，防止重复建议重命名
+pm2 list # 列出当前使用 pm2 开启的项目
+pm2 logs # 显示 log，默认为最后 15 行
+pm2 logs --lines 100 # 显示最近 100 行
+pm2 logs APP-NAME|id # 显示某个项目的 log，使用 pm2 list 中的 name 字段
+pm2 stop     <app_name|namespace|id|'all'|json_conf> # 停止服务
+pm2 restart  <app_name|namespace|id|'all'|json_conf> # 重启服务
+pm2 delete   <app_name|namespace|id|'all'|json_conf> # 删除服务
+``` 
+
+在 docker 中，pm2 对应 pm2-runtime，支持 .yml 配置文件
+
 ## long-timeout
 setTimeout 和 setInterval 当指定时间大于 2^31-1 毫秒(24.8 天)时，功能会失效，回调函数会立即执行。使用 [long-timeout](https://www.npmjs.com/package/long-timeout) 模块可以解决这个问题。
 
