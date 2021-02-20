@@ -2556,6 +2556,470 @@ describe('Fibonacci Test', () => {
 迭代版本比递归快很多，但递归代码量少更容易理解。对于有些算法迭代可能无法使用。使用尾递归优化，递归多余消耗甚至可能被消除。
 
 因此，我们经常使用递归，因为用它来解决问题会更简单。
+
+## 第 10 章 树
+之前介绍的都是顺序数据结构，第一个非顺序结构是散列表。下面来学习另一种非顺序结构：树，**它对于快速查找数据非常有用**
+
+生活中常见的树结构：家谱、公司组织架构图
+
+- `根节点` 树顶部的节点，没有父节点
+- `内部节点` 至少有一个子节点的节点
+- `外部节点(叶节点)` 没有子元素的节点
+- `子树` 节点和它的后代可以组成子树
+- `节点深度(树高度)` 第 0 层为 根节点，第 1 层为根节点的子节点，以此类推
+
+### 二叉树和二叉搜索树(BST)
+**二叉树** 中的节点最多只能有两个子节点：左侧节点，右侧节点。该定义有助于写出高效地在树中插入、查找和删除节点的算法。
+
+**二叉搜索树（BST，Binary Search Tree）** 是二叉树的一种。它只允许在左侧子节点存储比父节点小的值，在右侧子节点存储比父节点大的值。
+
+```bash
+            11
+     7              15
+  5     9       13       20   
+3   6 8   10 12    14 18    25
+```
+
+创建 BinarySeachTree 类
+
+```js
+class Node {
+  constructor() {
+    this.key = key    // 节点值
+    this.left = null  // 左侧子节点
+    this.right = null // 右侧子节点
+  }
+}
+
+class BinarySeachTree {
+  constructor() {
+    this.root = null
+  }
+}
+```
+实现的方法：
+- `insert(key)` 向树中插入新的键
+- `inOrderTraverse()` 中序遍历
+- `preOrderTraverse()` 先序遍历
+- `postOrderTraverse()` 后序遍历
+- `search(key)` 在树中查找一个键，节点存在返回 true，不存在返回 false
+- `min()` 返回树中最小的键/值
+- `max()` 返回树中最大的键/值
+- `remove(key)` 从树中移除某个键
+
+树的遍历有三种方式：
+- **中序** 先遍历左侧、再遍历自己、再遍历右侧。以上行顺序访问 BST 所有节点，从最小到最大的顺序访问所有节点
+- **先序** 先遍历自己，再遍历左侧，再遍历右侧。以优先于后代节点的顺序访问每个节点，可用于打印结构化的文档
+- **后序** 先遍历左侧，再遍历右侧，再遍历自己。先访问节点的后代节点，再访问节点本身，可用于计算一个目录及其子目录中所有文件占用空间大小
+
+```js
+class Node {
+  constructor(key) {
+    this.key = key // 节点值
+    this.left = null // 左侧子节点
+    this.right = null // 右侧子节点
+  }
+}
+
+class BinarySeachTree {
+  constructor() {
+    this.root = null
+  }
+
+  // 递归：将 key 插入对应的位置
+  insertNode(node, key) {
+    // 比较 node 的键 和 key 的值谁大，大的放右边，小的放左边
+    if (node.key > key) {
+      // 放左边
+      if (node.left === null) {
+        node.left = new Node(key)
+      } else {
+        this.insertNode(node.left, key)
+      }
+    } else {
+      // 放右边
+      if (node.right === null) {
+        node.right = new Node(key)
+      } else {
+        this.insertNode(node.right, key)
+      }
+    }
+  }
+
+  // 向树中插入新的键
+  insert(key) {
+    if (this.root) {
+      this.insertNode(this.root, key)
+    } else {
+      this.root = new Node(key)
+    }
+  }
+
+  // 中序遍历
+  inOrderTraverse(cb) {
+    this.inOrderTraverseNode(this.root, cb)
+  }
+  inOrderTraverseNode(node, cb) {
+    if (node != null) {
+      this.inOrderTraverseNode(node.left, cb)
+      cb(node.key)
+      this.inOrderTraverseNode(node.right, cb)
+    }
+  }
+
+  // 先序遍历
+  preOrderTraverse(cb) {
+    this.preOrderTraverseNode(this.root, cb)
+  }
+  preOrderTraverseNode(node, cb) {
+    if (node != null) {
+      cb(node.key)
+      this.preOrderTraverseNode(node.left, cb)
+      this.preOrderTraverseNode(node.right, cb)
+    }
+  }
+
+  // 后序遍历
+  postOrderTraverse(cb) {
+    this.postOrderTraverseNode(this.root, cb)
+  }
+  postOrderTraverseNode(node, cb) {
+    if (node != null) {
+      this.postOrderTraverseNode(node.left, cb)
+      this.postOrderTraverseNode(node.right, cb)
+      cb(node.key)
+    }
+  }
+
+  //返回树中最小的键/值
+  min() {
+    return this.minNode(this.root)
+  }
+  // 最左侧是最小值
+  minNode(node) {
+    let current = node
+    while (current != null && current.left != null) {
+      current = current.left
+    }
+    return current
+  }
+
+  //返回树中最大的键/值
+  max() {
+    return this.maxNode(this.root)
+  }
+  // 最右侧是最大值
+  maxNode(node) {
+    let current = node
+    while (current != null && current.right != null) {
+      current = current.right
+    }
+    return current
+  }
+
+  // 在树中查找一个键，节点存在返回 true，不存在返回 false
+  search(key) {
+    return this.searchNode(this.root, key)
+  }
+  searchNode(node, key) {
+    if (node == null) {
+      return false
+    }
+    if (node.key > key) {
+      return this.searchNode(node.left, key)
+    } else if (node.key < key) {
+      return this.searchNode(node.right, key)
+    } else {
+      // 等于
+      return true
+    }
+  }
+
+  //从树中移除某个键
+  remove(key) {
+    this.root = this.removeNode(this.root, key)
+  }
+  removeNode(node, key) {
+    if (node == null) {
+      return null
+    }
+    if (node.key > key) {
+      node.left = this.removeNode(node.left, key)
+      return node
+    } else if (node.key < key) {
+      node.right = this.removeNode(node.right, key)
+      return node
+    } else {
+      // 相等
+      // 1. 如果是叶子节点
+      if (node.left == null && node.right == null) {
+        node = null
+        return node
+      }
+      // node.left node.right 不都为空
+
+      // 2. 左侧为空，右侧有值。或者左侧有值，右侧为空
+      if (node.left == null) {
+        node = node.right
+        return node
+      } else if (node.right == null) {
+        node = node.left
+        return node
+      }
+
+      // 3.两侧都有节点，寻找右侧最小的替代自己，然后从右侧子树移除自己
+      let minNode = this.minNode(node.right)
+      node.key = minNode.key
+      node.right = this.removeNode(node.right, minNode.key)
+      return node
+    }
+  }
+}
+module.exports = BinarySeachTree
+```
+示例
+```js
+const tree = new BinarySeachTree()
+let arr = [11, 7, 15, 5, 3, 9, 8, 10, 13, 12, 14, 20, 18, 25]
+arr.forEach((item) => tree.insert(item))
+
+function getArr(tree, type) {
+  const typeMap = {
+    inOrder: 'inOrderTraverse',
+    preOrder: 'preOrderTraverse',
+    postOrder: 'postOrderTraverse',
+  }
+  let arr = []
+  tree[typeMap[type]]((item) => arr.push(item))
+  return arr
+}
+
+console.log(getArr(tree, 'inOrder'))
+// [ 3,  5,  7,  8,  9, 10, 11, 12, 13, 14, 15, 18, 20, 25 ]
+console.log(getArr(tree, 'preOrder'))
+// [ 11,  7,  5,  3,  9,  8, 10, 15, 13, 12, 14, 20, 18, 25 ]
+console.log(getArr(tree, 'postOrder'))
+// [ 3,  5,  8, 10,  9,  7, 12, 14, 13, 18, 25, 20, 15, 11 ]
+
+console.log(tree.min()) // Node { key: 3, left: null, right: null }
+console.log(tree.max()) // Node { key: 25, left: null, right: null }
+
+console.log(tree.search(1)) // false
+console.log(tree.search(8)) // true
+
+tree.remove(6)
+console.log(getArr(tree, 'inOrder'))
+// [ 3,  5,  7,  8,  9, 10, 11, 12, 13, 14, 15, 18, 20, 25]
+tree.remove(5)
+console.log(getArr(tree, 'inOrder'))
+// [ 3, 7,  8,  9, 10, 11, 12, 13, 14, 15, 18, 20, 25]
+tree.remove(15)
+console.log(getArr(tree, 'inOrder'))
+// [ 3, 7,  8,  9, 10, 11, 12, 13, 14, 18, 20, 25]
+```
+
+### 自平衡树
+二叉搜索树（BST）存在一个问题，树的某一条分支可能非常深，这样树的一条分支有很多层，而其他分支就只有几层。
+
+在这条非常深的分支进行添加、移除和删除某个节点时，会有性能问题。为了解决这个问题，有一种树叫做 Adelson-Velsky-Landi 树（AVL 树）
+
+**AVL 树是一种自平衡的二叉搜索树(Self-balancing binary search tree)**，任何一个节点左右两侧子树高度之差最多为 1
+
+### Adelson-Velsky-Landi 树(AVL树)
+AVL 树得名于它的发明者G. M. Adelson-Velsky 阿杰尔松-韦利斯基 (苏联数学家、计算机科学家) 和 E. M. Landis 叶夫根尼·兰迪斯（苏联数学家），他们在 1962 年的论文《An algorithm for the organization of information》中发表了它。
+
+AVL 的完整写法有两个版本，其中 Velsky 和 Velskii 都可以，这可能是德语、英语之间转换的原因
+
+添加或移除节点时 AVL 树会尝试保持自平衡。任意一节点的左子树和右子树高度最多相差 1，添加或移除节点时，AVL 树会尽可能尝试转换为完全树(Complete Binary Tree)。
+
+什么是 **完全二叉树**？先来看什么是 **满二叉树**？深度为 k，且有 2 的 k 次方 - 1 个节点的树即为 **满二叉树**。
+```bash
+# 深度 2，子节点树 3
+  2
+1   3
+# 深度 3，子节点树 7
+     4
+  2      6
+1   3  5   7
+```
+如果一棵树是 **满二叉树**，那他一定是完全二叉树。满二叉树在最底部的叶子节点中删除某些节点，就是 **完全二叉树**。
+
+下面来实现一个 AVL 树，它直接继承 BST，区别在于 **在树中添加节点，或移除节点时，AVL 树会检测当前树是否平衡，如果不平衡，进行翻转处理，使其平衡。**
+```js
+const BinarySeachTree = require('./l-binary-search-tree')
+class AVLTree extends BinarySeachTree {
+  constructor() {
+    super()
+    this.root = null
+  }
+}
+```
+
+当树不平衡时（左子树与右子树高度差值 > 1），有 4 种情况，需要做平衡操作，一般称之为 AVL 旋转。4种情况，分别对应 4 种翻转逻辑
+- 左子树高度 > 右子树高度 且 左侧子节点也是平衡或左侧较重，简称 LL
+- 右子树高度 > 左子树高度 且 右侧子节点也是平衡或右侧较重，简称 RR
+- 左侧子树高度 > 右子树高度 且 左侧子节点右侧较重，简称 LR
+- 右子树高度 > 左子树高度 且 右侧子几点左侧较重，简称 RL
+
+以下是上面 4 中情况的平衡处理，翻转逻辑
+```js
+rotationLL(node) {
+  let temp = node.left // node 的左侧子节点作为新的根节点，先保存
+  node.left = temp.right // 将新根节点的右侧子节点移动到原根节点左侧
+  temp.right = node // 将原根节点移动到新根节点的右侧
+  return temp // 返回新的根节点
+}
+```
+![rotationLL.png](/images/base/rotationLL.png)
+
+```js
+rotationRR(node) {
+  let temp = node.right // node 的右侧子节点作为新的根节点，先保存
+  node.right = temp.left // 将新根节点的左侧子节点移动到原根节点右侧
+  temp.left = node // 将原根节点移动到新根节点的左侧
+  return temp // 返回新的根节点
+}
+```
+![rotationRR.png](/images/base/rotationRR.png)
+
+```js
+rotationLR(node) {
+  node.left = this.rotationRR(node.left)
+  return this.rotationLL(node)
+}
+```
+![rotationLR.png](/images/base/rotationLR.png)
+
+```js
+rotationRL(node) {
+  node.right = this.rotationLL(node.right)
+  return this.rotationRR(node)
+}
+```
+![rotationRL.png](/images/base/rotationRL.png)
+
+AVL 树实现如下
+
+```js
+const BinarySeachTree = require('./l-binary-search-tree')
+class Node {
+  constructor(key) {
+    this.key = key // 节点值
+    this.left = null // 左侧子节点
+    this.right = null // 右侧子节点
+  }
+}
+class AVLTree extends BinarySeachTree {
+  constructor() {
+    super()
+    this.root = null
+  }
+  // 省略
+  // rotationLL(node) {}
+  // rotationRR(node) {}
+  // rotationLR(node) {}
+  // rotationRL(node) {}
+
+  insert(key) {
+    this.root = this.insertNode(this.root, key)
+  }
+  insertNode(node, key) {
+    if (node == null) {
+      return new Node(key)
+    }
+    if (node.key > key) {
+      node.left = this.insertNode(node.left, key)
+    } else if (node.key < key) {
+      node.right = this.insertNode(node.right, key)
+    } else {
+      return node // 已经有值相同的节点
+    }
+    // 验证树是否平衡
+    // node.left 高度 - node.right 高度，其高度差也叫平衡因子 相差大于2 ，即不平衡
+    // 由于树本来就是平衡的，且每次都有做做平衡处理，因此插入新值后，最多高度相差 2
+    const balanceFactor = this.getBalanceFactor(node)
+    if (balanceFactor === 2) {
+      // 左侧不平衡
+      return node.left.key > key ? this.rotationLL(node) : this.rotationLR(node)
+    }
+    if (balanceFactor === -2) {
+      // 右侧不平衡，比较 node.right 的 key 与当前 key 大小
+      // 如果大于，插入左侧，左侧不平衡 RL，否则插入右侧 RR
+      return node.right.key > key ? this.rotationRL(node) : this.rotationRR(node)
+    }
+    return node
+  }
+  // 获取平衡因子
+  getBalanceFactor(node) {
+    return this.getNodeHeight(node.left) - this.getNodeHeight(node.right)
+    // -2 右不平衡
+    // 2 左不平衡
+  }
+  // 获取节点高度
+  getNodeHeight(node) {
+    if (node == null) {
+      return -1
+    }
+    return Math.max(this.getNodeHeight(node.left), this.getNodeHeight(node.right)) + 1
+  }
+
+  removeNode(node, key) {
+    node = super.removeNode(node, key) // 调用 BST 的移除节点方法
+    if (node == null) {
+      return node // 不需要平衡
+    }
+    // 检测树是否平衡
+    const balanceFactor = this.getBalanceFactor(node)
+    if (balanceFactor === 2) {
+      // 左侧不平衡，说明右侧删了节点，需要再判断左侧是 LL 还是 LR
+      let balanceFactorLeft = this.getBalanceFactor(node.left)
+      // 左侧子节点平衡(0)或者左右相差(1) 则为 LL 否则为 LR
+      return [0, 1].includes(balanceFactorLeft) ? this.rotationLL(node) : this.rotationLR(node)
+    }
+    if (balanceFactor === -2) {
+      // 右侧不平衡
+      let balanceFactorRight = this.getBalanceFactor(node.left)
+      // 右侧子节点平衡(0)或者左右相差(-1) 则为 RR 否则为 RL
+      return [0, -1].includes(balanceFactorRight) ? this.rotationRR(node) : this.rotationRL(node)
+    }
+  }
+}
+```
+示例
+```js
+const tree = new AVLTree()
+// let arr = [11, 7, 15, 5, 3, 9, 8, 10, 13, 12, 14, 20, 18, 25] // 标准树
+let arr = [11, 3, 8, 9, 10, 13, 12, 14, 20, 18, 25, 7, 15, 5] // 标准树
+// let arr = [11, 7]
+arr.forEach((item) => tree.insert(item))
+
+function getArr(tree, type) {
+  const typeMap = {
+    inOrder: 'inOrderTraverse',
+    preOrder: 'preOrderTraverse',
+    postOrder: 'postOrderTraverse',
+  }
+  let arr = []
+  tree[typeMap[type]]((item) => arr.push(item))
+  return arr
+}
+
+console.log(getArr(tree, 'inOrder'))
+// [ 3,  5,  7,  8,  9, 10, 11, 12, 13, 14, 15, 18, 20, 25]
+console.log(getArr(tree, 'preOrder'))
+// [(10, 8, 5, 3, 7, 9, 14, 12, 11, 13, 20, 18, 15, 25)]
+console.log(getArr(tree, 'postOrder'))
+// [ 3,  7,  5,  9,  8, 11, 13, 12, 15, 18, 25, 20, 14, 10 ]
+
+tree.remove(9)
+console.log(getArr(tree, 'inOrder'))
+console.log(getArr(tree, 'preOrder'))
+console.log(getArr(tree, 'postOrder'))
+
+```
+### 红黑树
 ## 勘误
 - p101 getElementAt() 中 index <= this.count 应该是 index < this.count
 - p111 CircularLinkedList 前少了个 class
+- p190 LR 应该是先做 RR 旋转再做 LL 旋转，示例代码就是这样
+- p191 RL 应该是先做 LL 旋转再做 RR 旋转ÅÅ
