@@ -2580,7 +2580,7 @@ describe('Fibonacci Test', () => {
 3   6 8   10 12    14 18    25
 ```
 
-创建 BinarySeachTree 类
+创建 BinarySearchTree 类
 
 ```js
 class Node {
@@ -2591,7 +2591,7 @@ class Node {
   }
 }
 
-class BinarySeachTree {
+class BinarySearchTree {
   constructor() {
     this.root = null
   }
@@ -2621,7 +2621,7 @@ class Node {
   }
 }
 
-class BinarySeachTree {
+class BinarySearchTree {
   constructor() {
     this.root = null
   }
@@ -2775,11 +2775,11 @@ class BinarySeachTree {
     }
   }
 }
-module.exports = BinarySeachTree
+module.exports = BinarySearchTree
 ```
 示例
 ```js
-const tree = new BinarySeachTree()
+const tree = new BinarySearchTree()
 let arr = [11, 7, 15, 5, 3, 9, 8, 10, 13, 12, 14, 20, 18, 25]
 arr.forEach((item) => tree.insert(item))
 
@@ -2826,6 +2826,9 @@ console.log(getArr(tree, 'inOrder'))
 **AVL 树是一种自平衡的二叉搜索树(Self-balancing binary search tree)**，任何一个节点左右两侧子树高度之差最多为 1
 
 ### Adelson-Velsky-Landi 树(AVL树)
+
+AVL 是为了解决 二叉查找树（BST）退化为链表的情况。
+
 AVL 树得名于它的发明者G. M. Adelson-Velsky 阿杰尔松-韦利斯基 (苏联数学家、计算机科学家) 和 E. M. Landis 叶夫根尼·兰迪斯（苏联数学家），他们在 1962 年的论文《An algorithm for the organization of information》中发表了它。
 
 AVL 的完整写法有两个版本，其中 Velsky 和 Velskii 都可以，这可能是德语、英语之间转换的原因
@@ -2846,8 +2849,8 @@ AVL 的完整写法有两个版本，其中 Velsky 和 Velskii 都可以，这�
 
 下面来实现一个 AVL 树，它直接继承 BST，区别在于 **在树中添加节点，或移除节点时，AVL 树会检测当前树是否平衡，如果不平衡，进行翻转处理，使其平衡。**
 ```js
-const BinarySeachTree = require('./l-binary-search-tree')
-class AVLTree extends BinarySeachTree {
+const BinarySearchTree = require('./l-binary-search-tree')
+class AVLTree extends BinarySearchTree {
   constructor() {
     super()
     this.root = null
@@ -2901,7 +2904,7 @@ rotationRL(node) {
 AVL 树实现如下
 
 ```js
-const BinarySeachTree = require('./l-binary-search-tree')
+const BinarySearchTree = require('./l-binary-search-tree')
 class Node {
   constructor(key) {
     this.key = key // 节点值
@@ -2909,7 +2912,7 @@ class Node {
     this.right = null // 右侧子节点
   }
 }
-class AVLTree extends BinarySeachTree {
+class AVLTree extends BinarySearchTree {
   constructor() {
     super()
     this.root = null
@@ -3017,7 +3020,211 @@ console.log(getArr(tree, 'preOrder'))
 console.log(getArr(tree, 'postOrder'))
 
 ```
-### 红黑树
+### 红黑树(RBT)
+红黑树（RBT，Red Black Tree）是为了解决 平衡树(AVL树) 在删除、插入操作时需要频繁调整(旋转)的情况。
+
+与 AVL 树一样，**红黑树** 也是一个自平衡二叉搜索树。它的左右子树高差有可能大于 1，所以红黑树不是严格意义上的平衡搜索二叉树。如果插入和删除的频率低(需要更多搜索操作)，那么 AVL 树比红黑树更好。如果插入、删除频率高（旋转可能较多），红黑树性能比 AVL 树好。
+
+红黑树遵循以下原则
+- 每个节点不是红的就是黑的
+- 树的根节点是黑的
+- 所有叶节点(用 NULL 引用表示的节点)都是黑的，注意：这里的叶节点不是最下面有值的节点，而是不存在的 NULL 空节点
+- 如果一个节点时红的，其他两个子节点都是黑的
+- 不能有两个相邻的红节点（一个红节点不能有红的父节点或子节点）
+- 从给定节点到它的后代节点（叶节点）的所有路径包含相同数量的黑色节点
+
+![rbt_example.png](/images/base/rbt_example.png)
+
+为了更加清楚的理解红黑树，很有必要使用红黑树可视化工具：[Red/Black Tree Visualization](https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)
+
+
+![rbt-tree-insert.png](/images/base/rbt-tree-insert.png)
+
+下面是红黑树部分代码，书中提供的代码仅 TS 版本有，JS 没有，没有介绍删除的逻辑，整体不怎么好理解，暂时放置，后面有时间再深入了解。
+
+```js
+const BinarySearchTree = require('./l-binary-search-tree')
+const Colors = {
+  BLACK: 'black',
+  RED: 'red',
+}
+class RedBlackNode {
+  constructor(key) {
+    this.key = key // 节点值
+    this.left = null // 左侧子节点
+    this.right = null // 右侧子节点
+    this.color = Colors.RED
+    this.parent = null
+  }
+  isRed() {
+    return this.color === Colors.RED
+  }
+}
+
+class RedBlackTree extends BinarySearchTree {
+  insert(key) {
+    // special case: first key
+    if (this.root == null) {
+      this.root = new RedBlackNode(key)
+      this.root.color = Colors.BLACK
+    } else {
+      const newNode = this.insertNode(this.root, key)
+      // 验证红黑树是否还是平衡的，是否满足所有要求：重新填色/旋转
+      this.fixTreeProperties(newNode)
+    }
+  }
+
+  insertNode(node, key) {
+    if (key < node.key) {
+      if (node.left == null) {
+        node.left = new RedBlackNode(key)
+        node.left.parent = node
+        return node.left
+      } else {
+        return this.insertNode(node.left, key)
+      }
+    } else if (node.right == null) {
+      node.right = new RedBlackNode(key)
+      node.right.parent = node
+      return node.right
+    } else {
+      return this.insertNode(node.right, key)
+    }
+  }
+
+  fixTreeProperties(node) {
+    while (node && node.parent && node.parent.color === Colors.RED && node.color !== Colors.BLACK) {
+      let parent = node.parent
+      const grandParent = parent.parent
+
+      // case A 父节点是左侧子节点
+      if (grandParent && grandParent.left === parent) {
+        const uncle = grandParent.right
+
+        // case 1: uncle of node is also red - only recoloring
+        // 叔节点也是红色重新填色
+        if (uncle && uncle.color === Colors.RED) {
+          grandParent.color = Colors.RED
+          parent.color = Colors.BLACK
+          uncle.color = Colors.BLACK
+          node = grandParent
+        } else {
+          // case 2: node is right child - left rotate
+          // 节点是右侧子节点 - RR
+          if (node === parent.right) {
+            this.rotationRR(parent)
+            node = parent
+            parent = node.parent
+          }
+
+          // case 3: node is left child - right rotate
+          // 节点是左侧子节点 - LL
+          this.rotationLL(grandParent)
+          // swap color
+          parent.color = Colors.BLACK
+          grandParent.color = Colors.RED
+          node = parent
+        }
+      } else {
+        // case B: parent is right child of grand parent
+        // 父节点是右侧子节点
+
+        const uncle = grandParent.left
+
+        // case 1: uncle is read - only recoloring
+        // 叔节点是红色节点 - 只需重新填色
+        if (uncle && uncle.color === Colors.RED) {
+          grandParent.color = Colors.RED
+          parent.color = Colors.BLACK
+          uncle.color = Colors.BLACK
+          node = grandParent
+        } else {
+          // case 2: node is left child - left rotate
+          // 节点是左侧子节点 LL
+          if (node === parent.left) {
+            this.rotationLL(parent)
+            node = parent
+            parent = node.parent
+          }
+
+          // case 3: node is right child - left rotate
+          // 节点是右侧子节点 RR
+          this.rotationRR(grandParent)
+          // swap color
+          parent.color = Colors.BLACK
+          grandParent.color = Colors.RED
+          node = parent
+        }
+      }
+    }
+    this.root.color = Colors.BLACK
+  }
+
+  /**
+   * Left left case: rotate right
+   *
+   *       b                           a
+   *      / \                         / \
+   *     a   e -> rotationLL(b) ->   c   b
+   *    / \                             / \
+   *   c   d                           d   e
+   *
+   * @param node Node<T>
+   */
+  rotationLL(node) {
+    const tmp = node.left
+    node.left = tmp.right
+    if (tmp.right && tmp.right.key) {
+      tmp.right.parent = node
+    }
+    tmp.parent = node.parent
+    if (!node.parent) {
+      this.root = tmp
+    } else {
+      if (node === node.parent.left) {
+        node.parent.left = tmp
+      } else {
+        node.parent.right = tmp
+      }
+    }
+    tmp.right = node
+    node.parent = tmp
+  }
+
+  /**
+   * Right right case: rotate left
+   *
+   *     a                              b
+   *    / \                            / \
+   *   c   b   -> rotationRR(a) ->    a   e
+   *      / \                        / \
+   *     d   e                      c   d
+   *
+   * @param node Node<T>
+   */
+  rotationRR(node) {
+    const tmp = node.right
+    node.right = tmp.left
+    if (tmp.left && tmp.left.key) {
+      tmp.left.parent = node
+    }
+    tmp.parent = node.parent
+    if (!node.parent) {
+      this.root = tmp
+    } else {
+      if (node === node.parent.left) {
+        node.parent.left = tmp
+      } else {
+        node.parent.right = tmp
+      }
+    }
+    tmp.left = node
+    node.parent = tmp
+  }
+}
+```
+
+
 ## 勘误
 - p101 getElementAt() 中 index <= this.count 应该是 index < this.count
 - p111 CircularLinkedList 前少了个 class
