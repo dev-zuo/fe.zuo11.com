@@ -3224,7 +3224,297 @@ class RedBlackTree extends BinarySearchTree {
 }
 ```
 
+## 第 11 章 二叉堆和堆排序
 
+二叉堆是一种特殊的二叉树，也叫堆数据结构，它能高效、快速的找出最大值和最小值，常被应用于 **优先队列**、**堆排序算法** 中
+
+二叉堆有两个特性：
+- 它是一颗完全二叉树，树的每一层都有左侧和右侧子节点（除了最后一层的叶节点），并且最后一层的叶节点尽可能都是左侧子节点，这叫做**结构特性**。
+- 二叉堆不是最小堆就是最大堆。最小堆允许快速导出树的最小值，最大堆允许快速导出树的最大值。**所有节点都大于等于（最大堆）或小于等于（最小堆）每个它的子节点。**
+
+![heap.png](/images/base/heap.png)
+### 最小堆(MinHeap)
+所有节点都小于它的子节点。
+
+二叉树有两种表示方法：
+1. Node（节点） 指针表示方法
+2. 数组
+
+
+这里使用数组来表示 heap 堆，如下图
+
+![heap-array.png](/images/base/heap-array.png)
+
+```js
+class MinHeap {
+  constructor() {
+    this.heap = []
+  }
+}
+```
+
+对于给定位置 index 的节点：
+- left 左侧节点 2 * index + 1
+- right 右侧节点 2 * index + 2 
+- parent 父节点 index 为 0 时 undefined， 如果位置可用为 Math.floor((index - 1) / 2)
+
+堆主要操作
+- `insert(value)` 向堆中插入一个值，成功返回 true，失败返回 false
+- `extract()`  `[ˈekstrækt]` 提取，移除最小值（最小堆）或最大值，并返回这个值
+- `findMinimum()` 返回最小值（最小堆）或最大值（最大堆）且不会移除这个值
+
+insert 时，一般插入到数组最后，然后比较它与 parent 元素的大小，决定是否上移动，最小堆上移过程如下图
+
+![heap-insert.png](/images/base/heap-insert.png)
+
+extract() 时，与 insert 相反，我们把第一个元素要删除，将最后一个元素替换到第一个元素。然后判断大小，进行下移，过程如下图
+
+![heap-extract.png](/images/base/heap-extract.png)
+
+下面是最小堆具体实现代码
+
+```js
+class MinHeap {
+  constructor() {
+    this.heap = []
+  }
+
+  getLeftIndex(index) {
+    return 2 * index + 1
+  }
+
+  getRightIndex(index) {
+    return 2 * index + 2
+  }
+
+  getParentIndex(index) {
+    if (index === 0) {
+      return undefined
+    }
+    return Math.floor((index - 1) / 2)
+  }
+
+  insert(value) {
+    if (value != null) {
+      // 添加到末尾
+      this.heap.push(value)
+      // 将最后一个节点和其父节点比较，如果 > 就和父节点交换 sift [sɪft] 筛选
+      this.siftUp(this.heap.length - 1)
+      return true
+    }
+    return false
+  }
+
+  // 上移操作
+  siftUp(index) {
+    let parent = this.getParentIndex(index)
+    while (index > 0 && this.heap[parent] > this.heap[index]) {
+      this.swap(this.heap, parent, index)
+      index = parent
+      parent = this.getParentIndex(index)
+    }
+  }
+
+  // 交换数组中 a 和 b 的值
+  swap(arr, a, b) {
+    const temp = arr[a]
+    arr[a] = arr[b]
+    arr[b] = temp
+  }
+
+  size() {
+    return this.heap.length
+  }
+
+  isEmpty() {
+    return this.size() === 0
+  }
+
+  // 最小值或最大值
+  findMinimum() {
+    return this.isEmpty() ? undefined : this.heap[0]
+  }
+
+  extract() {
+    if (this.isEmpty()) {
+      return undefined
+    }
+    if (this.size() === 1) {
+      return this.heap.shift()
+    }
+    // 返回最小值/最大值，末尾元素替代 root 元素，再下移操作
+    const removedValue = this.heap[0]
+    this.heap[0] = this.heap.pop()
+    this.siftDown(0)
+    return removedValue
+  }
+
+  // 下移操作，堆化
+  siftDown(index) {
+    let element = index
+    const left = this.getLeftIndex(index)
+    const right = this.getRightIndex(index)
+    const size = this.size()
+    // 左侧子节点比父节点小，不是最小堆，需要处理
+    if (left < size && this.heap[element] > this.heap[left]) {
+      element = left
+    }
+    // 右侧子节点比原 index 或左侧子节点大，将 element 设置为 右侧子节点位置
+    if (right < size && this.heap[element] > this.heap[right]) {
+      element = right
+    }
+    if (index !== element) {
+      this.swap(this.heap, index, element)
+      this.siftDown(element)
+    }
+  }
+
+  getAsArray() {
+    return this.heap
+  }
+
+  clear() {
+    this.heap = []
+  }
+
+  heapify(array) {
+    if (array) {
+      this.heap = array
+    }
+    const maxIndex = Math.floor(this.size() / 2) - 1
+    // official demo error
+    // for (let i = 0; i <= maxIndex; i++) {
+    for (let i = maxIndex; i >= 0; i--) {
+      this.siftDown(i)
+    }
+    return this.heap
+  }
+}
+
+module.exports = {
+  MinHeap,
+}
+```
+
+### 最大堆(MaxHeap)
+最大堆和最小堆的比较正好相反，为了节省代码，我将比较函数直接写成了 > 或 <，在这里就显示出它的不足了。
+
+如果我们像书里那样写的比较函数，我们只需要重写比较函数即可，而不用再修改比较的代码了。用以下代码可以零最小堆轻松实现最大堆。
+
+```js
+export class MaxHeap extends MinHeap {
+  constructor(compareFun = defaultCompare) {
+    super(compareFn)
+    this.compareFn = reverseCompare(compareFn)
+    function reverseCompare(compareFn) {
+      return (a, b) => compareFn(b, a)
+    }
+  }
+}
+```
+### 堆排序算法
+可以使用二叉堆数据结构来帮助我们创建一个排序算法：堆排序算法
+
+先将数组堆化，然后使用 extract 删除提取顶部元素（最大值或最小值），extract 内部会自动 shiftDown 下移并堆化。
+```js
+  heapSort(array, compareFn) {
+    if (array.length <= 1) {
+      return array
+    }
+
+    let result = []
+    this.heapify(array) // 堆化
+    // 每次取堆顶部即可
+    while (this.size() >= 1) {
+      result.push(this.extract())
+    }
+    this.heap = result
+    return result
+  }
+```
+
+整体单元测试
+```js
+const expect = require('chai').expect
+const { MinHeap, heapSort } = require('../src/o-min-heap')
+
+describe('Heap', () => {
+  let heap
+
+  beforeEach(() => {
+    heap = new MinHeap()
+  })
+
+  it('starts empty MinHeap', () => {
+    expect(heap.size()).to.equal(0)
+    expect(heap.isEmpty()).to.equal(true)
+  })
+
+  it('inserts values in the MinHeap', () => {
+    const resultArray = []
+    for (let i = 1; i < 10; i++) {
+      resultArray.push(i)
+      heap.insert(i)
+      expect(heap.getAsArray()).to.deep.equal(resultArray)
+    }
+  })
+
+  it('finds the min value from the MinHeap', () => {
+    const resultArray = []
+    for (let i = 10; i >= 1; i--) {
+      resultArray.push(i)
+      heap.insert(i)
+      // console.log(heap.findMinimum(), i)
+      expect(heap.findMinimum()).to.equal(i)
+    }
+  })
+
+  it('performs heapify in the MinHeap', () => {
+    const resultArray = []
+    for (let i = 10; i >= 1; i--) {
+      resultArray.push(i)
+    }
+    expect(heap.heapify(resultArray)).to.deep.equal(resultArray)
+  })
+
+  it('extracts the min value from the MinHeap', () => {
+    let resultArray = []
+    for (let i = 1; i < 10; i++) {
+      resultArray.push(i)
+      heap.insert(i)
+      expect(heap.getAsArray()).to.deep.equal(resultArray)
+    }
+
+    resultArray = [
+      [],
+      [2, 4, 3, 8, 5, 6, 7, 9],
+      [3, 4, 6, 8, 5, 9, 7],
+      [4, 5, 6, 8, 7, 9],
+      [5, 7, 6, 8, 9],
+      [6, 7, 9, 8],
+      [7, 8, 9],
+      [8, 9],
+      [9],
+      [],
+    ]
+
+    for (let i = 1; i < 10; i++) {
+      expect(heap.extract()).to.equal(i)
+      expect(heap.getAsArray()).to.deep.equal(resultArray[i])
+    }
+  })
+
+  it('heapify test', () => {
+    let arr = [2, 5, 4, 1, 3, 6]
+    expect(heap.heapify(arr)).to.deep.equal([1, 2, 4, 5, 3, 6])
+  })
+
+  it('Heap Sort', () => {
+    const array = [3, 2, 5, 6, 1, 7, 8, 9]
+    expect(heap.heapSort(array)).to.deep.equal([1, 2, 3, 5, 6, 7, 8, 9])
+  })
+})
+```
 ## 勘误
 - p101 getElementAt() 中 index <= this.count 应该是 index < this.count
 - p111 CircularLinkedList 前少了个 class
