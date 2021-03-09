@@ -3515,6 +3515,340 @@ describe('Heap', () => {
   })
 })
 ```
+
+## 第 12 章 图 Graph
+之前学过散列表、树（包含二叉堆）这两种非线性数据结构，现在来看另一种非线性数据结构 ---- 图。
+
+图是网络结构的抽象模型，是一组由边连接的节点（或顶点 vertex `[ˈvɜːteks]` ）。任何社交网络都可以用图来表示，图还可以用来表示道路、航班及通信。
+
+图 G = (V, E)，V 是一组顶点，E是一组边，连接顶点
+
+![graph.png](/images/base/graph.png)
+
+图的相关术语
+- `相邻顶点` 由一条边连接在一起的顶点
+- `度` 一个顶点的 **度** 是其相邻顶点的数量
+- `路径` 顶点到顶点的路径，比如上图中的 ABEI、ACDG
+- `简单路径` 要求不包含重复的顶点，不如上图中的 ADG。
+- `环` 比如 ADCA，如果图中不存在环，则该图是 **无环的**。如果图中每个顶点间都存在路径，则该图是 **连通的**。
+- `有向图和无向图` 图可以是无向的（边没有方向）或有向的（有向图）。如果图的每两个顶点间在双向上都存在路径，则该图是 **强联通的**。
+- `加权和未加权` 图的边如果被赋予了权值，图就是加权的。
+
+### 图的三种表示方式
+- `邻接矩阵`，图最常见的实现方式。二维数组表示，相邻为 1， 不相邻为 0。A 和 BCD 相邻，B 和 EF 相邻，C 和 A D G 相邻，依次类推 x 和 y 是否相邻，`array[x][y]` 是否为 1
+- `邻接表` 可以用数组、链表、设置是散列表或字典来表示相邻顶点，比如 { a: [b, c, d], b: {a, e, f}, ... }
+- `关联矩阵` 用于边的数量比顶点多的情况，以节省空间和内容。二维数组 x 为边，y 为顶点。v1 边，A B 有值，v2 边 A C 有值，依次类推
+
+![graph-expression.png](/images/base/graph-expression.png)
+
+### Graph 实现
+这里使用邻接表，字典来实现
+```js
+const Dictionary = require('./h-dictionary')
+
+class Graph {
+  constructor(isDirected = false) {
+    this.isDirected = isDirected // 是否有向
+    this.vertices = [] // 数组存储顶点
+    this.adjList = new Dictionary() // 存储接邻表
+  }
+
+  // 添加顶点
+  addVertex(v) {
+    this.vertices.push(v)
+    this.adjList.set(v, [])
+  }
+
+  // 添加顶点之间的边，v, w两个顶点
+  addEdge(v, w) {
+    if (!this.adjList.get(v)) {
+      this.addVertex(v)
+    }
+    if (!this.adjList.get(w)) {
+      this.addVertex(w)
+    }
+    this.adjList.get(v).push(w)
+    if (!this.isDirected) {
+      // 如果无向，添加一条回去的边
+      this.adjList.get(w).push(v)
+    }
+  }
+
+  getVertices() {
+    return this.vertices
+  }
+
+  getAdjList() {
+    return this.adjList
+  }
+
+  toString() {
+    let str = ''
+    this.vertices.forEach((item) => {
+      str += `${item} -> `
+      this.adjList.get(item).forEach((subItem) => {
+        str += `${subItem}`
+      })
+      str += '\n'
+    })
+    return str
+  }
+}
+
+module.exports = Graph
+```
+单元测试
+```js
+const expect = require('chai').expect
+const Graph = require('../src/p-graph')
+let graph = null
+const myVertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+
+describe('graph test', () => {
+  beforeEach(() => {
+    graph = new Graph()
+    myVertices.forEach((item) => graph.addVertex(item))
+  })
+
+  it('grap base', () => {
+    graph.addEdge('A', 'B')
+    graph.addEdge('A', 'C')
+    graph.addEdge('A', 'D')
+    expect(graph.toString()).to.equal(
+      'A -> BCD\nB -> A\nC -> A\nD -> A\nE -> \nF -> \nG -> \nH -> \nI -> \n'
+    )
+    graph.addEdge('C', 'D')
+    graph.addEdge('C', 'G')
+    graph.addEdge('D', 'G')
+    graph.addEdge('D', 'H')
+    graph.addEdge('B', 'E')
+    graph.addEdge('B', 'F')
+    graph.addEdge('E', 'I')
+    console.log(graph.toString())
+  })
+})
+// A -> BCD
+// B -> AEF
+// C -> ADG
+// D -> ACGH
+// E -> BI
+// F -> B
+// G -> CD
+// H -> D
+// I -> E
+```
+### 图的遍历（广度/深度优先）
+有两种算法可以进行图的遍历：
+- `广度优先搜索`（Breadth-First Search, BFS）
+- `深度优先搜索`（Depth-First Search, DFS）
+
+![bfs-dfs.png](/images/base/bfs-dfs.png)
+
+图遍历可以用于：寻找特定的顶点、寻找两个顶点之间的路径、检查图是否连通，检查图是否有环等等
+
+算法 | dataStrcut | 描述
+--- | --- | ---
+深度优先算法 | 栈 | 将顶点存入栈，顶点是沿着路径被搜索的，存在新的相邻顶点就去访问
+广度优先算法 | 队列 | 将顶点存入队列，最先入队列的顶点先被探索
+
+标注已经访问过的顶点时，用三种颜色来反映他们的状态
+- `白色` 表示顶点还没有被访问
+- `灰色` 表示顶点被访问过，但并未被探索过
+- `黑色` 表示顶点被访问，且被完全探索过
+
+```js
+const Colors = {
+  WHITE: 0,
+  GREY: 1,
+  BLACK: 2
+}
+
+// 初始化每个顶点颜色
+const initializeColor = vertices => {
+  const color = {}
+  vertices.forEach(item => {
+    color[item] = Colors.WHITE
+  })
+  return color
+}
+```
+#### 广度优先搜索
+- 使用队列，初始化所有起点为白色
+- 将搜索的起点入队列。开一个 while 循环，当队列不为空时执行。
+- 出队列，标记当前节点为灰色(访问过)，遍历字典中与其连接的顶点，如果顶点是白色(未被访问)入队列，标记为灰色。遍历完后，将自己标记为黑色(已探索)，执行回调，参数为顶点自己
+- 出队列，上一个顶点的第一个子节点，重复步骤 3，依次类推
+```js
+const Queue = require('./7-queue-obj')
+const breadthFirstSearch = (graph, startVertex, callback) => {
+  const vertices = graph.getVertices() // 顶点数组
+  const adjList = graph.getAdjList() // 图，字典
+  const color = initializeColor(vertices) // 初始化每个顶点颜色
+  const queue = new Queue()
+  queue.enqueue(startVertex) // 入队列
+
+  // 队列不为空
+  while (!queue.isEmpty()) {
+    const u = queue.dequeue()
+    const neighbors = adjList.get(u) // 获取相邻的顶点列表
+    color[u] = Colors.GREY
+    neighbors.forEach((item) => {
+      if (color[item] === Colors.WHITE) {
+        color[item] = Colors.GREY
+        queue.enqueue(item)
+      }
+    })
+    color[u] = Colors.BLACK
+    if (callback) {
+      callback(u)
+    }
+  }
+}
+
+// 简单使用
+const Graph = require('./p-graph')
+const myVertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+let graph = new Graph()
+myVertices.forEach((item) => graph.addVertex(item))
+graph.addEdge('A', 'B')
+graph.addEdge('A', 'C')
+graph.addEdge('A', 'D')
+graph.addEdge('C', 'D')
+graph.addEdge('C', 'G')
+graph.addEdge('D', 'G')
+graph.addEdge('D', 'H')
+graph.addEdge('B', 'E')
+graph.addEdge('B', 'F')
+graph.addEdge('E', 'I')
+breadthFirstSearch(graph, myVertices[0], console.log)
+// A B C D E F G H I
+```
+
+**使用 BFS 寻找最短路径**，BFS 算法除了可以输出被访问顶点的顺序外，还可以用于寻找最短路径。来看下面的问题：
+
+> 给定一个图 G 和源顶点 v，找出每个顶点 u 和 v 之间最短路径距离（以边的数量计算）
+
+对于给定的顶点 v，广度优先算法会先访问所有与其距离为 1 的顶点，接着是距离为 2 的顶点，以此类推。可以使用广度优先算法来解决这个问题。在前面例子的基础上，加两个变量收集距离与上一个顶点：
+
+- 从 v 到 u 的距离 `distances[u]`
+- 前溯点(上一个顶点) `predecessors[u]`，用于推导从 v 到其他每个顶点 u 的最短路径
+
+```js {7-8,11-15,25-28,34}
+const Queue = require('./7-queue-obj')
+const BFS = (graph, startVertex) => {
+  const vertices = graph.getVertices() // 顶点数组
+  const adjList = graph.getAdjList() // 图，字典
+  const color = initializeColor(vertices) // 初始化每个顶点颜色
+  const queue = new Queue()
+  const distances = {} // 每个顶点到 startVertex 的距离
+  const predecessors = {} // 每个顶点的上一个顶点
+  queue.enqueue(startVertex) // 入队列
+
+  // 初始化
+  vertices.forEach((item) => {
+    distances[item] = 0
+    predecessors[item] = null
+  })
+
+  // 队列不为空
+  while (!queue.isEmpty()) {
+    const u = queue.dequeue()
+    const neighbors = adjList.get(u) // 获取相邻的顶点列表
+    color[u] = Colors.GREY
+    neighbors.forEach((item) => {
+      if (color[item] === Colors.WHITE) {
+        color[item] = Colors.GREY
+        // 与顶点的距离 = 上个节点距顶点的距离 + 1
+        distances[item] = distances[u] + 1
+        // 存储上一个顶点
+        predecessors[item] = u
+        queue.enqueue(item)
+      }
+    })
+    color[u] = Colors.BLACK
+  }
+  return { distances, predecessors }
+}
+
+const Graph = require('./p-graph')
+const myVertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+let graph = new Graph()
+myVertices.forEach((item) => graph.addVertex(item))
+graph.addEdge('A', 'B')
+// ... 省略部分代码
+graph.addEdge('E', 'I')
+// breadthFirstSearch(graph, myVertices[0], console.log)
+// A B C D E F G H I
+
+console.log(BFS(graph, myVertices[0]))
+// {
+//   distances: { A: 0, B: 1, C: 1, D: 1, E: 2, F: 2, G: 2, H: 2, I: 3 },
+//   predecessors: {
+//     A: null,
+//     B: 'A',
+//     C: 'A',
+//     D: 'A',
+//     E: 'B',
+//     F: 'B',
+//     G: 'C',
+//     H: 'D',
+//     I: 'E'
+//   }
+// }
+```
+由此我们可以得出顶点 A 与 顶点 B、C、D 的距离为 1，与 E、F、G、H 的距离为 2，与 I 的距离为 3。再通过 predecessors 可以找到具体的路径信息。
+```js
+let { distances, predecessors } = BFS(graph, myVertices[0])
+let topVetex = myVertices[0]
+const Stack = require('./2-stack-obj')
+myVertices.forEach((item, index) => {
+  if (index === 0) {
+    return
+  }
+  let stack = new Stack()
+  stack.push(item)
+  let temp = item
+  while (predecessors[temp] !== topVetex) {
+    temp = predecessors[temp]
+    stack.push(temp) // 插入首部
+  }
+  stack.push(topVetex)
+  let str = ''
+  while (!stack.isEmpty()) {
+    str += stack.pop() + (stack.isEmpty() ? '' : ' - ')
+  }
+  console.log(str)
+})
+// A - B
+// A - C
+// A - D
+// A - B - E
+// A - B - F
+// A - C - G
+// A - D - H
+// A - B - E - I
+```
+**深入学习最短路径算法**，本章的图不是加权图，如果需要计算加权图中的最短路径（比如，城市 A 和 城市 B 的最短路径），广度优先算法未必合适。还有一些其他算法，比如
+
+- **Dijkstra 算法** 解决了单源最短路径问题。
+- **Bellman-ford 算法** 解决了边权值为负的单源最短路径问题。
+- **A*搜索算法** 解决了求仅一对顶点间的最短路径问题，用经验法则来加速搜索过程。
+- **Floyd-Warshall 算法** 解决了求所有顶点对之间最短路径这一问题。
+
+后面会学习 Dijkstra 算法与 Floyd-Warshall 算法。
+
+#### 深度优先搜索
+### 最短路径算法
+### 最小生成树
+
+## 第 13 章 排序和搜索算法
+## 第 14 章 算法设计与技巧
+### 分而治之
+### 动态规划
+### 贪心算法
+### 回溯算法
+### 函数式编程
+
+## 第 15 章 算法复杂度
 ## 勘误
 - p101 getElementAt() 中 index <= this.count 应该是 index < this.count
 - p111 CircularLinkedList 前少了个 class

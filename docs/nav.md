@@ -7,6 +7,7 @@ keywords: 前端网址导航,前端常用网站,前端开发必备导航
 分类 | 链接
 --- | ---
 Vue.js | [Vue.js](https://cn.vuejs.org/v2/guide/)、[Vue Router](https://router.vuejs.org/zh/)、[Vuex](https://vuex.vuejs.org/zh/)、[Vue CLI](https://cli.vuejs.org/zh/)、[服务端渲染SSR](https://ssr.vuejs.org/zh/)、[VuePress中文文档](https://www.vuepress.cn/)
+React |  [React Docs](https://reactjs.org/docs/getting-started.html)、[React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 UI框架 | [Element UI](https://element.eleme.cn/#/zh-CN/component/radio)、[Vant](https://vant-contrib.gitee.io/vant/#/zh-CN/)
 微信开发 | [小程序运行环境](https://developers.weixin.qq.com/miniprogram/dev/framework/runtime/env.html) [NW.js(node-webkit)](https://github.com/nwjs/nw.js)
 JavaScript | [TC39 Finished Proposals](https://github.com/tc39/proposals/blob/master/finished-proposals.md)、[阮一峰 ES6 入门教程](https://es6.ruanyifeng.com/)
