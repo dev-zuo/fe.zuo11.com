@@ -8,6 +8,7 @@ const dailySidebar = [
     collapsable: false,
     children: [
       '',
+      '2021-03',
       '2021-02',
       '2020-12',
       '2020-11',
@@ -313,6 +314,20 @@ module.exports = {
   // base: '/fenote/',
   title: '左小白的前端笔记',
   description: '左小白的前端笔记，归纳整理自己在前端工作、学习中的一些心得笔记，有利于前端知识系统化。包括 Vue.js、前端工程化（TypeScript、Node.js、webpack）、Docker、JS/ES6、CSS/CSS3、HTML/HTML5、数据可视化、计算机基础、英语等笔记。',
+  locales: {
+    // 键名是该语言所属的子路径
+    // 作为特例，默认语言可以使用 '/' 作为其路径。
+    '/': {
+      lang: 'zh-CN', // 将会被设置为 <html> 的 lang 属性
+      // title: 'VuePress',
+      // description: 'Vue-powered Static Site Generator'
+    },
+    // '/zh/': {
+    //   lang: 'zh-CN',
+    //   title: 'VuePress',
+    //   description: 'Vue 驱动的静态网站生成器'
+    // }
+  },
   themeConfig: {
     // logo: '/logo.png',
     sidebar: {
@@ -403,8 +418,9 @@ module.exports = {
       },
       {
         text: '开源项目', items: [
+          { text: 'service-monitor', link: 'https://github.com/zuoxiaobai/service-monitor' },
           { text: '@guoqzuo/vue-chart', link: 'http://vuechart.zuo11.com' },
-          { text: 'zuo-blog', link: 'http://zuoblog.zuo11.com' }
+          { text: 'zuo-blog', link: 'http://zuoblog.zuo11.com' },
         ]
       },
       { text: '博客', link: 'http://www.zuo11.com' },
