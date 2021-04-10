@@ -8,6 +8,7 @@ const dailySidebar = [
     collapsable: false,
     children: [
       '',
+      '2021-04',
       '2021-03',
       '2021-02',
       '2020-12',
