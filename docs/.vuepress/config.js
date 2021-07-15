@@ -163,6 +163,14 @@ const jsSidebar = [{
       ]
     },
     {
+      title: '你不知道的 JavaScript - 上卷',
+      sidebarDepth: 5,
+      children: [
+        'you-donot-know-js-1/scope-closures',
+        'you-donot-know-js-1/this-object-prototypes.md'
+      ]
+    },
+    {
       title: 'JavaScript高级程序设计(第四版)笔记',
       sidebarDepth: 5,
       children: [
@@ -392,6 +400,7 @@ module.exports = {
           {
             text: 'JS/ES6', items: [
               { text: 'ES6标准入门(第三版)笔记', link: '/js/es6/es6-1.md' },
+              { text: '你不知道的 JavaScript - 上卷', link: '/js/you-donot-know-js-1/scope-closures.md' },
               { text: 'JavaScript高级程序设计(第四版)笔记', link: '/js/ad3/js-ad3-1.md' },
               { text: 'JavaScript DOM编程艺术(第二版)笔记', link: '/js/js-dom-art.md' },
             ]
