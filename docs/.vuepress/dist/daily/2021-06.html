@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>2021年06月技术日常 | 左小白的前端笔记</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    <link rel="icon" href="/logo.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon-152x152.png">
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#3eaf7c">
+    <meta name="description" content="左小白的前端笔记，归纳整理自己在前端工作、学习中的一些心得笔记，有利于前端知识系统化。包括 Vue.js、前端工程化（TypeScript、Node.js、webpack）、Docker、JS/ES6、CSS/CSS3、HTML/HTML5、数据可视化、计算机基础、英语等笔记。">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileImage" content="/icons/msapplication-icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <link rel="preload" href="/assets/css/0.styles.c896736b.css" as="style"><link rel="preload" href="/assets/js/app.5dbb3b16.js" as="script"><link rel="preload" href="/assets/js/2.3f8a6b0b.js" as="script"><link rel="preload" href="/assets/js/53.f4e566cd.js" as="script"><link rel="preload" href="/assets/js/3.018b29e2.js" as="script"><link rel="prefetch" href="/assets/js/10.354e6f15.js"><link rel="prefetch" href="/assets/js/100.c819952b.js"><link rel="prefetch" href="/assets/js/101.d3f56181.js"><link rel="prefetch" href="/assets/js/102.db6427d9.js"><link rel="prefetch" href="/assets/js/103.8a9c7618.js"><link rel="prefetch" href="/assets/js/104.35d4c324.js"><link rel="prefetch" href="/assets/js/105.ad6881bd.js"><link rel="prefetch" href="/assets/js/106.373b4433.js"><link rel="prefetch" href="/assets/js/107.2503e0f3.js"><link rel="prefetch" href="/assets/js/108.b4d7e593.js"><link rel="prefetch" href="/assets/js/109.9e08fa69.js"><link rel="prefetch" href="/assets/js/11.b7e99381.js"><link rel="prefetch" href="/assets/js/110.79a70bd7.js"><link rel="prefetch" href="/assets/js/111.d1ce5107.js"><link rel="prefetch" href="/assets/js/112.899088c2.js"><link rel="prefetch" href="/assets/js/113.6de1d6b3.js"><link rel="prefetch" href="/assets/js/114.dd7c3b32.js"><link rel="prefetch" href="/assets/js/115.1d7d49ce.js"><link rel="prefetch" href="/assets/js/116.a2213cda.js"><link rel="prefetch" href="/assets/js/117.9a93260d.js"><link rel="prefetch" href="/assets/js/118.40b461ca.js"><link rel="prefetch" href="/assets/js/119.06ec3c12.js"><link rel="prefetch" href="/assets/js/12.2e54819b.js"><link rel="prefetch" href="/assets/js/120.0b3ea7f2.js"><link rel="prefetch" href="/assets/js/121.0b8bde4d.js"><link rel="prefetch" href="/assets/js/122.d2e73d20.js"><link rel="prefetch" href="/assets/js/123.6eee3fbc.js"><link rel="prefetch" href="/assets/js/124.8bbe1b34.js"><link rel="prefetch" href="/assets/js/125.418052a5.js"><link rel="prefetch" href="/assets/js/126.cef6a3e9.js"><link rel="prefetch" href="/assets/js/127.17eb976e.js"><link rel="prefetch" href="/assets/js/128.2ac90be1.js"><link rel="prefetch" href="/assets/js/129.f628e357.js"><link rel="prefetch" href="/assets/js/13.2189e393.js"><link rel="prefetch" href="/assets/js/130.4021753f.js"><link rel="prefetch" href="/assets/js/131.64367708.js"><link rel="prefetch" href="/assets/js/132.a78117c0.js"><link rel="prefetch" href="/assets/js/133.cc7aa0e9.js"><link rel="prefetch" href="/assets/js/134.898729aa.js"><link rel="prefetch" href="/assets/js/135.7283a4dc.js"><link rel="prefetch" href="/assets/js/136.39e10aa7.js"><link rel="prefetch" href="/assets/js/137.91af548a.js"><link rel="prefetch" href="/assets/js/138.81d58b53.js"><link rel="prefetch" href="/assets/js/139.a40c017f.js"><link rel="prefetch" href="/assets/js/14.5ce6db09.js"><link rel="prefetch" href="/assets/js/140.43257c97.js"><link rel="prefetch" href="/assets/js/141.db30cf52.js"><link rel="prefetch" href="/assets/js/142.99248d7f.js"><link rel="prefetch" href="/assets/js/143.51af45d3.js"><link rel="prefetch" href="/assets/js/144.1852b0e0.js"><link rel="prefetch" href="/assets/js/145.c42647a8.js"><link rel="prefetch" href="/assets/js/146.255e0053.js"><link rel="prefetch" href="/assets/js/147.a53455cb.js"><link rel="prefetch" href="/assets/js/148.c1caabbb.js"><link rel="prefetch" href="/assets/js/149.d4672362.js"><link rel="prefetch" href="/assets/js/15.5469b4a1.js"><link rel="prefetch" href="/assets/js/150.7eda3e9c.js"><link rel="prefetch" href="/assets/js/151.3840e8dd.js"><link rel="prefetch" href="/assets/js/152.b5eead7e.js"><link rel="prefetch" href="/assets/js/153.72e927d9.js"><link rel="prefetch" href="/assets/js/154.5f8b93d8.js"><link rel="prefetch" href="/assets/js/155.24499e9c.js"><link rel="prefetch" href="/assets/js/156.7abc3d22.js"><link rel="prefetch" href="/assets/js/157.2ee4c6ad.js"><link rel="prefetch" href="/assets/js/158.6c820f29.js"><link rel="prefetch" href="/assets/js/159.2e2a8e03.js"><link rel="prefetch" href="/assets/js/16.1191ebc2.js"><link rel="prefetch" href="/assets/js/160.3df56bcb.js"><link rel="prefetch" href="/assets/js/161.48915ef4.js"><link rel="prefetch" href="/assets/js/162.b0d3aa72.js"><link rel="prefetch" href="/assets/js/163.c0974f59.js"><link rel="prefetch" href="/assets/js/164.319b796b.js"><link rel="prefetch" href="/assets/js/165.1b0c8e83.js"><link rel="prefetch" href="/assets/js/166.59655a10.js"><link rel="prefetch" href="/assets/js/167.f866505f.js"><link rel="prefetch" href="/assets/js/17.08eb5070.js"><link rel="prefetch" href="/assets/js/18.549c446f.js"><link rel="prefetch" href="/assets/js/19.4ff1cbb8.js"><link rel="prefetch" href="/assets/js/20.5dba5cbc.js"><link rel="prefetch" href="/assets/js/21.9f0ce5d2.js"><link rel="prefetch" href="/assets/js/22.682fbab2.js"><link rel="prefetch" href="/assets/js/23.ed628486.js"><link rel="prefetch" href="/assets/js/24.0d55fdfc.js"><link rel="prefetch" href="/assets/js/25.b513497e.js"><link rel="prefetch" href="/assets/js/26.38b016e3.js"><link rel="prefetch" href="/assets/js/27.51d9bd77.js"><link rel="prefetch" href="/assets/js/28.ada66cb3.js"><link rel="prefetch" href="/assets/js/29.ea0bf202.js"><link rel="prefetch" href="/assets/js/30.f8b68fed.js"><link rel="prefetch" href="/assets/js/31.84f7c8e8.js"><link rel="prefetch" href="/assets/js/32.cdd50ff9.js"><link rel="prefetch" href="/assets/js/33.3872e844.js"><link rel="prefetch" href="/assets/js/34.b73356ae.js"><link rel="prefetch" href="/assets/js/35.c89bfe3e.js"><link rel="prefetch" href="/assets/js/36.7d08c9af.js"><link rel="prefetch" href="/assets/js/37.3247d5e3.js"><link rel="prefetch" href="/assets/js/38.46f6bec8.js"><link rel="prefetch" href="/assets/js/39.a0aae745.js"><link rel="prefetch" href="/assets/js/4.727b3cb3.js"><link rel="prefetch" href="/assets/js/40.d74326d2.js"><link rel="prefetch" href="/assets/js/41.e6693e88.js"><link rel="prefetch" href="/assets/js/42.fa3dd430.js"><link rel="prefetch" href="/assets/js/43.82c0efdd.js"><link rel="prefetch" href="/assets/js/44.a6fd5424.js"><link rel="prefetch" href="/assets/js/45.5783826e.js"><link rel="prefetch" href="/assets/js/46.73bb240c.js"><link rel="prefetch" href="/assets/js/47.b47109b2.js"><link rel="prefetch" href="/assets/js/48.3989e8b0.js"><link rel="prefetch" href="/assets/js/49.a90588e1.js"><link rel="prefetch" href="/assets/js/5.5f97339e.js"><link rel="prefetch" href="/assets/js/50.78efb680.js"><link rel="prefetch" href="/assets/js/51.dbc615c4.js"><link rel="prefetch" href="/assets/js/52.55dec5bc.js"><link rel="prefetch" href="/assets/js/54.c37cffd0.js"><link rel="prefetch" href="/assets/js/55.af505001.js"><link rel="prefetch" href="/assets/js/56.55190502.js"><link rel="prefetch" href="/assets/js/57.8717401e.js"><link rel="prefetch" href="/assets/js/58.7d488a8f.js"><link rel="prefetch" href="/assets/js/59.aa85a6c8.js"><link rel="prefetch" href="/assets/js/6.8b6802aa.js"><link rel="prefetch" href="/assets/js/60.5e4fa3e7.js"><link rel="prefetch" href="/assets/js/61.22bcc17e.js"><link rel="prefetch" href="/assets/js/62.b1b30f77.js"><link rel="prefetch" href="/assets/js/63.35551730.js"><link rel="prefetch" href="/assets/js/64.bc28097f.js"><link rel="prefetch" href="/assets/js/65.e6e6851c.js"><link rel="prefetch" href="/assets/js/66.3bf92dea.js"><link rel="prefetch" href="/assets/js/67.175ff21f.js"><link rel="prefetch" href="/assets/js/68.790d1d1c.js"><link rel="prefetch" href="/assets/js/69.c31cc210.js"><link rel="prefetch" href="/assets/js/7.55c6af5e.js"><link rel="prefetch" href="/assets/js/70.8d7c375e.js"><link rel="prefetch" href="/assets/js/71.be95136a.js"><link rel="prefetch" href="/assets/js/72.32704e34.js"><link rel="prefetch" href="/assets/js/73.6e92309c.js"><link rel="prefetch" href="/assets/js/74.79ba8a89.js"><link rel="prefetch" href="/assets/js/75.0003d6fa.js"><link rel="prefetch" href="/assets/js/76.81604cd0.js"><link rel="prefetch" href="/assets/js/77.0641879e.js"><link rel="prefetch" href="/assets/js/78.7ab92c58.js"><link rel="prefetch" href="/assets/js/79.681c5778.js"><link rel="prefetch" href="/assets/js/8.539cd54f.js"><link rel="prefetch" href="/assets/js/80.a574f302.js"><link rel="prefetch" href="/assets/js/81.9392e551.js"><link rel="prefetch" href="/assets/js/82.587d4619.js"><link rel="prefetch" href="/assets/js/83.27dffcc9.js"><link rel="prefetch" href="/assets/js/84.bd60c92f.js"><link rel="prefetch" href="/assets/js/85.c57c938f.js"><link rel="prefetch" href="/assets/js/86.cb4e2238.js"><link rel="prefetch" href="/assets/js/87.74f6eaeb.js"><link rel="prefetch" href="/assets/js/88.90fb27ee.js"><link rel="prefetch" href="/assets/js/89.0d3fe4f0.js"><link rel="prefetch" href="/assets/js/9.4d954cfb.js"><link rel="prefetch" href="/assets/js/90.1dcd6669.js"><link rel="prefetch" href="/assets/js/91.c62df855.js"><link rel="prefetch" href="/assets/js/92.3b0ba45c.js"><link rel="prefetch" href="/assets/js/93.0370bd3e.js"><link rel="prefetch" href="/assets/js/94.563a8758.js"><link rel="prefetch" href="/assets/js/95.a030b7e8.js"><link rel="prefetch" href="/assets/js/96.5cf55cae.js"><link rel="prefetch" href="/assets/js/97.f803219d.js"><link rel="prefetch" href="/assets/js/98.6eaf31e9.js"><link rel="prefetch" href="/assets/js/99.c3aa1321.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.c896736b.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">左小白的前端笔记</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link router-link-active">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/you-donot-know-js-1/scope-closures.html" class="nav-link">
+  你不知道的 JavaScript - 上卷
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第四版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/less.html" class="nav-link">
+  CSS 预处理器 Less.js
+</a></li><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/js-data-struct.html" class="nav-link">
+  学习JavaScript数据结构与算法(第三版)笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/mocha-test.html" class="nav-link">
+  Mocha - JavaScript测试框架
+</a></li><li class="dropdown-item"><!----> <a href="/base/git.html" class="nav-link">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/zuoxiaobai/service-monitor" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  service-monitor
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/zuoxiaobai" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="指南" class="dropdown-title"><span class="title">指南</span> <span class="arrow down"></span></button> <button type="button" aria-label="指南" class="mobile-dropdown-title"><span class="title">指南</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/" class="nav-link">
+  首页
+</a></li><li class="dropdown-item"><!----> <a href="/nav.html" class="nav-link">
+  前端网址导航
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端进阶" class="dropdown-title"><span class="title">前端进阶</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端进阶" class="mobile-dropdown-title"><span class="title">前端进阶</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/daily/" class="nav-link router-link-active">
+  技术日常记录
+</a></li><li class="dropdown-item"><!----> <a href="/server/docker.html" class="nav-link">
+  Docker 基础
+</a></li><li class="dropdown-item"><h4>
+          Vue.js
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/vue/base/1.html" class="nav-link">
+  Vue.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vue-router.html" class="nav-link">
+  Vue Router 笔记
+</a></li><li class="dropdown-subitem"><a href="/vue/vuex.html" class="nav-link">
+  Vuex 笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          前端工程化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/ts/base-1.html" class="nav-link">
+  TypeScript 入门教程笔记
+</a></li><li class="dropdown-subitem"><a href="/node/base/1.html" class="nav-link">
+  Node.js 笔记
+</a></li><li class="dropdown-subitem"><a href="/webpack/base.html" class="nav-link">
+  webpack 基础
+</a></li></ul></li><li class="dropdown-item"><h4>
+          数据可视化
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/visual/echarts.html" class="nav-link">
+  Echarts 笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端基础" class="dropdown-title"><span class="title">前端基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端基础" class="mobile-dropdown-title"><span class="title">前端基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><h4>
+          JS/ES6
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/js/es6/es6-1.html" class="nav-link">
+  ES6标准入门(第三版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/you-donot-know-js-1/scope-closures.html" class="nav-link">
+  你不知道的 JavaScript - 上卷
+</a></li><li class="dropdown-subitem"><a href="/js/ad3/js-ad3-1.html" class="nav-link">
+  JavaScript高级程序设计(第四版)笔记
+</a></li><li class="dropdown-subitem"><a href="/js/js-dom-art.html" class="nav-link">
+  JavaScript DOM编程艺术(第二版)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          CSS/CSS3
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/css/less.html" class="nav-link">
+  CSS 预处理器 Less.js
+</a></li><li class="dropdown-subitem"><a href="/css/flex-grid.html" class="nav-link">
+  Flex与Grid布局
+</a></li><li class="dropdown-subitem"><a href="/css/html5-css-1.html" class="nav-link">
+  HTML5权威指南(CSS部分)笔记
+</a></li></ul></li><li class="dropdown-item"><h4>
+          HTML/HTML5
+        </h4> <ul class="dropdown-subitem-wrapper"><li class="dropdown-subitem"><a href="/html5/html/1.html" class="nav-link">
+  HTML5权威指南(HTML部分)笔记
+</a></li></ul></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/base/js-data-struct.html" class="nav-link">
+  学习JavaScript数据结构与算法(第三版)笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/mocha-test.html" class="nav-link">
+  Mocha - JavaScript测试框架
+</a></li><li class="dropdown-item"><!----> <a href="/base/git.html" class="nav-link">
+  Git 笔记
+</a></li><li class="dropdown-item"><!----> <a href="/base/markdown.html" class="nav-link">
+  Markdown 基础语法
+</a></li><li class="dropdown-item"><!----> <a href="/base/dbtheory/1.html" class="nav-link">
+  数据库系统原理笔记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="开源项目" class="dropdown-title"><span class="title">开源项目</span> <span class="arrow down"></span></button> <button type="button" aria-label="开源项目" class="mobile-dropdown-title"><span class="title">开源项目</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/zuoxiaobai/service-monitor" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  service-monitor
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://vuechart.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  @guoqzuo/vue-chart
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://zuoblog.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  zuo-blog
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="http://www.zuo11.com" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  博客
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div><div class="nav-item"><a href="https://github.com/zuoxiaobai" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>指南</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/daily/" aria-current="page" class="sidebar-link">技术日常记录</a></li><li><a href="/daily/2021-06.html" aria-current="page" class="active sidebar-link">2021年06月技术日常</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/daily/2021-06.html#_2021-06-06-周六" class="sidebar-link">2021/06/06 周六</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/daily/2021-06.html#js-实现点击按钮复制内容" class="sidebar-link">js 实现点击按钮复制内容</a></li><li class="sidebar-sub-header"><a href="/daily/2021-06.html#js-if-true-代码块中函数变量提升的问题" class="sidebar-link">js if(true) 代码块中函数变量提升的问题</a></li></ul></li><li class="sidebar-sub-header"><a href="/daily/2021-06.html#_2021-06-01-周二" class="sidebar-link">2021/06/01 周二</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/daily/2021-06.html#极简-node-自动化部署项目-线上实例" class="sidebar-link">极简 node 自动化部署项目，线上实例</a></li></ul></li></ul></li><li><a href="/daily/2021-05.html" class="sidebar-link">2021年05月技术日常</a></li><li><a href="/daily/2021-04.html" class="sidebar-link">2021年04月技术日常</a></li><li><a href="/daily/2021-03.html" class="sidebar-link">2021年03月技术日常</a></li><li><a href="/daily/2021-02.html" class="sidebar-link">2021年02月技术日常</a></li><li><a href="/daily/2020-12.html" class="sidebar-link">2020年12月技术日常</a></li><li><a href="/daily/2020-11.html" class="sidebar-link">2020年11月技术日常</a></li><li><a href="/daily/2020-10.html" class="sidebar-link">2020年10月技术日常</a></li><li><a href="/daily/2020-09.html" class="sidebar-link">2020年09月技术日常</a></li><li><a href="/daily/2020-08.html" class="sidebar-link">2020年08月技术日常</a></li><li><a href="/daily/2020-07.html" class="sidebar-link">2020年07月技术日常</a></li><li><a href="/daily/2020-06.html" class="sidebar-link">2020年06月技术日常</a></li><li><a href="/daily/2020-05.html" class="sidebar-link">2020年05月技术日常</a></li><li><a href="/daily/2020-04.html" class="sidebar-link">2020年04月技术日常</a></li><li><a href="/daily/2020-03.html" class="sidebar-link">2020年03月技术日常</a></li><li><a href="/daily/2020-02.html" class="sidebar-link">2020年02月技术日常</a></li><li><a href="/daily/2020-01.html" class="sidebar-link">2020年01月技术日常</a></li><li><a href="/daily/2019-12.html" class="sidebar-link">2019年12月技术日常</a></li><li><a href="/daily/2019-11.html" class="sidebar-link">2019年11月技术日常</a></li><li><a href="/daily/2019-10.html" class="sidebar-link">2019年10月技术日常</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="_2021年06月技术日常"><a href="#_2021年06月技术日常" class="header-anchor">#</a> 2021年06月技术日常</h1> <h2 id="_2021-06-06-周六"><a href="#_2021-06-06-周六" class="header-anchor">#</a> 2021/06/06 周六</h2> <h3 id="js-实现点击按钮复制内容"><a href="#js-实现点击按钮复制内容" class="header-anchor">#</a> js 实现点击按钮复制内容</h3> <p>点击按钮复制链接、复制代码在前端是比较常见的需求，这里介绍一种比较简单的实现：</p> <ol><li>先借用 input 等可以选中文本的元素，调用 element.select() 选中文本内容</li> <li>再执行 document.execCommand(&quot;copy&quot;) 对选中内容进行复制</li></ol> <p>我们可以通过下面的例子来了解这个过程，<a href="https://zuoxiaobai.github.io/fedemo/src/DebugDemo/%E7%82%B9%E5%87%BB%E6%8C%89%E9%92%AE%E5%A4%8D%E5%88%B6%E9%93%BE%E6%8E%A5/" target="_blank" rel="noopener noreferrer">点击按钮复制内容 - 在线演示<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>inputText<span class="token punctuation">&quot;</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>abcde<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">onclick</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>execCopy()<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>点击按钮复制内容<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+    <span class="token keyword">function</span> <span class="token function">execCopy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">let</span> element <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">&quot;#inputText&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      element<span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      document<span class="token punctuation">.</span><span class="token function">execCommand</span><span class="token punctuation">(</span><span class="token string">&quot;copy&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>实际使用中，我们需要清楚两点：</p> <ol><li>我们设置的内容是动态的，需要动态设置 input 内容</li> <li>我们不需要在页面上显示 input 内容，需要动态创建元素，并隐藏元素</li></ol> <p>我们可以将该功能封装成一个可复用的函数，如下</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 复制内容</span>
+<span class="token keyword">function</span> <span class="token function">copyContent</span><span class="token punctuation">(</span><span class="token parameter">text</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token comment">// 动态创建 input 元素，设置内容</span>
+	<span class="token keyword">let</span> element <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'input'</span><span class="token punctuation">)</span>
+	element<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'value'</span><span class="token punctuation">,</span> text<span class="token punctuation">)</span>
+	<span class="token comment">// 隐藏 input</span>
+	element<span class="token punctuation">.</span>style<span class="token punctuation">.</span>position <span class="token operator">=</span> <span class="token string">'absolute'</span>
+	element<span class="token punctuation">.</span>style<span class="token punctuation">.</span>top <span class="token operator">=</span> <span class="token string">'-1000px'</span>
+	element<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">=</span> <span class="token string">'block'</span>
+	<span class="token comment">// 挂载到 body</span>
+	document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>element<span class="token punctuation">)</span>
+	<span class="token comment">// 复制</span>
+	element<span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+	document<span class="token punctuation">.</span><span class="token function">execCommand</span><span class="token punctuation">(</span><span class="token string">&quot;Copy&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token comment">// 复制完成后从 body 移除</span>
+	document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">removeChild</span><span class="token punctuation">(</span>element<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>实际使用示例</p> <div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">onclick</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>execCopy()<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>点击按钮复制内容<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>randomText<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>textarea</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>textarea</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+    <span class="token comment">// 复制内容</span>
+    <span class="token keyword">function</span> <span class="token function">copyContent</span><span class="token punctuation">(</span><span class="token parameter">text</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 动态创建 input 元素，设置内容</span>
+      <span class="token keyword">let</span> element <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">'input'</span><span class="token punctuation">)</span>
+      element<span class="token punctuation">.</span><span class="token function">setAttribute</span><span class="token punctuation">(</span><span class="token string">'value'</span><span class="token punctuation">,</span> text<span class="token punctuation">)</span>
+      <span class="token comment">// 隐藏 input</span>
+      element<span class="token punctuation">.</span>style<span class="token punctuation">.</span>position <span class="token operator">=</span> <span class="token string">'absolute'</span>
+      element<span class="token punctuation">.</span>style<span class="token punctuation">.</span>top <span class="token operator">=</span> <span class="token string">'-1000px'</span>
+      element<span class="token punctuation">.</span>style<span class="token punctuation">.</span>display <span class="token operator">=</span> <span class="token string">'block'</span>
+      <span class="token comment">// 挂载到 body</span>
+      document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>element<span class="token punctuation">)</span>
+      <span class="token comment">// 复制</span>
+      element<span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      document<span class="token punctuation">.</span><span class="token function">execCommand</span><span class="token punctuation">(</span><span class="token string">&quot;Copy&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 复制完成后从 body 移除</span>
+      document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">removeChild</span><span class="token punctuation">(</span>element<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 生成 len 长度的随机字符串</span>
+    <span class="token keyword">function</span> <span class="token function">getRandomStr</span><span class="token punctuation">(</span><span class="token parameter">len</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// ascii 编码转 字符串，String.fromCharCode(65)  65 &quot;A&quot;, 97 &quot;a&quot;, 48 &quot;0&quot;</span>
+      <span class="token comment">// 字符串转 ascii 编码, &quot;a&quot;.charCodeAt(0)</span>
+      <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token string">''</span>
+      <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        result <span class="token operator">+=</span> String<span class="token punctuation">.</span><span class="token function">fromCharCode</span><span class="token punctuation">(</span><span class="token number">97</span> <span class="token operator">+</span> Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">25</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment">// 0 ~ 25</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> result
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">function</span> <span class="token function">execCopy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 生成随机字符串</span>
+      <span class="token keyword">let</span> text <span class="token operator">=</span> <span class="token function">getRandomStr</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+      document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#randomText'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> text
+      <span class="token function">copyContent</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span> <span class="token comment">// 复制内容</span>
+    <span class="token punctuation">}</span>
+  </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>完整代码参见：<a href="https://github.com/zuoxiaobai/fedemo/tree/master/src/DebugDemo/%E7%82%B9%E5%87%BB%E6%8C%89%E9%92%AE%E5%A4%8D%E5%88%B6%E9%93%BE%E6%8E%A5" target="_blank" rel="noopener noreferrer">点击按钮复制内容 - demo<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h3 id="js-if-true-代码块中函数变量提升的问题"><a href="#js-if-true-代码块中函数变量提升的问题" class="header-anchor">#</a> js if(true) 代码块中函数变量提升的问题</h3> <p>示例 1：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	<span class="token keyword">function</span> <span class="token function">a</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+	a <span class="token operator">=</span> <span class="token number">21</span><span class="token punctuation">;</span>
+	console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">里面:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>a<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">外面:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>a<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+</code></pre></div><p>Chrome 版本 91.0.4472.114 / Firefox 89.0 (64 位) 结果</p> <div class="language-js extra-class"><pre class="language-js"><code>里面<span class="token operator">:</span><span class="token number">21</span> 
+外面<span class="token operator">:</span><span class="token number">1</span>
+</code></pre></div><p>Safari 14.0.3 (16610.4.3.1.7) 结果</p> <div class="language-js extra-class"><pre class="language-js"><code>里面<span class="token operator">:</span><span class="token number">21</span>
+外面<span class="token operator">:</span><span class="token number">21</span>
+</code></pre></div><p>示例 2：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token function-variable function">a</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+	a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+	a <span class="token operator">=</span> <span class="token number">21</span><span class="token punctuation">;</span>
+	console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">里面:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>a<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">外面:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>a<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+</code></pre></div><p>示例 3:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token punctuation">{</span>
+	<span class="token keyword">function</span> <span class="token function">a</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+	a <span class="token operator">=</span> <span class="token number">50</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">{</span>
+	b <span class="token operator">=</span> <span class="token number">50</span><span class="token punctuation">;</span>
+	<span class="token keyword">function</span> <span class="token function">b</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="_2021-06-01-周二"><a href="#_2021-06-01-周二" class="header-anchor">#</a> 2021/06/01 周二</h2> <h3 id="极简-node-自动化部署项目-线上实例"><a href="#极简-node-自动化部署项目-线上实例" class="header-anchor">#</a> 极简 node 自动化部署项目，线上实例</h3></div> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">上次更新:</span> <span class="time">2021/7/16 上午12:41:42</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/daily/" class="prev router-link-active">
+        技术日常记录
+      </a></span> <span class="next"><a href="/daily/2021-05.html">
+        2021年05月技术日常
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"><!----><!----></div></div>
+    <script src="/assets/js/app.5dbb3b16.js" defer></script><script src="/assets/js/2.3f8a6b0b.js" defer></script><script src="/assets/js/53.f4e566cd.js" defer></script><script src="/assets/js/3.018b29e2.js" defer></script>
+  </body>
+</html>
