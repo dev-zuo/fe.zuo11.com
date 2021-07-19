@@ -71,3 +71,264 @@ foo(2)
 let p = 1
 p() // Uncaught TypeError: p is not a function
 ```
+## 词法作用域
+在编译的词法分析阶段，基本可以知道全部标识符（变量）是在哪以及如何声明的，从而预测在执行中如何对他进行查找。
+
+词法作用域意味着 - 作用域是由书写代码时函数声明的位置来决定的。
+
+下面的例子中，根据嵌套，有 3 层作用域：最外层全局作用域(foo) => foo 函数内作用域(a,b,bar) => bar 函数内作用域(c)
+```js 
+function foo(a) {
+  var b = a + 2;
+
+  function bar(c) {
+    console.log(a, b, c)
+  }
+
+  bar(b * 3)
+}
+foo(2)
+```
+### 欺骗词法 eval 和 with
+JS 有两种方法，可以 "欺骗" 词法作用域, 注意：欺骗词法作用域会导致性能下降
+
+eval("var a = 2") 可以根据字符串参数动态执行 js，在运行时，假设里面有声明的变量，会修改默认的词法作用域
+
+```js
+function foo(str, a) {
+  // "use strict" // 如果是严格模式，则 eval 不会影响词法作用域
+  eval(str)
+  console.log(a, b)
+}
+var b = 2;
+foo('var b = 3', 1) // 1 3
+```
+按照正常的词法作用域，b 应该是 2，但 eval 中执行了 b 的声明语句，导致词法作用域被修改
+
+with 的用处，减少重复引用
+```js
+var obj = {
+  a: 1,
+  b: 2
+}
+with(obj) {
+  a = 2 // 加了 with 后，等价于 obj.a = 2
+  b = 3 // 加了 with 后，等价于 obj.b = 3
+}
+```
+
+with 对词法作用域的修改
+```js
+function foo (obj) {
+  with(obj) {
+    a = 2
+  }
+}
+var o1 = {
+  a: 3
+}
+var o2 = {
+  b: 3
+}
+foo(o1)
+console.log(o1.a) // 2
+foo(o2)
+console.log(o2.a) // undefined
+console.log(a) // 2
+```
+foo(o1) 时，o1.a 被重写为 2.foo(o2) 时由于 o2.a 没有被定义，相当于 "a = 2" LHS，会在全局作用域上声明 a。
+
+**以上两种机制的副作用是：引擎无法在编译时对作用域查找进行优化，因为在运行时，根据执行的内容，默认词法作用域可能会被修改。**
+
+## 函数作用域与块级作用域
+
+### 函数作用域
+函数作用域中，外层函数无法访问内部嵌套函数作用域中的变量，可以用于隐藏内部实现
+
+匿名函数的缺点：
+1. 在栈追踪中不会显示有意义的函数名，不利于调试
+2. 如果是在触发事件中，无法解绑该事件函数
+3. 影响可读性
+
+```js
+setTimeout(() => {
+  console.log('1s 后执行')
+}, 1000)
+
+// 建议改为
+setTimeout(function timeoutHandler() {
+  console.log('1s 后执行')
+})
+```
+
+立即执行函数表达式（IIFE）: (function a() {})() 或者 (function a() {}())
+
+```js
+var a = 2;
+(function foo() {
+  var a = 3;
+  console.log(a) // 3
+})(); // 2
+console.log(a);
+```
+或者
+```js
+var a = 2;
+(function foo() {
+  var a = 3;
+  console.log(a) // 3
+}()); // 2
+console.log(a);
+```
+
+`(function` 开头的声明，和 `function` 开头的声明有很重要的区别，`(function` 会被当做函数表达式而不是一个标准的函数声明来处理。
+
+
+UMD 项目中广泛使用 IIFE
+```js
+(function IIFE(def) {
+  def(window)
+})(function def(global) {
+  var a = 3;
+  console.log(a) // 3
+  console.log(global.a) // 2
+})
+```
+
+### 块级作用域
+函数不是唯一的作用域单元，代码块也是，一般由 `{}` 包裹
+
+ES3 中 try {} catch(e) {}， catch 分句中，具有块作用域。
+
+ES6 新增的 let/const，在声明变量时，会隐式的将对应的变量劫持在所在的块作用域内。且在块作用域中，不会进行提升
+
+```js
+{
+  console.log(bar) // Uncaught ReferenceError: Cannot access 'bar' before initialization
+  let bar = 6;
+}
+console.log(bar)
+```
+ES6 之前 JS 没有块级作用域，if (){} 中的代码会泄露到全局。ES6 需要借助 let, const 来达到块级作用域效果
+```js
+var foo = true
+if (foo) {
+  var a = 2
+  const b = 3
+  a = 3
+  // b = 4 // Uncaught TypeError: Assignment to constant variable.
+}
+console.log(a) // 3
+console.log(b) // Uncaught ReferenceError: b is not defined
+```
+
+## 提升(hoisting)
+JS 是弱语言类型，容错性很高，变量在没定义前，就可以使用，这里涉及变量提升的概念
+```js
+// 片段 1
+a = 2;
+var a;
+console.log(a) // 为什么是 2，而不是 undefined
+
+// 片段 2
+console.log(a) // 为什么是 undefined，而不是 2
+var a = 2 
+```
+
+我们习惯将 `var a = 2` 看做一条声明，**但 JS 引擎不这么认为，它将 var a 和 a = 2 当做两个单独的声明。第一个声明是编译阶段的任务，第二个声明是执行阶段的任务。**
+
+这意味着，无论作用域中的声明出现在什么地方，JS 引擎会在编译阶段将所有的声明(变量、函数)移动到各自作用域的顶端，这个过程叫做提升(hoisting)。
+
+```js
+// 片段 1 实际执行代码
+var a
+a = 2
+console.log(a) // 2
+
+// 片段 2 实际执行代码
+var a
+console.log(a) // undefined
+a = 2
+```
+
+函数声明
+```js
+foo()
+function foo() {
+  console.log(a)
+  var a = 2
+}
+
+// 编译、执行时
+function foo() {
+  var a
+  console.log(a)
+  a = 2
+}
+foo()
+```
+需要注意两点
+1. 声明本身会被提升，但函数表达式的赋值操作不会提升
+3. 注意避免重复声明，比如不同的 var 声明 和 函数声明混合时，会引起危险问题
+
+```js
+foo(); // Uncaught TypeError: foo is not a function
+bar(); // ReferenceError
+var foo = function bar() {
+  console.log('1')
+}
+
+// 等价于
+var foo
+foo() // 对 undefined 执行 RHS 时类型错误，报 TypeError 
+bar() // 找不到该变量
+foo = function() {
+  var bar = ...self...
+  console.log('1')
+}
+```
+
+### 函数优先
+函数声明和变量声明都会被提升，如果函数和变量名重复，函数会被优先提升
+```js
+foo() // 1
+var foo;
+function foo() {
+  console.log('1')
+}
+foo = function() {
+  console.log('2')
+}
+```
+如果有多个重复的函数声明，后面的会覆盖前面的
+```js
+foo() // 3
+function foo() {
+  console.log('1')
+}
+foo = function() {
+  console.log('2')
+}
+function foo() {
+  console.log('3')
+}
+```
+函数声明的提升，不会根据 if else 逻辑来走，编译时可能就会提升，这里的行为并不可靠，JS 未来版本可能会发生改变，因此需要避免在
+块内部声明函数
+```js
+foo() 
+// Safari 是 'b'
+// Chrome/Firefox 是 Uncaught TypeError: foo is not a function
+var a = true
+if (a) {
+  function foo() { console.log('a') }
+} else {
+  function foo() { console.log('b') }
+}
+```
+
+## 作用域闭包（closures）
+closures [ˈkləʊʒə(r)]，个人认为这一章讲的相对复杂，[JS 高级程序设计 函数 - 闭包 笔记](http://fe.zuo11.com/js/ad3/js-ad3-10.html#%E9%97%AD%E5%8C%85) 里面讲的要好理解一点。
+
+
+
