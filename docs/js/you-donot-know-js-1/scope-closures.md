@@ -168,8 +168,8 @@ var a = 2;
 (function foo() {
   var a = 3;
   console.log(a) // 3
-})(); // 2
-console.log(a);
+})();
+console.log(a); // 2
 ```
 或者
 ```js
@@ -177,8 +177,8 @@ var a = 2;
 (function foo() {
   var a = 3;
   console.log(a) // 3
-}()); // 2
-console.log(a);
+}());
+console.log(a); // 2
 ```
 
 `(function` 开头的声明，和 `function` 开头的声明有很重要的区别，`(function` 会被当做函数表达式而不是一个标准的函数声明来处理。
@@ -331,4 +331,51 @@ if (a) {
 closures [ˈkləʊʒə(r)]，个人认为这一章讲的相对复杂，[JS 高级程序设计 函数 - 闭包 笔记](http://fe.zuo11.com/js/ad3/js-ad3-10.html#%E9%97%AD%E5%8C%85) 里面讲的要好理解一点。
 
 
+## 词法作用域与动态作用域
+和大部分语言一样，JS 是词法作用域，另外还有一中动态作用域。
+
+- 词法作用域，**函数/标识符声明位置决定其作用域**，编译初期，词法分析时静态确定
+- 动态作用域，**只关心他从何处调用，作用域基于调用栈**，和 JS 中的 this 机制有点像
+
+```js
+function foo() {
+  console.log(a)
+}
+
+function bar() {
+  var a = 3
+  foo()
+}
+
+var a = 2
+bar() // 2
+```
+如果是词法作用域，foo() 执行时， a 通过 RHS 找到了全局作用域的 a，输出 2
+
+如果是动态作用域，作用域基于调用栈，bar() 会打印 3
+
+总结，主要区别：
+1. 词法作用域是在写代码或声明的时候确定的，动态作用域是在运行确定的。
+2. 词法作用域关注函数在何处声明，动态作用域关注函数在何处调用
+
+## this 词法
+this 绑定丢失的问题
+
+```js
+var obj = {
+  id: 'awesome',
+  cool: function coolFn() {
+    console.log(this.id)
+  }
+}
+var id = 'not awesome'
+obj.cool() // this.id 为 "awesome"
+setTimeout(obj.cool, 100) // this.id 为 "not awesome"
+```
+
+该函数是谁在调用，this 就指向谁 obj.cool() 调用 this 就是 obj。obj.cool 赋值到 setTimeout，执行时 this 就是 window
+
+一般可以使用 self 来解决 this 丢失的问题
+
+ES6 新增的箭头函数，会继承父级作用域的 this，也就是 this 固定指向父级作用域
 
