@@ -1,7 +1,7 @@
 ---
 title: 首页
 description: 左小白的前端笔记，归纳整理自己在前端工作学习中的一些心得、笔记，有利于前端知识系统化。包括 Vue.js、前端工程化（TypeScript、Node.js、webpack）、Docker、JS/ES6、CSS/CSS3、HTML/HTML5、数据可视化、计算机基础、英语等笔记。
----
+--- 
 
 分类 | 相关笔记
 --- | ---
