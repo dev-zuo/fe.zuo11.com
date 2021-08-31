@@ -1,4 +1,4 @@
-export default ({ router }) => {
+export default ({ router, Vue}) => {
   router.afterEach(function (to) {
     if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
       window.addEventListener('load', () => {
@@ -11,12 +11,28 @@ export default ({ router }) => {
           s.parentNode.insertBefore(hm, s);
         })();
 
-        let script = document.createElement("script");
-        script.setAttribute("data-ad-client", "ca-pub-9527676606416641");
-        script.setAttribute("async", "");
-        script.src = "//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
-        document.body.appendChild(script);
+    //     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9527676606416641"
+    //  crossorigin="anonymous"></script>
+
+        // let script = document.createElement("script");
+        // script.setAttribute("crossorigin", "anonymous");
+        // script.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9527676606416641";
+        // document.body.appendChild(script);
       })
+    }
+
+    if (typeof window !== 'undefined') {
+      import('vue-google-adsense')
+        .then(module => {
+          const Ads = module.default
+          Vue.use(require('vue-script2'))
+          Vue.use(Ads.Adsense)
+          Vue.use(Ads.InArticleAdsense)
+          Vue.use(Ads.InFeedAdsense)
+        })
+        .catch(e => {
+          console.log(e)
+        })
     }
   })
 }

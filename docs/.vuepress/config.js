@@ -454,7 +454,15 @@ module.exports = {
     ['link', { rel: 'apple-touch-icon', href: '/icons/apple-touch-icon-152x152.png' }],
     ['link', { rel: 'mask-icon', href: '/icons/safari-pinned-tab.svg', color: '#3eaf7c' }],
     ['meta', { name: 'msapplication-TileImage', content: '/icons/msapplication-icon-144x144.png' }],
-    ['meta', { name: 'msapplication-TileColor', content: '#000000' }]
+    ['meta', { name: 'msapplication-TileColor', content: '#000000' }],
+    [
+      "script",
+      {
+        "crossorigin": "anonymous",
+        async: true,
+        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9527676606416641",
+      },
+    ],
   ],
   plugins: [
     '@vuepress/back-to-top',
@@ -468,7 +476,13 @@ module.exports = {
         serviceWorker: true,
         updatePopup: true
       }
-    ]
+    ],
+    // [
+    //   "vuepress-plugin-google-adsense",
+    //   {
+    //     adClient: "ca-pub-9527676606416641", // replace it with your adClient
+    //   },
+    // ],
     // ['sitemap', {
     //   hostname: 'http://fe.zuo11.com',
     //   exclude: ['/404.html']
