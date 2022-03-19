@@ -321,6 +321,25 @@ const vueSidebar = [
   }
 ]
 
+// Read 独立侧边栏
+const readSidebar = [
+  {
+    title: '传记',
+    sidebarDepth: 5,
+    children: [
+      'xinRuoPuTi'
+    ]
+  },
+  {
+    title: '小说',
+    sidebarDepth: 5,
+    children: [
+      'life'
+    ]
+  }
+]
+
+
 module.exports = {
   // base: '/fenote/',
   title: '左小白的前端笔记',
@@ -352,6 +371,7 @@ module.exports = {
       '/webpack/': webpackSidebar,
       '/ts/': tsSidebar,
       '/vue/': vueSidebar,
+      '/read/': readSidebar,
       '/': [
         {
           title: '指南',
@@ -429,7 +449,24 @@ module.exports = {
         ]
       },
       {
+        text: '读书', items: [
+          // { text: '技术日常记录', link: "/daily/" },
+          // { text: 'Docker 基础', link: "/server/docker.md" },
+          {
+            text: '传记', items: [
+              { text: '心若菩提(曹德旺)', link: '/read/xinRuoPuTi.md' },
+            ]
+          },
+          {
+            text: '小说', items: [
+              { text: '人生(路遥)', link: '/read/life.md' },
+            ]
+          }
+        ]
+      },
+      {
         text: '开源项目', items: [
+          { text: 'zuo-deploy', link: 'https://github.com/zuoxiaobai/zuo-deploy' },
           { text: 'service-monitor', link: 'https://github.com/zuoxiaobai/service-monitor' },
           { text: '@guoqzuo/vue-chart', link: 'http://vuechart.zuo11.com' },
           { text: 'zuo-blog', link: 'http://zuoblog.zuo11.com' },

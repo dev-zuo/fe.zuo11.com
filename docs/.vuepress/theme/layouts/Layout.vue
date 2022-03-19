@@ -1,8 +1,8 @@
 <template>
   <ParentLayout>
-    <AdSense slot="sidebar-top" adSlot="sidebar-top"/>
+    <!-- <AdSense slot="sidebar-top" adSlot="sidebar-top"/>
     <AdSense slot="page-bottom" adSlot="page-bottom"/>
-    <AdSense slot="page-top" adSlot="page-top"/>
+    <AdSense slot="page-top" adSlot="page-top"/> -->
   </ParentLayout>
 </template>
 
