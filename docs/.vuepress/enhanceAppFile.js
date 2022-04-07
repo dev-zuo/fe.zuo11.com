@@ -11,15 +11,14 @@ export default ({ router, Vue}) => {
           s.parentNode.insertBefore(hm, s);
         })();
         
-        <script>
-          var _hmt = _hmt || [];
-          (function() {
-            var hm = document.createElement("script");
-            hm.src = "http://zuo11.com:3000/zs.js?283281668cc3440449274d1f93c04de6";
-            var s = document.getElementsByTagName("script")[0]; 
-            s.parentNode.insertBefore(hm, s);
-          })();
-        </script>
+
+        var _hmt2 = _hmt2 || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "http://zuo11.com:3000/zs.js?283281668cc3440449274d1f93c04de6";
+          var s = document.getElementsByTagName("script")[0]; 
+          s.parentNode.insertBefore(hm, s);
+        })();
 
     //     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9527676606416641"
     //  crossorigin="anonymous"></script>
