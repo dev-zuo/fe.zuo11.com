@@ -492,14 +492,26 @@ module.exports = {
     ['link', { rel: 'mask-icon', href: '/icons/safari-pinned-tab.svg', color: '#3eaf7c' }],
     ['meta', { name: 'msapplication-TileImage', content: '/icons/msapplication-icon-144x144.png' }],
     ['meta', { name: 'msapplication-TileColor', content: '#000000' }],
-    [
-      "script",
-      {
-        "crossorigin": "anonymous",
-        async: true,
-        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9527676606416641",
-      },
+    ['script', {},
+      `
+      var _hmt = _hmt || [];
+      (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5d5a0f94bb1b694bbb5de712d00a8490";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+      })();
+      `
     ],
+    ['script', { src: "http://zuo11.com:3000/zs.js?283281668cc3440449274d1f93c04de6" }],
+    // [
+    //   "script",
+    //   {
+    //     "crossorigin": "anonymous",
+    //     async: true,
+    //     src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9527676606416641",
+    //   },
+    // ],
   ],
   plugins: [
     '@vuepress/back-to-top',
