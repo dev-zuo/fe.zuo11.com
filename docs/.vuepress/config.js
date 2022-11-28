@@ -342,8 +342,8 @@ const readSidebar = [
 
 module.exports = {
   // base: '/fenote/',
-  title: '左小白的前端笔记',
-  description: '左小白的前端笔记，归纳整理自己在前端工作、学习中的一些心得笔记，有利于前端知识系统化。包括 Vue.js、前端工程化（TypeScript、Node.js、webpack）、Docker、JS/ES6、CSS/CSS3、HTML/HTML5、数据可视化、计算机基础、英语等笔记。',
+  title: 'dev-zuo 笔记',
+  description: 'dev-zuo 笔记，归纳整理自己在前端工作、学习中的一些心得笔记，有利于前端知识系统化。包括 Vue.js、前端工程化（TypeScript、Node.js、webpack）、Docker、JS/ES6、CSS/CSS3、HTML/HTML5、数据可视化、计算机基础、英语等笔记。',
   locales: {
     // 键名是该语言所属的子路径
     // 作为特例，默认语言可以使用 '/' 作为其路径。
@@ -362,7 +362,7 @@ module.exports = {
     // logo: '/logo.png',
     sidebar: {
       '/daily/': dailySidebar,
-      '/en/': englishSidebar,
+      // '/en/': englishSidebar,
       '/base/': baseSidebar,
       '/html5/': htmlSidebar,
       '/css/': cssSidebar,
@@ -371,7 +371,7 @@ module.exports = {
       '/webpack/': webpackSidebar,
       '/ts/': tsSidebar,
       '/vue/': vueSidebar,
-      '/read/': readSidebar,
+      // '/read/': readSidebar,
       '/': [
         {
           title: '指南',
@@ -448,28 +448,34 @@ module.exports = {
           { text: '数据库系统原理笔记', link: '/base/dbtheory/1.md' }
         ]
       },
-      {
-        text: '读书', items: [
-          // { text: '技术日常记录', link: "/daily/" },
-          // { text: 'Docker 基础', link: "/server/docker.md" },
-          {
-            text: '传记', items: [
-              { text: '心若菩提(曹德旺)', link: '/read/xinRuoPuTi.md' },
-            ]
-          },
-          {
-            text: '小说', items: [
-              { text: '人生(路遥)', link: '/read/life.md' },
-            ]
-          }
-        ]
-      },
+      // {
+      //   text: '读书', items: [
+      //     {
+      //       text: '传记', items: [
+      //         { text: '心若菩提(曹德旺)', link: '/read/xinRuoPuTi.md' },
+      //       ]
+      //     },
+      //     {
+      //       text: '小说', items: [
+      //         { text: '人生(路遥)', link: '/read/life.md' },
+      //       ]
+      //     }
+      //   ]
+      // },
       {
         text: '开源项目', items: [
           { text: 'zuo-deploy', link: 'https://github.com/zuoxiaobai/zuo-deploy' },
+          { text: 'visitors', link: 'https://github.com/zuoxiaobai/visitors' },
+          { text: 'food', link: 'https://github.com/zuoxiaobai/food' }, // 饮食
           { text: 'service-monitor', link: 'https://github.com/zuoxiaobai/service-monitor' },
-          { text: '@guoqzuo/vue-chart', link: 'http://vuechart.zuo11.com' },
           { text: 'zuo-blog', link: 'http://zuoblog.zuo11.com' },
+          // { text: 'cli.zuo11.com' }, // 快速 demo 模板生成
+          // { text: 'config.zuo11.com' }, // 配置中心，接口生成
+          // { text: 'en.zuo11.com' }, // 中英双语、翻译、划词，类似扇贝阅读
+          // { text: 'life.zuo11.com' }, // 站在巨人的肩膀上（书、经验积累）
+          // { text: 'code.zuo11.com' }, // 代码片段、工具库代码收集
+          // { text: 'ux.zuo11.com' }, // UE 交互收集、展示
+          // { text: 'lab.zuo11.com' }, // 实验室
         ]
       },
       { text: '博客', link: 'http://www.zuo11.com' },
@@ -526,6 +532,7 @@ module.exports = {
         updatePopup: true
       }
     ],
+    'fulltext-search',
     // [
     //   "vuepress-plugin-google-adsense",
     //   {

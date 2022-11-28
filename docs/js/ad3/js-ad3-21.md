@@ -243,7 +243,7 @@ console.error('错误消息') // 错误消息
 
 ### 浏览器断点调试/debugger
 
-chrome 断点调试参见 [怎么使用Chrome断点调试功能，断点调试使用场景 - 左小白的技术日常](http://www.zuo11.com/blog/2019/11/breakpoint.html)
+chrome 断点调试参见 [怎么使用Chrome断点调试功能，断点调试使用场景 - dev-zuo 技术日常](http://www.zuo11.com/blog/2019/11/breakpoint.html)
 
 在 ES5 中，新增了 debugger 关键字，用于以程序化的方式下断点。打开页面时，程序会停留在该位置，并自动打开 DevTools 调试面板，点击按钮（Resume script execution, Resume `[rɪˈzjuːm]`）可以继续向下执行
 
@@ -264,7 +264,7 @@ chrome 断点调试参见 [怎么使用Chrome断点调试功能，断点调试�
 ### 在页面中打印消息/拦截原生 console
 可以自定义一个 log() 函数，在需要记录 log 时调用。log() 函数每次执行时，可以像 dom 指定区域 append 错误信息的 DOM。
 
-vconsole 的思路就是这样，先拦截 console、xhr 等系统方法，在把信息 append 到页面的 DOM 中，方便查看。更多细节参考：[为什么vconsole直接new一下就能引入，实现原理是什么？ - 左小白的技术日常](http://www.zuo11.com/blog/2020/9/vconsole.html)
+vconsole 的思路就是这样，先拦截 console、xhr 等系统方法，在把信息 append 到页面的 DOM 中，方便查看。更多细节参考：[为什么vconsole直接new一下就能引入，实现原理是什么？ - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/9/vconsole.html)
 
 ### 抛出错误 throw/assert()
 抛出错误是调试代码的好方法，只要看一眼错误就能确定错误的确切信息，可以节省额外调试的工作量。

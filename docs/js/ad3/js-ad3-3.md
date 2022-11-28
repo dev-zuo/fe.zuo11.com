@@ -384,7 +384,7 @@ a = { i: 1, valueOf() {return this.i++;}}
 a == 1 && a == 2
 ```
 
-参考：[什么情况下 a == 1 && a == 2，什么情况 a + 1 === a + 2 - 左小白的技术日常](http://www.zuo11.com/blog/2020/8/js_a1_a2.html)
+参考：[什么情况下 a == 1 && a == 2，什么情况 a + 1 === a + 2 - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/8/js_a1_a2.html)
 
 ### 条件操作符(isTrue?a:b)
 也叫三目运算符, 判断是否为真?为真时执行:不为真时执行，注意加括号，防止复杂运算时优先级的问题导致逻辑异常
@@ -427,7 +427,7 @@ for (var propName in k) { // propName可以是其他可用的关键字
 在 JS高程4 中说 for...in 遍历是无序的，但实际是按一定规则来的：**首先遍历所有数值键，按照数值升序排列；其次遍历所有字符串键，按照加入时间升序排列；最后遍历所有 Symbol 键，按照加入时间升序排列；最后遍历继承自父元素的原型属性，按照先数值、再字符串的顺序。**
 :::
 
-参考：[深入JS遍历对象，从4个维度比较遍历对象的8种方法 - 左小白的技术日常](http://www.zuo11.com/blog/2020/2/js_obj_iterator.html)
+参考：[深入JS遍历对象，从4个维度比较遍历对象的8种方法 - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/2/js_obj_iterator.html)
 
 - for-of 第四版新增，一般数组都可以使用 for...of 遍历的，而对象默认是不能使用 for...of 遍历的，需要自己实现对象的 Symbol.iterator 方法。常规使用 for...of 遍历对象，一般是使用 Object.keys/values/entries 等先把对象转数组，再使用 for...of 遍历。
 

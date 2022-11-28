@@ -396,7 +396,7 @@ var keys2 = Object.keys(Person.prototype); // 与for-in结果类似
 ![6_0_实例属性与原型属性.png](/images/js/6_0_实例属性与原型属性.png)
 
 #### 属性的枚举顺序与对象的迭代
-参考：[深入JS遍历对象，从4个维度比较遍历对象的8种方法 | 左小白的技术日常](http://www.zuo11.com/blog/2020/2/js_obj_iterator.html)
+参考：[深入JS遍历对象，从4个维度比较遍历对象的8种方法 | dev-zuo 技术日常](http://www.zuo11.com/blog/2020/2/js_obj_iterator.html)
 
 #### 更简单的原型语法
 ```js

@@ -778,7 +778,7 @@ URI保留字符 | Reserved Characters | `;,/?:@&=+$#` | 不转义 | 转义(escap
 - encodeURI 不会编码 URI 保留字符/非转义字符，只会对空格等其他字符(如中文字符，中文等)进行编码  
 - encodeURIComponent 不会编码非转义字符，URI保留字符和其他字符都会编码 
 
-encodeURI 与 encodeURIComponent 的区别是：encodeURIComponent 会对 URI 保留字符进行编码，而 encodeURI 则不会，其他逻辑基本一致。 更多细节参考：[为什么有效的URI不能包含空格等其他字符，URI编码方法详解 - 左小白的技术日常](http://www.zuo11.com/blog/2020/9/uri.html)
+encodeURI 与 encodeURIComponent 的区别是：encodeURIComponent 会对 URI 保留字符进行编码，而 encodeURI 则不会，其他逻辑基本一致。 更多细节参考：[为什么有效的URI不能包含空格等其他字符，URI编码方法详解 - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/9/uri.html)
 
 ```js
 // URI (Uniform Resource Identifiers，统一资源标识符) 在某个规则下把资源独一无二的标识出来

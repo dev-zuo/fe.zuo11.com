@@ -1,7 +1,7 @@
 {
   "name": "fenote",
   "version": "1.0.0",
-  "description": "左小白的前端笔记，用于记录、完善个人前端知识体系结构",
+  "description": "dev-zuo 笔记，用于记录、完善个人前端知识体系结构",
   "main": "index.js",
   "directories": {
     "doc": "docs"
@@ -17,7 +17,7 @@
     "url": "git+https://github.com/zuoxiaobai/fenote.git"
   },
   "keywords": [
-    "左小白",
+    "dev-zuo",
     "前端知识体系",
     "web前端"
   ],
@@ -37,6 +37,7 @@
     "vue-google-adsense": "^1.10.1",
     "vue-script2": "^2.1.0",
     "vuepress": "^1.7.1",
+    "vuepress-plugin-fulltext-search": "^2.2.1",
     "vuepress-plugin-google-adsense": "^0.2.1",
     "vuepress-plugin-sitemap": "^2.3.1"
   }

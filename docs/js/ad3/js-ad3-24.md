@@ -340,7 +340,7 @@ res.header("Access-Control-Max-Age", "1728000"); // 应该将这个 Preflight �
 res.header('Access-Control-Allow-Headers', 'Content-Type'); // 允许的头部
 ```
 
-关于请求预检的更多信息参见：[CORS跨域资源共享 - 利用koa来彻底理解web前端跨域问题 - 左小白的技术日常](http://www.zuo11.com/blog/2020/6/koa_web_cros.html)
+关于请求预检的更多信息参见：[CORS跨域资源共享 - 利用koa来彻底理解web前端跨域问题 - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/6/koa_web_cros.html)
 ### 凭据请求 cookie
 > credentials [krəˈdenʃlz] n. [管理] 证书；文凭；
 
@@ -406,7 +406,7 @@ function gzhM_test(app, data, req, res) {
 }
 ```
 
-跨域的理解可以参考：[利用koa来彻底理解web前端跨域问题 - 左小白的技术日常](http://www.zuo11.com/blog/2020/6/koa_web_cros.html)
+跨域的理解可以参考：[利用koa来彻底理解web前端跨域问题 - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/6/koa_web_cros.html)
 
 ## Fetch API
 Fetch API 能够执行 XMLHttpRequest 对象的所有任务，且更容易使用，接口更加现代化，能够在 Web Worker 里面使用。XMLHttpRequest 可以选择异步，而 Fetch API 必须是异步。
@@ -607,7 +607,7 @@ koa 处理文件上传可以使用 multer 组件，相关接口 demo 参见： [
     .catch(console.log)
 </script>
 ```
-参考：[下载文件进度显示以及koa下载接口mock - 左小白的技术日常](http://www.zuo11.com/blog/2019/10/http_download_progress.html)
+参考：[下载文件进度显示以及koa下载接口mock - dev-zuo 技术日常](http://www.zuo11.com/blog/2019/10/http_download_progress.html)
 
 **5.发送跨域请求**
 ```html
@@ -634,7 +634,7 @@ koa 处理文件上传可以使用 multer 组件，相关接口 demo 参见： [
   // 'no-cors' to fetch the resource with CORS disabled.
 </script>
 ```
-后端允许跨域代码，更多跨域详情，参考 [利用koa来彻底理解web前端跨域问题 | 左小白的技术日常](http://www.zuo11.com/blog/2020/6/koa_web_cros.html)
+后端允许跨域代码，更多跨域详情，参考 [利用koa来彻底理解web前端跨域问题 | dev-zuo 技术日常](http://www.zuo11.com/blog/2020/6/koa_web_cros.html)
 ```js
 // options 预检请求时允许
 router.options('/corsTest', ctx => {
@@ -722,7 +722,7 @@ router.post('/abortTest', async ctx => {
 ```
 **注意：有些安全的请求头有些是不能修改的**，参考：
 - [Forbidden header name | MDN](https://developer.mozilla.org/en-US/docs/Glossary/Forbidden_header_name)
-- [前端ajax请求时，设置Cookie请求头无效 - 左小白的技术日常](http://www.zuo11.com/blog/2019/10/http_request_header.html)
+- [前端ajax请求时，设置Cookie请求头无效 - dev-zuo 技术日常](http://www.zuo11.com/blog/2019/10/http_request_header.html)
 - [CORS-safelisted request header | MDN](https://developer.mozilla.org/en-US/docs/Glossary/CORS-safelisted_request_header)
 - [Forbidden response header name | MDN](https://developer.mozilla.org/zh-CN/docs/glossary/forbidden_response_header_name)
 

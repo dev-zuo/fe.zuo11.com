@@ -713,8 +713,8 @@ EventUtil.addHandler(textbox, "textInput", function(event) {
 ```
 
 **复合事件**，IME 输入法组合文字的过程中触发，compositionstart，compositionupdate，compositionend。参考：
-- [输入法组合文字事件compositionstart等不能用on监听 - 左小白的技术日常](http://www.zuo11.com/blog/2020/9/oncompositionstart_issue.html)
-- [v-model为什么不能监听中文输入法实时输入，内部是怎么实现的？ - 左小白的技术日常](http://www.zuo11.com/blog/2019/12/v_model_text.html)
+- [输入法组合文字事件compositionstart等不能用on监听 - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/9/oncompositionstart_issue.html)
+- [v-model为什么不能监听中文输入法实时输入，内部是怎么实现的？ - dev-zuo 技术日常](http://www.zuo11.com/blog/2019/12/v_model_text.html)
 
 ### 变化事件(dom mutation)
 DOM2 的变化事件是为了在 DOM 发生改变时提供通知，由于性能问题已废弃，第四版已删除相关内容。 由 Mutation Observers 取代。参考：[MutationObserver 接口 - 14. DOM | JS高程4笔记](http://fe.zuo11.com/js/ad3/js-ad3-14.html#mutationobserver-%E6%8E%A5%E5%8F%A3) 

@@ -1227,7 +1227,7 @@ updateViaCache 可以是如下三个值
 - `all` service worker 脚本没有任何特殊待遇，所有文件都会遵循 HTTP 缓存规则
 - `none` service worker 脚本和 importScripts() 导入的文件都不会被缓存
 
-参考：[通过koa写demo彻底理解前端http缓存 - 左小白的技术日常](http://www.zuo11.com/blog/2020/9/web_cache.html)
+参考：[通过koa写demo彻底理解前端http缓存 - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/9/web_cache.html)
 
 ### 强制性 Service Worker 操作
 Service Worker 中有三种强制操作

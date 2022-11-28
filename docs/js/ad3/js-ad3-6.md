@@ -185,7 +185,7 @@ zeroes.fill(0);  // reset
 zeroes.fill(8, -4, -1);
 alert(zeroes);   // [0, 8, 8, 8, 0];
 ```
-注意：如果 fill 填充的是引用类型，那么他的没一个元素都是同一个地址，修改一个，会修改所有。参考：[Array.prototype.fill()填充引用类型值的问题 - 左小白的技术日常](http://www.zuo11.com/blog/2020/7/araay_fill.html)
+注意：如果 fill 填充的是引用类型，那么他的没一个元素都是同一个地址，修改一个，会修改所有。参考：[Array.prototype.fill()填充引用类型值的问题 - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/7/araay_fill.html)
 
 ```js
 let ints,

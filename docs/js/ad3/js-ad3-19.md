@@ -901,5 +901,5 @@ range.pasteHTML(`<span style="background-color: yellow">${range.htmlText}</span>
 富文本编辑器如果只是写 demo 就比较简单，但如果应用于生产环境或者实现某些特定的功能，其兼容性以及各种情况的特殊处理，坑是非常多的。开发中尽量使用社区现有的，尽量少自定义。相关内容参见：
 
 - [为什么都说富文本编辑器是天坑？- 知乎](https://www.zhihu.com/question/38699645)
-- [输入过程中，怎么实时高亮部分文字(@xxx高亮实现) - 左小白的技术日常](http://www.zuo11.com/blog/2020/9/highlight_when_input.html)
-- [Vue @ 功能实现 - 左小白的技术日常](http://www.zuo11.com/blog/2020/11/vue_mentions.html)
+- [输入过程中，怎么实时高亮部分文字(@xxx高亮实现) - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/9/highlight_when_input.html)
+- [Vue @ 功能实现 - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/11/vue_mentions.html)

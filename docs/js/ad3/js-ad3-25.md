@@ -189,7 +189,7 @@ sessionStorage maintains a separate storage area for each given origin that's av
 - Storage limit is larger than a cookie (at most 5MB).
 ```
 
-相关链接: [怎么解决sessionStorage新打开一个tab页就失效的问题 - 左小白的技术日常](http://www.zuo11.com/blog/2020/8/sessionStorage_loss.html)
+相关链接: [怎么解决sessionStorage新打开一个tab页就失效的问题 - dev-zuo 技术日常](http://www.zuo11.com/blog/2020/8/sessionStorage_loss.html)
 ### localStorage
 修订过的 HTML5 规范中，localStorage 取代 globalStorage，作为持久保存客户端的数据的方案。**要访问同一个 localStorage 对象，页面必须来自同一个域名(子域名无效)。使用同一种协议，同一个端口**， 2.5M - 5M
 ```js

@@ -851,7 +851,7 @@ console.log(new Blob(['<p>Foo</p>', '<p>Bar</p>'], { type: "text/html"}))
   }
 </script>
 ```
-对象 URL 以及 FileReader.prototype.readAsDataURL 虽然都可以用于预览图片，但是他们的区别是 readAsDataURL 返回的是文件的 URI, base64 格式。而 createObjectURL() 返回的是一个链接 URL。对于比较大的文件 base64 会卡，对象 URL 不会，详情参见：[FileReader.readAsDataURL与URL.createObjectURL的区别 | 左小白的技术日常](http://www.zuo11.com/blog/2020/10/file_preview_download.html)
+对象 URL 以及 FileReader.prototype.readAsDataURL 虽然都可以用于预览图片，但是他们的区别是 readAsDataURL 返回的是文件的 URI, base64 格式。而 createObjectURL() 返回的是一个链接 URL。对于比较大的文件 base64 会卡，对象 URL 不会，详情参见：[FileReader.readAsDataURL与URL.createObjectURL的区别 | dev-zuo 技术日常](http://www.zuo11.com/blog/2020/10/file_preview_download.html)
 ### 读取拖拽文件并上传
 使用 H5 拖放 API，从桌面上把文件拖放到浏览器中会触发 drop 事件。在 event.dataTransger.files 中可以读取到放置的文件，与通过 type 为 file 的 input 获取的 File 一致
 ```html
@@ -1070,7 +1070,7 @@ if (audio.canPlayType('audio/mpeg')) {
 
 拖动某个元素时，会依次触发**dragstart, drag, dragend** 事件。当某个元素被拖动到一个有效的目标位置时，目标元素会依次触发**dragenter, dragover**，**dragleave(不可放置)或drop(可放置)**
 
-参考: [H5原生拖放(Drag and Drop)demo以及浏览器兼容性处理 | 左小白的技术日常](http://www.zuo11.com/blog/2020/8/js_drag_drop.html)
+参考: [H5原生拖放(Drag and Drop)demo以及浏览器兼容性处理 | dev-zuo 技术日常](http://www.zuo11.com/blog/2020/8/js_drag_drop.html)
 
 ```html
 <!DOCTYPE html>

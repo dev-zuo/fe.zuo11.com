@@ -357,7 +357,7 @@ function getQueryStringArgs() {
     return args;
 }
 ```
-关于 URLSearchParams 的使用可以参考：[URLSearchParams URL查询字符串处理 - 左小白的技术日常](http://www.zuo11.com/blog/2019/10/web_url_searchparams.html)
+关于 URLSearchParams 的使用可以参考：[URLSearchParams URL查询字符串处理 - dev-zuo 技术日常](http://www.zuo11.com/blog/2019/10/web_url_searchparams.html)
 
 这里简单介绍下，URLSearchParams 构造函数接收 location.searh 查询字符串，生成一个 searchParams 实例，这个实例有下面几个方法
 - toString() 用于转字符串，会自动去掉首部 ?，不会进行 decodeURIComponent()
