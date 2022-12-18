@@ -251,23 +251,27 @@ const webpackSidebar = [
 // ts 独立侧边栏
 const tsSidebar = [{
   title: 'TypeScript',
+  sidebarDepth: 5,
   children: [
     {
       title: 'TypeScript入门教程笔记',
       sidebarDepth: 5,
       children: [
-        'base-1',
-        'base-2',
-        'base-3',
-        'base-4',
-        'base-5',
-        'base-6',
-        'base-7',
-        'base-8',
-        'base-9',
-        'base-10'
+        'base/base-1',
+        'base/base-2',
+        'base/base-3',
+        'base/base-4',
+        'base/base-5',
+        'base/base-6',
+        'base/base-7',
+        'base/base-8',
+        'base/base-9',
+        'base/base-10'
       ]
-    }
+    },
+    'ts-best-guide',
+    'ts-exercise',
+    'ts-interview',
   ]
 }]
 
@@ -317,6 +321,17 @@ const vueSidebar = [
     children: [
       'vue-router',
       'vuex'
+    ]
+  }
+]
+
+const vue3Sidebar = [
+  {
+    title: 'Vue3',
+    sidebarDepth: 5,
+    children: [
+      'vue3-options-to-setup',
+      'vue3-element-plus'
     ]
   }
 ]
@@ -371,6 +386,7 @@ module.exports = {
       '/webpack/': webpackSidebar,
       '/ts/': tsSidebar,
       '/vue/': vueSidebar,
+      '/vue3/': vue3Sidebar,
       // '/read/': readSidebar,
       '/': [
         {
@@ -402,8 +418,15 @@ module.exports = {
             ]
           },
           {
+            text: 'Vue3', items: [
+              { text: 'Vue3 options 改 setup 快速参考', link: '/vue3/vue3-options-to-setup.md' },
+              { text: 'Vue3 + Element Plus', link: '/vue3/vue3-options-to-setup.md' },
+            ]
+          },
+          {
             text: '前端工程化', items: [
-              { text: 'TypeScript 入门教程笔记', link: '/ts/base-1.md' },
+              { text: 'TypeScript 入门教程笔记', link: '/ts/base/base-1.md' },
+              { text: 'TypeScript 最佳实践', link: '/ts/ts-best-guide.md' },
               { text: 'Node.js 笔记', link: '/node/base/1.md' },
               { text: 'webpack 基础', link: '/webpack/base.md' },
             ]
@@ -469,6 +492,7 @@ module.exports = {
           { text: 'food', link: 'https://github.com/zuoxiaobai/food' }, // 饮食
           { text: 'service-monitor', link: 'https://github.com/zuoxiaobai/service-monitor' },
           { text: 'zuo-blog', link: 'http://zuoblog.zuo11.com' },
+          { text: '博客 zuo11.com', link: 'http://www.zuo11.com' },
           // { text: 'cli.zuo11.com' }, // 快速 demo 模板生成
           // { text: 'config.zuo11.com' }, // 配置中心，接口生成
           // { text: 'en.zuo11.com' }, // 中英双语、翻译、划词，类似扇贝阅读
@@ -478,7 +502,6 @@ module.exports = {
           // { text: 'lab.zuo11.com' }, // 实验室
         ]
       },
-      { text: '博客', link: 'http://www.zuo11.com' },
       { text: 'Github', link: 'https://github.com/zuoxiaobai' }
     ],
     lastUpdated: '上次更新', // string | boolean
