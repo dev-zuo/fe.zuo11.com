@@ -534,7 +534,8 @@ module.exports = {
       })();
       `
     ],
-    ['script', { src: "http://zuo11.com:3000/zs.js?283281668cc3440449274d1f93c04de6" }],
+    // 暂时注释
+    // ['script', { src: "http://zuo11.com:3000/zs.js?283281668cc3440449274d1f93c04de6", defer: true }],
     // [
     //   "script",
     //   {
