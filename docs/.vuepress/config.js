@@ -281,6 +281,17 @@ const tsSidebar = [{
 // Vue.js 独立侧边栏
 const vueSidebar = [
   {
+    title: '深入浅出 Vue.js 笔记',
+    sidebarDepth: 5,
+    children: [
+      'head-first-vue-js/1',
+      'head-first-vue-js/2',
+      'head-first-vue-js/3',
+      'head-first-vue-js/4',
+      'head-first-vue-js/5',
+    ]
+  },
+  {
     title: 'Vue 基础',
     sidebarDepth: 5,
     children: [
@@ -415,6 +426,7 @@ module.exports = {
           { text: 'Docker 基础', link: "/server/docker.md" },
           {
             text: 'Vue.js', items: [
+              { text: '深入浅出 Vue.js 笔记', link: '/vue/head-first-vue-js/1.md' },
               { text: 'Vue.js 笔记', link: '/vue/base/1.md' },
               { text: 'Vue Router 笔记', link: '/vue/vue-router.md' },
               { text: 'Vuex 笔记', link: '/vue/vuex.md' },
