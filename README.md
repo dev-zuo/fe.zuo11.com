@@ -1,6 +1,6 @@
-# FE技术栈
+# dev-zuo 笔记
 
-近期计划: https://github.com/zuoxiaobai/fenote/projects/1
+学习笔记
 
 - [JS/ES6](#jses6)
 - [HTML/HTML5](#htmlhtml5)
