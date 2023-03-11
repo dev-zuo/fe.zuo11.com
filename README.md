@@ -1,6 +1,6 @@
-# dev-zuo 笔记
+# fe.zuo11.com
 
-学习笔记
+学习笔记 http://fe.zuo11.com
 
 - [JS/ES6](#jses6)
 - [HTML/HTML5](#htmlhtml5)
